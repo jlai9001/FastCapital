@@ -1,88 +1,73 @@
-# Customwerkz
+# Fast Capital
 
 ## Getting started
 
-## Add your files
+To get started with this project, clone the respository from the development branch using the steps found below. 
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+## Git Branching Workflow
 
-```
-cd existing_repo
-git remote add origin https://gitlab.galvanize.com/bowejessop/customwerkz.git
-git branch -M main
-git push -uf origin main
-```
+We follow a simple feature‑branch workflow:
 
-## Integrate with your tools
+1. **Sync your local `dev`**  
+   git checkout dev
+   git pull origin dev
 
-- [ ] [Set up project integrations](https://gitlab.galvanize.com/bowejessop/customwerkz/-/settings/integrations)
+2. Create a new feature branch
+Use the ticket/card name from the Trello board and ticket description to create a new feature branch. 
 
-## Collaborate with your team
+   git checkout -b feature/1234-login-page
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+3. Work & commit locally
+Use the ticket/card name from the Trello board and ticket description to create a new feature branch. 
 
-## Test and Deploy
+   git add .
+   git commit -m "FEAT(1234): Add login page UI"
 
-Use the built-in continuous integration in GitLab.
+4. Push your feature branch
+Once you're ready to push your feature, use the following command:
+   git push origin feature/1234-login-page
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+5. Keeping your branch up to date
+Periodically pull in the latest from dev to avoid large conflicts:
+    # Fetch and update dev
+    git fetch origin
+    git checkout dev
+    git pull origin dev
 
----
+    # Merge or rebase into your feature branch
+    git checkout feature/1234-login-page
+    git merge dev
+    # —or—
+    git rebase dev
 
-# Editing this README
+    # Resolve conflicts if any, then:
+    git push origin feature/1234-login-page
 
-## Suggestions for a good README
+6. Open a merge request:
+On GitLab, create an MR from feature/<ticket-or-desc> → main.
+	•	Assign reviewers.
+	•	Link any related issues (e.g. Closes #<issue-number>).
 
-## Name
+7. Sprint End Release:
+At the end of each sprint, the release engineer will: 
+# Merge the fully tested dev branch into main
+git checkout main
+git pull origin main
+git merge --no-ff dev
+git push origin main
 
-## Description
+8. Clean up
+git branch -d feature/1234-login-page              # delete local
+git push origin --delete feature/1234-login-page   # delete remote
 
-## Badges
-
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
 
 ## Authors and acknowledgment
 
-## License
+Authors: Tyler McCallum, Bowe Jessop, Daniel Greenberg, Jonathan Lai
 
-For open source projects, say how it is licensed.
+## Licenses
+
+N/A
 
 ## Project status
 
