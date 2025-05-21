@@ -1,0 +1,60 @@
+/* pending-investments-card.css */
+
+.pending-investment-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 4px;
+    min-width: 500px;
+    max-width: 700px;
+    margin: 0.5rem;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+
+  .pending-investment-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pending-investment-info .name {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #000;
+  }
+
+  .pending-investment-info .location {
+    margin-top: 0.25rem;
+    font-size: 1rem;
+    color: #555;
+  }
+
+  .pending-investment-info .percent-complete {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #777;
+  }
+
+  .pending-investment-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .pending-investment-actions .shares-bought {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+  }
+
+  .view-details-button {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+  }
