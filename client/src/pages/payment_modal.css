@@ -1,0 +1,29 @@
+.payment_modal{
+    height: 500px;
+    width:1000px;
+
+    border-radius: 15px;
+    background: linear-gradient(to bottom, #a0d6ff, #9a9af6);
+}
+
+
+.payment_title{
+    font-size: 35px;
+    font-weight: bold;
+    text-shadow: 0 0 10px #3f3f3f;
+}
+
+
+.payment_bar{
+    background: linear-gradient(to right, #64a0b4, #60909b);
+
+    height: 60px;
+    width:1000px;
+
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+
+
+    align-items: center;
+
+}
