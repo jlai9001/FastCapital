@@ -7,6 +7,7 @@ import Portfolio from './pages/portfolio.jsx'
 import Login from './pages/login.jsx'
 import NotFound from './pages/not-found.jsx'
 import './App.css'
+import Nav from './components/Nav.jsx'
 
 
 function App() {
@@ -14,7 +15,8 @@ function App() {
 
   return (
     <>
-<Routes>
+      <Nav />
+      <Routes>
         <Route path='/' element={<Homepage />}></Route>
         <Route path='/all-investments' element={<AllInvestments />}></Route>
         <Route path='/investment-details' element={<InvestmentDetails />}></Route>
@@ -22,8 +24,6 @@ function App() {
         <Route path='/portfolio' element={<Portfolio />}></Route>
         <Route path='/login' element={<Login />}></Route>
         <Route path='/not-found' element={<NotFound />}></Route>
-
-
       </Routes >
     </>
   )
