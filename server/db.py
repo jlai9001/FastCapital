@@ -19,7 +19,7 @@ def get_business(business_id: int) -> BusinessOut | None:
 
     business = BusinessOut(
         id=db_business.id,
-        user_id=db_business.user_id,
+        users_id=db_business.users_id,
         name=db_business.name,
         image_url=db_business.image_url,
         address1=db_business.address1,
