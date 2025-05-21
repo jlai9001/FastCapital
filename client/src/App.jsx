@@ -7,6 +7,7 @@ import Portfolio from './pages/portfolio.jsx'
 import Login from './pages/login.jsx'
 import NotFound from './pages/not-found.jsx'
 import './App.css'
+import Nav from './components/Nav.jsx'
 
 
 function App() {
@@ -14,7 +15,7 @@ function App() {
 
   return (
     <>
-    <Nav />
+      <Nav />
       <Routes>
         <Route path='/' element={<Homepage />}></Route>
         <Route path='/all-investments' element={<AllInvestments />}></Route>
