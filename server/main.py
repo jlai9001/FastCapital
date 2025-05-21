@@ -1,5 +1,7 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
 from pydantic_schemas import OfferOut, BusinessOut
+from pathlib import Path
 import db
 
 
@@ -20,3 +22,10 @@ async def get_business(business_id: int) -> BusinessOut:
     if not business:
         raise HTTPException(status_code=404, detail="Business not found")
     return business
+
+
+@app.get("/{file_path}", response_class=FileResponse)
+def get_static_file(file_path: str):
+    if Path("static/" + file_path).is_file():
+        return "static/" + file_path
+    raise HTTPException(status_code=404, detail="Item not found")
