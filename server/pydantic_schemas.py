@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from datetime import date, datetime
+from typing import Optional
 
 
 class UserCreate(BaseModel):
@@ -31,7 +32,7 @@ class BusinessOut(BusinessCreate):
     users_id: int
     image_url: str
     address1: str
-    address2: str
+    address2: Optional[str] = None
     city: str
     state: str
     postal_code: str
