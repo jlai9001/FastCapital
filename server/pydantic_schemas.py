@@ -80,7 +80,7 @@ class FinancialsCreate(BaseModel):
     business_id: int
     date: date
     amount: float
-    tyoe: str
+    type: str
 
 
 class FinancialsOut(FinancialsCreate):
@@ -88,4 +88,4 @@ class FinancialsOut(FinancialsCreate):
     business_id: int
     date: date
     amount: float
-    tyoe: str
+    type: str
