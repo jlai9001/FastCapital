@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from datetime import date, datetime
+from typing import Optional
 
 
 class UserCreate(BaseModel):
@@ -16,7 +17,7 @@ class UserOut(UserCreate):
 
 class BusinessCreate(BaseModel):
     name: str
-    user_id: int
+    users_id: int
     image_url: str
     address1: str
     address2: str
@@ -28,10 +29,10 @@ class BusinessCreate(BaseModel):
 class BusinessOut(BusinessCreate):
     id: int
     name: str
-    user_id: int
+    users_id: int
     image_url: str
     address1: str
-    address2: str
+    address2: Optional[str] = None
     city: str
     state: str
     postal_code: str
@@ -59,7 +60,7 @@ class OfferOut(OfferCreate):
 
 class PurchaseCreate(BaseModel):
     offer_id: int
-    user_id: int
+    users_id: int
     shares_purchased: int
     cost_per_share: float
     purchase_date: datetime
@@ -68,7 +69,7 @@ class PurchaseCreate(BaseModel):
 class PurchaseOut(PurchaseCreate):
     id: int
     offer_id: int
-    user_id: int
+    users_id: int
     shares_purchased: int
     cost_per_share: float
     purchase_date: datetime

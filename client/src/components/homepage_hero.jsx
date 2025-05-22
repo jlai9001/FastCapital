@@ -1,19 +1,14 @@
+import React from 'react'
 import './homepage_hero.css'
-import logo from './investment_logo.png'
 
-
-
-
-function HomePageHero(){
+export default function HomePageHero(){
     // set states
 
     // display elements
     return (
-        <div className = "homepage_hero">
-            <div className = "hero_text"> FastCapital</div>
-            <img className ="logo" src={logo} alt="My image"/>
+        <div className = "homepage-hero">
+            <div className = "hero-text"> FastCapital</div>
+            <img className ="hero-logo" src='../assets/investment_logo.png' alt="My image"/>
         </div>
     )
 }
-
-export default HomePageHero

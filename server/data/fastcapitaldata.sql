@@ -2,26 +2,31 @@ DROP TABLE IF EXISTS purchase;
 DROP TABLE IF EXISTS offer;
 DROP TABLE IF EXISTS financials;
 DROP TABLE IF EXISTS business;
-DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS users;
 
+DROP TYPE IF EXISTS financial_type;
+DROP TYPE IF EXISTS purchase_status;
 
-CREATE TABLE user (
+CREATE TYPE financial_type AS ENUM ('income', 'expense', 'asset', 'liability');
+CREATE TYPE purchase_status AS ENUM ('pending', 'completed', 'expired');
+
+CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE business (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    user_id int REFERENCES user(id),
+    users_id int REFERENCES users(id),
     image_url VARCHAR(255),
     address1 VARCHAR(255) NOT NULL,
     address2 VARCHAR(255),
     city VARCHAR(255) NOT NULL,
     state VARCHAR(255) NOT NULL,
-    postal_code VARCHAR(255) NOT NULL,
+    postal_code VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE financials (
@@ -29,7 +34,7 @@ CREATE TABLE financials (
     business_id int REFERENCES business(id),
     date DATE NOT NULL,
     amount decimal(10, 2) NOT NULL,
-    type enum('income', 'expense', 'asset', 'liability') NOT NULL,
+    type financial_type NOT NULL
 );
 
 CREATE TABLE offer (
@@ -40,20 +45,20 @@ CREATE TABLE offer (
     min_investment int NOT NULL,
     start_date DATE NOT NULL,
     expiration_date DATE NOT NULL,
-    featured boolean NOT NULL DEFAULT 0,
+    featured boolean NOT NULL DEFAULT false
 );
 
 CREATE TABLE purchase (
     id SERIAL PRIMARY KEY,
     offer_id int REFERENCES offer(id),
-    user_id int REFERENCES user(id),
+    users_id int REFERENCES users(id),
     shares_purchased int NOT NULL,
     cost_per_share decimal(10, 2) NOT NULL,
     purchase_date DATE NOT NULL,
-    status enum('pending', 'completed', 'expired') NOT NULL DEFAULT 'pending',
+    status purchase_status NOT NULL DEFAULT 'pending'
 );
 
-INSERT INTO user(id, name, email, password)
+INSERT INTO users(id, name, email, password)
 VALUES
     (1, 'John Smith', 'jsmith@email.com', 'password'),
     (2, 'Jane Doe', 'jdoe@email.com', 'password'),
@@ -76,7 +81,7 @@ VALUES
     (19, 'Quinn Adams', 'qadams@email.com', 'password'),
     (20, 'Ruby Baker', 'rbaker@email.com', 'password');
 
-INSERT INTO business(id, user_id, image_url, address1, address2, city, state, postal_code)
+INSERT INTO business(id, name, users_id, image_url, address1, address2, city, state, postal_code)
 VALUES
     (1, 'Best Burgers', '1', 'http://example.com/image1.jpg', '123 Main St', 'Apt 4B', 'Los Angeles', 'CA', '90001'),
     (2, 'Tech Innovations', '2', 'http://example.com/image2.jpg', '456 Market St', NULL, 'San Francisco', 'CA', '94105'),
@@ -112,7 +117,7 @@ VALUES
     (19, 10, '2023-01-25', 95000.00, 'income'),
     (20, 10, '2023-02-25', 15000.00, 'expense');
 
-INSERT INTO offer(id, business_id, shares_available, price_per_share, min_share_purchase, start_date, expiration_date, featured)
+INSERT INTO offer(id, business_id, shares_available, price_per_share, min_investment, start_date, expiration_date, featured)
 VALUES
     (1, 1, 500, 10.00, 100, '2023-03-01', '2023-06-01', true),
     (2, 2, 1000, 20.00, 100, '2023-03-15', '2023-09-15', false),
@@ -125,7 +130,7 @@ VALUES
     (9, 9, 850, 19.00, 50, '2023-07-01', '2024-03-01', true),
     (10, 10, 950, 25.00, 50, '2023-07-15', '2024-04-15', false);
 
-INSERT INTO purchase(id, offer_id, user_id, shares_purchased, cost_per_share, purchase_date, status)
+INSERT INTO purchase(id, offer_id, users_id, shares_purchased, cost_per_share, purchase_date, status)
 VALUES
     (1, 1, 1, 100, 10.00, '2023-03-02', 'completed'),
     (2, 2, 2, 100, 20.00, '2023-03-16', 'pending'),
@@ -139,4 +144,4 @@ VALUES
     (10, 10, 10, 95, 25.00, '2023-07-16', 'pending');
 
 -- run the following line in the psql shell to load this file
--- \i data/projects.sql
+-- \i data/fastcapitaldata.sql
