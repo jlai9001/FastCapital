@@ -1,0 +1,94 @@
+.Login_Container{
+    margin-top: -100px;
+    width:1000px;
+    height:500px;
+    background-color: white;
+
+}
+
+.Login_Title{
+    color: rgb(0, 0, 0);
+    font-weight: Bold;
+    font-size: 50px;
+}
+
+.Error_Message{
+    color: rgb(255, 0, 0);
+    font-weight: Bold;
+    font-size: 25px;
+    background-color: rgb(255, 187, 187);
+    transform: translateY(50px);
+}
+
+.All_Fields_Container{
+    transform: translate(20px,-30px);
+
+}
+
+.Fields_Title_Container{
+    transform: translate(-600px,100px);
+
+}
+
+
+.Field_Title{
+    color: rgb(0, 0, 0);
+    font-weight: Bold;
+    font-size: 25px;
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+.Input_Container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* vertical centering */
+    align-items: center; /* horizontal centering */
+    transform: translate(40px,12px);
+}
+
+.Input_Field{
+    color:black;
+    background-color: rgb(208, 208, 208);
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.Login_Button{
+    width:400px;
+    background-color: green;
+    margin-bottom: 5px;
+}
+
+.Login_Button:hover{
+    width:400px;
+    background-color: rgb(195, 255, 0);
+    color: black;
+    border: none;
+}
+
+.Login_Button_Container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* vertical centering */
+    align-items: center; /* horizontal centering */
+}
+
+.Signup_Button{
+    width:198px;
+    background-color: rgb(5, 0, 150);
+    margin-right: 5px;
+
+}
+
+.SecondRow{
+    flex-direction: row;
+    transform: translateX(1.5px);
+
+}
+
+
+.Forget_Password_Button{
+    width:198px;
+    background-color: rgb(96, 15, 15);
+}

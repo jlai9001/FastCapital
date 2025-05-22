@@ -9,7 +9,6 @@ import NotFound from './pages/not-found.jsx'
 import './App.css'
 import Nav from './components/Nav.jsx'
 
-
 function App() {
 
 
