@@ -9,6 +9,7 @@ DATABASE_URL = "postgresql+psycopg://postgres:postgres@localhost:5432/fastcapita
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 
+
 def get_businesses() -> list[BusinessOut]:
     db = SessionLocal()
     db_businesses = db.query(DBBusiness).order_by(DBBusiness.name).all()
@@ -52,6 +53,7 @@ def get_business(business_id: int) -> BusinessOut | None:
     db.close()
     return business
 
+
 def get_offers() -> list[OfferOut]:
     db = SessionLocal()
     db_offers = db.query(DBOffer).order_by(DBOffer.id).all()
@@ -71,6 +73,7 @@ def get_offers() -> list[OfferOut]:
         )
     db.close()
     return offers
+
 
 def get_offer(offer_id: int) -> OfferOut | None:
     db = SessionLocal()
@@ -96,16 +99,18 @@ def get_offer(offer_id: int) -> OfferOut | None:
 def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut | None:
     with SessionLocal() as db:
         db_purchase = DBPurchase(**purchase_request.dict())
+        print(db_purchase)
         db.add(db_purchase)
         db.commit()
         db.refresh(db_purchase)
         purchase = PurchaseOut(
             id=db_purchase.id,
-            offer_id=db_purchase.id,
-            user_id=db_purchase.user,
+            offer_id=db_purchase.offer_id,
+            users_id=db_purchase.users_id,
             shares_purchased=db_purchase.shares_purchased,
             cost_per_share=db_purchase.cost_per_share,
             purchase_date=db_purchase.purchase_date,
-            status=db.status,
+            status=db_purchase.status.value,  # DB status is an enum object, so this should return one of three values?
         )
+        print(purchase)
         return purchase

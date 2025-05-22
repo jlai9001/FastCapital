@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic_schemas import OfferOut, BusinessOut, PurchaseCreate
 from pathlib import Path
 import db
+from rich import print  # debugging
 
 
 app = FastAPI()
@@ -59,14 +60,15 @@ def get_static_file(file_path: str):
     raise HTTPException(status_code=404, detail="Item not found")
 
 
-@app.post("/api/purchases")
+@app.post("/api/purchases", status_code=201)  # status code 201 indicates success
 async def post_purchase(purchase_request: PurchaseCreate):
     try:
         purchase = db.add_purchase(purchase_request)
         return purchase
-    # except NotEnoughSharesException:
+    # except NotEnoughSharesException: FOR FUTURE HANDLING
     #   raise HTTPException(status_code=400, detail="Not enough shares available.")
-    except Exception:
+    except Exception as e:
+        print(f"Unexpected error: {e}")
         raise HTTPException(
             status_code=500, detail="Something went wrong on the server."
         )

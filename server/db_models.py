@@ -1,8 +1,25 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, Boolean
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    Float,
+    ForeignKey,
+    DateTime,
+    Boolean,
+    Enum,
+)
 from sqlalchemy.orm import declarative_base
 import datetime
+import enum
+
 
 Base = declarative_base()
+
+
+class PurchaseStatusEnum(str, enum.Enum):
+    pending = "pending"
+    completed = "completed"
+    expired = "expired"
 
 
 class DBUser(Base):
@@ -42,15 +59,19 @@ class DBOffer(Base):
 
 class DBPurchase(Base):
     __tablename__ = "purchase"
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     offer_id = Column(Integer, ForeignKey("offer.id"))
-    user_id = Column(Integer, ForeignKey("users.id"))
+    users_id = Column(Integer, ForeignKey("users.id"))
     shares_purchased = Column(Integer)
     cost_per_share = Column(Float)
     purchase_date = Column(
         DateTime, default=datetime.datetime.now(datetime.timezone.utc)
     )
-    status = Column(String, default="pending")  # pending, completed, cancelled
+    status = Column(
+        Enum(PurchaseStatusEnum, name="purchase_status", create_type=False),
+        default=PurchaseStatusEnum.pending,
+        nullable=False,
+    )
 
 
 class DBFinancials(Base):
