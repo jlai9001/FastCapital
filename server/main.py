@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from pydantic_schemas import OfferOut, BusinessOut
+from pydantic_schemas import OfferOut, BusinessOut, PurchaseCreate
 import db
 
 
@@ -20,3 +20,16 @@ async def get_business(business_id: int) -> BusinessOut:
     if not business:
         raise HTTPException(status_code=404, detail="Business not found")
     return business
+
+
+@app.post("/api/purchases")
+async def post_purchase(purchase_request: PurchaseCreate):
+    try:
+        purchase = db.add_purchase(purchase_request)
+        return purchase
+    # except NotEnoughSharesException:
+    #   raise HTTPException(status_code=400, detail="Not enough shares available.")
+    except Exception:
+        raise HTTPException(
+            status_code=500, detail="Something went wrong on the server."
+        )

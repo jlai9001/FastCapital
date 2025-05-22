@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from db_models import DBBusiness, DBOffer
-from pydantic_schemas import OfferOut, BusinessOut
+from db_models import DBBusiness, DBOffer, DBPurchase
+from pydantic_schemas import OfferOut, BusinessOut, PurchaseCreate, PurchaseOut
 
 
 DATABASE_URL = "postgresql+psycopg://postgres:postgres@localhost:5432/fastcapital"
@@ -51,3 +51,21 @@ def get_offer(offer_id: int) -> OfferOut | None:
     )
     db.close()
     return offer
+
+
+def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut | None:
+    with SessionLocal() as db:
+        db_purchase = DBPurchase(**purchase_request.dict())
+        db.add(db_purchase)
+        db.commit()
+        db.refresh(db_purchase)
+        purchase = PurchaseOut(
+            id=db_purchase.id,
+            offer_id=db_purchase.id,
+            user_id=db_purchase.user,
+            shares_purchased=db_purchase.shares_purchased,
+            cost_per_share=db_purchase.cost_per_share,
+            purchase_date=db_purchase.purchase_date,
+            status=db.status,
+        )
+        return purchase
