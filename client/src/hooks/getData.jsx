@@ -1,62 +1,65 @@
-import { useState, useEffect } from "react"
-export  function useOffer(offerId){
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState(null)
-    const [data, setData] = useState(null)
+import { useState, useEffect } from "react";
 
-    useEffect(() => {
-        if (!offerId) return;
+function useOffer(offerId) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [data, setData] = useState(null);
 
-        const fetchData = async () => {
-            setLoading(true);
-            setError(null);
-            try {
-                const response = await fetch(`http://localhost:8000/api/offers/${offerId}`);
-                if (!response.ok) {
-                    throw new Error("Failed to fetch offer data");
-                }
-                const json = await response.json();
-                setData(json);
-            } catch (e) {
-                setError(e.message);
-            } finally {
-                setLoading(false);
-            }
-        };
+  useEffect(() => {
+    if (!offerId) return;
 
-        fetchData();
-    }, [offerId]);
+    async function fetchOffer() {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`http://localhost:8000/api/offer/${offerId}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch offer data");
+        }
+        const json = await response.json();
+        setData(json);
+      } catch (e) {
+        setError(e.message);
+      } finally {
+        setLoading(false);
+      }
+    }
 
-    return { loading, error, data };
+    fetchOffer();
+  }, [offerId]);
+
+  return { loading, error, data };
 }
 
-export function useBusiness(bussinessId){
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState(null)
-    const [data, setData] = useState(null)
+function useBusiness(businessId) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [data, setData] = useState(null);
 
-    useEffect(() => {
-        if (!bussinessId) return;
+  useEffect(() => {
+    if (!businessId) return;
 
-        const fetchData = async () => {
-            setLoading(true);
-            setError(null);
-            try {
-                const response = await fetch(`http://localhost:8000/api/offers/${bussinessId}`);
-                if (!response.ok) {
-                    throw new Error("Failed to fetch offer data");
-                }
-                const json = await response.json();
-                setData(json);
-            } catch (e) {
-                setError(e.message);
-            } finally {
-                setLoading(false);
-            }
-        };
+    async function fetchBusiness() {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`http://localhost:8000/api/business/${businessId}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch business data");
+        }
+        const json = await response.json();
+        setData(json);
+      } catch (e) {
+        setError(e.message);
+      } finally {
+        setLoading(false);
+      }
+    }
 
-        fetchData();
-    }, [bussinessId]);
+    fetchBusiness();
+  }, [businessId]);
 
-    return { loading, error, data };
+  return { loading, error, data };
 }
+
+export { useOffer, useBusiness };

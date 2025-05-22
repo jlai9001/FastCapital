@@ -33,25 +33,20 @@ def get_businesses() -> list[BusinessOut]:
 
 
 def get_business(business_id: int) -> BusinessOut | None:
-    db = SessionLocal()
-    db_business = db.query(DBBusiness).filter(DBBusiness.id == business_id).first()
-
-    if db_business is None:
-        return None
-
-    business = BusinessOut(
-        id=db_business.id,
-        users_id=db_business.users_id,
-        name=db_business.name,
-        image_url=db_business.image_url,
-        address1=db_business.address1,
-        address2=db_business.address2,
-        city=db_business.city,
-        state=db_business.state,
-        postal_code=db_business.postal_code,
-    )
-    db.close()
-    return business
+    with SessionLocal() as db:
+        db_business = db.query(DBBusiness).filter(DBBusiness.id == business_id).first()
+        business = BusinessOut(
+            id=db_business.id,
+            users_id=db_business.users_id,
+            name=db_business.name,
+            image_url=db_business.image_url,
+            address1=db_business.address1,
+            address2=db_business.address2,
+            city=db_business.city,
+            state=db_business.state,
+            postal_code=db_business.postal_code,
+        )
+        return business
 
 
 def get_offers() -> list[OfferOut]:

@@ -19,8 +19,8 @@ function App() {
       <Routes>
         <Route path='/' element={<Homepage />}></Route>
         <Route path='/all-investments' element={<AllInvestments />}></Route>
-        <Route path='/investment-details/:id' element={<InvestmentDetails />}></Route>
-        <Route path='/purchase' element={<Purchase />}></Route>
+        <Route path='/investment-details/:offerid' element={<InvestmentDetails />}></Route>
+        <Route path='/purchase-offer/:offerid' element={<Purchase />}></Route>
         <Route path='/portfolio' element={<Portfolio />}></Route>
         <Route path='/login' element={<Login />}></Route>
         <Route path='/not-found' element={<NotFound />}></Route>

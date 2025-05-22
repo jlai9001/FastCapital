@@ -20,7 +20,7 @@ class BusinessCreate(BaseModel):
     users_id: int
     image_url: str
     address1: str
-    address2: str
+    address2: Optional[str] = None
     city: str
     state: str
     postal_code: str
@@ -28,14 +28,6 @@ class BusinessCreate(BaseModel):
 
 class BusinessOut(BusinessCreate):
     id: int
-    name: str
-    users_id: int
-    image_url: str
-    address1: str
-    address2: Optional[str] = None
-    city: str
-    state: str
-    postal_code: str
 
 
 class OfferCreate(BaseModel):
@@ -80,7 +72,7 @@ class FinancialsCreate(BaseModel):
     business_id: int
     date: date
     amount: float
-    tyoe: str
+    type: str
 
 
 class FinancialsOut(FinancialsCreate):
@@ -88,4 +80,4 @@ class FinancialsOut(FinancialsCreate):
     business_id: int
     date: date
     amount: float
-    tyoe: str
+    type: str
