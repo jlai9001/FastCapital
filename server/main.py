@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic_schemas import OfferOut, BusinessOut, PurchaseCreate
+from pydantic_schemas import OfferOut, BusinessOut, FinancialsOut, PurchaseCreate
 from pathlib import Path
 import db
 from rich import print  # debugging
@@ -51,6 +51,14 @@ async def get_business(business_id: int) -> BusinessOut:
 @app.get("/api/business")
 async def get_businesses() -> list[BusinessOut]:
     return db.get_businesses()
+
+
+@app.get("/api/financials/business/{business_id}", response_model=list[FinancialsOut])
+def get_financials_for_business(business_id: int):
+    financials = db.get_financials_by_business_id(business_id)
+    if not financials:
+        raise HTTPException(status_code=404, detail="Financials not found for business")
+    return financials
 
 
 @app.get("/{file_path}", response_class=FileResponse)

@@ -1,7 +1,13 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from db_models import DBBusiness, DBOffer, DBPurchase
-from pydantic_schemas import OfferOut, BusinessOut, PurchaseCreate, PurchaseOut
+from db_models import DBBusiness, DBOffer, DBFinancials, DBPurchase
+from pydantic_schemas import (
+    OfferOut,
+    BusinessOut,
+    FinancialsOut,
+    PurchaseCreate,
+    PurchaseOut,
+)
 
 
 DATABASE_URL = "postgresql+psycopg://postgres:postgres@localhost:5432/fastcapital"
@@ -89,6 +95,26 @@ def get_offer(offer_id: int) -> OfferOut | None:
     )
     db.close()
     return offer
+
+
+def get_financials_by_business_id(business_id: int) -> list[FinancialsOut]:
+    db = SessionLocal()
+    db_financials = (
+        db.query(DBFinancials).filter(DBFinancials.business_id == business_id).all()
+    )
+
+    financials_list = [
+        FinancialsOut(
+            id=record.id,
+            business_id=record.business_id,
+            date=record.date,
+            amount=record.amount,
+            type=record.type,
+        )
+        for record in db_financials
+    ]
+    db.close()
+    return financials_list
 
 
 def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut | None:
