@@ -1,7 +1,7 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, and_
 from sqlalchemy.orm import sessionmaker
-from db_models import DBBusiness, DBOffer
-from pydantic_schemas import OfferOut, BusinessOut
+from db_models import DBBusiness, DBOffer, DBPurchase, PurchaseStatus
+from pydantic_schemas import OfferOut, BusinessOut, PurchaseOut
 
 
 DATABASE_URL = "postgresql+psycopg://postgres:postgres@localhost:5432/fastcapital"
@@ -91,3 +91,26 @@ def get_offer(offer_id: int) -> OfferOut | None:
     )
     db.close()
     return offer
+
+
+def get_pending_purchases(users_id: int) -> list[PurchaseOut] | None:
+    db = SessionLocal()
+    db_purchases = db.query(DBPurchase).filter(
+            DBPurchase.users_id == users_id,
+            DBPurchase.status == PurchaseStatus.pending
+    ).order_by(DBPurchase.id).all()
+    purchases = []
+    for db_purchase in db_purchases:
+        purchases.append(
+            PurchaseOut(
+                id=db_purchase.id,
+                offer_id=db_purchase.offer_id,
+                users_id=db_purchase.users_id,
+                shares_purchased=db_purchase.shares_purchased,
+                cost_per_share=db_purchase.cost_per_share,
+                purchase_date=db_purchase.purchase_date,
+                status=db_purchase.status
+            )
+        )
+    db.close()
+    return purchases

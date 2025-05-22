@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic_schemas import OfferOut, BusinessOut
+from pydantic_schemas import OfferOut, BusinessOut, PurchaseOut
 from pathlib import Path
 import db
 
@@ -33,6 +33,7 @@ async def get_offer(offer_id: int) -> OfferOut:
         raise HTTPException(status_code=404, detail="Offer not found")
     return offer
 
+
 @app.get("/api/offer")
 async def get_offers() -> list[OfferOut]:
     return db.get_offers()
@@ -45,9 +46,18 @@ async def get_business(business_id: int) -> BusinessOut:
         raise HTTPException(status_code=404, detail="Business not found")
     return business
 
+
 @app.get("/api/business")
 async def get_businesses() -> list[BusinessOut]:
     return db.get_businesses()
+
+
+@app.get("/api/purchases/{user_id}")
+async def get_user_pending_purchases(user_id: int) -> list[PurchaseOut]:
+    purchases = db.get_pending_purchases(user_id)
+    if not purchases:
+        raise HTTPException(status_code=404, detail="Purchases not found")
+    return purchases
 
 
 @app.get("/{file_path}", response_class=FileResponse)
