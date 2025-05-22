@@ -1,0 +1,20 @@
+.homepage_hero{
+  flex-direction: row;
+  padding-top: 0.3%;
+  padding-bottom: 0.5%;
+  background: linear-gradient(to right, #5bb8ff, #f5f5ff);
+  display: flex;
+  align-items: center;
+
+}
+
+.hero_text{
+  font-size: 5.5vh;
+  padding-left: 15%;
+  text-shadow: 0 0 10px #3f3f3f;
+  font-weight: bolder;
+}
+
+.hero-logo{
+  height:8vh;
+}
