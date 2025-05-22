@@ -9,8 +9,6 @@ import NotFound from './pages/not-found.jsx'
 import './App.css'
 import Nav from './components/Nav.jsx'
 
-////////////////////////////////////////////////////////////////// delete this
-import PaymentModal from './pages/payment_modal.jsx'
 
 function App() {
 
@@ -27,8 +25,6 @@ function App() {
         <Route path='/login' element={<Login />}></Route>
         <Route path='/not-found' element={<NotFound />}></Route>
       </Routes >
-      {/* delete this */}
-      <PaymentModal />
     </>
   )
 }
