@@ -3,9 +3,10 @@
     width:1000px;
 
     border-radius: 15px;
-    background: linear-gradient(to bottom, #a0d6ff, #9a9af6);
-}
+    background: linear-gradient(to bottom, #ebf6ff, #d8d7d7);
 
+    transform: translateY(-60px);
+}
 
 .payment_title{
     font-size: 35px;
@@ -13,17 +14,94 @@
     text-shadow: 0 0 10px #3f3f3f;
 }
 
-
 .payment_bar{
-    background: linear-gradient(to right, #64a0b4, #60909b);
-
+    background: linear-gradient(to right, #8e8e8e, #cbcbcb);
     height: 60px;
     width:1000px;
-
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
-
-
     align-items: center;
 
+}
+
+.buy_button{
+    width:150px;
+    height: 40px;
+    background-color: rgb(0, 173, 52);
+    font-weight: bold;
+    position:absolute;
+    transform: translate(330px,390px);
+    align-content: center;
+    border-radius: 15px;
+}
+
+.buy_button:hover{
+    background-color: rgb(223, 255, 45);
+    color: black;
+    border: none;
+}
+
+
+.cancel_button{
+    width:150px;
+    height: 40px;
+    background-color: rgb(92, 92, 92);
+    font-weight: bold;
+    position:absolute;
+    transform: translate(170px,390px);
+    align-content: center;
+    border-radius: 15px;
+}
+
+.cancel_button:hover{
+    background-color: rgb(223, 255, 45);
+    color: black;
+    border: none;
+}
+
+
+.exit_button{
+    width:150px;
+    height: 40px;
+    background-color: rgb(92, 92, 92);
+    font-weight: bold;
+    position:absolute;
+    transform: translate(320px,390px);
+    align-content: center;
+    border-radius: 15px;
+}
+
+.exit_button:hover{
+    background-color: rgb(223, 255, 45);
+    color: black;
+    border: none;
+}
+
+
+
+.field_title{
+    color:black;
+    font-size: 30px;
+    font-weight: bold;
+    transform: translate(-610px,70px);
+    text-align: right;
+}
+
+.finance_field{
+    font-size: 25px;
+    background-color: #cbcbcb;
+    border-width: 0;
+    color: black;
+    transform: translate(60px,33px);
+}
+
+.fields_container{
+    transform: translateX(50px);
+}
+
+.completion_message{
+    color:black;
+    font-size:60px;
+    font-weight: bolder;
+    transform: translate(0px,120px);
 }
