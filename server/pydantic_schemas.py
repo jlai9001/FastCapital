@@ -41,13 +41,6 @@ class OfferCreate(BaseModel):
 
 class OfferOut(OfferCreate):
     id: int
-    business_id: int
-    shares_available: int
-    price_per_share: float
-    min_investment: int
-    start_date: date
-    expiration_date: date
-    featured: bool
 
 
 class PurchaseCreate(BaseModel):
@@ -60,11 +53,6 @@ class PurchaseCreate(BaseModel):
 
 class PurchaseOut(PurchaseCreate):
     id: int
-    offer_id: int
-    users_id: int
-    shares_purchased: int
-    cost_per_share: float
-    purchase_date: datetime
     status: str
 
 
@@ -77,7 +65,3 @@ class FinancialsCreate(BaseModel):
 
 class FinancialsOut(FinancialsCreate):
     id: int
-    business_id: int
-    date: date
-    amount: float
-    type: str

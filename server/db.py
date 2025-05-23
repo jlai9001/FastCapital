@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from db_models import DBBusiness, DBOffer, DBFinancials, DBPurchase
+from db_models import DBBusiness, DBOffer, DBFinancials, DBPurchase, PurchaseStatusEnum
 from pydantic_schemas import (
     OfferOut,
     BusinessOut,
@@ -119,19 +119,29 @@ def get_financials_by_business_id(business_id: int) -> list[FinancialsOut]:
 
 def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut | None:
     with SessionLocal() as db:
-        db_purchase = DBPurchase(**purchase_request.dict())
-        print(db_purchase)
+        db_offer = (
+            db.query(DBOffer).filter(DBOffer.id == purchase_request.offer_id).first()
+        )
+        if not db_offer:
+            raise ValueError("Offer not found")
+        if db_offer.shares_available < purchase_request.shares_purchased:
+            raise Exception("NotEnoughSharesException")
+
+        # Deduct shares
+        db_offer.shares_available -= purchase_request.shares_purchased
+        db_purchase = DBPurchase(
+            **purchase_request.dict(), status=PurchaseStatusEnum.pending
+        )
         db.add(db_purchase)
         db.commit()
         db.refresh(db_purchase)
-        purchase = PurchaseOut(
+
+        return PurchaseOut(
             id=db_purchase.id,
             offer_id=db_purchase.offer_id,
             users_id=db_purchase.users_id,
             shares_purchased=db_purchase.shares_purchased,
             cost_per_share=db_purchase.cost_per_share,
             purchase_date=db_purchase.purchase_date,
-            status=db_purchase.status.value,  # DB status is an enum object, so this should return one of three values?
+            status=db_purchase.status.value,
         )
-        print(purchase)
-        return purchase

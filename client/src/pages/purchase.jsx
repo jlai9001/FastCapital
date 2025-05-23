@@ -7,6 +7,7 @@ import PaymentModal from "./payment_modal"
 export default function Purchase(){
 	const nav = useNavigate()
 	const offerId = 2
+	const userId = 3
     const offerData = useOffer(offerId)
 	const offer = offerData.data
     const businessData = useBusiness(offer ? offer.business_id : null)
@@ -23,16 +24,20 @@ export default function Purchase(){
 	//checking data fetch
 
 	function handleShareAmount(e) {
-		const value = parseInt(e.target.value, 10);
+		let value = parseInt(e.target.value, 10);
 		if (value > offer.shares_available){
 			value = offer.shares_available
 		}
 		else if (value < 0){value = 0}
+		const min = offer.min_investment;
+		if (value % min !== 0) {
+		value = Math.floor(value / min) * min} // Round down to nearest valid multiple (for manual input)
 		if (!isNaN(value)) {
 			setShareAmount(value);
 		} else {
 			setShareAmount(0);
 		}
+
 	} //input desired share amount
 
 	function modalPop(){
@@ -48,7 +53,7 @@ export default function Purchase(){
   } //hides modal
 
   function handleCancel(){
-	nav=(-1)
+	nav(-1)
   } //nav back
 
   if (offerData.loading) return <p>Loading offer...</p>;
@@ -66,14 +71,14 @@ export default function Purchase(){
 		<div>
 			<p> Price per Share: <span/> {offer.price_per_share} </p>
 			<p> Shares Available: <span/> {offer.shares_available}</p>
-			<p> Number of shares: <input type="number" max={offer.shares_available} min="0" value={shareAmount}
+			<p> Number of shares: <input type="number" max={offer.shares_available} min="0" step={offer.min_investment} value={shareAmount}
 				onChange={handleShareAmount} /> </p>
-			<p> Total Price: {totalPrice} </p>
+			<p> Total Price: ${totalPrice.toFixed(2)} </p>
 		</div>
 		<div>
 			<button onClick={handleCancel}>Cancel</button>
-			<button onClick={modalPop}>Buy Now</button>
-			{showModal && (<PaymentModal onClose={handleModalClose} offer={offer}></PaymentModal>)}
+			<button onClick={modalPop} disabled={shareAmount <= 0}>Buy Now</button>
+			{showModal && (<PaymentModal onClose={handleModalClose} offer={offer} userId={userId} shareAmount={shareAmount}></PaymentModal>)}
 		</div>
         </>
     )

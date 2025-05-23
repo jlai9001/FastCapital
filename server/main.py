@@ -73,10 +73,11 @@ async def post_purchase(purchase_request: PurchaseCreate):
     try:
         purchase = db.add_purchase(purchase_request)
         return purchase
-    # except NotEnoughSharesException: FOR FUTURE HANDLING
-    #   raise HTTPException(status_code=400, detail="Not enough shares available.")
     except Exception as e:
-        print(f"Unexpected error: {e}")
-        raise HTTPException(
-            status_code=500, detail="Something went wrong on the server."
-        )
+        if str(e) == "NotEnoughSharesException":
+            raise HTTPException(status_code=400, detail="Not enough shares available.")
+        else:
+            print(f"Unexpected error: {e}")
+            raise HTTPException(
+                status_code=500, detail="Something went wrong on the server."
+            )
