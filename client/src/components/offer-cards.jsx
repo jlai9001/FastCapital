@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getOffers, getBusinesses } from "./api";
+import { getOffers, getBusinesses } from "../hooks/getData";
+import "./offer-cards.css";
 
 
 export default function OfferCards() {
     const [error, setError] = useState(null);
-    const [offers, setOffers] = useState(null);
-    const [businesses, setBusinesses] = useState(null);
+    const [offers, setOffers] = useState([]);
+    const [businesses, setBusinesses] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -48,11 +49,13 @@ return (
                 <li key={offer.id} className="offer-card">
                     <h3>Business Name: {business.name}</h3>
                     <h3>Location: {business.city}, {business.state}</h3>
+                    <div className="details">
                     <h3>Website: {business.website}</h3>
-                    <h3>Shares Available: {shares_available}</h3>
+                    <h3>Shares Available: {offer.shares_available}</h3>
                     <h3>Price per share: {offer.price_per_share}</h3>
                     <h3>Minimum shares for investment: {offer.min_investment}</h3>
                     <h3>Offer expires on: {offer.expiration_date}</h3>
+                    </div>
                     <div className="button-container">
                         <button onClick={() => handleViewDetailsClick(offer.id)}
                          className="view-details-button">View Details</button>

@@ -23,7 +23,7 @@ export default function Purchase(){
 	//checking data fetch
 
 	function handleShareAmount(e) {
-		const value = parseInt(e.target.value, 10);
+		let value = parseInt(e.target.value, 10);
 		if (value > offer.shares_available){
 			value = offer.shares_available
 		}
@@ -48,7 +48,7 @@ export default function Purchase(){
   } //hides modal
 
   function handleCancel(){
-	nav=(-1)
+	nav(-1);
   } //nav back
 
   if (offerData.loading) return <p>Loading offer...</p>;
