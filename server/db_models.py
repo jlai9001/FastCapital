@@ -1,9 +1,26 @@
-from sqlalchemy import Enum, Column, Integer, String, Float, ForeignKey, DateTime, Boolean
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    Float,
+    ForeignKey,
+    DateTime,
+    Boolean,
+    Enum,
+)
 from sqlalchemy.orm import declarative_base
 import datetime
-from pydantic_schemas import PurchaseStatus
+import enum
+
+=======
 
 Base = declarative_base()
+
+
+class PurchaseStatusEnum(str, enum.Enum):
+    pending = "pending"
+    completed = "completed"
+    expired = "expired"
 
 
 class DBUser(Base):
@@ -41,10 +58,17 @@ class DBOffer(Base):
     featured = Column(Boolean, default=False)
 
 
+class PurchaseStatus(str, enum.Enum):
+    pending = "pending"
+    completed = "completed"
+    expired = "expired"
+
+
 class DBPurchase(Base):
     __tablename__ = "purchase"
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     offer_id = Column(Integer, ForeignKey("offer.id"))
+    users_id = Column(Integer, ForeignKey("users.id"))
     users_id = Column(Integer, ForeignKey("users.id"))
     shares_purchased = Column(Integer)
     cost_per_share = Column(Float)
@@ -52,10 +76,10 @@ class DBPurchase(Base):
         DateTime, default=datetime.datetime.now(datetime.timezone.utc)
     )
     status = Column(
-        Enum(PurchaseStatus, name="purchase_status"),
-        default=PurchaseStatus.pending,
-        nullable=False
-        )  # pending, completed, cancelled
+        Enum(PurchaseStatusEnum, name="purchase_status", create_type=False),
+        default=PurchaseStatusEnum.pending,
+        nullable=False,
+    )
 
 
 class DBFinancials(Base):
@@ -64,4 +88,6 @@ class DBFinancials(Base):
     business_id = Column(Integer, ForeignKey("business.id"))
     date = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc))
     amount = Column(Float)
-    type = Column(String)  # revenue, expense, asset, liability
+    type = Column(
+        Enum()
+    )  # revenue, expense, asset, liability
