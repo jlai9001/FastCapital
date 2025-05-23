@@ -1,0 +1,39 @@
+.investment-dashboard {
+    display: flex;
+    gap: 40px;
+    padding: 20px;
+    align-items: flex-start;
+  }
+
+  .investment-chart {
+    flex: 1;
+    min-width: 300px;
+  }
+
+  .investment-grid-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 2;
+  }
+
+  .investment-card {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 16px;
+  }
+
+  .investment-header {
+    margin-bottom: 8px;
+  }
+
+  .investment-title {
+    font-size: 1.2rem;
+    margin: 0;
+  }
+
+  .investment-details p {
+    margin: 4px 0;
+    font-size: 0.95rem;
+  }
