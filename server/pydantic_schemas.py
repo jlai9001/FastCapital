@@ -85,6 +85,7 @@ class EnrichedPurchaseOut(BaseModel):
     business_name: str
     business_city: str
     business_state: str
+    business_image_url: str
 
 
 class FinancialType(str, enum.Enum):
