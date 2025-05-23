@@ -1,9 +1,12 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic_schemas import OfferOut, BusinessOut, FinancialsOut, PurchaseCreate
+from pydantic_schemas import OfferOut, BusinessOut, FinancialsOut, PurchaseCreate, EnrichedPurchaseOut
 from pathlib import Path
+from typing import List
 import db
+from db import get_purchases_by_status
+from db_models import PurchaseStatus
 from rich import print  # debugging
 
 
@@ -51,6 +54,17 @@ async def get_business(business_id: int) -> BusinessOut:
 @app.get("/api/business")
 async def get_businesses() -> list[BusinessOut]:
     return db.get_businesses()
+
+
+@app.get("/api/purchases/{user_id}", response_model=List[EnrichedPurchaseOut])
+async def get_user_purchases(
+    user_id: int,
+    status: PurchaseStatus = Query(PurchaseStatus.pending)  # default to 'pending'
+):
+    purchases = get_purchases_by_status(user_id, status)
+    if not purchases:
+        raise HTTPException(status_code=404, detail=f"No {status} purchases found")
+    return purchases
 
 
 @app.get("/api/financials/{business_id}", response_model=list[FinancialsOut])

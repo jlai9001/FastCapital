@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, and_
 from sqlalchemy.orm import sessionmaker
 from db_models import DBBusiness, DBOffer, DBFinancials, DBPurchase, PurchaseStatusEnum
 from pydantic_schemas import (
@@ -7,6 +7,7 @@ from pydantic_schemas import (
     FinancialsOut,
     PurchaseCreate,
     PurchaseOut,
+    EnrichedPurchaseOut
 )
 
 
@@ -55,6 +56,7 @@ def get_business(business_id: int) -> BusinessOut | None:
         return business
 
 
+
 def get_offers() -> list[OfferOut]:
     db = SessionLocal()
     db_offers = db.query(DBOffer).order_by(DBOffer.id).all()
@@ -97,6 +99,37 @@ def get_offer(offer_id: int) -> OfferOut | None:
     return offer
 
 
+def get_purchases_by_status(users_id: int, status: PurchaseStatus) -> list[EnrichedPurchaseOut]:
+    db = SessionLocal()
+    try:
+        results = (
+            db.query(DBPurchase, DBBusiness)
+            .join(DBOffer, DBPurchase.offer_id == DBOffer.id)
+            .join(DBBusiness, DBOffer.business_id == DBBusiness.id)
+            .filter(
+                DBPurchase.users_id == users_id,
+                DBPurchase.status == status
+            )
+            .order_by(DBPurchase.id)
+            .all()
+        )
+
+        return [
+            EnrichedPurchaseOut(
+                id=purchase.id,
+                offer_id=purchase.offer_id,
+                shares_purchased=purchase.shares_purchased,
+                cost_per_share=purchase.cost_per_share,
+                purchase_date=purchase.purchase_date,
+                status=purchase.status,
+                business_name=business.name,
+                business_city=business.city,
+                business_state=business.state
+            )
+            for purchase, business in results
+        ]
+    finally:
+        db.close()
 def get_financials_by_business_id(business_id: int) -> list[FinancialsOut]:
     db = SessionLocal()
     db_financials = (

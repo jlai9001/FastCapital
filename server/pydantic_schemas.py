@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from datetime import date, datetime
 from typing import Optional
+import enum
 
 
 class UserCreate(BaseModel):
@@ -51,16 +52,21 @@ class PurchaseCreate(BaseModel):
     purchase_date: datetime
 
 
+class PurchaseStatus(str, enum.Enum):
+    pending = "pending"
+    completed = "completed"
+    expired = "expired"
+
+
 class PurchaseOut(PurchaseCreate):
     id: int
-    status: str
 
 
 class FinancialsCreate(BaseModel):
     business_id: int
     date: date
     amount: float
-    type: str
+    type: FinancialType
 
 
 class FinancialsOut(FinancialsCreate):
