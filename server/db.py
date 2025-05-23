@@ -1,7 +1,14 @@
 from sqlalchemy import create_engine, and_
 from sqlalchemy.orm import sessionmaker
-from db_models import DBBusiness, DBOffer, DBPurchase, PurchaseStatus
-from pydantic_schemas import OfferOut, BusinessOut, PurchaseOut, EnrichedPurchaseOut
+from db_models import DBBusiness, DBOffer, DBFinancials, DBPurchase
+from pydantic_schemas import (
+    OfferOut,
+    BusinessOut,
+    FinancialsOut,
+    PurchaseCreate,
+    PurchaseOut,
+    EnrichedPurchaseOut
+)
 
 
 DATABASE_URL = "postgresql+psycopg://postgres:postgres@localhost:5432/fastcapital"
@@ -33,25 +40,21 @@ def get_businesses() -> list[BusinessOut]:
 
 
 def get_business(business_id: int) -> BusinessOut | None:
-    db = SessionLocal()
-    db_business = db.query(DBBusiness).filter(DBBusiness.id == business_id).first()
+    with SessionLocal() as db:
+        db_business = db.query(DBBusiness).filter(DBBusiness.id == business_id).first()
+        business = BusinessOut(
+            id=db_business.id,
+            users_id=db_business.users_id,
+            name=db_business.name,
+            image_url=db_business.image_url,
+            address1=db_business.address1,
+            address2=db_business.address2,
+            city=db_business.city,
+            state=db_business.state,
+            postal_code=db_business.postal_code,
+        )
+        return business
 
-    if db_business is None:
-        return None
-
-    business = BusinessOut(
-        id=db_business.id,
-        users_id=db_business.users_id,
-        name=db_business.name,
-        image_url=db_business.image_url,
-        address1=db_business.address1,
-        address2=db_business.address2,
-        city=db_business.city,
-        state=db_business.state,
-        postal_code=db_business.postal_code,
-    )
-    db.close()
-    return business
 
 
 def get_offers() -> list[OfferOut]:
@@ -127,3 +130,41 @@ def get_purchases_by_status(users_id: int, status: PurchaseStatus) -> list[Enric
         ]
     finally:
         db.close()
+def get_financials_by_business_id(business_id: int) -> list[FinancialsOut]:
+    db = SessionLocal()
+    db_financials = (
+        db.query(DBFinancials).filter(DBFinancials.business_id == business_id).all()
+    )
+
+    financials_list = [
+        FinancialsOut(
+            id=record.id,
+            business_id=record.business_id,
+            date=record.date,
+            amount=record.amount,
+            type=record.type,
+        )
+        for record in db_financials
+    ]
+    db.close()
+    return financials_list
+
+
+def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut | None:
+    with SessionLocal() as db:
+        db_purchase = DBPurchase(**purchase_request.dict())
+        print(db_purchase)
+        db.add(db_purchase)
+        db.commit()
+        db.refresh(db_purchase)
+        purchase = PurchaseOut(
+            id=db_purchase.id,
+            offer_id=db_purchase.offer_id,
+            users_id=db_purchase.users_id,
+            shares_purchased=db_purchase.shares_purchased,
+            cost_per_share=db_purchase.cost_per_share,
+            purchase_date=db_purchase.purchase_date,
+            status=db_purchase.status.value,  # DB status is an enum object, so this should return one of three values?
+        )
+        print(purchase)
+        return purchase

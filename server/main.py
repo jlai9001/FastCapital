@@ -1,12 +1,13 @@
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic_schemas import OfferOut, BusinessOut, EnrichedPurchaseOut
+from pydantic_schemas import OfferOut, BusinessOut, FinancialsOut, PurchaseCreate, EnrichedPurchaseOut
 from pathlib import Path
 from typing import List
 import db
 from db import get_purchases_by_status
 from db_models import PurchaseStatus
+from rich import print  # debugging
 
 
 app = FastAPI()
@@ -66,8 +67,30 @@ async def get_user_purchases(
     return purchases
 
 
+@app.get("/api/financials/{business_id}", response_model=list[FinancialsOut])
+def get_financials_for_business(business_id: int):
+    financials = db.get_financials_by_business_id(business_id)
+    if not financials:
+        raise HTTPException(status_code=404, detail="Financials not found for business")
+    return financials
+
+
 @app.get("/{file_path}", response_class=FileResponse)
 def get_static_file(file_path: str):
     if Path("static/" + file_path).is_file():
         return "static/" + file_path
     raise HTTPException(status_code=404, detail="Item not found")
+
+
+@app.post("/api/purchases", status_code=201)  # status code 201 indicates success
+async def post_purchase(purchase_request: PurchaseCreate):
+    try:
+        purchase = db.add_purchase(purchase_request)
+        return purchase
+    # except NotEnoughSharesException: FOR FUTURE HANDLING
+    #   raise HTTPException(status_code=400, detail="Not enough shares available.")
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        raise HTTPException(
+            status_code=500, detail="Something went wrong on the server."
+        )

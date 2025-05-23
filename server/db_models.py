@@ -12,8 +12,6 @@ from sqlalchemy.orm import declarative_base
 import datetime
 import enum
 
-=======
-
 Base = declarative_base()
 
 
@@ -68,7 +66,6 @@ class DBPurchase(Base):
     __tablename__ = "purchase"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     offer_id = Column(Integer, ForeignKey("offer.id"))
-    users_id = Column(Integer, ForeignKey("users.id"))
     users_id = Column(Integer, ForeignKey("users.id"))
     shares_purchased = Column(Integer)
     cost_per_share = Column(Float)
