@@ -63,3 +63,16 @@ function useBusiness(businessId) {
 }
 
 export { useOffer, useBusiness };
+
+
+export async function getOffers() {
+  const response = await fetch("http://localhost:8000/api/offer");
+  if (!response.ok) throw new Error("Failed to fetch offers");
+  return await response.json();
+}
+
+export async function getBusinesses() {
+  const response = await fetch("http://localhost:8000/api/business");
+  if (!response.ok) throw new Error("Failed to fetch businesses");
+  return await response.json();
+}
