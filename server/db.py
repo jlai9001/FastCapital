@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, and_
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from db_models import DBBusiness, DBOffer, DBFinancials, DBPurchase
 from pydantic_schemas import (
@@ -7,7 +7,8 @@ from pydantic_schemas import (
     FinancialsOut,
     PurchaseCreate,
     PurchaseOut,
-    EnrichedPurchaseOut
+    EnrichedPurchaseOut,
+    PurchaseStatus
 )
 
 
@@ -54,7 +55,6 @@ def get_business(business_id: int) -> BusinessOut | None:
             postal_code=db_business.postal_code,
         )
         return business
-
 
 
 def get_offers() -> list[OfferOut]:
@@ -130,6 +130,8 @@ def get_purchases_by_status(users_id: int, status: PurchaseStatus) -> list[Enric
         ]
     finally:
         db.close()
+
+
 def get_financials_by_business_id(business_id: int) -> list[FinancialsOut]:
     db = SessionLocal()
     db_financials = (

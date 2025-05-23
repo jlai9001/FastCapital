@@ -29,8 +29,9 @@ export default function PendingInvestmentsCard({ purchase }){
                 <span className='pending-investment location'>
                     {details.location || "Los Angeles, CA"}
                 </span>
-                <span className='pending-investment' id='percent-complete'>
+                <span className='pending-investment percent-complete'>
                     {details.percentComplete || "10% of requested shares sold"}
+                    {/* TODO: need to pull this from the offer api by calculating the number of shares sold / total */}
                 </span>
             </div>
 
