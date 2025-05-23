@@ -15,6 +15,7 @@ function App() {
 
   return (
     <>
+
       <Nav />
       <Routes>
         <Route path='/' element={<Homepage />}></Route>
