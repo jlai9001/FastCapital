@@ -62,6 +62,13 @@ class PurchaseOut(PurchaseCreate):
     id: int
 
 
+class FinancialType(str, enum.Enum):
+    income = "income"
+    expense = "expense"
+    asset = "asset"
+    liability = "liability"
+
+
 class FinancialsCreate(BaseModel):
     business_id: int
     date: date
