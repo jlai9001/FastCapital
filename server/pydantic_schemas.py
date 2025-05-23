@@ -60,6 +60,20 @@ class PurchaseStatus(str, enum.Enum):
 
 class PurchaseOut(PurchaseCreate):
     id: int
+    status: PurchaseStatus
+
+
+class EnrichedPurchaseOut(BaseModel):
+    id: int
+    offer_id: int
+    shares_purchased: int
+    cost_per_share: float
+    purchase_date: datetime
+    status: PurchaseStatus
+    business_name: str
+    business_city: str
+    business_state: str
+    business_image_url: str
 
 
 class FinancialType(str, enum.Enum):

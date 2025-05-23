@@ -124,12 +124,14 @@ def get_purchases_by_status(users_id: int, status: PurchaseStatus) -> list[Enric
                 status=purchase.status,
                 business_name=business.name,
                 business_city=business.city,
-                business_state=business.state
+                business_state=business.state,
+                business_image_url=business.image_url
             )
             for purchase, business in results
         ]
     finally:
         db.close()
+
 def get_financials_by_business_id(business_id: int) -> list[FinancialsOut]:
     db = SessionLocal()
     db_financials = (

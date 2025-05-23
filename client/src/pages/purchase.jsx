@@ -53,7 +53,7 @@ export default function Purchase(){
   } //hides modal
 
   function handleCancel(){
-	nav(-1)
+	nav=(-1)
   } //nav back
 
   if (offerData.loading) return <p>Loading offer...</p>;
