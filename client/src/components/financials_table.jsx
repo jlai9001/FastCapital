@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from "react";
 import { BarChart } from '@mui/x-charts/BarChart';
 import axios from "axios";
-
+import "./financials_table.css";
 
 function FinancialDashboard({ businessId }) {
     const [tab, setTab] = useState('pl');
@@ -11,12 +11,20 @@ function FinancialDashboard({ businessId }) {
 
     useEffect(() => {
         axios
-            .get(`api/financials/${businessId}`)
+            .get(`http://localhost:8000/api/financials/${businessId}`)
             .then((res) => {
                 const data = res.data;
+
+                if (!Array.isArray(data)) {
+                    console.error("Expected array but got:", data);
+                    setFinancials([]);
+                    setYears([]);
+                    setSelectedYear(null);
+                    return;
+                }
+
                 setFinancials(data);
 
-                // Extract years from the financials
                 const yearSet = new Set(data.map((f) => new Date(f.date).getFullYear()));
                 const sortedYears = Array.from(yearSet).sort((a, b) => b - a);
                 setYears(sortedYears);
@@ -91,15 +99,15 @@ function FinancialDashboard({ businessId }) {
     };
 
     return (
-        <div>
+        <div className="financial-dashboard">
             {/* Tabs */}
-            <div>
+            <div className="financial-dashboard-tabs">
                 <button onClick={() => setTab('pl')}>Profit & Loss</button>
                 <button onClick={() => setTab('bs')}>Balance Sheet</button>
             </div>
 
             {/* Dropdown */}
-            <div>
+            <div className="financial-dashboard-dropdown">
                 <label>Select Year: </label>
                 <select value={selectedYear || ''} onChange={(e) => setSelectedYear(Number(e.target.value))}>
                     {years.map((year) => (
