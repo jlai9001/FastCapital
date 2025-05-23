@@ -49,7 +49,7 @@ async def get_business(business_id: int) -> BusinessOut:
 async def get_businesses() -> list[BusinessOut]:
     return db.get_businesses()
 
-@app.get("/api/financials/business/{business_id}", response_model=list[FinancialsOut])
+@app.get("/api/financials/{business_id}", response_model=list[FinancialsOut])
 def get_financials_for_business(business_id: int):
     financials = db.get_financials_by_business_id(business_id)
     if not financials:
