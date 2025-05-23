@@ -1,13 +1,14 @@
 from sqlalchemy import create_engine, and_
 from sqlalchemy.orm import sessionmaker
 from db_models import DBBusiness, DBOffer, DBPurchase, PurchaseStatus
-from pydantic_schemas import OfferOut, BusinessOut, PurchaseOut
+from pydantic_schemas import OfferOut, BusinessOut, PurchaseOut, EnrichedPurchaseOut
 
 
 DATABASE_URL = "postgresql+psycopg://postgres:postgres@localhost:5432/fastcapital"
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
+
 
 def get_businesses() -> list[BusinessOut]:
     db = SessionLocal()
@@ -52,6 +53,7 @@ def get_business(business_id: int) -> BusinessOut | None:
     db.close()
     return business
 
+
 def get_offers() -> list[OfferOut]:
     db = SessionLocal()
     db_offers = db.query(DBOffer).order_by(DBOffer.id).all()
@@ -71,6 +73,7 @@ def get_offers() -> list[OfferOut]:
         )
     db.close()
     return offers
+
 
 def get_offer(offer_id: int) -> OfferOut | None:
     db = SessionLocal()
@@ -93,24 +96,34 @@ def get_offer(offer_id: int) -> OfferOut | None:
     return offer
 
 
-def get_pending_purchases(users_id: int) -> list[PurchaseOut] | None:
+def get_purchases_by_status(users_id: int, status: PurchaseStatus) -> list[EnrichedPurchaseOut]:
     db = SessionLocal()
-    db_purchases = db.query(DBPurchase).filter(
-            DBPurchase.users_id == users_id,
-            DBPurchase.status == PurchaseStatus.pending
-    ).order_by(DBPurchase.id).all()
-    purchases = []
-    for db_purchase in db_purchases:
-        purchases.append(
-            PurchaseOut(
-                id=db_purchase.id,
-                offer_id=db_purchase.offer_id,
-                users_id=db_purchase.users_id,
-                shares_purchased=db_purchase.shares_purchased,
-                cost_per_share=db_purchase.cost_per_share,
-                purchase_date=db_purchase.purchase_date,
-                status=db_purchase.status
+    try:
+        results = (
+            db.query(DBPurchase, DBBusiness)
+            .join(DBOffer, DBPurchase.offer_id == DBOffer.id)
+            .join(DBBusiness, DBOffer.business_id == DBBusiness.id)
+            .filter(
+                DBPurchase.users_id == users_id,
+                DBPurchase.status == status
             )
+            .order_by(DBPurchase.id)
+            .all()
         )
-    db.close()
-    return purchases
+
+        return [
+            EnrichedPurchaseOut(
+                id=purchase.id,
+                offer_id=purchase.offer_id,
+                shares_purchased=purchase.shares_purchased,
+                cost_per_share=purchase.cost_per_share,
+                purchase_date=purchase.purchase_date,
+                status=purchase.status,
+                business_name=business.name,
+                business_city=business.city,
+                business_state=business.state
+            )
+            for purchase, business in results
+        ]
+    finally:
+        db.close()

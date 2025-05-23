@@ -1,7 +1,7 @@
 from sqlalchemy import Enum, Column, Integer, String, Float, ForeignKey, DateTime, Boolean
 from sqlalchemy.orm import declarative_base
 import datetime
-import enum
+from pydantic_schemas import PurchaseStatus
 
 Base = declarative_base()
 
@@ -39,12 +39,6 @@ class DBOffer(Base):
         DateTime, default=datetime.datetime.now(datetime.timezone.utc)
     )
     featured = Column(Boolean, default=False)
-
-
-class PurchaseStatus(str, enum.Enum):
-    pending = "pending"
-    completed = "completed"
-    expired = "expired"
 
 
 class DBPurchase(Base):

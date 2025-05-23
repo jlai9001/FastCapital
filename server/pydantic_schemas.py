@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from datetime import date, datetime
 from typing import Optional
+import enum
 
 
 class UserCreate(BaseModel):
@@ -66,6 +67,12 @@ class PurchaseCreate(BaseModel):
     purchase_date: datetime
 
 
+class PurchaseStatus(str, enum.Enum):
+    pending = "pending"
+    completed = "completed"
+    expired = "expired"
+
+
 class PurchaseOut(PurchaseCreate):
     id: int
     offer_id: int
@@ -73,14 +80,33 @@ class PurchaseOut(PurchaseCreate):
     shares_purchased: int
     cost_per_share: float
     purchase_date: datetime
-    status: str
+    status: PurchaseStatus
+
+
+class EnrichedPurchaseOut(BaseModel):
+    id: int
+    offer_id: int
+    shares_purchased: int
+    cost_per_share: float
+    purchase_date: datetime
+    status: PurchaseStatus
+    business_name: str
+    business_city: str
+    business_state: str
+
+
+class FinancialType(str, enum.Enum):
+    income = 'income'
+    expense = 'expense'
+    asset = 'asset'
+    liability = 'liability'
 
 
 class FinancialsCreate(BaseModel):
     business_id: int
     date: date
     amount: float
-    tyoe: str
+    type: FinancialType
 
 
 class FinancialsOut(FinancialsCreate):
@@ -88,4 +114,4 @@ class FinancialsOut(FinancialsCreate):
     business_id: int
     date: date
     amount: float
-    tyoe: str
+    type: FinancialType
