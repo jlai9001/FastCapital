@@ -1,7 +1,30 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import PendingInvestmentsCard from '../components/pending-investments-card'
 
 export default function Portfolio(){
+  const [pendingPurchases, setPendingPurchases] = useState([]);
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("");
+
+  const user_id = 2
+
+  useEffect (() => {
+    const fetchPastPurchases = async () => {
+      try {
+        const result = await fetch(`http://localhost:8000/api/purchases/${user_id}?status=pending`)
+        if(!result.ok) throw new Error("Failed to fetch past purchases");
+
+        const data = await result.json();
+        setPendingPurchases(data)
+      } catch (error) {
+        setError("Could not load past purchases.");
+      } finally {
+        setLoading(false)
+      }
+    };
+    fetchPastPurchases();
+  }, []);
+
     return(
         <>
             <section className="your-investments">
@@ -10,35 +33,22 @@ export default function Portfolio(){
             </section>
             <section className="pending-investments">
                 <h2>Pending Investments</h2>
-                <PendingInvestmentsCard
-          purchase={{
-            id: 101,
-            name: "Bob’s Coffee",
-            location: "Los Angeles, CA",
-            percentComplete: "10% of requested shares sold",
-            sharesBought: "100 Shares",
-          }}
-        />
+                {loading && <p>Loading pending investments...</p>}
+                {error && <p>{error}</p>}
 
-        <PendingInvestmentsCard
-          purchase={{
-            id: 102,
-            name: "Sunny’s Books",
-            location: "Seattle, WA",
-            percentComplete: "50% of requested shares sold",
-            sharesBought: "250 Shares",
-          }}
-        />
-
-        <PendingInvestmentsCard
-          purchase={{
-            id: 103,
-            name: "Green Thumb Nursery",
-            location: "Portland, OR",
-            percentComplete: "75% of requested shares sold",
-            sharesBought: "300 Shares",
-          }}
-        />
+                {pendingPurchases.map((purchase) => (
+                  <PendingInvestmentsCard
+                  key={purchase.id}
+                  purchase={{
+                    id: purchase.id,
+                    name: purchase.name,
+                    location: `${purchase.business_city}, ${purchase.business_state}`,
+                    percentComplete: "10% of requested shares sold", // Placeholder
+                    sharesBought: `${purchase.shares_purchased} Shares`,
+                  }}
+                />
+                )
+              )}
             </section>
         </>
     )

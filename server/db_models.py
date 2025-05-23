@@ -12,7 +12,6 @@ from sqlalchemy.orm import declarative_base
 import datetime
 import enum
 
-
 Base = declarative_base()
 
 
@@ -57,6 +56,12 @@ class DBOffer(Base):
     featured = Column(Boolean, default=False)
 
 
+class PurchaseStatus(str, enum.Enum):
+    pending = "pending"
+    completed = "completed"
+    expired = "expired"
+
+
 class DBPurchase(Base):
     __tablename__ = "purchase"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
@@ -80,4 +85,6 @@ class DBFinancials(Base):
     business_id = Column(Integer, ForeignKey("business.id"))
     date = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc))
     amount = Column(Float)
-    type = Column(String)  # revenue, expense, asset, liability
+    type = Column(
+        Enum()
+    )  # revenue, expense, asset, liability

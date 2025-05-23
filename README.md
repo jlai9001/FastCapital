@@ -4,6 +4,55 @@
 
 To get started with this project, clone the respository from the development branch using the steps found below.
 
+To run the front in project, use the following command:
+cd client
+npm run dev
+
+To run the backend project:
+
+**Start your venv**
+cd server
+source .venv/bin/activate
+
+**Install Dependencies**
+pip install -r requirements.txt
+
+**Start the DB**
+
+<!-- Show running containers -->
+
+    docker ps
+
+<!-- Kill and remove any running containers -->
+
+    docker kill $(docker ps -q)
+    docker rm $(docker ps -aq)
+    docker rmi $(docker images -q)
+
+<!-- Start up a new container and connect to the default DB -->
+
+    docker-compose up -d
+    docker exec -it postgres_db psql -U postgres -d postgres
+
+<!-- Create and switch to the fastcapital DB -->
+
+    CREATE DATABASE fastcapital
+    \c fastcapital
+
+<!-- Seed Test Data in the fastcapital db -->
+
+\i /data/fastcapitaldata.sql
+
+**Start the FastAPI Server**
+
+<!-- Start fastapi server (defaults to main.py) -->
+
+    fastapi dev
+
+<!-- Start fastapi server (defaults to main.py) -->
+
+    visit [text](http://localhost:8000/docs) to test APIs
+
 ## Git Branching Workflow
 
 We follow a simple feature‑branch workflow:
