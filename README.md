@@ -17,6 +17,8 @@ source .venv/bin/activate
 **Install Dependencies**
 pip install -r requirements.txt
 
+npm install @mui/material @emotion/react @emotion/styled @mui/x-charts axios
+
 **Start the DB**
 
 <!-- Show running containers -->

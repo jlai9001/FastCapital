@@ -7,7 +7,8 @@ from pydantic_schemas import (
     FinancialsOut,
     PurchaseCreate,
     PurchaseOut,
-    EnrichedPurchaseOut
+    EnrichedPurchaseOut,
+    PurchaseStatus
 )
 
 
