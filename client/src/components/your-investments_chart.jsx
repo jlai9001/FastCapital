@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import './investmentscard.css';
+import '../components/your-investments_chart.css';
 import { PieChart } from "@mui/x-charts/PieChart";
 
 const InvestmentCard = ({ investment }) => {

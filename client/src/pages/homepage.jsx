@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import HomePageHero from '../components/homepage_hero'
-import OfferCards from '../components/offer-cards'
+import InvestmentCard from '../components/investment-card'
 
 export default function Homepage(){
     const [featuredInvestments, setFeaturedInvestments] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState("")
+    const navigate = useNavigate();
+
 
     useEffect (() => {
         const fetchFeaturedInvestments = async () => {
             try {
                 const result = await fetch('http://localhost:8000/api/investment')
-                if(!result.ok) throw new Error("Failed to fetch offers")
+                if(!result.ok) throw new Error("Failed to fetch investments")
 
                 const data = await result.json();
-                const featured = data.filter((offer) => offer.featured);
+                const featured = data.filter((investment) => investment.featured);
                 setFeaturedInvestments(featured);
             } catch (error) {
                 console.error(error);
@@ -26,18 +29,23 @@ export default function Homepage(){
         fetchFeaturedInvestments();
     }, []);
 
+    const handleViewAllClick = () => {
+        navigate('/all-investments');
+    };
+
     return(
         <>
             <HomePageHero />
+            <button onClick={handleViewAllClick} className='view-all-button'>View All Investments</button>
             <section className='featured-investments'>
                 <h2>Featured Investments</h2>
                 {loading && <p>Loading featured investments...</p>}
                 {error && <p>{error}</p>}
                 {featuredInvestments.length > 0 && (
                 <ul>
-                    {featuredInvestments.map((offer) => (
-                    <li key={offer.id}>
-                        <OfferCards offer={offer} />
+                    {featuredInvestments.map((investment) => (
+                    <li key={investment.id}>
+                        <InvestmentCard investment={investment} />
                     </li>
                     ))}
                 </ul>
