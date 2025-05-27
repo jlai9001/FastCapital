@@ -8,6 +8,7 @@ import Login from './pages/login.jsx'
 import NotFound from './pages/not-found.jsx'
 import './App.css'
 import Nav from './components/Nav.jsx'
+import TestPage from './pages/testpage.jsx'
 
 
 function App() {
@@ -19,10 +20,11 @@ function App() {
       <Routes>
         <Route path='/' element={<Homepage />}></Route>
         <Route path='/all-investments' element={<AllInvestments />}></Route>
-        <Route path='/investment-details/:id' element={<InvestmentDetails />}></Route>
-        <Route path='/purchase' element={<Purchase />}></Route>
+        <Route path='/investment-details/:offerid' element={<InvestmentDetails />}></Route>
+        <Route path='/purchase-offer/:offerid' element={<Purchase />}></Route>
         <Route path='/portfolio' element={<Portfolio />}></Route>
         <Route path='/login' element={<Login />}></Route>
+        <Route path='/testpage' element={<TestPage />}></Route>
         <Route path='/not-found' element={<NotFound />}></Route>
       </Routes >
     </>
