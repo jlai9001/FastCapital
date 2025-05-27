@@ -7,7 +7,8 @@ from pydantic_schemas import (
     FinancialsOut,
     PurchaseCreate,
     PurchaseOut,
-    EnrichedPurchaseOut
+    EnrichedPurchaseOut,
+    PurchaseStatus,
 )
 
 
@@ -56,7 +57,6 @@ def get_business(business_id: int) -> BusinessOut | None:
         return business
 
 
-
 def get_offers() -> list[OfferOut]:
     db = SessionLocal()
     db_offers = db.query(DBOffer).order_by(DBOffer.id).all()
@@ -99,17 +99,16 @@ def get_offer(offer_id: int) -> OfferOut | None:
     return offer
 
 
-def get_purchases_by_status(users_id: int, status: PurchaseStatus) -> list[EnrichedPurchaseOut]:
+def get_purchases_by_status(
+    users_id: int, status: PurchaseStatus
+) -> list[EnrichedPurchaseOut]:
     db = SessionLocal()
     try:
         results = (
             db.query(DBPurchase, DBBusiness)
             .join(DBOffer, DBPurchase.offer_id == DBOffer.id)
             .join(DBBusiness, DBOffer.business_id == DBBusiness.id)
-            .filter(
-                DBPurchase.users_id == users_id,
-                DBPurchase.status == status
-            )
+            .filter(DBPurchase.users_id == users_id, DBPurchase.status == status)
             .order_by(DBPurchase.id)
             .all()
         )
@@ -125,12 +124,13 @@ def get_purchases_by_status(users_id: int, status: PurchaseStatus) -> list[Enric
                 business_name=business.name,
                 business_city=business.city,
                 business_state=business.state,
-                business_image_url=business.image_url
+                business_image_url=business.image_url,
             )
             for purchase, business in results
         ]
     finally:
         db.close()
+
 
 def get_financials_by_business_id(business_id: int) -> list[FinancialsOut]:
     db = SessionLocal()
