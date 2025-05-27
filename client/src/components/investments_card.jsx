@@ -1,75 +1,120 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import './investmentscard.css';
+import './investments_card.css';
 import { PieChart } from "@mui/x-charts/PieChart";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 
-const InvestmentCard = ({ investment }) => {
-    const {
-        business_name,
-        shares_purchased,
-        cost_per_share,
-    } = investment;
+const chartTheme = createTheme({
+  components: {
+    MuiChartsLegend: {
+      styleOverrides: {
+        root: {
+          color: "#333", // Legend text
+        },
+      },
+    },
+    MuiChartsTooltip: {
+      styleOverrides: {
+        root: {
+          color: "#333",
+          backgroundColor: "#fff", // Optional for tooltip background
+        },
+      },
+    },
+    MuiChartsAxis: {
+      styleOverrides: {
+        tickLabel: {
+          fill: "#333", // Axis labels if present
+        },
+      },
+    },
+  },
+});
 
-    const totalInvestment = shares_purchased * cost_per_share;
 
-    return (
-        <div className="investment-card">
-            <div className="investment-header">
-              <h2 className="investment-title">{business_name}</h2>
-            </div>
-            <div className="investment-details">
-              <p><strong>Shares:</strong> {shares_purchased}</p>
-              <p><strong>Cost/Share:</strong> ${cost_per_share.toFixed(2)}</p>
-              <p><strong>Total:</strong> ${totalInvestment.toFixed(2)}</p>
-            </div>
-          </div>
-      );
-    };
+const InvestmentsCard = ({ investment }) => {
+  const { business_name, shares_purchased, cost_per_share } = investment;
+  const totalInvestment = shares_purchased * cost_per_share;
 
-    const UserInvestments = ({ userId }) => {
-      const [investments, setInvestments] = useState([]);
+  return (
+    <div className="investments-card">
+      <div className="investments-header">
+        <h2 className="investments-title">{business_name}</h2>
+      </div>
+      <div className="investments-details">
+        <p><strong>Value:</strong> ${totalInvestment.toFixed(2)}</p>
+      </div>
+    </div>
+  );
+};
 
-      useEffect(() => {
-        axios
-          .get(`/api/purchases/${userId}?status=completed`)
-          .then(res => setInvestments(res.data))
-          .catch(err => console.error('Error fetching investments:', err));
-      }, [userId]);
+const UserInvestments = ({ userId = 1 }) => {
+  const [investments, setInvestments] = useState([]);
 
-      const pieData = Object.values(
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8000/api/purchases/${userId}?status=completed`)
+      .then(res => {
+        if (Array.isArray(res.data)) {
+          setInvestments(res.data);
+        } else {
+          console.error("Unexpected response format:", res.data);
+        }
+      })
+      .catch(err => console.error("Error fetching investments:", err));
+  }, [userId]);
+
+  const pieData = Array.isArray(investments)
+    ? Object.values(
         investments.reduce((acc, inv) => {
           const total = inv.shares_purchased * inv.cost_per_share;
           if (!acc[inv.business_name]) {
             acc[inv.business_name] = {
               id: inv.business_name,
               value: 0,
-              label: inv.business_name
+              label: inv.business_name,
             };
           }
           acc[inv.business_name].value += total;
           return acc;
         }, {})
-      );
+      )
+    : [];
 
-      return (
-        <div className="investment-dashboard">
-          <div className="investment-chart">
-            <h3>Investment by Business</h3>
-            <PieChart
-              series={[{ data: pieData }]}
-              width={300}
-              height={300}
-              legend={{ position: 'right' }}
-            />
-          </div>
+  const totalPortfolioValue = investments.reduce((sum, inv) => {
+    return sum + inv.shares_purchased * inv.cost_per_share;
+  }, 0);
 
-          <div className="investment-grid-wrapper">
-            {investments.map(inv => (
-              <InvestmentCard key={inv.id} investment={inv} />
-            ))}
-          </div>
-        </div>
-      );
-    };
+  return (
+    <ThemeProvider theme={chartTheme}>
+    <div className="investments-dashboard">
+      <div className="investments-chart">
+        <h3>Investments by Business</h3>
+        <PieChart
+          series={[{
+            data: pieData }]}
+          width={300}
+          height={300}
+          legend={{ position: "right" }}
+          sx={{
+            '& .MuiChartsLegend-series': {
+              color: '#fff'
+            },
+          }}
+        />
+      </div>
 
-    export default UserInvestments;
+      <div className="investments-grid-wrapper">
+        {investments.map((inv) => (
+          <InvestmentsCard key={inv.id} investment={inv} />
+        ))}
+      <div className="portfolio-total">
+        <h3>Total Portfolio Value: ${totalPortfolioValue.toFixed(2)}</h3>
+      </div>
+      </div>
+    </div>
+    </ThemeProvider>
+  );
+};
+
+export default UserInvestments;

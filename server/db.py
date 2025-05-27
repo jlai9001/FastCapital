@@ -112,17 +112,17 @@ def get_purchases_by_status(user_id: int, status: PurchaseStatus) -> list[Enrich
 
         enriched_purchases = [
             EnrichedPurchaseOut(
-                id=purchase.id,
-                investment_id=purchase.investment_id,
-                shares_purchased=purchase.shares_purchased,
-                cost_per_share=purchase.cost_per_share,
-                purchase_date=purchase.purchase_date,
-                status=purchase.status,
-                business_name=business.name,
-                business_city=business.city,
-                business_state=business.state,
-                business_image_url=business.image_url,
-                business_website_url=business.website_url,
+                id=db_purchase.id,
+                investment_id=db_purchase.investment_id,
+                shares_purchased=db_purchase.shares_purchased,
+                cost_per_share=db_purchase.cost_per_share,
+                purchase_date=db_purchase.purchase_date,
+                status=db_purchase.status,
+                business_name=db_business.name,
+                business_city=db_business.city,
+                business_state=db_business.state,
+                business_image_url=db_business.image_url,
+                business_website_url=db_business.website_url,
             )
             for db_purchase, db_business in results
         ]
