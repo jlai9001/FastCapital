@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import {useOffer, useBusiness} from "../hooks/getData"
+import {useInvestment, useBusiness} from "../hooks/getData"
 import PaymentModal from "./payment_modal"
 
 

@@ -154,7 +154,7 @@ def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut | None:
             db.query(DBInvestment).filter(DBInvestment.id == purchase_request.investment_id).first()
         )
         if not db_investment:
-            raise ValueError("Offer not found")
+            raise ValueError("Investment not found")
         if db_investment.shares_available < purchase_request.shares_purchased:
             raise Exception("NotEnoughSharesException")
 
