@@ -12,13 +12,12 @@ class UserCreate(BaseModel):
 
 class UserOut(UserCreate):
     id: int
-    name: str
-    email: str
 
 
 class BusinessCreate(BaseModel):
     name: str
     users_id: int
+    website_url: str
     image_url: str
     address1: str
     address2: Optional[str] = None
@@ -31,7 +30,7 @@ class BusinessOut(BusinessCreate):
     id: int
 
 
-class OfferCreate(BaseModel):
+class InvestmentCreate(BaseModel):
     business_id: int
     shares_available: int
     price_per_share: float
@@ -40,20 +39,14 @@ class OfferCreate(BaseModel):
     expiration_date: date
 
 
-class OfferOut(OfferCreate):
+class InvestmentOut(InvestmentCreate):
     id: int
-    business_id: int
-    shares_available: int
-    price_per_share: float
-    min_investment: int
-    start_date: date
-    expiration_date: date
     featured: bool
 
 
 class PurchaseCreate(BaseModel):
-    offer_id: int
-    users_id: int
+    investment_id: int
+    user_id: int
     shares_purchased: int
     cost_per_share: float
     purchase_date: datetime
@@ -67,17 +60,12 @@ class PurchaseStatus(str, enum.Enum):
 
 class PurchaseOut(PurchaseCreate):
     id: int
-    offer_id: int
-    users_id: int
-    shares_purchased: int
-    cost_per_share: float
-    purchase_date: datetime
     status: PurchaseStatus
 
 
 class EnrichedPurchaseOut(BaseModel):
     id: int
-    offer_id: int
+    investment_id: int
     shares_purchased: int
     cost_per_share: float
     purchase_date: datetime
@@ -86,13 +74,14 @@ class EnrichedPurchaseOut(BaseModel):
     business_city: str
     business_state: str
     business_image_url: str
+    business_website_url: str
 
 
 class FinancialType(str, enum.Enum):
-    income = 'income'
-    expense = 'expense'
-    asset = 'asset'
-    liability = 'liability'
+    income = "income"
+    expense = "expense"
+    asset = "asset"
+    liability = "liability"
 
 
 class FinancialsCreate(BaseModel):
@@ -104,7 +93,3 @@ class FinancialsCreate(BaseModel):
 
 class FinancialsOut(FinancialsCreate):
     id: int
-    business_id: int
-    date: date
-    amount: float
-    type: FinancialType

@@ -60,7 +60,7 @@ function PaymentModal({ onClose, offer, shareAmount, userId }) {
         });
 
         try {
-            const response = await fetch(`http://localhost:8000/api/purchase`, {
+            const response = await fetch(`http://localhost:8000/api/purchases`, {
                 method: 'POST',
                 headers,
                 body
