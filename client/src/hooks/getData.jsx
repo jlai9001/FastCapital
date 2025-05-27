@@ -65,7 +65,7 @@ function useBusiness(businessId) {
 export { useOffer, useBusiness };
 
 
-export async function getOffers() {
+export async function getInvestments() {
   const response = await fetch("http://localhost:8000/api/investment");
   if (!response.ok) throw new Error("Failed to fetch investments");
   return await response.json();

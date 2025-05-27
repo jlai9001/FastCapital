@@ -17,6 +17,7 @@ class UserOut(UserCreate):
 class BusinessCreate(BaseModel):
     name: str
     users_id: int
+    website_url: str
     image_url: str
     address1: str
     address2: Optional[str] = None

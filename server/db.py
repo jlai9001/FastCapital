@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine,
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from db_models import DBBusiness, DBInvestment, DBFinancials, DBPurchase, PurchaseStatus
 from pydantic_schemas import (
@@ -27,7 +27,7 @@ def get_businesses() -> list[BusinessOut]:
                 BusinessOut(
                     id=db_business.id,
                     name=db_business.name,
-                    user_id=db_business.user_id,
+                    users_id=db_business.user_id,
                     image_url=db_business.image_url,
                     website_url=db_business.website_url,
                     address1=db_business.address1,
@@ -47,7 +47,7 @@ def get_business(business_id: int) -> BusinessOut | None:
             return None
         return BusinessOut(
             id=db_business.id,
-            user_id=db_business.user_id,
+            users_id=db_business.user_id,
             name=db_business.name,
             image_url=db_business.image_url,
             website_url=db_business.website_url,
@@ -121,7 +121,7 @@ def get_purchases_by_status(user_id: int, status: PurchaseStatus) -> list[Enrich
                 business_name=business.name,
                 business_city=business.city,
                 business_state=business.state,
-                business_image_url=business.image_url
+                business_image_url=business.image_url,
                 business_website_url=business.website_url,
             )
             for db_purchase, db_business in results
@@ -166,7 +166,6 @@ def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut | None:
         db.add(db_purchase)
         db.commit()
         db.refresh(db_purchase)
-
 
         return PurchaseOut(
             id=db_purchase.id,

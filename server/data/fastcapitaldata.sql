@@ -1,11 +1,11 @@
-DROP TABLE IF EXISTS purchases;
-DROP TABLE IF EXISTS investments;
-DROP TABLE IF EXISTS financials;
-DROP TABLE IF EXISTS businesses;
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS purchases CASCADE;
+DROP TABLE IF EXISTS investments CASCADE;
+DROP TABLE IF EXISTS financials CASCADE;
+DROP TABLE IF EXISTS businesses CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
 
-DROP TYPE IF EXISTS financial_type;
-DROP TYPE IF EXISTS purchase_status;
+DROP TYPE IF EXISTS financial_type CASCADE;
+DROP TYPE IF EXISTS purchase_status CASCADE;
 
 CREATE TYPE financial_type AS ENUM ('income', 'expense', 'asset', 'liability');
 CREATE TYPE purchase_status AS ENUM ('pending', 'completed', 'expired');

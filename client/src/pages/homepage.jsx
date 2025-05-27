@@ -10,7 +10,7 @@ export default function Homepage(){
     useEffect (() => {
         const fetchFeaturedInvestments = async () => {
             try {
-                const result = await fetch('http://localhost:8000/api/offer')
+                const result = await fetch('http://localhost:8000/api/investment')
                 if(!result.ok) throw new Error("Failed to fetch offers")
 
                 const data = await result.json();
