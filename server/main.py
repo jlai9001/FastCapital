@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic_schemas import (
-    OfferOut,
+    InvestmentOut,
     BusinessOut,
     FinancialsOut,
     PurchaseCreate,
@@ -36,17 +36,17 @@ app.add_middleware(
 )
 
 
-@app.get("/api/offer/{offer_id}")
-async def get_offer(offer_id: int) -> OfferOut:
-    offer = db.get_offer(offer_id)
-    if not offer:
-        raise HTTPException(status_code=404, detail="Offer not found")
-    return offer
+@app.get("/api/investment/{investment_id}")
+async def get_investment(investment_id: int) -> InvestmentOut:
+    investment = db.get_investment(investment_id)
+    if not investment:
+        raise HTTPException(status_code=404, detail="Investment not found")
+    return investment
 
 
-@app.get("/api/offer")
-async def get_offers() -> list[OfferOut]:
-    return db.get_offers()
+@app.get("/api/investment")
+async def get_investments() -> list[InvestmentOut]:
+    return db.get_investments()
 
 
 @app.get("/api/business/{business_id}")
@@ -98,5 +98,5 @@ async def post_purchase(purchase_request: PurchaseCreate):
 @app.get("/{file_path}", response_class=FileResponse)
 def get_static_file(file_path: str):
     if Path("static/" + file_path).is_file():
-        return "static/" + file_path
+        return FileResponse("static/" + file_path)
     raise HTTPException(status_code=404, detail="Item not found")
