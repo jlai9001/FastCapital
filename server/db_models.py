@@ -30,11 +30,12 @@ class DBUser(Base):
 
 
 class DBBusiness(Base):
-    __tablename__ = "business"
+    __tablename__ = "businesses"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
-    users_id = Column(Integer, ForeignKey("users.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
     image_url = Column(String)
+    website_url = Column(String)
     address1 = Column(String)
     address2 = Column(String)
     city = Column(String)
@@ -42,10 +43,10 @@ class DBBusiness(Base):
     postal_code = Column(String)
 
 
-class DBOffer(Base):
-    __tablename__ = "offer"
+class DBInvestment(Base):
+    __tablename__ = "investments"
     id = Column(Integer, primary_key=True, index=True)
-    business_id = Column(Integer, ForeignKey("business.id"))
+    business_id = Column(Integer, ForeignKey("businesses.id"))
     shares_available = Column(Integer)
     price_per_share = Column(Float)
     min_investment = Column(Integer)
@@ -63,10 +64,10 @@ class PurchaseStatus(str, enum.Enum):
 
 
 class DBPurchase(Base):
-    __tablename__ = "purchase"
+    __tablename__ = "purchases"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    offer_id = Column(Integer, ForeignKey("offer.id"))
-    users_id = Column(Integer, ForeignKey("users.id"))
+    investment_id = Column(Integer, ForeignKey("investments.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
     shares_purchased = Column(Integer)
     cost_per_share = Column(Float)
     purchase_date = Column(
@@ -82,7 +83,7 @@ class DBPurchase(Base):
 class DBFinancials(Base):
     __tablename__ = "financials"
     id = Column(Integer, primary_key=True, index=True)
-    business_id = Column(Integer, ForeignKey("business.id"))
+    business_id = Column(Integer, ForeignKey("businesses.id"))
     date = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc))
     amount = Column(Float)
     type = Column(

@@ -1,13 +1,14 @@
-from sqlalchemy import create_engine, and_
+from sqlalchemy import create_engine,
 from sqlalchemy.orm import sessionmaker
-from db_models import DBBusiness, DBOffer, DBFinancials, DBPurchase, PurchaseStatusEnum
+from db_models import DBBusiness, DBInvestment, DBFinancials, DBPurchase, PurchaseStatus
 from pydantic_schemas import (
-    OfferOut,
+    InvestmentOut,
     BusinessOut,
     FinancialsOut,
     PurchaseCreate,
     PurchaseOut,
-    EnrichedPurchaseOut
+    EnrichedPurchaseOut,
+    PurchaseStatus
 )
 
 
@@ -18,106 +19,101 @@ SessionLocal = sessionmaker(bind=engine)
 
 
 def get_businesses() -> list[BusinessOut]:
-    db = SessionLocal()
-    db_businesses = db.query(DBBusiness).order_by(DBBusiness.name).all()
-    businesses = []
-    for db_business in db_businesses:
-        businesses.append(
-            BusinessOut(
-                id=db_business.id,
-                name=db_business.name,
-                users_id=db_business.users_id,
-                image_url=db_business.image_url,
-                address1=db_business.address1,
-                address2=db_business.address2,
-                city=db_business.city,
-                state=db_business.state,
-                postal_code=db_business.postal_code,
+    with SessionLocal() as db:
+        db_businesses = db.query(DBBusiness).order_by(DBBusiness.name).all()
+        businesses = []
+        for db_business in db_businesses:
+            businesses.append(
+                BusinessOut(
+                    id=db_business.id,
+                    name=db_business.name,
+                    user_id=db_business.user_id,
+                    image_url=db_business.image_url,
+                    website_url=db_business.website_url,
+                    address1=db_business.address1,
+                    address2=db_business.address2,
+                    city=db_business.city,
+                    state=db_business.state,
+                    postal_code=db_business.postal_code,
+                )
             )
-        )
-    db.close()
-    return businesses
+        return businesses
 
 
 def get_business(business_id: int) -> BusinessOut | None:
     with SessionLocal() as db:
         db_business = db.query(DBBusiness).filter(DBBusiness.id == business_id).first()
-        business = BusinessOut(
+        if db_business is None:
+            return None
+        return BusinessOut(
             id=db_business.id,
-            users_id=db_business.users_id,
+            user_id=db_business.user_id,
             name=db_business.name,
             image_url=db_business.image_url,
+            website_url=db_business.website_url,
             address1=db_business.address1,
             address2=db_business.address2,
             city=db_business.city,
             state=db_business.state,
             postal_code=db_business.postal_code,
         )
-        return business
 
 
-
-def get_offers() -> list[OfferOut]:
-    db = SessionLocal()
-    db_offers = db.query(DBOffer).order_by(DBOffer.id).all()
-    offers = []
-    for db_offer in db_offers:
-        offers.append(
-            OfferOut(
-                id=db_offer.id,
-                business_id=db_offer.business_id,
-                shares_available=db_offer.shares_available,
-                price_per_share=db_offer.price_per_share,
-                min_investment=db_offer.min_investment,
-                start_date=db_offer.start_date,
-                expiration_date=db_offer.expiration_date,
-                featured=db_offer.featured,
+def get_investments() -> list[InvestmentOut]:
+    with SessionLocal() as db:
+        db_investments = db.query(DBInvestment).order_by(DBInvestment.id).all()
+        investments = []
+        for db_investment in db_investments:
+            investments.append(
+                InvestmentOut(
+                    id=db_investment.id,
+                    business_id=db_investment.business_id,
+                    shares_available=db_investment.shares_available,
+                    price_per_share=db_investment.price_per_share,
+                    min_investment=db_investment.min_investment,
+                    start_date=db_investment.start_date,
+                    expiration_date=db_investment.expiration_date,
+                    featured=db_investment.featured,
+                )
             )
+        return investments
+
+
+def get_investment(investment_id: int) -> InvestmentOut | None:
+    with SessionLocal() as db:
+        db_investment = db.query(DBInvestment).filter(DBInvestment.id == investment_id).first()
+        if db_investment is None:
+            return None
+        return InvestmentOut(
+            id=db_investment.id,
+            business_id=db_investment.business_id,
+            shares_available=db_investment.shares_available,
+            price_per_share=db_investment.price_per_share,
+            min_investment=db_investment.min_investment,
+            start_date=db_investment.start_date,
+            expiration_date=db_investment.expiration_date,
+            featured=db_investment.featured,
         )
-    db.close()
-    return offers
 
 
-def get_offer(offer_id: int) -> OfferOut | None:
-    db = SessionLocal()
-    db_offer = db.query(DBOffer).filter(DBOffer.id == offer_id).first()
-
-    if db_offer is None:
-        return None
-
-    offer = OfferOut(
-        id=db_offer.id,
-        business_id=db_offer.business_id,
-        shares_available=db_offer.shares_available,
-        price_per_share=db_offer.price_per_share,
-        min_investment=db_offer.min_investment,
-        start_date=db_offer.start_date,
-        expiration_date=db_offer.expiration_date,
-        featured=db_offer.featured,
-    )
-    db.close()
-    return offer
-
-
-def get_purchases_by_status(users_id: int, status: PurchaseStatus) -> list[EnrichedPurchaseOut]:
-    db = SessionLocal()
-    try:
+def get_purchases_by_status(user_id: int, status: PurchaseStatus) -> list[EnrichedPurchaseOut]:
+    with SessionLocal() as db:
         results = (
             db.query(DBPurchase, DBBusiness)
-            .join(DBOffer, DBPurchase.offer_id == DBOffer.id)
-            .join(DBBusiness, DBOffer.business_id == DBBusiness.id)
+            .join(DBInvestment, DBPurchase.investment_id == DBInvestment.id)
+            .join(DBBusiness, DBInvestment.business_id == DBBusiness.id)
             .filter(
-                DBPurchase.users_id == users_id,
+                DBPurchase.user_id == user_id,
                 DBPurchase.status == status
             )
             .order_by(DBPurchase.id)
             .all()
         )
 
-        return [
+        enriched_purchases = [
             EnrichedPurchaseOut(
                 id=purchase.id,
-                offer_id=purchase.offer_id,
+                investment_id=purchase.investment_id,
                 shares_purchased=purchase.shares_purchased,
                 cost_per_share=purchase.cost_per_share,
                 purchase_date=purchase.purchase_date,
@@ -126,55 +122,56 @@ def get_purchases_by_status(users_id: int, status: PurchaseStatus) -> list[Enric
                 business_city=business.city,
                 business_state=business.state,
                 business_image_url=business.image_url
+                business_website_url=business.website_url,
             )
-            for purchase, business in results
+            for db_purchase, db_business in results
         ]
-    finally:
-        db.close()
+        return enriched_purchases
+
 
 def get_financials_by_business_id(business_id: int) -> list[FinancialsOut]:
-    db = SessionLocal()
-    db_financials = (
-        db.query(DBFinancials).filter(DBFinancials.business_id == business_id).all()
-    )
-
-    financials_list = [
-        FinancialsOut(
-            id=record.id,
-            business_id=record.business_id,
-            date=record.date,
-            amount=record.amount,
-            type=record.type,
+    with SessionLocal() as db:
+        db_financial_records = (
+            db.query(DBFinancials).filter(DBFinancials.business_id == business_id).all()
         )
-        for record in db_financials
-    ]
-    db.close()
-    return financials_list
+
+        financials = [
+            FinancialsOut(
+                id=record.id,
+                business_id=record.business_id,
+                date=record.date,
+                amount=record.amount,
+                type=record.type,
+            )
+            for db_financial in db_financial_records
+        ]
+        return financials
 
 
 def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut | None:
     with SessionLocal() as db:
-        db_offer = (
-            db.query(DBOffer).filter(DBOffer.id == purchase_request.offer_id).first()
+        db_investment = (
+            db.query(DBInvestment).filter(DBInvestment.id == purchase_request.investment_id).first()
         )
-        if not db_offer:
+        if not db_investment:
             raise ValueError("Offer not found")
-        if db_offer.shares_available < purchase_request.shares_purchased:
+        if db_investment.shares_available < purchase_request.shares_purchased:
             raise Exception("NotEnoughSharesException")
 
         # Deduct shares
-        db_offer.shares_available -= purchase_request.shares_purchased
+        db_investment.shares_available -= purchase_request.shares_purchased
         db_purchase = DBPurchase(
-            **purchase_request.dict(), status=PurchaseStatusEnum.pending
+            **purchase_request.dict(), status=PurchaseStatus.pending
         )
         db.add(db_purchase)
         db.commit()
         db.refresh(db_purchase)
 
+
         return PurchaseOut(
             id=db_purchase.id,
-            offer_id=db_purchase.offer_id,
-            users_id=db_purchase.users_id,
+            investment_id=db_purchase.investment_id,
+            user_id=db_purchase.user_id,
             shares_purchased=db_purchase.shares_purchased,
             cost_per_share=db_purchase.cost_per_share,
             purchase_date=db_purchase.purchase_date,
