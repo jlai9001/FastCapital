@@ -12,7 +12,7 @@ function useOffer(offerId) {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(`http://localhost:8000/api/offer/${offerId}`);
+        const response = await fetch(`http://localhost:8000/api/investment/${investmentId}`);
         if (!response.ok) {
           throw new Error("Failed to fetch offer data");
         }
@@ -66,8 +66,8 @@ export { useOffer, useBusiness };
 
 
 export async function getOffers() {
-  const response = await fetch("http://localhost:8000/api/offer");
-  if (!response.ok) throw new Error("Failed to fetch offers");
+  const response = await fetch("http://localhost:8000/api/investment");
+  if (!response.ok) throw new Error("Failed to fetch investments");
   return await response.json();
 }
 

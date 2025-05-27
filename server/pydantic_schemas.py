@@ -77,10 +77,10 @@ class EnrichedPurchaseOut(BaseModel):
 
 
 class FinancialType(str, enum.Enum):
-    income = 'income'
-    expense = 'expense'
-    asset = 'asset'
-    liability = 'liability'
+    income = "income"
+    expense = "expense"
+    asset = "asset"
+    liability = "liability"
 
 
 class FinancialsCreate(BaseModel):

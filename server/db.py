@@ -150,10 +150,23 @@ def get_financials_by_business_id(business_id: int) -> list[FinancialsOut]:
 
 def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut | None:
     with SessionLocal() as db:
-        db_purchase = DBPurchase(**purchase_request.dict())
+        db_investment = (
+            db.query(DBInvestment).filter(DBInvestment.id == purchase_request.investment_id).first()
+        )
+        if not db_investment:
+            raise ValueError("Offer not found")
+        if db_investment.shares_available < purchase_request.shares_purchased:
+            raise Exception("NotEnoughSharesException")
+
+        # Deduct shares
+        db_investment.shares_available -= purchase_request.shares_purchased
+        db_purchase = DBPurchase(
+            **purchase_request.dict(), status=PurchaseStatus.pending
+        )
         db.add(db_purchase)
         db.commit()
         db.refresh(db_purchase)
+
 
         return PurchaseOut(
             id=db_purchase.id,
@@ -162,5 +175,5 @@ def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut | None:
             shares_purchased=db_purchase.shares_purchased,
             cost_per_share=db_purchase.cost_per_share,
             purchase_date=db_purchase.purchase_date,
-            status=db_purchase.status.value,  # DB status is an enum object, so this should return one of three values?
+            status=db_purchase.status.value,
         )
