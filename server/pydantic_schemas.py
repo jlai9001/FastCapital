@@ -89,3 +89,25 @@ class FinancialsOut(FinancialsCreate):
     date: date
     amount: float
     type: str
+
+############################################ Login Session by Jonathan
+
+class LoginCredentials(BaseModel):
+    email: str
+    password: str
+
+class SignupCredentials(BaseModel):
+    name: str
+    email: str
+    password: str
+
+class SuccessResponse(BaseModel):
+    success: bool
+
+
+class SecretResponse(BaseModel):
+    secret: str
+
+
+class UserPublicDetails(BaseModel):
+    email: str

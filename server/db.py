@@ -1,10 +1,16 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from db_models import DBBusiness, DBOffer, DBFinancials
-from pydantic_schemas import OfferOut, BusinessOut, FinancialsOut
+from db_models import DBBusiness, DBOffer, DBFinancials, DBUser # edited by Jonathan
+from pydantic_schemas import OfferOut, BusinessOut, FinancialsOut, UserPublicDetails # edited by Jonathan
+# edited by Jonathan
+from datetime import datetime, timedelta
+from secrets import token_urlsafe
+import bcrypt
 
+DATABASE_URL = "postgresql+psycopg://postgres:postgres@localhost:5432/database"
 
-DATABASE_URL = "postgresql+psycopg://postgres:postgres@localhost:5432/fastcapital"
+# edited by Jonathan
+SESSION_LIFE_MINUTES = 240
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
@@ -108,3 +114,145 @@ def get_financials_by_business_id(business_id: int) -> list[FinancialsOut]:
     ]
     db.close()
     return financials_list
+
+
+################################################## login-backend by Jonathan
+
+def validate_session(email: str, session_token: str) -> bool:
+    """
+    Validate a session token for a given email. Returns True if the
+    session is valid and not expired, and updates the session expiration.
+    Returns False otherwise.
+    """
+
+    with SessionLocal() as db:
+        account = (
+            db.query(DBUser)
+            .filter(
+                DBUser.email == email,
+                DBUser.session_token == session_token,
+            )
+            .first()
+        )
+        if not account:
+            return False
+
+        # validate that it is not expired
+        if datetime.now() >= account.session_expires_at:
+            return False
+
+        # update the expiration date and save to the database
+        expires = datetime.now() + timedelta(minutes=SESSION_LIFE_MINUTES)
+        # assign as datetime, not isoformat
+        account.session_expires_at = expires
+        db.commit()
+        return True
+
+def validate_email_password(email: str, password: str) -> str | None:
+    """
+    Validate email and password. Returns a new session token if valid,
+    None if invalid.
+    """
+    print(f"🔍 DEBUG: Trying to login with email: {email}")
+
+    with SessionLocal() as db:
+        account = db.query(DBUser).filter(DBUser.email == email).first()
+
+        if not account:
+            print(f"❌ DEBUG: No account found for email: {email}")
+            return None
+
+        print(f"✅ DEBUG: Account found! Name: {account.name}")
+        print(f"🔑 DEBUG: Stored hash: {account.hashed_password}")
+        print(f"🔑 DEBUG: Input password: {password}")
+
+        # Check password using bcrypt
+        password_match = bcrypt.checkpw(password.encode(), account.hashed_password.encode())
+        print(f"🔐 DEBUG: Password match result: {password_match}")
+
+        if not password_match:
+            print("❌ DEBUG: Password doesn't match!")
+            return None
+
+        print("✅ DEBUG: Password matches! Creating session...")
+
+        # Generate new session token and set expiration
+        session_token = token_urlsafe()
+        expires = datetime.now() + timedelta(minutes=SESSION_LIFE_MINUTES)
+
+        account.session_token = session_token
+        account.session_expires_at = expires
+        db.commit()
+
+        print(f"🎉 DEBUG: Login successful! Session token: {session_token}")
+        return session_token
+
+
+
+def invalidate_session(email: str, session_token: str) -> None:
+    """
+    Invalidate a user's session by setting the session token to a unique
+    expired value.
+    """
+    # retrieve the user account for the given session token
+    with SessionLocal() as db:
+        account = (
+            db.query(DBUser)
+            .filter(
+                DBUser.email == email,
+                DBUser.session_token == session_token,
+            )
+            .first()
+        )
+        if not account:
+            return
+
+        # set the token to an invalid value that is unique
+        account.session_token = f"expired-{token_urlsafe()}"
+        db.commit()
+
+
+def create_user_account(name:str, email: str, password: str) -> bool:
+    """
+    Create a new user account with the given email and password.
+    Returns True if the account was created successfully, or False if the
+    username exists.
+    """
+    # Create a new user account.
+    # Returns True if successful, False if email exists.
+    with SessionLocal() as db:
+        # Check if email already exists
+        if db.query(DBUser).filter(DBUser.email == email).first():
+            return False
+        # Hash the password using bcrypt before storing it in the database.
+        # bcrypt.hashpw returns a hashed password as bytes,
+        # which we decode to a string.
+        hashed_password = bcrypt.hashpw(
+            password.encode(), bcrypt.gensalt()
+        ).decode()
+
+        account = DBUser()
+        account.name = name
+        account.email = email
+        account.hashed_password = hashed_password
+        account.session_token = None
+        account.session_expires_at = None
+
+        db.add(account)
+        db.commit()
+        return True
+
+
+def get_user_public_details(email: str)-> UserPublicDetails | None:
+    """
+    Fetch public details for a user by email. Returns a UserPublicDetails
+    object if found, or None if not found.
+    """
+
+    with SessionLocal() as db:
+        account = (
+            db.query(DBUser).filter(DBUser.email == email).first()
+        )
+        if not account:
+            return None
+        return UserPublicDetails(email=account.email)

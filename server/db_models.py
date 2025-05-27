@@ -10,8 +10,11 @@ class DBUser(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     name = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False)
-    password = Column(String, nullable=False)
-
+    hashed_password = Column(String, nullable=False)
+    # added login session information by Jonathan
+    # note replace hashed password with regular password
+    session_token = Column(String, nullable=True)
+    session_expires_at = Column(DateTime, nullable=True)
 
 class DBBusiness(Base):
     __tablename__ = "business"

@@ -10,11 +10,18 @@ DROP TYPE IF EXISTS purchase_status;
 CREATE TYPE financial_type AS ENUM ('income', 'expense', 'asset', 'liability');
 CREATE TYPE purchase_status AS ENUM ('pending', 'completed', 'expired');
 
+
+-- ADD COLUMN hashed_password VARCHAR,
+-- ADD COLUMN session_token VARCHAR,
+-- ADD COLUMN session_expires_at TIMESTAMP;
+
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL
+    hashed_password VARCHAR(255) NOT NULL,
+    session_token VARCHAR(255),
+    session_expires_at TIMESTAMP;
 );
 
 CREATE TABLE business (
@@ -57,6 +64,8 @@ CREATE TABLE purchase (
     purchase_date DATE NOT NULL,
     status purchase_status NOT NULL DEFAULT 'pending'
 );
+
+
 
 INSERT INTO users(id, name, email, password)
 VALUES
@@ -143,5 +152,36 @@ VALUES
     (9, 9, 9, 85, 19.00, '2023-07-02', 'completed'),
     (10, 10, 10, 95, 25.00, '2023-07-16', 'pending');
 
--- run the following line in the psql shell to load this file
--- \i data/fastcapitaldata.sql
+-- credentials for users
+
+-- ALTER TABLE users
+-- ADD COLUMN hashed_password VARCHAR,
+-- ADD COLUMN session_token VARCHAR,
+-- ADD COLUMN session_expires_at TIMESTAMP;
+
+-- ALTER TABLE users DROP COLUMN password;
+-- ALTER TABLE users ALTER COLUMN session_expires_at TYPE TIMESTAMP USING session_expires_at::timestamp;
+
+-- UPDATE users
+-- SET
+--     name = 'John Doe',
+--     email = 'him@test.com',
+--     -- unencrypted : admin123
+--     hashed_password = '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p02ch0Ngc6FUHdRGqXup5bJO',
+--     session_token = NULL,
+--     session_expires_at = NULL
+-- WHERE id = 1;
+
+-- UPDATE users
+-- SET
+--     name = 'Jane Doe',
+--     email = 'her@test.com.com',
+--     -- unencrypted: demo2024
+--     hashed_password = '$2b$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+--     session_token = NULL,
+--     session_expires_at = NULL
+-- WHERE id = 2;
+
+
+-- -- run the following line in the psql shell to load this file
+-- -- \i data/fastcapitaldata.sql
