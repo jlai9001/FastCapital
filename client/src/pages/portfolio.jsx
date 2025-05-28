@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import PendingInvestmentsCard from '../components/pending-investments-card'
-import UserInvestments from "../components/investments_card";
+
 
 export default function Portfolio(){
   const [pendingPurchases, setPendingPurchases] = useState([]);
