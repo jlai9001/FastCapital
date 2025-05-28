@@ -1,8 +1,32 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from datetime import date, datetime
 from typing import Optional
 import enum
 
+
+class LoginCredentials(BaseModel):
+    email: EmailStr
+    password: str
+
+class SignupCredentials(BaseModel):
+    name: str
+    email: EmailStr
+    password: str
+
+
+class SuccessResponse(BaseModel):
+    success: bool
+    message: str | None = None
+
+
+class SecretResponse(BaseModel):
+    secret: str
+
+
+class UserPublicDetails(BaseModel):
+    email: str
+    id: int
+    # Add more public fields here if needed
 
 class UserCreate(BaseModel):
     name: str

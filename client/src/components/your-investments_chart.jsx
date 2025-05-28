@@ -215,4 +215,3 @@ const UserInvestments = ({ userId = 1 }) => {
 };
 
 export default UserInvestments;
-export default UserInvestments;
