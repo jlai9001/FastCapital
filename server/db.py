@@ -1,11 +1,17 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from db_models import DBBusiness, DBInvestment, DBFinancials, DBPurchase, PurchaseStatus, DBUser
-from datetime import datetime, timedelta
+from db_models import (
+    DBBusiness,
+    DBInvestment,
+    DBFinancials,
+    DBPurchase,
+    PurchaseStatus,
+    DBUser,
+)
 import bcrypt
 from secrets import token_urlsafe
+from datetime import datetime, timedelta
 from pydantic_schemas import (
     InvestmentOut,
     BusinessOut,
@@ -20,6 +26,7 @@ from pydantic_schemas import (
 
 DATABASE_URL = "postgresql+psycopg://postgres:postgres@localhost:5432/fastcapital"
 
+
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 SESSION_LIFE_MINUTES = 30
@@ -33,9 +40,7 @@ def validate_email_password(email: str, password: str) -> str | None:
     """
     # retrieve the user account from the database
     with SessionLocal() as db:
-        account = (
-            db.query(DBUser).filter(DBUser.email == email).first()
-        )
+        account = db.query(DBUser).filter(DBUser.email == email).first()
         if not account:
             return None
 
@@ -54,6 +59,7 @@ def validate_email_password(email: str, password: str) -> str | None:
         account.session_expires_at = expires
         db.commit()
         return session_token
+
 
 def validate_session(email: str, session_token: str) -> bool:
     """
@@ -85,6 +91,7 @@ def validate_session(email: str, session_token: str) -> bool:
         db.commit()
         return True
 
+
 def invalidate_session(email: str, session_token: str) -> None:
     """
     Invalidate a user's session by setting the session token to a unique
@@ -104,16 +111,15 @@ def invalidate_session(email: str, session_token: str) -> None:
             return
 
         # set the token to an invalid value that is unique
-        account.session_token = f"expired-{token_urlsafe()}"
+        account.session_token = f"expired-{secrets.token_urlsafe()}"
         db.commit()
+
 
 def create_user(name: str, email: str, password: str) -> bool:
     with SessionLocal() as db:
         if db.query(DBUser).filter(DBUser.email == email).first():
             return False
-        hashed_password = bcrypt.hashpw(
-            password.encode(), bcrypt.gensalt()
-        ).decode()
+        hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
         account = DBUser(
             name=name,
             email=email,
@@ -125,15 +131,13 @@ def create_user(name: str, email: str, password: str) -> bool:
         db.commit()
         return True
 
+
 def get_user_public_details(email: str):
     with SessionLocal() as db:
-        account = (
-            db.query(DBUser).filter(DBUser.email == email).first()
-        )
+        account = db.query(DBUser).filter(DBUser.email == email).first()
         if not account:
             return None
         return UserPublicDetails(id=account.id, email=account.email)
-
 
 
 def get_businesses() -> list[BusinessOut]:
@@ -199,7 +203,9 @@ def get_investments() -> list[InvestmentOut]:
 
 def get_investment(investment_id: int) -> InvestmentOut | None:
     with SessionLocal() as db:
-        db_investment = db.query(DBInvestment).filter(DBInvestment.id == investment_id).first()
+        db_investment = (
+            db.query(DBInvestment).filter(DBInvestment.id == investment_id).first()
+        )
         if db_investment is None:
             return None
         return InvestmentOut(
@@ -214,16 +220,15 @@ def get_investment(investment_id: int) -> InvestmentOut | None:
         )
 
 
-def get_purchases_by_status(user_id: int, status: PurchaseStatus) -> list[EnrichedPurchaseOut]:
+def get_purchases_by_status(
+    user_id: int, status: PurchaseStatus
+) -> list[EnrichedPurchaseOut]:
     with SessionLocal() as db:
         results = (
             db.query(DBPurchase, DBBusiness)
             .join(DBInvestment, DBPurchase.investment_id == DBInvestment.id)
             .join(DBBusiness, DBInvestment.business_id == DBBusiness.id)
-            .filter(
-                DBPurchase.user_id == user_id,
-                DBPurchase.status == status
-            )
+            .filter(DBPurchase.user_id == user_id, DBPurchase.status == status)
             .order_by(DBPurchase.id)
             .all()
         )
@@ -269,7 +274,9 @@ def get_financials_by_business_id(business_id: int) -> list[FinancialsOut]:
 def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut | None:
     with SessionLocal() as db:
         db_investment = (
-            db.query(DBInvestment).filter(DBInvestment.id == purchase_request.investment_id).first()
+            db.query(DBInvestment)
+            .filter(DBInvestment.id == purchase_request.investment_id)
+            .first()
         )
         if not db_investment:
             raise ValueError("Investment not found")

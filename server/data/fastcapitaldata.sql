@@ -1,3 +1,4 @@
+-- Drop existing objects
 DROP TABLE IF EXISTS purchases CASCADE;
 DROP TABLE IF EXISTS investments CASCADE;
 DROP TABLE IF EXISTS financials CASCADE;
@@ -7,9 +8,16 @@ DROP TABLE IF EXISTS users CASCADE;
 DROP TYPE IF EXISTS financial_type CASCADE;
 DROP TYPE IF EXISTS purchase_status CASCADE;
 
+-- Create ENUM types
 CREATE TYPE financial_type AS ENUM ('income', 'expense', 'asset', 'liability');
 CREATE TYPE purchase_status AS ENUM ('pending', 'completed', 'expired');
 
+
+-- ADD COLUMN hashed_password VARCHAR,
+-- ADD COLUMN session_token VARCHAR,
+-- ADD COLUMN session_expires_at TIMESTAMP;
+
+-- Create tables
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -22,9 +30,9 @@ CREATE TABLE users (
 CREATE TABLE businesses (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    user_id int REFERENCES users(id),
+    user_id INT REFERENCES users(id),
     image_url VARCHAR(255),
-    website_url VARCHAR(255),
+    website_url VARCHAR(255) NOT NULL,
     address1 VARCHAR(255) NOT NULL,
     address2 VARCHAR(255),
     city VARCHAR(255) NOT NULL,
@@ -34,38 +42,38 @@ CREATE TABLE businesses (
 
 CREATE TABLE financials (
     id SERIAL PRIMARY KEY,
-    business_id int REFERENCES businesses(id),
+    business_id INT REFERENCES businesses(id),
     date DATE NOT NULL,
-    amount decimal(10, 2) NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
     type financial_type NOT NULL
 );
 
 CREATE TABLE investments (
     id SERIAL PRIMARY KEY,
-    business_id int REFERENCES businesses(id),
-    shares_available int NOT NULL,
-    price_per_share decimal(10, 2) NOT NULL,
-    min_investment int NOT NULL,
+    business_id INT REFERENCES businesses(id),
+    shares_available INT NOT NULL,
+    price_per_share DECIMAL(10,2) NOT NULL,
+    min_investment INT NOT NULL,
     start_date DATE NOT NULL,
     expiration_date DATE NOT NULL,
-    featured boolean NOT NULL DEFAULT false
+    featured BOOLEAN NOT NULL DEFAULT false
 );
 
 CREATE TABLE purchases (
     id SERIAL PRIMARY KEY,
-    investment_id int REFERENCES investments(id),
-    user_id int REFERENCES users(id),
-    shares_purchased int NOT NULL,
-    cost_per_share decimal(10, 2) NOT NULL,
+    investment_id INT REFERENCES investments(id),
+    user_id INT REFERENCES users(id),
+    shares_purchased INT NOT NULL,
+    cost_per_share DECIMAL(10,2) NOT NULL,
     purchase_date DATE NOT NULL,
     status purchase_status NOT NULL DEFAULT 'pending'
 );
 
 INSERT INTO users(name, email, hashed_password)
 VALUES
-    ('John Smith', 'jsmith@email.com', 'password'),
-    ('Jane Doe', 'jdoe@email.com', 'password'),
-    ('Alice Johnson', 'alicej@email.com', 'password'),
+    ('John Smith', 'jsmith@email.com', '$2b$12$B.u84R0iEfuKtPFW2r13DOhAu6iHKm2erZD0icf8NjYCIVDW0L.RW'), --pass:admin123
+    ('Jane Doe', 'jdoe@email.com', '$2b$12$APvM26Vbbc8fvxFfrIGAKudul24SGcuA7znlfTxrUcr8rW9zk7WF2'), --pass: demo2024
+    ('Alice Johnson', 'alicej@email.com', '$2b$12$IWnYtBj9p2wzpR9A8cn5Sets.dh9zBCbe.GSMRUydmURrodxt/UIq'), --pas: dummypass
     ('Bob Williams', 'bwilliams@email.com', 'password'),
     ('Carol Taylor', 'ctaylor@email.com', 'password'),
     ('David Brown', 'dbrown@email.com', 'password'),
