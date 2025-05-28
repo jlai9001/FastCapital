@@ -143,11 +143,11 @@ def get_financials_by_business_id(business_id: int) -> list[FinancialsOut]:
 
         financials = [
             FinancialsOut(
-                id=record.id,
-                business_id=record.business_id,
-                date=record.date,
-                amount=record.amount,
-                type=record.type,
+                id=db_financial.id,
+                business_id=db_financial.business_id,
+                date=db_financial.date,
+                amount=db_financial.amount,
+                type=db_financial.type,
             )
             for db_financial in db_financial_records
         ]

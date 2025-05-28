@@ -11,6 +11,7 @@ from sqlalchemy import (
 from sqlalchemy.orm import declarative_base
 import datetime
 import enum
+from pydantic_schemas import FinancialType
 
 Base = declarative_base()
 
@@ -90,5 +91,5 @@ class DBFinancials(Base):
     date = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc))
     amount = Column(Float)
     type = Column(
-        Enum()
-    )  # revenue, expense, asset, liability
+        Enum(FinancialType, name="financial_type"), nullable=False
+    )
