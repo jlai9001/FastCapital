@@ -30,7 +30,7 @@ function ButtonsContainer({ isVisible, onCancel, onBuy }) {
     );
 }
 
-function PaymentModal({ onClose, offer, shareAmount, userId }) {
+function PaymentModal({ onClose, investment, shareAmount, userId }) {
     const [isVisible, setIsVisible] = useState(true);
     const [showFields, setShowFields] = useState(true);
     const [showButtons, setShowButtons] = useState(true);
@@ -50,38 +50,45 @@ function PaymentModal({ onClose, offer, shareAmount, userId }) {
     };
 
     const handle_buy = async () => {
+        if (!investment?.id || !userId || !shareAmount || shareAmount <= 0) {
+          alert("Missing or invalid purchase details. Please try again.");
+          return;
+        }
+
         const headers = { "Content-Type": "application/json" };
         const body = JSON.stringify({
-            offer_id: offer.id,
-            users_id: userId,
-            shares_purchased: shareAmount,
-            cost_per_share: offer.price_per_share,
-            purchase_date: new Date().toISOString()
+          investment_id: investment.id,
+          user_id: userId,
+          shares_purchased: shareAmount,
+          cost_per_share: parseFloat(investment.price_per_share),
+          purchase_date: new Date().toISOString()
         });
 
         try {
-            const response = await fetch(`http://localhost:8000/api/purchases`, {
-                method: 'POST',
-                headers,
-                body
-            });
+          const response = await fetch(`http://localhost:8000/api/purchases`, {
+            method: 'POST',
+            headers,
+            body
+          });
 
-            if (!response.ok) {
-                throw new Error("Purchase failed");
-            }
+          if (!response.ok) {
+            const errorDetails = await response.json();
+            console.error("Detailed error response:", errorDetails)
+            throw new Error("Purchase failed");
+          }
 
-            const data = await response.json();
-            console.log("Purchase successful:", data);
+          const data = await response.json();
+          console.log("Purchase successful:", data);
 
-            setShowFields(false);
-            setShowButtons(false);
-            setShowExitButton(true);
-            setShowCompletionMessage(true);
+          setShowFields(false);
+          setShowButtons(false);
+          setShowExitButton(true);
+          setShowCompletionMessage(true);
         } catch (error) {
-            console.error("Error during purchase:", error);
-            alert("Failed to complete transaction. Please try again.");
+          console.error("Error during purchase:", error);
+          alert("Failed to complete transaction. Please try again.");
         }
-    };
+      };
 
     if (!isVisible) return null;
 
