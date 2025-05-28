@@ -1,6 +1,6 @@
 import './login.css';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { data, useNavigate } from 'react-router-dom';
 import { useUser } from '../context/user-provider.jsx';
 
 function Error_Message() {
@@ -23,6 +23,13 @@ function Login() {
     console.log("password", password);
 
     //this should check valid account & password
+
+    //code here
+    // fetch post with email and password
+    const response = await fetch(`http://localhost:8000/api/login`, )
+    // if true, nav
+
+    //
     if (email === "user123" && password === "P@ssw0rd123!") {
       console.log("login success!");
 
