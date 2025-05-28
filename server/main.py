@@ -86,8 +86,6 @@ async def get_user_purchases(
     status: PurchaseStatus = Query(PurchaseStatus.pending),  # default to 'pending'
 ):
     purchases = get_purchases_by_status(user_id, status)
-    if not purchases:
-        raise HTTPException(status_code=404, detail=f"No {status} purchases found")
     return purchases
 
 

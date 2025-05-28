@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getInvestments, getBusinesses } from "../hooks/getData";
-import "./investment-cards.css";
+import "./investment-cards-list.css";
 
 
-export default function InvestmentCards() {
+export default function InvestmentCardsList() {
     const [error, setError] = useState(null);
     const [investments, setInvestments] = useState([]);
     const [businesses, setBusinesses] = useState([]);

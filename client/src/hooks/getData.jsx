@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react";
 
-function useOffer(offerId) {
+function useInvestment(investmentId) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    if (!offerId) return;
+    if (!investmentId) return;
 
-    async function fetchOffer() {
+    async function fetchInvestment() {
       setLoading(true);
       setError(null);
       try {
         const response = await fetch(`http://localhost:8000/api/investment/${investmentId}`);
         if (!response.ok) {
-          throw new Error("Failed to fetch offer data");
+          throw new Error("Failed to fetch investment data");
         }
         const json = await response.json();
         setData(json);
@@ -25,8 +25,8 @@ function useOffer(offerId) {
       }
     }
 
-    fetchOffer();
-  }, [offerId]);
+    fetchInvestment();
+  }, [investmentId]);
 
   return { loading, error, data };
 }
@@ -62,7 +62,7 @@ function useBusiness(businessId) {
   return { loading, error, data };
 }
 
-export { useOffer, useBusiness };
+export { useInvestment, useBusiness };
 
 
 export async function getInvestments() {
