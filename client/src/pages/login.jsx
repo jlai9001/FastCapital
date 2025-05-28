@@ -5,40 +5,41 @@ import { useUser } from '../context/user-provider.jsx';
 
 function Error_Message() {
   return (
-    <div className="Error_Message">Invalid Username or Password</div>
+    <div className="Error_Message">Invalid email or Password</div>
   );
 }
 
 function Login() {
-  const [username, set_username] = useState('');
-  const [password, set_password] = useState('');
-  const [showError, set_showError] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showError, setShowError] = useState(false);
 
   const { refreshUser } = useUser();   // useUser hook inside main Login component
   const navigate = useNavigate();
 
   const LoginClick = async () => {
     console.log("Login Click");
-    console.log("username", username);
+    console.log("email", email);
     console.log("password", password);
 
-    if (username === "user123" && password === "P@ssw0rd123!") {
+    //this should check valid account & password
+    if (email === "user123" && password === "P@ssw0rd123!") {
       console.log("login success!");
 
       await refreshUser();     // refresh user context after login
       navigate('/');           // redirect to homepage with new context
     } else {
       console.log("login failed!");
-      set_showError(true);
+      setShowError(true);
     }
   };
 
   const SignUpClick = () => {
-    alert("Can't Sign Up - Developer 404");
+    alert("Can't Sign Up - Developer 404"); //nav to sign-up
   };
 
   const ForgetPasswordClick = () => {
-    alert("Can't Change Password - Developer 404");
+    alert("Can't Change Password - Developer 404"); //future ticket
   };
 
   return (
@@ -47,22 +48,22 @@ function Login() {
       {showError && <Error_Message />}
       <div className="All_Fields_Container">
         <div className="Fields_Title_Container">
-          <div className="Field_Title">Username:</div>
+          <div className="Field_Title">Email:</div>
           <div className="Field_Title">Password:</div>
         </div>
         <div className="Input_Container">
           <input
             className="Input_Field"
             type="text"
-            value={username}
-            onChange={(e) => { set_showError(false); set_username(e.target.value); }}
-            placeholder="Enter Your Username"
+            value={email}
+            onChange={(e) => { setShowError(false); setEmail(e.target.value); }}
+            placeholder="Enter Your Email"
           />
           <input
             className="Input_Field"
             type="password"
             value={password}
-            onChange={(e) => { set_showError(false); set_password(e.target.value); }}
+            onChange={(e) => { setShowError(false); setPassword(e.target.value); }}
             placeholder="Enter Your Password"
           />
         </div>

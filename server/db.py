@@ -1,6 +1,13 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from db_models import DBBusiness, DBInvestment, DBFinancials, DBPurchase, PurchaseStatus, DBUser
+from db_models import (
+    DBBusiness,
+    DBInvestment,
+    DBFinancials,
+    DBPurchase,
+    PurchaseStatus,
+    DBUser,
+)
 from pydantic_schemas import (
     InvestmentOut,
     BusinessOut,
@@ -9,11 +16,11 @@ from pydantic_schemas import (
     PurchaseOut,
     EnrichedPurchaseOut,
     PurchaseStatus,
-    UserPublicDetails
+    UserPublicDetails,
 )
 import bcrypt
 import secrets
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 
 DATABASE_URL = "postgresql+psycopg://postgres:postgres@localhost:5432/fastcapital"
 
@@ -87,7 +94,9 @@ def get_investments() -> list[InvestmentOut]:
 
 def get_investment(investment_id: int) -> InvestmentOut | None:
     with SessionLocal() as db:
-        db_investment = db.query(DBInvestment).filter(DBInvestment.id == investment_id).first()
+        db_investment = (
+            db.query(DBInvestment).filter(DBInvestment.id == investment_id).first()
+        )
         if db_investment is None:
             return None
         return InvestmentOut(
@@ -103,20 +112,14 @@ def get_investment(investment_id: int) -> InvestmentOut | None:
 
 
 def get_purchases_by_status(
-    users_id: int, status: PurchaseStatus
+    user_id: int, status: PurchaseStatus
 ) -> list[EnrichedPurchaseOut]:
-    db = SessionLocal()
-    try:
-def get_purchases_by_status(user_id: int, status: PurchaseStatus) -> list[EnrichedPurchaseOut]:
     with SessionLocal() as db:
         results = (
             db.query(DBPurchase, DBBusiness)
             .join(DBInvestment, DBPurchase.investment_id == DBInvestment.id)
             .join(DBBusiness, DBInvestment.business_id == DBBusiness.id)
-            .filter(
-                DBPurchase.user_id == user_id,
-                DBPurchase.status == status
-            )
+            .filter(DBPurchase.user_id == user_id, DBPurchase.status == status)
             .order_by(DBPurchase.id)
             .all()
         )
@@ -158,10 +161,13 @@ def get_financials_by_business_id(business_id: int) -> list[FinancialsOut]:
         ]
         return financials
 
+
 def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut | None:
     with SessionLocal() as db:
         db_investment = (
-            db.query(DBInvestment).filter(DBInvestment.id == purchase_request.investment_id).first()
+            db.query(DBInvestment)
+            .filter(DBInvestment.id == purchase_request.investment_id)
+            .first()
         )
         if not db_investment:
             raise ValueError("Investment not found")
@@ -188,9 +194,8 @@ def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut | None:
         )
 
 
-
-
 ################################################## login-backend by Jonathan
+
 
 def validate_session(email: str, session_token: str) -> bool:
     """
@@ -205,16 +210,16 @@ def validate_session(email: str, session_token: str) -> bool:
             db.query(DBUser)
             .filter(
                 # find what user is using this through email only
-                DBUser.email == email,
+                DBUser.email
+                == email,
             )
             .first()
         )
-        if not account: # if account does not exist
+        if not account:  # if account does not exist
             return False
 
         # assign account session token with session token
-        account.session_token=session_token
-
+        account.session_token = session_token
 
         # validate that it is not expired
         if datetime.now() >= account.session_expires_at:
@@ -226,6 +231,7 @@ def validate_session(email: str, session_token: str) -> bool:
         account.session_expires_at = expires
         db.commit()
         return True
+
 
 def validate_email_password(email: str, password: str) -> str | None:
     """
@@ -246,7 +252,9 @@ def validate_email_password(email: str, password: str) -> str | None:
         print(f"🔑 DEBUG: Input password: {password}")
 
         # Check password using bcrypt
-        password_match = bcrypt.checkpw(password.encode(), account.hashed_password.encode())
+        password_match = bcrypt.checkpw(
+            password.encode(), account.hashed_password.encode()
+        )
         print(f"🔐 DEBUG: Password match result: {password_match}")
 
         if not password_match:
@@ -265,7 +273,6 @@ def validate_email_password(email: str, password: str) -> str | None:
 
         print(f"🎉 DEBUG: Login successful! Session token: {session_token}")
         return session_token
-
 
 
 def invalidate_session(email: str, session_token: str) -> None:
@@ -291,18 +298,14 @@ def invalidate_session(email: str, session_token: str) -> None:
         db.commit()
 
 
-
-
-def get_user_public_details(email: str)-> UserPublicDetails | None:
+def get_user_public_details(email: str) -> UserPublicDetails | None:
     """
     Fetch public details for a user by email. Returns a UserPublicDetails
     object if found, or None if not found.
     """
 
     with SessionLocal() as db:
-        account = (
-            db.query(DBUser).filter(DBUser.email == email).first()
-        )
+        account = db.query(DBUser).filter(DBUser.email == email).first()
         if not account:
             return None
         return UserPublicDetails(email=account.email)

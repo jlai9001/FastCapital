@@ -12,7 +12,7 @@ from pydantic_schemas import (
     LoginCredentials,
     SuccessResponse,
     SecretResponse,
-    UserPublicDetails
+    UserPublicDetails,
 )
 from pathlib import Path
 from typing import List
@@ -22,8 +22,7 @@ from db import (
     validate_email_password,
     validate_session,
     invalidate_session,
-    create_user_account,
-    get_user_public_details
+    get_user_public_details,
 )
 from db_models import PurchaseStatus
 from rich import print  # debugging
@@ -49,10 +48,12 @@ app.add_middleware(
 
 # Session middleware for user authentication by Jonathan
 app.add_middleware(
-    SessionMiddleware, # Tells FastAPI that this feature will run on every request
-    secret_key="some-random-string", #Like a password that encrypts user session data
-    session_cookie="session", # Names the "memory card" stored in user's browser
-    max_age=60*60*2  #Sets how long the "memory" lasts. in this case 2 hours in seconds
+    SessionMiddleware,  # Tells FastAPI that this feature will run on every request
+    secret_key="some-random-string",  # Like a password that encrypts user session data
+    session_cookie="session",  # Names the "memory card" stored in user's browser
+    max_age=60
+    * 60
+    * 2,  # Sets how long the "memory" lasts. in this case 2 hours in seconds
 )
 
 
@@ -67,6 +68,7 @@ async def get_investment(investment_id: int) -> InvestmentOut:
 @app.get("/api/investment")
 async def get_investments() -> list[InvestmentOut]:
     return db.get_investments()
+
 
 @app.get("/api/business/{business_id}")
 async def get_business(business_id: int) -> BusinessOut:
@@ -122,6 +124,7 @@ async def post_purchase(purchase_request: PurchaseCreate):
 
 ###################################################### Login_Backend by Jonathan
 
+
 # accepts a email and password and create a new login-session
 # if the email and password are valid
 @app.post("/api/login", response_model=SuccessResponse)
@@ -149,10 +152,9 @@ async def session_login(
     return SuccessResponse(success=True)
 
 
-
-
 # invalidate the user's session in the database
 # and delete the session cookie from the user's browser
+
 
 @app.get("/api/logout", response_model=SuccessResponse)
 async def session_logout(request: Request) -> SuccessResponse:
@@ -175,15 +177,12 @@ async def session_logout(request: Request) -> SuccessResponse:
     return SuccessResponse(success=True)
 
 
-
-
-
-
 # a "protected" route which should only be reachable by a logged-in user
 # example: background metadeta
 # ex:  can't navigate to purchase if not logged in
 # ex: sending sensitive information (need encryption)
 # ex: sending password to server to check credentials
+
 
 # This is an authentication function which can be Depend'd
 # on by a route to require authentication for access to the route.
@@ -243,7 +242,6 @@ async def secret() -> SecretResponse:
     """
     # it can be assumed that the user is logged in and has a valid session
     return SecretResponse(secret="info")
-
 
 
 #################################################
