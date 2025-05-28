@@ -167,25 +167,25 @@ VALUES
 -- ALTER TABLE users DROP COLUMN password;
 -- ALTER TABLE users ALTER COLUMN session_expires_at TYPE TIMESTAMP USING session_expires_at::timestamp;
 
--- UPDATE users
--- SET
---     name = 'John Doe',
---     email = 'him@test.com',
---     -- unencrypted : admin123
---     hashed_password = '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p02ch0Ngc6FUHdRGqXup5bJO',
---     session_token = NULL,
---     session_expires_at = NULL
--- WHERE id = 1;
+UPDATE users
+SET
+    name = 'John Doe',
+    email = 'him@test.com',
+    -- unencrypted : admin123
+    hashed_password = '$2b$12$B.u84R0iEfuKtPFW2r13DOhAu6iHKm2erZD0icf8NjYCIVDW0L.RW',
+    session_token = NULL,
+    session_expires_at = NULL
+WHERE id = 1;
 
--- UPDATE users
--- SET
---     name = 'Jane Doe',
---     email = 'her@test.com.com',
---     -- unencrypted: demo2024
---     hashed_password = '$2b$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
---     session_token = NULL,
---     session_expires_at = NULL
--- WHERE id = 2;
+UPDATE users
+SET
+    name = 'Jane Doe',
+    email = 'her@test.com.com',
+    -- unencrypted: demo2024
+    hashed_password = '$2b$12$APvM26Vbbc8fvxFfrIGAKudul24SGcuA7znlfTxrUcr8rW9zk7WF2',
+    session_token = NULL,
+    session_expires_at = NULL
+WHERE id = 2;
 
 
 -- -- run the following line in the psql shell to load this file

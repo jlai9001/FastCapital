@@ -12,6 +12,8 @@ from pydantic_schemas import (
     UserPublicDetails
 )
 import bcrypt
+import secrets
+from datetime import datetime,timedelta
 
 DATABASE_URL = "postgresql+psycopg://postgres:postgres@localhost:5432/fastcapital"
 
@@ -249,7 +251,7 @@ def validate_email_password(email: str, password: str) -> str | None:
         print("✅ DEBUG: Password matches! Creating session...")
 
         # Generate new session token and set expiration
-        session_token = token_urlsafe()
+        session_token = secrets.token_urlsafe()
         expires = datetime.now() + timedelta(minutes=SESSION_LIFE_MINUTES)
 
         account.session_token = session_token
@@ -280,7 +282,7 @@ def invalidate_session(email: str, session_token: str) -> None:
             return
 
         # set the token to an invalid value that is unique
-        account.session_token = f"expired-{token_urlsafe()}"
+        account.session_token = f"expired-{secrets.token_urlsafe()}"
         db.commit()
 
 
