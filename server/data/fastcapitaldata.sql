@@ -12,12 +12,19 @@ DROP TYPE IF EXISTS purchase_status CASCADE;
 CREATE TYPE financial_type AS ENUM ('income', 'expense', 'asset', 'liability');
 CREATE TYPE purchase_status AS ENUM ('pending', 'completed', 'expired');
 
+
+-- ADD COLUMN hashed_password VARCHAR,
+-- ADD COLUMN session_token VARCHAR,
+-- ADD COLUMN session_expires_at TIMESTAMP;
+
 -- Create tables
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL
+    hashed_password VARCHAR(255) NOT NULL,
+    session_token VARCHAR(255),
+    session_expires_at TIMESTAMP
 );
 
 CREATE TABLE businesses (
@@ -62,28 +69,28 @@ CREATE TABLE purchases (
     status purchase_status NOT NULL DEFAULT 'pending'
 );
 
--- Seed users
-INSERT INTO users(id, name, email, password) VALUES
-  (1,  'John Smith',    'jsmith@email.com',    'password'),
-  (2,  'Jane Doe',      'jdoe@email.com',      'password'),
-  (3,  'Alice Johnson', 'alicej@email.com',    'password'),
-  (4,  'Bob Williams',  'bwilliams@email.com', 'password'),
-  (5,  'Carol Taylor',  'ctaylor@email.com',   'password'),
-  (6,  'David Brown',   'dbrown@email.com',    'password'),
-  (7,  'Emily Davis',   'edavis@email.com',    'password'),
-  (8,  'Frank Miller',  'fmiller@email.com',   'password'),
-  (9,  'Grace Wilson',  'gwilson@email.com',   'password'),
-  (10, 'Henry Moore',   'hmoore@email.com',    'password'),
-  (11, 'Isla Thomas',   'ithomas@email.com',   'password'),
-  (12, 'Jack Lee',      'jlee@email.com',      'password'),
-  (13, 'Karen Hall',    'khall@email.com',     'password'),
-  (14, 'Liam Young',    'lyoung@email.com',    'password'),
-  (15, 'Mia King',      'mking@email.com',     'password'),
-  (16, 'Noah Wright',   'nwright@email.com',   'password'),
-  (17, 'Olivia Scott',  'oscott@email.com',    'password'),
-  (18, 'Paul Green',    'pgreen@email.com',    'password'),
-  (19, 'Quinn Adams',   'qadams@email.com',    'password'),
-  (20, 'Ruby Baker',    'rbaker@email.com',    'password');
+INSERT INTO users(id, name, email, hashed_password)
+VALUES
+    (1, 'John Smith', 'jsmith@email.com', '$2b$12$B.u84R0iEfuKtPFW2r13DOhAu6iHKm2erZD0icf8NjYCIVDW0L.RW'), --pass:admin123
+    (2, 'Jane Doe', 'jdoe@email.com', '$2b$12$APvM26Vbbc8fvxFfrIGAKudul24SGcuA7znlfTxrUcr8rW9zk7WF2'), --pass: demo2024
+    (3, 'Alice Johnson', 'alicej@email.com', '$2b$12$IWnYtBj9p2wzpR9A8cn5Sets.dh9zBCbe.GSMRUydmURrodxt/UIq'), --pas: dummypass
+    (4, 'Bob Williams', 'bwilliams@email.com', 'password'),
+    (5, 'Carol Taylor', 'ctaylor@email.com', 'password'),
+    (6, 'David Brown', 'dbrown@email.com', 'password'),
+    (7, 'Emily Davis', 'edavis@email.com', 'password'),
+    (8, 'Frank Miller', 'fmiller@email.com', 'password'),
+    (9, 'Grace Wilson', 'gwilson@email.com', 'password'),
+    (10, 'Henry Moore', 'hmoore@email.com', 'password'),
+    (11, 'Isla Thomas', 'ithomas@email.com', 'password'),
+    (12, 'Jack Lee', 'jlee@email.com', 'password'),
+    (13, 'Karen Hall', 'khall@email.com', 'password'),
+    (14, 'Liam Young', 'lyoung@email.com', 'password'),
+    (15, 'Mia King', 'mking@email.com', 'password'),
+    (16, 'Noah Wright', 'nwright@email.com', 'password'),
+    (17, 'Olivia Scott', 'oscott@email.com', 'password'),
+    (18, 'Paul Green', 'pgreen@email.com', 'password'),
+    (19, 'Quinn Adams', 'qadams@email.com', 'password'),
+    (20, 'Ruby Baker', 'rbaker@email.com', 'password');
 
 -- Seed businesses (website_url always a non-null string)
 INSERT INTO businesses(id, name, user_id, image_url, website_url, address1, address2, city, state, postal_code) VALUES
@@ -197,3 +204,6 @@ INSERT INTO purchases(id, investment_id, user_id, shares_purchased, cost_per_sha
 
   -- User 4: one completed
   (15,  9, 4,  85, 19.00, '2023-07-02', 'completed');
+
+-- run the following line in the psql shell to load this file
+-- \i data/fastcapitaldata.sql
