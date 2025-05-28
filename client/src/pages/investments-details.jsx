@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useInvestment, useBusiness } from "../hooks/getData";
+import FinancialDashboard from "../components/financials_table";
 
 export default function InvestmentDetails() {
     const { investmentId } = useParams();
@@ -44,6 +45,7 @@ export default function InvestmentDetails() {
               Invest Now!
             </button>
           </div>
+          {business?.id && <FinancialDashboard businessId={business.id} />}
         </div>
       );
     }
