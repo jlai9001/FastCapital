@@ -21,7 +21,7 @@ CREATE TABLE users (
     email VARCHAR(255) NOT NULL,
     hashed_password VARCHAR(255) NOT NULL,
     session_token VARCHAR(255),
-    session_expires_at TIMESTAMP;
+    session_expires_at TIMESTAMP
 );
 
 CREATE TABLE businesses (
@@ -68,7 +68,7 @@ CREATE TABLE purchases (
 
 
 
-INSERT INTO users(id, name, email, password)
+INSERT INTO users(id, name, email, hashed_password)
 VALUES
     (1, 'John Smith', 'jsmith@email.com', 'password'),
     (2, 'Jane Doe', 'jdoe@email.com', 'password'),

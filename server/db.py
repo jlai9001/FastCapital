@@ -13,7 +13,7 @@ from pydantic_schemas import (
 )
 import bcrypt
 
-DATABASE_URL = "postgresql+psycopg://postgres:postgres@localhost:5432/database"
+DATABASE_URL = "postgresql+psycopg://postgres:postgres@localhost:5432/fastcapital"
 
 # edited by Jonathan
 SESSION_LIFE_MINUTES = 240
@@ -193,16 +193,21 @@ def validate_session(email: str, session_token: str) -> bool:
     """
 
     with SessionLocal() as db:
+        # find the account in the DATABASEEEEEEEEE (no session related stuff)
         account = (
             db.query(DBUser)
             .filter(
+                # find what user is using this through email only
                 DBUser.email == email,
-                DBUser.session_token == session_token,
             )
             .first()
         )
-        if not account:
+        if not account: # if account does not exist
             return False
+
+        # assign account session token with session token
+        account.session_token=session_token
+
 
         # validate that it is not expired
         if datetime.now() >= account.session_expires_at:
