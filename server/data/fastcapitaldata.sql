@@ -71,9 +71,9 @@ CREATE TABLE purchases (
 
 INSERT INTO users(id, name, email, hashed_password)
 VALUES
-    (1, 'John Smith', 'jsmith@email.com', 'password'),
-    (2, 'Jane Doe', 'jdoe@email.com', 'password'),
-    (3, 'Alice Johnson', 'alicej@email.com', 'password'),
+    (1, 'John Smith', 'jsmith@email.com', '$2b$12$B.u84R0iEfuKtPFW2r13DOhAu6iHKm2erZD0icf8NjYCIVDW0L.RW'), --pass:admin123
+    (2, 'Jane Doe', 'jdoe@email.com', '$2b$12$APvM26Vbbc8fvxFfrIGAKudul24SGcuA7znlfTxrUcr8rW9zk7WF2'), --pass: demo2024
+    (3, 'Alice Johnson', 'alicej@email.com', '$2b$12$IWnYtBj9p2wzpR9A8cn5Sets.dh9zBCbe.GSMRUydmURrodxt/UIq'), --pas: dummypass
     (4, 'Bob Williams', 'bwilliams@email.com', 'password'),
     (5, 'Carol Taylor', 'ctaylor@email.com', 'password'),
     (6, 'David Brown', 'dbrown@email.com', 'password'),
