@@ -10,7 +10,6 @@ from pydantic_schemas import (
     PurchaseCreate,
     EnrichedPurchaseOut,
     LoginCredentials,
-    SignupCredentials,
     SuccessResponse,
     SecretResponse,
     UserPublicDetails
@@ -176,35 +175,7 @@ async def session_logout(request: Request) -> SuccessResponse:
     return SuccessResponse(success=True)
 
 
-# accepts a email and password and create a new user in the database
-# if the user doesn't already exist. It also logs the user in.
-@app.post("/api/signup", response_model=SuccessResponse)
-async def signup(
-    credentials: SignupCredentials, request: Request
-) -> SuccessResponse:
-    """
-    Handle user signup.
-    Creates a new user account if email is available, then logs in
-    the user. Returns success if signup is successful, else raises 400
-    or 409.
-    """
-    name = credentials.name
-    email = credentials.email
-    password = credentials.password
-    # Check for empty email or password
-    if not email or not password:
-        raise HTTPException(
-            status_code=400, detail="Email and password required"
-        )
-    # Use db.py helper to create the user account
-    success = create_user_account(name, email, password)
-    if not success:
-        raise HTTPException(status_code=409, detail="Email already exists")
-    # Automatically log in the user after signup
-    new_session_token = validate_email_password(email, password)
-    request.session["email"] = email
-    request.session["session_token"] = new_session_token
-    return SuccessResponse(success=True)
+
 
 
 

@@ -286,35 +286,6 @@ def invalidate_session(email: str, session_token: str) -> None:
         db.commit()
 
 
-def create_user_account(name:str, email: str, password: str) -> bool:
-    """
-    Create a new user account with the given email and password.
-    Returns True if the account was created successfully, or False if the
-    username exists.
-    """
-    # Create a new user account.
-    # Returns True if successful, False if email exists.
-    with SessionLocal() as db:
-        # Check if email already exists
-        if db.query(DBUser).filter(DBUser.email == email).first():
-            return False
-        # Hash the password using bcrypt before storing it in the database.
-        # bcrypt.hashpw returns a hashed password as bytes,
-        # which we decode to a string.
-        hashed_password = bcrypt.hashpw(
-            password.encode(), bcrypt.gensalt()
-        ).decode()
-
-        account = DBUser()
-        account.name = name
-        account.email = email
-        account.hashed_password = hashed_password
-        account.session_token = None
-        account.session_expires_at = None
-
-        db.add(account)
-        db.commit()
-        return True
 
 
 def get_user_public_details(email: str)-> UserPublicDetails | None:

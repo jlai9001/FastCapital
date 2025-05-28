@@ -100,11 +100,6 @@ class LoginCredentials(BaseModel):
     email: str
     password: str
 
-class SignupCredentials(BaseModel):
-    name: str
-    email: str
-    password: str
-
 class SuccessResponse(BaseModel):
     success: bool
 
