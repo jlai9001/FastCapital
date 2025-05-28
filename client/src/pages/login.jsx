@@ -10,29 +10,46 @@ function Error_Message(){
 
 
 function Login(){
-    const [username,set_username] = useState('');
+    const [email,set_email] = useState('');
     const [password,set_password] = useState('');
     const [showError,set_showError] = useState(false);
 
     const navigate = useNavigate();
 
-    const LoginClick = () => {
-    console.log("Login Click");
-    console.log("username",username);
-    console.log("password",password);
+    const LoginClick = async () => {
+        try {
+            const response = await fetch("http://localhost:8000/api/login", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              credentials: "include",
+              body: JSON.stringify({
+                email: email,
+                password: password,
+              }),
+            });
 
-    /////////////////////////////////////////////////// validate login credentials
-    // login success
-    if (username == "user123" && password == "P@ssw0rd123!"){
-        console.log("login success!");
-        navigate('/');
-    }else{
-    // login failed
-        console.log("login failed!");
-        set_showError(true);
-    }
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Login failed:", errorData.detail || "Unknown error");
+                set_showError(true);
+                return;
+            }
 
-    }
+            const data = await response.json();
+            if (data.success) {
+              console.log("Login success!");
+              navigate("/portfolio");
+            } else {
+                console.error("Login failed: success flag false");
+                set_showError(true);
+            }
+          } catch (error) {
+            console.log("Login error:", error);
+            set_showError(true);
+          }
+        };
 
     const SignUpClick = () => {
     alert("Can't Sign Up - Developer 404")
@@ -48,18 +65,18 @@ function Login(){
             {showError && <Error_Message />}
             <div className = "All_Fields_Container">
                 <div className= "Fields_Title_Container">
-                    <div className = "Field_Title">Username:</div>
+                    <div className = "Field_Title">Email:</div>
                     <div className = "Field_Title">Password:</div>
                 </div>
                 <div className= "Input_Container">
                         <input className="Input_Field"
                         type="text"
-                        value={username}
-                        onChange={(e) => set_username(e.target.value)}
-                        placeholder="Enter Your Username"
+                        value={email}
+                        onChange={(e) => set_email(e.target.value)}
+                        placeholder="Enter Your Email"
                         />
                         <input className="Input_Field"
-                        type="text"
+                        type="password"
                         value={password}
                         onChange={(e) => set_password(e.target.value)}
                         placeholder="Enter Your Password"

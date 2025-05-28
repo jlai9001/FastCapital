@@ -52,7 +52,7 @@ app.add_middleware(
 
 # Endpoint to handle login requests
 @app.post("/api/login", response_model=SuccessResponse)
-async def session_login(
+async def login(
     credentials: LoginCredentials, request: Request
 ) -> SuccessResponse:
     """
@@ -101,12 +101,6 @@ async def session_logout(request: Request) -> SuccessResponse:
 async def signup(
     credentials: SignupCredentials, request: Request
 ) -> SuccessResponse:
-    """
-    Handle user signup.
-    Creates a new user account if username is available, then logs in
-    the user. Returns success if signup is successful, else raises 400
-    or 409.
-    """
     name = credentials.name
     email = credentials.email
     password = credentials.password
@@ -127,7 +121,11 @@ async def signup(
     "/api/me",
     response_model=UserPublicDetails)
 async def get_me(current_user: UserPublicDetails = Depends(get_auth_user)) -> UserPublicDetails:
-    return current_user
+    try:
+        return current_user
+    except Exception as e:
+        print(f"Error in get_me: {e}")
+        raise HTTPException(status_code=401, detail="Unauthorized")
 
 
 # This is how to declare that a route is "protected" and requires
@@ -173,12 +171,12 @@ async def get_businesses() -> list[BusinessOut]:
     return db.get_businesses()
 
 
-@app.get("/api/purchases/{user_id}", response_model=List[EnrichedPurchaseOut])
+@app.get("/api/purchases", response_model=List[EnrichedPurchaseOut])
 async def get_user_purchases(
     status: PurchaseStatus = Query(PurchaseStatus.pending),
     current_user: UserPublicDetails = Depends(get_auth_user)
 ):
-    user_id = current_user.id  # assuming UserPublicDetails has 'id'
+    user_id = current_user.id
     purchases = get_purchases_by_status(user_id, status)
     return purchases
 

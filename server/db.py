@@ -109,12 +109,8 @@ def invalidate_session(email: str, session_token: str) -> None:
 
 def create_user(name: str, email: str, password: str) -> bool:
     with SessionLocal() as db:
-        # Check if email already exists
         if db.query(DBUser).filter(DBUser.email == email).first():
             return False
-        # Hash the password using bcrypt before storing it in the database.
-        # bcrypt.hashpw returns a hashed password as bytes,
-        # which we decode to a string.
         hashed_password = bcrypt.hashpw(
             password.encode(), bcrypt.gensalt()
         ).decode()
@@ -130,19 +126,13 @@ def create_user(name: str, email: str, password: str) -> bool:
         return True
 
 def get_user_public_details(email: str):
-    """
-    Fetch public details for a user by email. Returns a UserPublicDetails
-    object if found, or None if not found.
-    """
-    from schemas import UserPublicDetails
-
     with SessionLocal() as db:
         account = (
             db.query(DBUser).filter(DBUser.email == email).first()
         )
         if not account:
             return None
-        return UserPublicDetails(email=account.email)
+        return UserPublicDetails(id=account.id, email=account.email)
 
 
 
