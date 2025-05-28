@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import './investments_card.css';
+import '../components/your-investments_chart.css';
 import { PieChart } from "@mui/x-charts/PieChart";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
