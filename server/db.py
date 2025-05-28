@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from db_models import DBBusiness, DBInvestment, DBFinancials, DBPurchase, PurchaseStatus
+from db_models import DBBusiness, DBInvestment, DBFinancials, DBPurchase, PurchaseStatus, DBUser
 from pydantic_schemas import (
     InvestmentOut,
     BusinessOut,
@@ -8,11 +8,17 @@ from pydantic_schemas import (
     PurchaseCreate,
     PurchaseOut,
     EnrichedPurchaseOut,
-    PurchaseStatus
+    PurchaseStatus,
+    UserPublicDetails
 )
-
+import bcrypt
+import secrets
+from datetime import datetime,timedelta
 
 DATABASE_URL = "postgresql+psycopg://postgres:postgres@localhost:5432/fastcapital"
+
+# edited by Jonathan
+SESSION_LIFE_MINUTES = 240
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
@@ -117,17 +123,17 @@ def get_purchases_by_status(user_id: int, status: PurchaseStatus) -> list[Enrich
 
         enriched_purchases = [
             EnrichedPurchaseOut(
-                id=purchase.id,
-                investment_id=purchase.investment_id,
-                shares_purchased=purchase.shares_purchased,
-                cost_per_share=purchase.cost_per_share,
-                purchase_date=purchase.purchase_date,
-                status=purchase.status,
-                business_name=business.name,
-                business_city=business.city,
-                business_state=business.state,
-                business_image_url=business.image_url,
-                business_website_url=business.website_url,
+                id=db_purchase.id,
+                investment_id=db_purchase.investment_id,
+                shares_purchased=db_purchase.shares_purchased,
+                cost_per_share=db_purchase.cost_per_share,
+                purchase_date=db_purchase.purchase_date,
+                status=db_purchase.status,
+                business_name=db_business.name,
+                business_city=db_business.city,
+                business_state=db_business.state,
+                business_image_url=db_business.image_url,
+                business_website_url=db_business.website_url,
             )
             for db_purchase, db_business in results
         ]
@@ -142,16 +148,15 @@ def get_financials_by_business_id(business_id: int) -> list[FinancialsOut]:
 
         financials = [
             FinancialsOut(
-                id=record.id,
-                business_id=record.business_id,
-                date=record.date,
-                amount=record.amount,
-                type=record.type,
+                id=db_financial.id,
+                business_id=db_financial.business_id,
+                date=db_financial.date,
+                amount=db_financial.amount,
+                type=db_financial.type,
             )
             for db_financial in db_financial_records
         ]
         return financials
-
 
 def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut | None:
     with SessionLocal() as db:
@@ -159,7 +164,7 @@ def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut | None:
             db.query(DBInvestment).filter(DBInvestment.id == purchase_request.investment_id).first()
         )
         if not db_investment:
-            raise ValueError("Offer not found")
+            raise ValueError("Investment not found")
         if db_investment.shares_available < purchase_request.shares_purchased:
             raise Exception("NotEnoughSharesException")
 
@@ -181,3 +186,123 @@ def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut | None:
             purchase_date=db_purchase.purchase_date,
             status=db_purchase.status.value,
         )
+
+
+
+
+################################################## login-backend by Jonathan
+
+def validate_session(email: str, session_token: str) -> bool:
+    """
+    Validate a session token for a given email. Returns True if the
+    session is valid and not expired, and updates the session expiration.
+    Returns False otherwise.
+    """
+
+    with SessionLocal() as db:
+        # find the account in the DATABASEEEEEEEEE (no session related stuff)
+        account = (
+            db.query(DBUser)
+            .filter(
+                # find what user is using this through email only
+                DBUser.email == email,
+            )
+            .first()
+        )
+        if not account: # if account does not exist
+            return False
+
+        # assign account session token with session token
+        account.session_token=session_token
+
+
+        # validate that it is not expired
+        if datetime.now() >= account.session_expires_at:
+            return False
+
+        # update the expiration date and save to the database
+        expires = datetime.now() + timedelta(minutes=SESSION_LIFE_MINUTES)
+        # assign as datetime, not isoformat
+        account.session_expires_at = expires
+        db.commit()
+        return True
+
+def validate_email_password(email: str, password: str) -> str | None:
+    """
+    Validate email and password. Returns a new session token if valid,
+    None if invalid.
+    """
+    print(f"🔍 DEBUG: Trying to login with email: {email}")
+
+    with SessionLocal() as db:
+        account = db.query(DBUser).filter(DBUser.email == email).first()
+
+        if not account:
+            print(f"❌ DEBUG: No account found for email: {email}")
+            return None
+
+        print(f"✅ DEBUG: Account found! Name: {account.name}")
+        print(f"🔑 DEBUG: Stored hash: {account.hashed_password}")
+        print(f"🔑 DEBUG: Input password: {password}")
+
+        # Check password using bcrypt
+        password_match = bcrypt.checkpw(password.encode(), account.hashed_password.encode())
+        print(f"🔐 DEBUG: Password match result: {password_match}")
+
+        if not password_match:
+            print("❌ DEBUG: Password doesn't match!")
+            return None
+
+        print("✅ DEBUG: Password matches! Creating session...")
+
+        # Generate new session token and set expiration
+        session_token = secrets.token_urlsafe()
+        expires = datetime.now() + timedelta(minutes=SESSION_LIFE_MINUTES)
+
+        account.session_token = session_token
+        account.session_expires_at = expires
+        db.commit()
+
+        print(f"🎉 DEBUG: Login successful! Session token: {session_token}")
+        return session_token
+
+
+
+def invalidate_session(email: str, session_token: str) -> None:
+    """
+    Invalidate a user's session by setting the session token to a unique
+    expired value.
+    """
+    # retrieve the user account for the given session token
+    with SessionLocal() as db:
+        account = (
+            db.query(DBUser)
+            .filter(
+                DBUser.email == email,
+                DBUser.session_token == session_token,
+            )
+            .first()
+        )
+        if not account:
+            return
+
+        # set the token to an invalid value that is unique
+        account.session_token = f"expired-{secrets.token_urlsafe()}"
+        db.commit()
+
+
+
+
+def get_user_public_details(email: str)-> UserPublicDetails | None:
+    """
+    Fetch public details for a user by email. Returns a UserPublicDetails
+    object if found, or None if not found.
+    """
+
+    with SessionLocal() as db:
+        account = (
+            db.query(DBUser).filter(DBUser.email == email).first()
+        )
+        if not account:
+            return None
+        return UserPublicDetails(email=account.email)

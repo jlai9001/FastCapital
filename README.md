@@ -34,7 +34,7 @@ npm install @mui/material @emotion/react @emotion/styled @mui/x-charts axios
 <!-- Start up a new container and connect to the default DB -->
 
     docker-compose up -d
-    docker exec -it postgres_db psql -U postgres -d postgres
+    docker exec -it postgres_db psql -U postgres
 
 <!-- Create and switch to the fastcapital DB -->
 
