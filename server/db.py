@@ -107,14 +107,7 @@ def invalidate_session(email: str, session_token: str) -> None:
         account.session_token = f"expired-{token_urlsafe()}"
         db.commit()
 
-def create_user(email: str, password: str) -> bool:
-    """
-    Create a new user account with the given email and password.
-    Returns True if the account was created successfully, or False if the
-    email exists.
-    """
-    # Create a new user account.
-    # Returns True if successful, False if email exists.
+def create_user(name: str, email: str, password: str) -> bool:
     with SessionLocal() as db:
         # Check if email already exists
         if db.query(DBUser).filter(DBUser.email == email).first():
@@ -126,6 +119,7 @@ def create_user(email: str, password: str) -> bool:
             password.encode(), bcrypt.gensalt()
         ).decode()
         account = DBUser(
+            name=name,
             email=email,
             hashed_password=hashed_password,
             session_token=None,

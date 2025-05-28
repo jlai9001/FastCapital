@@ -8,6 +8,11 @@ class LoginCredentials(BaseModel):
     email: EmailStr
     password: str
 
+class SignupCredentials(BaseModel):
+    name: str
+    email: EmailStr
+    password: str
+
 
 class SuccessResponse(BaseModel):
     success: bool

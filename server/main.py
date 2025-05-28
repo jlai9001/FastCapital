@@ -13,11 +13,12 @@ from pydantic_schemas import (
     SecretResponse,
     UserPublicDetails,
     UserCreate,
+    SignupCredentials,
 )
 from pathlib import Path
 from typing import List
 import db
-from db import get_purchases_by_status
+from db import get_purchases_by_status, create_user, invalidate_session, validate_email_password
 from db_models import PurchaseStatus
 from rich import print  # debugging
 from auth import get_auth_user
@@ -98,7 +99,7 @@ async def session_logout(request: Request) -> SuccessResponse:
 # Endpoint to handle signup requests
 @app.post("/api/signup", response_model=SuccessResponse)
 async def signup(
-    credentials: LoginCredentials, request: Request
+    credentials: SignupCredentials, request: Request
 ) -> SuccessResponse:
     """
     Handle user signup.
@@ -106,15 +107,14 @@ async def signup(
     the user. Returns success if signup is successful, else raises 400
     or 409.
     """
+    name = credentials.name
     email = credentials.email
     password = credentials.password
-    # Check for empty username or password
     if not email or not password:
         raise HTTPException(
             status_code=400, detail="Email and password required"
         )
-    # Use db.py helper to create the user account
-    success = create_user_account(email, password)
+    success = create_user(name, email, password)
     if not success:
         raise HTTPException(status_code=409, detail="Email already exists")
     # Automatically log in the user after signup
