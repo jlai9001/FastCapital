@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import {useInvestment, useBusiness} from "../hooks/getData"
+import { useUser } from "../context/user-provider"
 import PaymentModal from "./payment_modal"
 
 
@@ -8,7 +9,7 @@ import PaymentModal from "./payment_modal"
 export default function Purchase(){
 	const nav = useNavigate()
 	const { investmentId } = useParams()
-	const userId = 3
+	const userId = useUser()
 
 	const { data: investment, loading: investmentLoading, error: investmentError} = useInvestment(investmentId);
 	const { data: business, loading: businessLoading, error: businessError } = useBusiness(investment?.business_id);

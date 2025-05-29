@@ -1,63 +1,69 @@
-import './login.css'
-import {useState} from 'react';
+import './login.css';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../context/user-provider.jsx';
 
-function Error_Message(){
-    return (
-        <div className= "Error_Message">Invalid Username or Password</div>
-    )
+function Error_Message() {
+  return (
+    <div className="Error_Message">Invalid email or Password</div>
+  );
 }
 
+function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showError, setShowError] = useState(false);
+  const [loading, setLoading] = useState(false)
 
-function Login(){
-    const [email,set_email] = useState('');
-    const [password,set_password] = useState('');
-    const [showError,set_showError] = useState(false);
+  const { refreshUser } = useUser();   // useUser hook inside main Login component
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
 
     const LoginClick = async () => {
-        try {
-            const response = await fetch("http://localhost:8000/api/login", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              credentials: "include",
-              body: JSON.stringify({
-                email: email,
-                password: password,
-              }),
-            });
+    if (!email || !password) {
+      setShowError(true);
+      return;
+    }
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                console.error("Login failed:", errorData.detail || "Unknown error");
-                set_showError(true);
-                return;
-            }
+    setLoading(true);
+    try {
+        const response = await fetch("http://localhost:8000/api/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ email, password }),
+        });
 
-            const data = await response.json();
-            if (data.success) {
-              console.log("Login success!");
-              navigate("/portfolio");
-            } else {
-                console.error("Login failed: success flag false");
-                set_showError(true);
-            }
-          } catch (error) {
-            console.log("Login error:", error);
-            set_showError(true);
-          }
-        };
+        const data = await response.json();
 
-    const SignUpClick = () => {
-    alert("Can't Sign Up - Developer 404")
-    };
+        if (!response.ok || !data.success) {
+            console.error("Login failed:", data.detail || "Unknown error");
+            setShowError(true);
+            return;
+        }
 
-    const ForgetPasswordClick = () => {
-    alert("Can't Change Password - Developer 404")
-    };
+        console.log("Login success!");
+        await refreshUser();
+        navigate("/portfolio");
+
+    } catch (error) {
+        console.error("Login error:", error);
+        setShowError(true);
+    } finally {
+        setLoading(false);
+    }
+};
+
+
+  const SignUpClick = () => {
+    alert("Can't Sign Up - Developer 404"); //nav to sign-up
+  };
+
+  const ForgetPasswordClick = () => {
+    alert("Can't Change Password - Developer 404"); //future ticket
+  };
 
     return(
         <div className="Login_Container">
@@ -72,13 +78,13 @@ function Login(){
                         <input className="Input_Field"
                         type="text"
                         value={email}
-                        onChange={(e) => set_email(e.target.value)}
+                        onChange={(e) => setEmail(e.target.value)}
                         placeholder="Enter Your Email"
                         />
                         <input className="Input_Field"
                         type="password"
                         value={password}
-                        onChange={(e) => set_password(e.target.value)}
+                        onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter Your Password"
                         />
                     </div>
