@@ -54,18 +54,18 @@ function FinancialDashboard({ businessId }) {
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
         if (tab === 'pl') {
-            const [revenues, expenses] = getMonthlyData(['revenue', 'expense']).reduce(
+            const [incomes, expenses] = getMonthlyData(['income', 'expense']).reduce(
                 ([rev, exp], [r, e]) => [[...rev, r], [...exp, e]],
                 [[], []]
             );
 
-            const netIncome = revenues.map((r, i) => r - expenses[i]);
+            const netIncome = incomes.map((r, i) => r - expenses[i]);
 
             return (
                 <BarChart
                     xAxis={[{ scaleType: 'band', data: months }]}
                     series={[
-                       { label: 'Revenue', data: revenues },
+                       { label: 'Income', data: incomes },
                        { label: 'Expenses', data: expenses },
                        { label: 'Net Income', data: netIncome },
                     ]}
