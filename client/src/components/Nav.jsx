@@ -2,12 +2,26 @@ import React, { useState } from "react";
 // CRITICAL: Import from 'react-router-dom' for web projects
 import { NavLink} from "react-router-dom";
 import './Nav.css';
+import { useUser } from "../context/user-provider";
+import { useNavigate } from "react-router-dom";
 
 export default function Nav() {
     const [menuOpen, setMenuOpen] = useState(false);
+    const { user, refreshUser } = useUser();
+    const navigate = useNavigate();
 
     const closeMobileMenu = () => {
         setMenuOpen(false);
+    };
+
+    const handleLogout = async () => {
+        await fetch('http://localhost:8000/api/logout', {
+            method: 'POST',
+            credentials: 'include',
+        });
+
+        await refreshUser();
+        navigate('/login');
     };
 
     return (
@@ -36,6 +50,16 @@ export default function Nav() {
                         All Investments
                     </NavLink>
                 </div>
+
+                {user ? (
+                    <button
+                        className="nav-link desktop-only"
+                        id="logout"
+                        onClick={handleLogout}
+                        >
+                        Logout
+                        </button>
+                ) : (
                     <NavLink
                         className="nav-link desktop-only"
                         id="login"
@@ -44,6 +68,7 @@ export default function Nav() {
                     >
                         Login
                     </NavLink>
+                )}
 
                 {/* Hamburger Icon for Mobile */}
                 <button
@@ -58,15 +83,25 @@ export default function Nav() {
             {/* Mobile Menu (conditionally rendered) */}
             {menuOpen && (
                 <div className="mobile-menu mobile-only">
-                    <NavLink className="nav-link" to="/feed" onClick={closeMobileMenu}>
+                    <NavLink className="nav-link" to="/portfolio" onClick={closeMobileMenu}>
                         Portfolio
                     </NavLink>
-                    <NavLink className="nav-link" to="/my-recipes" onClick={closeMobileMenu}>
+                    <NavLink className="nav-link" to="/all-investments" onClick={closeMobileMenu}>
                         All Investments
                     </NavLink>
-                    <NavLink className="nav-link" to="/my-recipes" onClick={closeMobileMenu}>
+                    {user ? (
+                        <button
+                            className="nav-link"
+                            id="logout-mobile"
+                            onClick={handleLogout}
+                        >
+                            Logout
+                        </button>
+                    ) : (
+                    <NavLink className="nav-link" to="/login" onClick={closeMobileMenu}>
                         Login
                     </NavLink>
+            )}
                 </div>
             )}
         </header>
