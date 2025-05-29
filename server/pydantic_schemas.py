@@ -8,6 +8,7 @@ class LoginCredentials(BaseModel):
     email: EmailStr
     password: str
 
+
 class SignupCredentials(BaseModel):
     name: str
     email: EmailStr
@@ -27,6 +28,7 @@ class UserPublicDetails(BaseModel):
     email: str
     id: int
     # Add more public fields here if needed
+
 
 class UserCreate(BaseModel):
     name: str
@@ -118,11 +120,14 @@ class FinancialsCreate(BaseModel):
 class FinancialsOut(FinancialsCreate):
     id: int
 
+
 ############################################ Login Session by Jonathan
+
 
 class LoginCredentials(BaseModel):
     email: str
     password: str
+
 
 class SuccessResponse(BaseModel):
     success: bool
