@@ -111,7 +111,7 @@ def invalidate_session(email: str, session_token: str) -> None:
             return
 
         # set the token to an invalid value that is unique
-        account.session_token = f"expired-{secrets.token_urlsafe()}"
+        account.session_token = f"expired-{token_urlsafe()}"
         db.commit()
 
 

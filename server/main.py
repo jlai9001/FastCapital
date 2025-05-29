@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, Query, Request, Depends
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 from pydantic_schemas import (
     InvestmentOut,
     BusinessOut,
