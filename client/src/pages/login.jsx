@@ -1,6 +1,6 @@
 import './login.css';
 import { useState } from 'react';
-import { data, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useUser } from '../context/user-provider.jsx';
 
 function Error_Message() {
@@ -13,67 +13,49 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showError, setShowError] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   const { refreshUser } = useUser();   // useUser hook inside main Login component
   const navigate = useNavigate();
 
-  const LoginClick = async () => {
-    console.log("Login Click");
-    console.log("email", email);
-    console.log("password", password);
 
-    //this should check valid account & password
-
-    //code here
-    // fetch post with email and password
-    const response = await fetch(`http://localhost:8000/api/login`, )
-    // if true, nav
-
-    //
-    if (email === "user123" && password === "P@ssw0rd123!") {
-      console.log("login success!");
-
-      await refreshUser();     // refresh user context after login
-      navigate('/');           // redirect to homepage with new context
-    } else {
-      console.log("login failed!");
-      setShowError(true);
-    }
-  };
     const LoginClick = async () => {
-        try {
-            const response = await fetch("http://localhost:8000/api/login", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              credentials: "include",
-              body: JSON.stringify({
-                email: email,
-                password: password,
-              }),
-            });
+    if (!email || !password) {
+      setShowError(true);
+      return;
+    }
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                console.error("Login failed:", errorData.detail || "Unknown error");
-                set_showError(true);
-                return;
-            }
+    setLoading(true);
+    try {
+        const response = await fetch("http://localhost:8000/api/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ email, password }),
+        });
 
-            const data = await response.json();
-            if (data.success) {
-              console.log("Login success!");
-              navigate("/portfolio");
-            } else {
-                console.error("Login failed: success flag false");
-                set_showError(true);
-            }
-          } catch (error) {
-            console.log("Login error:", error);
-            set_showError(true);
-          }
-        };
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            console.error("Login failed:", data.detail || "Unknown error");
+            setShowError(true);
+            return;
+        }
+
+        console.log("Login success!");
+        await refreshUser();
+        navigate("/portfolio");
+
+    } catch (error) {
+        console.error("Login error:", error);
+        setShowError(true);
+    } finally {
+        setLoading(false);
+    }
+};
+
 
   const SignUpClick = () => {
     alert("Can't Sign Up - Developer 404"); //nav to sign-up
@@ -96,13 +78,13 @@ function Login() {
                         <input className="Input_Field"
                         type="text"
                         value={email}
-                        onChange={(e) => set_email(e.target.value)}
+                        onChange={(e) => setEmail(e.target.value)}
                         placeholder="Enter Your Email"
                         />
                         <input className="Input_Field"
                         type="password"
                         value={password}
-                        onChange={(e) => set_password(e.target.value)}
+                        onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter Your Password"
                         />
                     </div>
