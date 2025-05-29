@@ -8,7 +8,6 @@ function SignupForm() {
         name: "",
         email: "",
         password: "",
-        confirmPassword: "",
   });
 
   const [message, setMessage] = useState("");
@@ -23,20 +22,13 @@ function SignupForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (formData.password !== formData.confirmPassword) {
-      setMessage("Passwords do not match.");
-      return;
-    }
-
-    const { confirmPassword, ...submitData } = formData;
-
     const res = await fetch("http://localhost:8000/api/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(submitData),
-      credentials: "include",
+      body: JSON.stringify(formData),
+      credentials: "include", // Include cookies for session management
     });
 
     const data = await res.json();
@@ -50,54 +42,38 @@ function SignupForm() {
   };
 
   return (
-    <div className="signup-container">
-      <h1 className="signup-title">Signup</h1>
-      <form onSubmit={handleSubmit} className="signup-form">
-        <input
-          name="name"
-          placeholder="Full Name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="email"
-          type="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="confirmPassword"
-          type="password"
-          placeholder="Confirm Password"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          required
-        />
-
-      <div className="button-group">
-        <button type="button" onClick={() => navigate("/")}>Cancel</button>
-        <button type="submit">
-          Sign Up
-        </button>
-      </div>
-
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <input
+        name="name"
+        placeholder="Full Name"
+        value={formData.name}
+        onChange={handleChange}
+        className="border p-2 w-full"
+        required
+      />
+      <input
+        name="email"
+        type="email"
+        placeholder="Email"
+        value={formData.email}
+        onChange={handleChange}
+        className="border p-2 w-full"
+        required
+      />
+      <input
+        name="password"
+        type="password"
+        placeholder="Password"
+        value={formData.password}
+        onChange={handleChange}
+        className="border p-2 w-full"
+        required
+      />
+      <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+        Sign Up
+      </button>
       {message && <p>{message}</p>}
-
-      <p className="login-link">Already have an account? <a href="/login">Log in</a>
-      </p>
     </form>
-    </div>
   );
 }
 
