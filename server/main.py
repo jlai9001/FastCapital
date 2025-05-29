@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, Query, Request, Depends
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 from pydantic_schemas import (
     InvestmentOut,
     BusinessOut,
@@ -15,7 +16,7 @@ from pydantic_schemas import (
     SignupCredentials,
 )
 from pathlib import Path
-from typing import List
+from typing import List, U
 import db
 from db import (
     get_purchases_by_status,
@@ -142,8 +143,8 @@ async def login(credentials: LoginCredentials, request: Request) -> SuccessRespo
     return SuccessResponse(success=True)
 
 
-@app.get("/api/logout", response_model=SuccessResponse)
-async def session_logout(request: Request) -> SuccessResponse:
+@app.post("/api/logout", response_model=SuccessResponse)
+async def logout(request: Request) -> SuccessResponse:
     """
     Handle user logout.
     Invalidates the session in the database and clears session data
@@ -211,8 +212,6 @@ async def secret() -> SecretResponse:
     # it can be assumed that the user is logged in and has a valid session
     return SecretResponse(secret="info")
 
-
-#################################################
 
 
 @app.get("/{file_path}", response_class=FileResponse)
