@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, Query, Request, Depends
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from pydantic_schemas import (
@@ -16,7 +16,7 @@ from pydantic_schemas import (
     SignupCredentials,
 )
 from pathlib import Path
-from typing import List, U
+from typing import List
 import db
 from db import (
     get_purchases_by_status,
