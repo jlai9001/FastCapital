@@ -1,0 +1,54 @@
+.investments-dashboard {
+    display: flex;
+    min-width: 800px;
+    gap: 40px;
+    padding: 20px;
+    align-items: flex-start;
+  }
+
+h2 {
+  text-align: left;
+}
+  .investments-chart {
+    flex: 1;
+    min-width: 300px;
+  }
+
+  .investments-grid-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 2;
+  }
+
+  .investments-card {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 8px;
+  }
+
+  .investments-header {
+    margin-bottom: 8px;
+  }
+
+  .investments-title {
+    text-align: left;
+    color: black;
+    font-size: 1.2rem;
+    margin: 0;
+  }
+
+  .investments-details p {
+    text-align: right;
+    color: black;
+    margin: 2px 0;
+    font-size: 0.95rem;
+  }
+
+  .portfolio-total {
+    border-radius: 12px;
+    text-align: right;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }

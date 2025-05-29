@@ -6,9 +6,9 @@
     align-items: flex-start;
     background-color: white;
     border: 1px solid black;
-    border-radius: 4px;
-    min-width: 500px;
-    max-width: 700px;
+    border-radius: 12px;
+    min-width: 600px;
+    max-width: 800px;
     margin: 0.5rem;
     padding: 1rem;
     box-sizing: border-box;
@@ -33,10 +33,10 @@
     color: #555;
   }
 
-  .pending-investment-info .percent-complete {
+  .pending-investment-info #percent-complete {
     margin-top: 0.5rem;
     font-size: 0.9rem;
-    color: #777;
+    color: #555;
   }
 
   .pending-investment-actions {

@@ -4,9 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 // This function will need to recieve the data for a purchase by passing the prop into the component
 export default function PendingInvestmentsCard({ purchase }){
-
     const navigate = useNavigate();
-    const [details, setDetails] = useState(purchase)
     const [error, setError] = useState(null)
 
     if (error) {
@@ -14,9 +12,8 @@ export default function PendingInvestmentsCard({ purchase }){
     }
 
     const handleViewDetails = () => {
-        navigate(`/investment-details/${details.id}`) // TODO: Repalce with the ID details once defined
-    }
-    // TODO: Add fetch to the getPurchase route so that we can populate the pending investment's details
+        navigate(`/investment-details/${purchase.id}`) // TODO: Repalce with the ID details once defined
+    };
 
 
     return (
@@ -24,24 +21,25 @@ export default function PendingInvestmentsCard({ purchase }){
         <div className='pending-investment-card'>
             <div className='pending-investment-info'>
                 <h3 className='pending-investment name'>
-                    {details.name || "Bob's Coffee"}
+                    {purchase.business_name || "No business name provided"}
                 </h3>
                 <span className='pending-investment location'>
-                    {details.location || "Los Angeles, CA"}
+                    {purchase.business_city || "No city provided"},
+                    {purchase.business_state || "No state provided"}
                 </span>
-                <span className='pending-investment' id='percent-complete'>
-                    {details.percentComplete || "10% of requested shares sold"}
+                <span className='pending-investment-info' id='percent-complete'>
+                    {purchase.percentComplete || "10% of requested shares sold"}
                 </span>
             </div>
 
             <div className="pending-investment-actions">
                 <span className='pending-investment shares-bought'>
-                    {details.sharesBought || "100 Shares"}
+                    {purchase.shares_purchased || "100 Shares"} Shares
                 </span>
                 <button
                 onClick={handleViewDetails}
                 className='action-button view-details-button'>
-                    View Details
+                    Details
                 </button>
             </div>
         </div>

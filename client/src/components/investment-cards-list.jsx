@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getInvestments, getBusinesses } from "../hooks/getData";
-import "./investment-cards.css";
+import "./investment-cards-list.css";
 
 
-export default function InvestmentCards() {
+export default function InvestmentCardsList() {
     const [error, setError] = useState(null);
     const [investments, setInvestments] = useState([]);
     const [businesses, setBusinesses] = useState([]);
@@ -59,7 +59,8 @@ if (sortOption === 'price') {
     if (!investments.length || !businesses.length) return <h1>Loading...</h1>;
 
     const handleViewDetailsClick = (investmentId) => {
-        navigate(`/investment/${investmentId}`); // Replace with actual route to Investment Detail page
+        navigate(`/investment-details/${investmentId}`);
+
     };
 
 return (

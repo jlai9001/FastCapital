@@ -1,46 +1,69 @@
-import './login.css'
-import {useState} from 'react';
+import './login.css';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../context/user-provider.jsx';
 
-function Error_Message(){
-    return (
-        <div className= "Error_Message">Invalid Username or Password</div>
-    )
+function Error_Message() {
+  return (
+    <div className="Error_Message">Invalid email or Password</div>
+  );
 }
 
+function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showError, setShowError] = useState(false);
+  const [loading, setLoading] = useState(false)
 
-function Login(){
-    const [username,set_username] = useState('');
-    const [password,set_password] = useState('');
-    const [showError,set_showError] = useState(false);
+  const { refreshUser } = useUser();   // useUser hook inside main Login component
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
 
-    const LoginClick = () => {
-    console.log("Login Click");
-    console.log("username",username);
-    console.log("password",password);
-
-    /////////////////////////////////////////////////// validate login credentials
-    // login success
-    if (username == "user123" && password == "P@ssw0rd123!"){
-        console.log("login success!");
-        navigate('/');
-    }else{
-    // login failed
-        console.log("login failed!");
-        set_showError(true);
+    const LoginClick = async () => {
+    if (!email || !password) {
+      setShowError(true);
+      return;
     }
 
+    setLoading(true);
+    try {
+        const response = await fetch("http://localhost:8000/api/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            console.error("Login failed:", data.detail || "Unknown error");
+            setShowError(true);
+            return;
+        }
+
+        console.log("Login success!");
+        await refreshUser();
+        navigate("/portfolio");
+
+    } catch (error) {
+        console.error("Login error:", error);
+        setShowError(true);
+    } finally {
+        setLoading(false);
     }
+};
 
-    const SignUpClick = () => {
-    alert("Can't Sign Up - Developer 404")
-    };
 
-    const ForgetPasswordClick = () => {
-    alert("Can't Change Password - Developer 404")
-    };
+  const SignUpClick = () => {
+    alert("Can't Sign Up - Developer 404"); //nav to sign-up
+  };
+
+  const ForgetPasswordClick = () => {
+    alert("Can't Change Password - Developer 404"); //future ticket
+  };
 
     return(
         <div className="Login_Container">
@@ -48,20 +71,20 @@ function Login(){
             {showError && <Error_Message />}
             <div className = "All_Fields_Container">
                 <div className= "Fields_Title_Container">
-                    <div className = "Field_Title">Username:</div>
+                    <div className = "Field_Title">Email:</div>
                     <div className = "Field_Title">Password:</div>
                 </div>
                 <div className= "Input_Container">
                         <input className="Input_Field"
                         type="text"
-                        value={username}
-                        onChange={(e) => set_username(e.target.value)}
-                        placeholder="Enter Your Username"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Enter Your Email"
                         />
                         <input className="Input_Field"
-                        type="text"
+                        type="password"
                         value={password}
-                        onChange={(e) => set_password(e.target.value)}
+                        onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter Your Password"
                         />
                     </div>

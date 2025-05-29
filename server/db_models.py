@@ -8,9 +8,11 @@ from sqlalchemy import (
     Boolean,
     Enum,
 )
-from sqlalchemy.orm import declarative_base
-import datetime
+from sqlalchemy.orm import declarative_base, mapped_column, Mapped
+from sqlalchemy.sql import func
+from datetime import datetime
 import enum
+from pydantic_schemas import FinancialType
 
 Base = declarative_base()
 
@@ -23,10 +25,12 @@ class PurchaseStatusEnum(str, enum.Enum):
 
 class DBUser(Base):
     __tablename__ = "users"
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    name = Column(String, nullable=False)
-    email = Column(String, unique=True, nullable=False)
-    password = Column(String, nullable=False)
+    id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(nullable=False)
+    email: Mapped[str] = mapped_column(unique=True, nullable=False)
+    hashed_password: Mapped[str] = mapped_column(nullable=False)
+    session_token: Mapped[str] = mapped_column(nullable=True)
+    session_expires_at: Mapped[datetime] = mapped_column(nullable=True)
 
 
 class DBBusiness(Base):
@@ -50,10 +54,8 @@ class DBInvestment(Base):
     shares_available = Column(Integer)
     price_per_share = Column(Float)
     min_investment = Column(Integer)
-    start_date = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc))
-    expiration_date = Column(
-        DateTime, default=datetime.datetime.now(datetime.timezone.utc)
-    )
+    start_date = Column(DateTime(timezone=True), default=func.now())
+    expiration_date = Column(DateTime(timezone=True), default=func.now())
     featured = Column(Boolean, default=False)
 
 
@@ -70,9 +72,7 @@ class DBPurchase(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     shares_purchased = Column(Integer)
     cost_per_share = Column(Float)
-    purchase_date = Column(
-        DateTime, default=datetime.datetime.now(datetime.timezone.utc)
-    )
+    purchase_date = Column(DateTime(timezone=True), server_default=func.now())
     status = Column(
         Enum(PurchaseStatusEnum, name="purchase_status", create_type=False),
         default=PurchaseStatusEnum.pending,
@@ -80,12 +80,17 @@ class DBPurchase(Base):
     )
 
 
+class FinancialType(enum.Enum):
+    revenue = "revenue"
+    expense = "expense"
+    asset = "asset"
+    liability = "liability"
+
+
 class DBFinancials(Base):
     __tablename__ = "financials"
     id = Column(Integer, primary_key=True, index=True)
     business_id = Column(Integer, ForeignKey("businesses.id"))
-    date = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc))
+    date = Column(DateTime(timezone=True), server_default=func.now())
     amount = Column(Float)
-    type = Column(
-        Enum()
-    )  # revenue, expense, asset, liability
+    type = Column(Enum(FinancialType), nullable=False)
