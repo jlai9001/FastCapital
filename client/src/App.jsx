@@ -9,6 +9,7 @@ import NotFound from './pages/not-found.jsx'
 import './App.css'
 import Nav from './components/Nav.jsx'
 import TestPage from './pages/testpage.jsx'
+import Signup from './pages/signup.jsx'
 
 
 function App() {
@@ -16,12 +17,14 @@ function App() {
 
   return (
     <>
+
       <Nav />
       <Routes>
         <Route path='/' element={<Homepage />}></Route>
+        <Route path='/signup' element={<Signup />}></Route>
         <Route path='/all-investments' element={<AllInvestments />}></Route>
-        <Route path='/investment-details/:offerid' element={<InvestmentDetails />}></Route>
-        <Route path='/purchase-offer/:offerid' element={<Purchase />}></Route>
+        <Route path='/investment-details/:investmentId' element={<InvestmentDetails />}></Route>
+        <Route path='/investment-details/:investmentId/purchase' element={<Purchase />}></Route>
         <Route path='/portfolio' element={<Portfolio />}></Route>
         <Route path='/login' element={<Login />}></Route>
         <Route path='/testpage' element={<TestPage />}></Route>

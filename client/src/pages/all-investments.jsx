@@ -1,5 +1,5 @@
 import React from "react"
-import InvestmentCards from "../components/investment-cards.jsx"
+import InvestmentCardsList from "../components/investment-cards-list.jsx"
 import "./all-investments.css"
 
 export default function AllInvestments() {
@@ -9,7 +9,7 @@ export default function AllInvestments() {
             <h1>All Investments</h1>
         </div>
         <div>
-        <InvestmentCards />
+        <InvestmentCardsList />
         </div>
         </>
     )
