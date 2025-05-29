@@ -116,6 +116,10 @@ git push origin main
 
 Authors: Tyler McCallum, Bowe Jessop, Daniel Greenberg, Jonathan Lai
 
+## Deployment Pipeline Badge
+
+[![GitLab CI](https://gitlab.com/<your-namespace>/<your-project>/badges/main/pipeline.svg)](https://gitlab.com/<your-namespace>/<your-project>/-/pipelines)
+
 ## Licenses
 
 N/A
