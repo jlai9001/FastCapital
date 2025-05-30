@@ -41,10 +41,11 @@ build-front-end-job:
   # needs: [tests]  # Skipped since we're not running backend tests
   script:
     - cd client
+    - rm -rf node_modules package-lock.json
     - npm install
-    - npm run lint || echo "Linting failed, but continuing"
+    - npm run lint || echo "Linting failed, but continuing..."
     - VITE_API_HOST="${VITE_API_HOST:-https://localhost:8000}" npm run build -- --base=/${CI_PROJECT_NAME}/
-    # Update VITE_API_HOST once domain name has been purchased
+      # Update VITE_API_HOST once domain name has been purchased
   artifacts:
     paths:
       - client/dist/
