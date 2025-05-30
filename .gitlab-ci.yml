@@ -22,16 +22,17 @@ tests:
 
 build-api-image:
   stage: build
-  image: docker:git
-  needs:
-    - tests
+  image: docker:20.10.11
+  services:
+    - docker:dind
   variables:
-    GITLAB_IMAGE: ${CI_REGISTRY_IMAGE}/api
+    DOCKER_DRIVER: overlay2
   before_script:
-    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
+    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token $CI_REGISTRY --password-stdin
   script:
-    - docker build --tag $GITLAB_IMAGE:latest ./api
-    - docker push $GITLAB_IMAGE:latest
+    - docker build -t $CI_REGISTRY_IMAGE:latest ./server # 👈 Corrected path
+    - docker images # 👈 Shows the built image
+    - docker push $CI_REGISTRY_IMAGE:latest
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
 
@@ -65,6 +66,7 @@ pages:
       - public
   variables:
     GITLAB_PAGES_HTTP: "true"
+
 deploy-to-ec2:
   stage: deploy
   image: docker:20.10.11-cli
