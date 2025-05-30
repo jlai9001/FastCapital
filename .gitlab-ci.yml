@@ -48,7 +48,7 @@ build-front-end-job:
     - rm -rf node_modules package-lock.json
     - npm install
     - npm run lint || echo "Linting failed, but continuing..."
-    - VITE_API_HOST="${VITE_API_HOST:-https://localhost:8000}" npm run build -- --base=/${CI_PROJECT_NAME}/
+    - VITE_API_HOST="${VITE_API_HOST:-https://localhost:8000}" npm run build
       # Update VITE_API_HOST once domain name has been purchased
   artifacts:
     paths:
