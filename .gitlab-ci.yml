@@ -13,7 +13,7 @@ tests:
   image: python:3-bullseye
   stage: test
   script:
-    - cd api
+    - cd server
     - pip install -r requirements.txt
     - python -m pytest
   cache:
