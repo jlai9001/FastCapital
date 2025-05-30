@@ -2,7 +2,7 @@ services:
   - docker:dind # Needed for building Docker images, not required for frontend Pages deployment
 
 stages:
-  - test # Commented out since we're skipping backend tests
+  - test
   - build
   - deploy
 
@@ -32,8 +32,8 @@ build-api-image:
   script:
     - docker build --tag $GITLAB_IMAGE:latest ./api
     - docker push $GITLAB_IMAGE:latest
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
+  only:
+    - main
 
 build-front-end-job:
   stage: build
@@ -65,6 +65,7 @@ pages:
       - public
   variables:
     GITLAB_PAGES_HTTP: "true"
+
 deploy-to-ec2:
   stage: deploy
   image: docker:20.10.11-cli
