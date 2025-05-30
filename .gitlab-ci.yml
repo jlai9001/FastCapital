@@ -43,7 +43,7 @@ build-api-image:
 build-front-end-job:
   stage: build
   image: node:lts-bullseye
-  needs: [tests] # Skipped since we're not running backend tests
+  # needs: [tests] # Skipped since we're not running backend tests
   script:
     - cd client
     - rm -rf node_modules package-lock.json
