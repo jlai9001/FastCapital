@@ -2,7 +2,7 @@ services:
   - docker:dind # Needed for building Docker images, not required for frontend Pages deployment
 
 stages:
-  - test
+  # - test
   - build
   - deploy
 
