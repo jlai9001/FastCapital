@@ -28,7 +28,7 @@ build-api-image:
     GITLAB_IMAGE: ${CI_REGISTRY_IMAGE}/server
 
   before_script:
-    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
+    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token $CI_REGISTRY --password-stdin
 
   script:
     - docker build --tag $GITLAB_IMAGE:latest ./server
