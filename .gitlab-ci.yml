@@ -27,13 +27,11 @@ build-api-image:
     - docker:dind
   variables:
     DOCKER_DRIVER: overlay2
-    GITLAB_IMAGE: ${CI_REGISTRY_IMAGE}/api
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" $CI_REGISTRY --password-stdin
   script:
-    - docker build --tag $GITLAB_IMAGE:latest ./server
-    - docker images
-    - docker push $GITLAB_IMAGE:latest
+    - docker compose -f server/docker-compose.yaml build
+    - docker compose -f server/docker-compose.yaml push
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
     - if: '$CI_COMMIT_BRANCH == "dev"'
