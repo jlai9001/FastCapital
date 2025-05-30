@@ -37,6 +37,7 @@ build-api-image:
     - docker push $CI_REGISTRY_IMAGE:latest
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "ci-test"' # Optional: for dev testing
 
 build-front-end-job:
   stage: build
