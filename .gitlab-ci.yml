@@ -30,8 +30,10 @@ build-api-image:
   before_script:
     - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token $CI_REGISTRY --password-stdin
   script:
-    - docker build -t $CI_REGISTRY_IMAGE:latest ./server # 👈 Corrected path
-    - docker images # 👈 Shows the built image
+    - echo "Registry: $CI_REGISTRY"
+    - echo "Image path: $CI_REGISTRY_IMAGE"
+    - docker build -t $CI_REGISTRY_IMAGE:latest ./server
+    - docker images
     - docker push $CI_REGISTRY_IMAGE:latest
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
