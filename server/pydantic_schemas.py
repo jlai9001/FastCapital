@@ -117,20 +117,3 @@ class FinancialsCreate(BaseModel):
 
 class FinancialsOut(FinancialsCreate):
     id: int
-
-############################################ Login Session by Jonathan
-
-class LoginCredentials(BaseModel):
-    email: str
-    password: str
-
-class SuccessResponse(BaseModel):
-    success: bool
-
-
-class SecretResponse(BaseModel):
-    secret: str
-
-
-class UserPublicDetails(BaseModel):
-    email: str

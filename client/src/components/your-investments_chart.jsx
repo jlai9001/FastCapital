@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import './investment-card.css';
-import '../components/your-investments_chart.css';
+import './your-investments_chart.css';
 import { PieChart } from "@mui/x-charts/PieChart";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
@@ -49,11 +48,13 @@ const InvestmentsCard = ({ investment }) => {
   );
 };
 
-const UserInvestments = ({ userId = 1 }) => {
+const UserInvestments = () => {
   const [investments, setInvestments] = useState([]);
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/api/purchases/${userId}?status=completed`)
+      .get(`http://localhost:8000/api/purchases?status=completed`, {
+      withCredentials: true
+      })
       .then(res => {
         if (Array.isArray(res.data)) {
           setInvestments(res.data);
@@ -62,7 +63,7 @@ const UserInvestments = ({ userId = 1 }) => {
         }
       })
       .catch(err => console.error("Error fetching investments:", err));
-    }, [userId]);
+    }, []);
 
   const pieData = Array.isArray(investments)
     ? Object.values(
