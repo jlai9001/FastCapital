@@ -9,6 +9,7 @@ stages:
 variables:
   EC2_HOST: "52.15.239.32" # Related to backend EC2 deployment
 
+#testing a change
 # tests:
 #   image: python:3-bullseye
 #   stage: test
