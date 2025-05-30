@@ -13,15 +13,25 @@ export default function UserProvider({children}){
     const [user, setUser] = useState(null)
 
     const refreshUser = useCallback(async () => {
-        // Call the backend to get current user info. 'credentials: "include"' sends cookies for session auth.
+       try {
         const res = await fetch(`http://localhost:8000/api/me`, {
             credentials: "include",
         });
+
         if (res.ok) {
-            setUser(await res.json());
-        } else {
+            const userData = await res.json();
+            setUser(userData);
+        } else if (res.status === 401) {
             setUser(null);
         }
+        else {
+            console.error("refreshUser failed:", res.status);
+            setUser(null);
+        }
+    } catch (error) {
+        console.error("refreshUser network error:", error);
+        setUser(null);
+    }
     }, []);
 
     // On mount, fetch the current user to initialize auth state.

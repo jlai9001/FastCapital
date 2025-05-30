@@ -81,7 +81,7 @@ class DBPurchase(Base):
 
 
 class FinancialType(enum.Enum):
-    revenue = "revenue"
+    income = "income"
     expense = "expense"
     asset = "asset"
     liability = "liability"
