@@ -2,7 +2,7 @@ services:
   - docker:dind # Needed for building Docker images, not required for frontend Pages deployment
 
 stages:
-  - test # Commented out since we're skipping backend tests
+  - test
   - build
   - deploy
 
@@ -22,24 +22,18 @@ tests:
 
 build-api-image:
   stage: build
-  image: docker:20.10.11
-  services:
-    - docker:dind
+  image: docker:git
   needs:
     - tests
   variables:
-    DOCKER_DRIVER: overlay2
     GITLAB_IMAGE: ${CI_REGISTRY_IMAGE}/api
   before_script:
-    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token $CI_REGISTRY --password-stdin
+    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
   script:
-    - echo "Building image: $GITLAB_IMAGE:latest"
-    - docker build --tag $GITLAB_IMAGE:latest ./server
-    - docker images
+    - docker build --tag $GITLAB_IMAGE:latest ./api
     - docker push $GITLAB_IMAGE:latest
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-    - if: '$CI_COMMIT_BRANCH == "ci-test"' # Optional: for dev/test branch
+  only:
+    - main
 
 build-front-end-job:
   stage: build
