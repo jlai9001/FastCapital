@@ -23,14 +23,12 @@ variables:
 build-api-image:
   stage: build
   image: docker:git
-  services:
-    - docker:dind
 
   variables:
     GITLAB_IMAGE: ${CI_REGISTRY_IMAGE}/server
 
   before_script:
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" $CI_REGISTRY --password-stdin
+    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
 
   script:
     - docker build --tag $GITLAB_IMAGE:latest ./server
