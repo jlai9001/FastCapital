@@ -22,7 +22,7 @@ variables:
 
 build-api-image:
   stage: build
-  image: docker:latest
+  image: docker:git
   services:
     - docker:dind
 
