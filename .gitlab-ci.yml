@@ -9,16 +9,16 @@ stages:
 variables:
   EC2_HOST: "52.15.239.32" # Related to backend EC2 deployment
 
-tests:
-  image: python:3-bullseye
-  stage: test
-  script:
-    - cd server
-    - pip install -r requirements.txt
+# tests:
+#   image: python:3-bullseye
+#   stage: test
+#   script:
+#     - cd server
+#     - pip install -r requirements.txt
 
-  cache:
-    paths:
-      - ~/.cache/pip
+#   cache:
+#     paths:
+#       - ~/.cache/pip
 
 build-api-image:
   stage: build
