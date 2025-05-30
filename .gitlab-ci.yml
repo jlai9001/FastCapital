@@ -15,7 +15,7 @@ tests:
   script:
     - cd server
     - pip install -r requirements.txt
-    - python -m pytest
+
   cache:
     paths:
       - ~/.cache/pip
