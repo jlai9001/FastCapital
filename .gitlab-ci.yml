@@ -29,7 +29,7 @@ build-api-image:
     DOCKER_DRIVER: overlay2
     GITLAB_IMAGE: ${CI_REGISTRY_IMAGE}/api
   before_script:
-    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token $CI_REGISTRY --password-stdin # ✅ use variable
+    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token $CI_REGISTRY --password-stdin # use variable
   script:
     - echo "Building image: $GITLAB_IMAGE:latest"
     - docker build --tag $GITLAB_IMAGE:latest ./server
