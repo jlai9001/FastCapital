@@ -5,6 +5,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from pydantic_schemas import (
     InvestmentOut,
     BusinessOut,
+    FinancialsCreate,
     FinancialsOut,
     PurchaseCreate,
     EnrichedPurchaseOut,
@@ -117,6 +118,19 @@ async def post_purchase(purchase_request: PurchaseCreate):
             )
 
 
+# create-financials --Bowe
+@app.post("/api/financials/", status_code=201)
+async def post_financials(new_finance: FinancialsCreate):
+    try:
+        finance = db.add_finance(new_finance)
+        return finance
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        raise HTTPException(
+            status_code=500, detail="Something went wrong on the server."
+        )
+
+
 ###################################################### Login_Backend by Jonathan
 
 
@@ -211,7 +225,6 @@ async def secret() -> SecretResponse:
     """
     # it can be assumed that the user is logged in and has a valid session
     return SecretResponse(secret="info")
-
 
 
 @app.get("/{file_path}", response_class=FileResponse)

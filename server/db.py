@@ -16,6 +16,7 @@ from pydantic_schemas import (
     InvestmentOut,
     BusinessOut,
     FinancialsOut,
+    FinancialsCreate,
     PurchaseCreate,
     PurchaseOut,
     EnrichedPurchaseOut,
@@ -269,6 +270,31 @@ def get_financials_by_business_id(business_id: int) -> list[FinancialsOut]:
             for db_financial in db_financial_records
         ]
         return financials
+
+
+def add_finance(new_finance: FinancialsCreate) -> FinancialsOut:
+    with SessionLocal() as db:
+        db_business = (
+            db.query(DBBusiness)
+            .filter(DBBusiness.id == new_finance.business_id)
+            .first()
+        )
+        if not db_business:
+            raise ValueError("Business not found")
+        # transcribe new_finance to db_finance
+        db_financial = DBFinancials(**new_finance.dict())
+        db.add(db_financial)
+        db.commit()
+        db.refresh(db_financial)
+        # add, commit, refresh, return
+        finance = FinancialsOut(
+            id=db_financial.id,
+            business_id=db_financial.business_id,
+            date=db_financial.date,
+            amount=db_financial.amount,
+            type=db_financial.type,
+        )
+        return finance
 
 
 def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut | None:
