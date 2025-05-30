@@ -22,18 +22,22 @@ tests:
 
 build-api-image:
   stage: build
-  image: docker:git
-  needs:
-    - tests
+  image: docker:20.10.11 # ✅ actual Docker client (not just git)
+  services:
+    - docker:dind # ✅ needed for Docker builds
   variables:
+    DOCKER_DRIVER: overlay2
     GITLAB_IMAGE: ${CI_REGISTRY_IMAGE}/api
   before_script:
-    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
+    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token $CI_REGISTRY --password-stdin # ✅ use variable
   script:
-    - docker build --tag $GITLAB_IMAGE:latest ./api
+    - echo "Building image: $GITLAB_IMAGE:latest"
+    - docker build --tag $GITLAB_IMAGE:latest ./server
+    - docker images
     - docker push $GITLAB_IMAGE:latest
-  only:
-    - main
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "dev"' # Optional: allow dev branch for testing
 
 build-front-end-job:
   stage: build
