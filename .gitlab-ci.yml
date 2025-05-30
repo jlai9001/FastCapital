@@ -22,22 +22,19 @@ tests:
 
 build-api-image:
   stage: build
-  image: docker:20.10.11
-  services:
-    - docker:dind
+  image: docker:git
+  needs:
+    - tests
   variables:
-    DOCKER_DRIVER: overlay2
+    GITLAB_IMAGE: ${CI_REGISTRY_IMAGE}/api
   before_script:
-    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token $CI_REGISTRY --password-stdin
+    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
   script:
-    - echo "Registry: $CI_REGISTRY"
-    - echo "Image path: $CI_REGISTRY_IMAGE"
-    - docker build -t $CI_REGISTRY_IMAGE:latest ./server
+    - docker build --tag $GITLAB_IMAGE:latest ./api
     - docker images
-    - docker push $CI_REGISTRY_IMAGE:latest
+    - docker push $GITLAB_IMAGE:latest
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
-    - if: '$CI_COMMIT_BRANCH == "ci-test"' # Optional: for dev testing
 
 build-front-end-job:
   stage: build
