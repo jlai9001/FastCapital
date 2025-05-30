@@ -62,7 +62,35 @@ function useBusiness(businessId) {
   return { loading, error, data };
 }
 
-export { useInvestment, useBusiness };
+function useBusinessForUser() {
+  const [business, setBusiness] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+      async function fetchBusiness() {
+          try {
+              const res = await fetch('http://localhost:8000/api/my_business', { credentials: "include" });
+              if (!res.ok) {
+                const errorText = await res.text();
+                throw new Error("Could not load business");
+              }
+              const data = await res.json();
+              setBusiness(data);
+          } catch (err) {
+              setError(err);
+          } finally {
+              setLoading(false);
+          }
+      }
+
+      fetchBusiness();
+  }, []);
+
+  return { business, loading, error };
+}
+
+export { useInvestment, useBusiness, useBusinessForUser };
 
 
 export async function getInvestments() {

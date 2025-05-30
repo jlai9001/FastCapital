@@ -21,6 +21,7 @@ from pydantic_schemas import (
     EnrichedPurchaseOut,
     PurchaseStatus,
     UserPublicDetails,
+    BusinessCreate,
 )
 
 
@@ -30,6 +31,13 @@ DATABASE_URL = "postgresql+psycopg://postgres:postgres@localhost:5432/fastcapita
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 SESSION_LIFE_MINUTES = 30
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 def validate_email_password(email: str, password: str) -> str | None:
@@ -139,6 +147,27 @@ def get_user_public_details(email: str):
             return None
         return UserPublicDetails(id=account.id, email=account.email)
 
+def create_business(business: BusinessCreate) -> BusinessOut:
+    with SessionLocal() as db:
+        db_business = DBBusiness(**business.dict())
+        db.add(db_business)
+        db.commit()
+        db.refresh(db_business)
+        print(vars(db_business))
+        return BusinessOut(
+            id=db_business.id,
+            name=db_business.name,
+            user_id=db_business.user_id,
+            website_url=db_business.website_url,
+            image_url=db_business.image_url,
+            address1=db_business.address1,
+            address2=db_business.address2,
+            city=db_business.city,
+            state=db_business.state,
+            postal_code=db_business.postal_code,
+        )
+
+
 
 def get_businesses() -> list[BusinessOut]:
     with SessionLocal() as db:
@@ -149,7 +178,7 @@ def get_businesses() -> list[BusinessOut]:
                 BusinessOut(
                     id=db_business.id,
                     name=db_business.name,
-                    users_id=db_business.user_id,
+                    user_id=db_business.user_id,
                     image_url=db_business.image_url,
                     website_url=db_business.website_url,
                     address1=db_business.address1,
@@ -169,7 +198,7 @@ def get_business(business_id: int) -> BusinessOut | None:
             return None
         return BusinessOut(
             id=db_business.id,
-            users_id=db_business.user_id,
+            user_id=db_business.user_id,
             name=db_business.name,
             image_url=db_business.image_url,
             website_url=db_business.website_url,

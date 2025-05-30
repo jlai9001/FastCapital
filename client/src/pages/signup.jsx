@@ -52,13 +52,12 @@ function SignupForm() {
   return (
     <div className="signup-container">
       <h1 className="signup-title">Sign Up</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit}>
           <input
             name="name"
             placeholder="Full Name"
             value={formData.name}
             onChange={handleChange}
-            className="border p-2 w-full"
             required
           />
           <input
@@ -67,7 +66,6 @@ function SignupForm() {
             placeholder="Email"
             value={formData.email}
             onChange={handleChange}
-            className="border p-2 w-full"
             required
           />
           <input
@@ -76,7 +74,6 @@ function SignupForm() {
             placeholder="Password"
             value={formData.password}
             onChange={handleChange}
-            className="border p-2 w-full"
             required
           />
           <input
@@ -90,7 +87,7 @@ function SignupForm() {
 
         <div className="button-group">
           <button type="button" onClick={() => navigate("/")}>Cancel</button>
-          <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+          <button type="submit">
             Sign Up
           </button>
           </div>

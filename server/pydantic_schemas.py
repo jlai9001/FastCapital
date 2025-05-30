@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 from datetime import date, datetime
 from typing import Optional
 import enum
@@ -40,7 +40,7 @@ class UserOut(UserCreate):
 
 class BusinessCreate(BaseModel):
     name: str
-    users_id: int
+    user_id: int
     website_url: str
     image_url: str
     address1: str
@@ -52,6 +52,8 @@ class BusinessCreate(BaseModel):
 
 class BusinessOut(BusinessCreate):
     id: int
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class InvestmentCreate(BaseModel):

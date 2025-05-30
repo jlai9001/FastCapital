@@ -10,6 +10,8 @@ import './App.css'
 import Nav from './components/Nav.jsx'
 import TestPage from './pages/testpage.jsx'
 import Signup from './pages/signup.jsx'
+import AddBusiness from './pages/add-business.jsx'
+import BusinessProfile from './pages/business-profile.jsx'
 
 
 function App() {
@@ -26,6 +28,8 @@ function App() {
         <Route path='/investment-details/:investmentId' element={<InvestmentDetails />}></Route>
         <Route path='/investment-details/:investmentId/purchase' element={<Purchase />}></Route>
         <Route path='/portfolio' element={<Portfolio />}></Route>
+        <Route path='/business-profile' element={<BusinessProfile />}></Route>
+        <Route path='/add-business' element={<AddBusiness />}></Route>
         <Route path='/login' element={<Login />}></Route>
         <Route path='/testpage' element={<TestPage />}></Route>
         <Route path='/not-found' element={<NotFound />}></Route>

@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 // CRITICAL: Import from 'react-router-dom' for web projects
-import { NavLink} from "react-router-dom";
+import { NavLink, useNavigate} from "react-router-dom";
 import './Nav.css';
 import { useUser } from "../context/user-provider";
-import { useNavigate } from "react-router-dom";
 
 export default function Nav() {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -33,14 +32,26 @@ export default function Nav() {
 
                 {/* Desktop Navigation Links */}
                 <div className="nav-center desktop-only">
-                    <NavLink
-                        className="nav-link"
-                        id="portfolio"
-                        to="/portfolio"
-                        style={({ isActive }) => isActive ? { textDecoration: 'underline', fontWeight: 'bold' } : {}}
-                    >
-                        Portfolio
-                    </NavLink>
+                    {user && (
+                        <>
+                            <NavLink
+                                className="nav-link"
+                                id="portfolio"
+                                to="/portfolio"
+                                style={({ isActive }) => isActive ? { textDecoration: 'underline', fontWeight: 'bold' } : {}}
+                            >
+                                Portfolio
+                            </NavLink>
+                            <NavLink
+                                className="nav-link"
+                                id="business-profile"
+                                to="/business-profile"
+                                style={({ isActive }) => isActive ? { textDecoration: 'underline', fontWeight: 'bold' } : {}}
+                            >
+                                Business Profile
+                            </NavLink>
+                        </>
+                    )}
                     <NavLink
                         className="nav-link"
                         id="all-investments"
@@ -83,9 +94,16 @@ export default function Nav() {
             {/* Mobile Menu (conditionally rendered) */}
             {menuOpen && (
                 <div className="mobile-menu mobile-only">
+                    {user && (
+                        <>
                     <NavLink className="nav-link" to="/portfolio" onClick={closeMobileMenu}>
                         Portfolio
                     </NavLink>
+                    <NavLink className="nav-link" to="/business-profile" onClick={closeMobileMenu}>
+                        Business Profile
+                    </NavLink>
+                    </>
+                    )}
                     <NavLink className="nav-link" to="/all-investments" onClick={closeMobileMenu}>
                         All Investments
                     </NavLink>

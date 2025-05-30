@@ -1,4 +1,4 @@
-from fastapi import HTTPException, Request
+from fastapi import HTTPException, Request, status
 import db
 from db import validate_session
 from pydantic_schemas import UserPublicDetails

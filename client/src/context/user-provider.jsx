@@ -14,14 +14,17 @@ export default function UserProvider({children}){
 
     const refreshUser = useCallback(async () => {
        try {
+        console.log("refreshUser: fetching /api/me");
         const res = await fetch(`http://localhost:8000/api/me`, {
             credentials: "include",
         });
 
         if (res.ok) {
             const userData = await res.json();
+            console.log("refreshUser: success, user data:", userData);
             setUser(userData);
         } else if (res.status === 401) {
+            console.warn("refreshUser: 401 Unauthorized, user not logged in");
             setUser(null);
         }
         else {
