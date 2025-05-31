@@ -28,17 +28,31 @@ function AddBusiness() {
     setLogoFile(e.target.files[0]);
   };
 
+  function normalizeUrl(url) {
+    if (!/^https?:\/\//i.test(url)) {
+      return "https://" + url;
+    }
+    return url;
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const form = new FormData();
+
     for (const key in formData) {
-      form.append(key, formData[key]);
+      let value = formData[key];
+
+      if (key === "website_url") {
+        value = normalizeUrl(value);
+      }
+
+      form.append(key, value);
     }
+
     if (logoFile) {
       form.append("image", logoFile);
     }
-    form.append("user_id");
 
     const res = await fetch("http://localhost:8000/api/business", {
       method: "POST",
@@ -48,11 +62,16 @@ function AddBusiness() {
 
     const data = await res.json();
 
-    if (res.ok && data.success) {
+    if (res.ok) {
       setMessage("Business added!");
       navigate("/portfolio");
     } else {
-      setMessage(data.detail || "Failed to add business.");
+      if (Array.isArray(data.detail)) {
+        const messages = data.detail.map((err) => err.msg).join(", ");
+        setMessage(messages);
+      } else {
+        setMessage(data.detail || "Failed to add business.");
+      }
     }
   };
 
@@ -69,8 +88,8 @@ function AddBusiness() {
           />
           <input
             name="website_url"
-            type="url"
-            placeholder="Business Website"
+            type="text"
+            placeholder="https://www.business.com"
             value={formData.website_url}
             onChange={handleChange}
             required
@@ -83,7 +102,7 @@ function AddBusiness() {
           />
           <input
           name="address1"
-          type="address"
+          type="text"
           placeholder="Address1"
           value={formData.address1}
           onChange={handleChange}
@@ -91,15 +110,14 @@ function AddBusiness() {
         />
         <input
           name="address2"
-          type="address"
+          type="text"
           placeholder="Address2"
           value={formData.address2}
           onChange={handleChange}
-          required
         />
         <input
           name="city"
-          type="city"
+          type="text"
           placeholder="City"
           value={formData.city}
           onChange={handleChange}
@@ -107,13 +125,20 @@ function AddBusiness() {
         />
         <input
           name="state"
-          type="state"
+          type="text"
           placeholder="State"
           value={formData.state}
           onChange={handleChange}
           required
         />
-
+        <input
+          name="postal_code"
+          type="text"
+          placeholder="Postal Code"
+          value={formData.postal_code}
+          onChange={handleChange}
+          required
+        />
         <div className="button-group">
           <button type="button" onClick={() => navigate("/")}>Cancel</button>
           <button type="submit">

@@ -9,22 +9,25 @@ import {
 
 const UserContext = createContext({ user: null, refreshUser: async () => {} });
 
+// Toggle detailed logging by setting this to true during debugging only
+const DEBUG = false;
+
 export default function UserProvider({children}){
     const [user, setUser] = useState(null)
 
     const refreshUser = useCallback(async () => {
        try {
-        console.log("refreshUser: fetching /api/me");
+        if (DEBUG) console.log("refreshUser: fetching /api/me");
         const res = await fetch(`http://localhost:8000/api/me`, {
             credentials: "include",
         });
 
         if (res.ok) {
             const userData = await res.json();
-            console.log("refreshUser: success, user data:", userData);
+            if (DEBUG) console.log("refreshUser: success, user data:", userData);
             setUser(userData);
         } else if (res.status === 401) {
-            console.warn("refreshUser: 401 Unauthorized, user not logged in");
+             if (DEBUG) console.warn("refreshUser: 401 Unauthorized, user not logged in");
             setUser(null);
         }
         else {

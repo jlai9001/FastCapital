@@ -10,7 +10,16 @@ export default function BusinessProfile() {
 
     if (loading) return <h1> Loading... </h1>
     if (error) return <h1> {error.message} </h1>
-    if (!business) return <h1>No business found.</h1>
+    if (!business) {
+    return (
+      <div className="no-business-container">
+          <h1>No Business Found</h1>
+          <p>It looks like you haven't added a business profile yet.</p>
+          <button onClick={() => navigate("/add-business")}>Add Your Business</button>
+      </div>
+  );
+}
+    console.log("Business image URL:", business.image_url);
 
     return (
         <div className="business-profile-container">

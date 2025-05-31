@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './signup.css';
+import { useUser } from "../context/user-provider.jsx";
 
 function SignupForm() {
     const navigate = useNavigate();
@@ -42,6 +43,7 @@ function SignupForm() {
     const data = await res.json();
 
     if (res.ok && data.success) {
+      await refreshUser();
       setMessage("Signup successful!");
       navigate("/portfolio");
     } else {

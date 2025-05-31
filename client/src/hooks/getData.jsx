@@ -71,12 +71,16 @@ function useBusinessForUser() {
       async function fetchBusiness() {
           try {
               const res = await fetch('http://localhost:8000/api/my_business', { credentials: "include" });
-              if (!res.ok) {
+
+              if (res.status === 401 || res.status === 404) {
+                  setBusiness(null);
+              } else if (!res.ok) {
                 const errorText = await res.text();
-                throw new Error("Could not load business");
-              }
+                throw new Error(`Error fetching business: ${errorText}`);
+              } else {
               const data = await res.json();
               setBusiness(data);
+              }
           } catch (err) {
               setError(err);
           } finally {

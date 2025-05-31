@@ -40,7 +40,7 @@ app = FastAPI()
 
 UPLOAD_DIR = "uploaded_images"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
-app.mount("/static/images", StaticFiles(directory="uploaded_images"), name="images")
+app.mount("/uploaded_images", StaticFiles(directory="uploaded_images"), name="uploaded_images")
 
 origins = [
     "http://localhost.tiangolo.com",
@@ -49,6 +49,7 @@ origins = [
     "http://localhost:8080",
     "http://localhost",
     "http://localhost:8000",
+    "http://localhost:3000",
 ]
 
 app.add_middleware(
@@ -93,14 +94,14 @@ async def get_investments() -> list[InvestmentOut]:
 @app.post("/api/business", response_model=BusinessOut, status_code=status.HTTP_201_CREATED)
 async def create_business_api(
     name: str = Form(...),
-    user_id: int = Form(...),
     website_url: str = Form(...),
     image: UploadFile = File(...),
     address1: str = Form(...),
     address2: str = Form(None),
     city: str = Form(...),
     state: str = Form(...),
-    postal_code: str = Form(...)
+    postal_code: str = Form(...),
+    current_user: DBUser = Depends(get_auth_user),
 ) -> BusinessOut:
     try:
         # Save image file to local storage
@@ -109,11 +110,11 @@ async def create_business_api(
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(image.file, buffer)
 
-        image_url = f"/static/images/{filename}"
+        image_url = f"http://localhost:8000/uploaded_images/{filename}"
 
         business_data = {
             "name": name,
-            "user_id": user_id,
+            "user_id": current_user.id,
             "website_url": website_url,
             "image_url": image_url,
             "address1": address1,
@@ -268,7 +269,6 @@ async def get_my_business(
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
     if not business:
-        print("Business not found for user")
         raise HTTPException(status_code=404, detail="Business not found")
     return business
 

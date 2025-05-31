@@ -42,7 +42,7 @@ class BusinessCreate(BaseModel):
     name: str
     user_id: int
     website_url: str
-    image_url: str
+    image_url: Optional[str] = None
     address1: str
     address2: Optional[str] = None
     city: str
