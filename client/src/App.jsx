@@ -10,6 +10,7 @@ import './App.css'
 import Nav from './components/Nav.jsx'
 import TestPage from './pages/testpage.jsx'
 import Signup from './pages/signup.jsx'
+import NewInvestment from './pages/create-investment.jsx'
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
         <Route path='/login' element={<Login />}></Route>
         <Route path='/testpage' element={<TestPage />}></Route>
         <Route path='/not-found' element={<NotFound />}></Route>
+        <Route path='/create-investment-offer' element={<NewInvestment />}></Route>
       </Routes >
     </>
   )

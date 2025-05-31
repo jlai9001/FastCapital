@@ -8,6 +8,7 @@ class LoginCredentials(BaseModel):
     email: EmailStr
     password: str
 
+
 class SignupCredentials(BaseModel):
     name: str
     email: EmailStr
@@ -27,6 +28,7 @@ class UserPublicDetails(BaseModel):
     email: str
     id: int
     # Add more public fields here if needed
+
 
 class UserCreate(BaseModel):
     name: str
@@ -59,8 +61,8 @@ class InvestmentCreate(BaseModel):
     shares_available: int
     price_per_share: float
     min_investment: int
-    start_date: date
-    expiration_date: date
+    start_date: datetime
+    expiration_date: datetime
 
 
 class InvestmentOut(InvestmentCreate):
