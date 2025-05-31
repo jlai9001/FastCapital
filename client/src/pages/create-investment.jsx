@@ -3,15 +3,38 @@ import { useNavigate } from "react-router-dom";
 
 export default function NewInvestment() {
     const [sharesAvailable, setSharesAvailable] = useState(0);
-    const [pricePerShare, setPricePerShare] = useState("");
+    const [pricePerShare, setPricePerShare] = useState(0);
     const [minInvestment, setMinInvestment] = useState(0);
     const [expirationDate, setExpirationDate] = useState("");
 
     const nav = useNavigate();
     const businessId = 1; // TODO: make dynamic
 
-    const handlePost = async () => { // TODO: check validation
+    const handlePost = async () => {
         try {
+
+            //this provides some input validation
+            const validate = () => {
+                if (sharesAvailable % 100 != 0){
+                    alert("Available shares must be divisible by 100.")
+                    throw new Error("Avaliable shares is invalid")}
+                if (minInvestment > sharesAvailable){
+                    alert("Minimum shares invested must be less than shares available.")
+                    throw new Error("Minimum shares is invalid.")}
+
+
+
+                const today = new Date();
+                const expiry = new Date(expirationDate); // Parse from string
+                const diffInTime = expiry.getTime() - today.getTime();
+                const diffInDays = diffInTime / (1000 * 3600 * 24);
+                if (diffInDays < 30) {
+                    alert("Expiration date must be at least 30 days from today.");
+                    throw new Error("Invalid expiration date.");
+                }
+
+            }; validate()
+
 
             const headers = { "Content-Type": "application/json" };
             const body = JSON.stringify({
@@ -58,7 +81,8 @@ export default function NewInvestment() {
                     <input
                         type="number"
                         value={sharesAvailable}
-                        min="1"
+                        min="100"
+                        step="100"
                         onChange={(e) => setSharesAvailable(Number(e.target.value))}
                     />
                 </div><br />
@@ -71,15 +95,29 @@ export default function NewInvestment() {
                         onChange={(e) => setMinInvestment(Number(e.target.value))}
                     />
                 </div><br />
-                <div>
-                    <label>What is the price per share?</label><br />
-                    <p>$<input
+                <div style={{ position: "relative", display: "inline-block" }}> {/* this div was made with AI */}
+                    <span style={{
+                        position: "absolute",
+                        left: "10px",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        pointerEvents: "none",
+                        color: "#555"
+                    }}>$</span>
+                    <input
                         type="number"
                         value={pricePerShare}
-                        min="0.01"
-                        step="0.01"
-                        onChange={(e) => setPricePerShare(e.target.value)}
-                    /></p>
+                        min="1"
+                        step="1"
+                        style={{
+                        paddingLeft: "20px",
+                        height: "30px"
+                        }}
+                        onChange={(e) => {
+                        const val = parseInt(e.target.value);
+                        setPricePerShare(isNaN(val) ? 0 : val);
+                        }}
+                    />
                 </div><br />
                 <div>
                     <label>What is the expiration date?</label><br />
