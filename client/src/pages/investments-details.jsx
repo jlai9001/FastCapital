@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useInvestment, useBusiness } from "../hooks/getData";
+import { useInvestment, useBusiness, useInvestmentPurchases } from "../hooks/getData";
 import FinancialDashboard from "../components/financials_table";
 import "./investments-details.css";
 
@@ -19,12 +19,21 @@ export default function InvestmentDetails() {
         data: business,
     } = useBusiness(investment?.business_id)
 
+    const {
+        loading: purchasesLoading,
+        error: purchasesError,
+        data: purchases,
+    } = useInvestmentPurchases(investmentId);
+
     if (investmentLoading || businessLoading) return <h1> Loading... </h1>
     if (investmentError || businessError) return <h1> {investmentError || businessError} </h1>
     if (!investment || !business) return <h1>Unable to retreive investment data.</h1>
 
-    const shares_available = investment.shares_available - (investment.shares_sold || 0)
-    const number_of_investors = investment.investors?.length || 0;
+    const totalSharesPurchased = purchases?.reduce((sum, purchase) => sum + purchase.shares_purchased, 0) || 0;
+    const shares_available = investment.shares_available - totalSharesPurchased;
+    const uniqueInvestorIds = new Set(purchases?.map(p => p.user_id));
+    const number_of_investors = uniqueInvestorIds.size;
+    const percentSold = (totalSharesPurchased / investment.shares_available) * 100;
 
     const handlePurchaseClick = () => {
         navigate (`/investment-details/${investment.id}/purchase`);
@@ -34,12 +43,20 @@ export default function InvestmentDetails() {
         <div className="investment-details-container">
           <h1 className="business-name">{business.name}</h1>
           <div className="business-info">
+            <div>
             <div className="business-image-container">
               <img
                 src={business.image_url || "https://via.placeholder.com/150"}
                 alt={business.name}
                 className="business-image"
               />
+            </div>
+              <div className="progress-bar-wrapper">
+                <div className="progress-bar">
+                  <div className="progress-fill" style={{ width: `${percentSold}%` }}></div>
+                </div>
+                <p>{percentSold}% Funded</p>
+              </div>
             </div>
             <div className="business-details">
           <h3>{business.city}, {business.state}</h3>
@@ -50,6 +67,7 @@ export default function InvestmentDetails() {
           <h3>Minimum shares for investment: {investment.min_investment}</h3>
           <h3>Current number of investors: {number_of_investors}</h3>
           <h3>Offer expires on: {new Date(investment.expiration_date).toLocaleDateString()}</h3>
+          <h3>Current Investors: {number_of_investors}</h3>
           </div>
           </div>
           <div className="button-container">

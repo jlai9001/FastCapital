@@ -32,6 +32,36 @@ function useInvestment(investmentId) {
   return { loading, error, data };
 }
 
+function useInvestmentPurchases(investmentId) {
+  const [purchases, setPurchases] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!investmentId) return;
+
+    async function fetchPurchases() {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await axios.get(`http://localhost:8000/api/purchases`, {
+          params: { investment_id: investmentId },
+          withCredentials: true,
+        });
+        setPurchases(response.data);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchPurchases();
+  }, [investmentId]);
+
+  return { data: purchases, loading, error };
+}
+
 function useBusiness(businessId) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -156,7 +186,8 @@ function useInvestmentsForBusiness(businessId) {
     return { investments, loading, error };
 }
 
-export { useInvestment, useBusiness, useBusinessForUser, useFinancialsForBusiness, useInvestmentsForBusiness};
+export { useInvestment, useBusiness, useBusinessForUser, useFinancialsForBusiness,
+  useInvestmentsForBusiness, useInvestmentPurchases };
 
 
 export async function getInvestments() {
