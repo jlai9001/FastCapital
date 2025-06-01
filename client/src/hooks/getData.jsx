@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 function useInvestment(investmentId) {
   const [loading, setLoading] = useState(false);
@@ -94,7 +95,68 @@ function useBusinessForUser() {
   return { business, loading, error };
 }
 
-export { useInvestment, useBusiness, useBusinessForUser };
+function useFinancialsForBusiness(businessId) {
+  const [financials, setFinancials] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+      async function fetchData() {
+        try {
+          const res = await axios.get(`http://localhost:8000/api/financials/${businessId}`);
+          setFinancials(res.data);
+          } catch (err) {
+            if (err.response.status === 404) {
+              setFinancials(null);
+            } else {
+              setError(err);
+            }
+          } finally {
+              setLoading(false);
+          }
+      };
+
+      if (businessId) {
+        fetchData();
+      }
+  }, [businessId]);
+
+  return { financials, loading, error };
+}
+
+function useInvestmentsForBusiness(businessId) {
+    const [investments, setInvestments] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        async function fetchData() {
+          try {
+            const res = await axios.get(`http://localhost:8000/api/business_investments`, {
+                params: { business_id: businessId },
+                withCredentials: true,
+                });
+                setInvestments(res.data);
+            } catch (err) {
+                if (err.response?.status === 404) {
+                    setInvestments(null);
+                } else {
+                    setError(err);
+                }
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        if (businessId) {
+          fetchData();
+        }
+    }, [businessId]);
+
+    return { investments, loading, error };
+}
+
+export { useInvestment, useBusiness, useBusinessForUser, useFinancialsForBusiness, useInvestmentsForBusiness};
 
 
 export async function getInvestments() {

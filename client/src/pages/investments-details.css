@@ -1,0 +1,61 @@
+.business-profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: sans-serif;
+  }
+
+
+.business-name {
+text-align: left;
+font-size: 2rem;
+margin-bottom: 1rem;
+}
+
+.business-info {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+.business-image-container {
+width: 200px;
+height: 200px;
+overflow: hidden;
+border-radius: 8px;
+border: 1px solid #ccc;
+background-color: #f5f5f5;
+}
+
+.business-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+.business-details h3 {
+margin: 0.5rem 0;
+}
+
+.business-details a {
+color: #0077cc;
+text-decoration: none;
+}
+
+.business-details a:hover {
+text-decoration: underline;
+}
+
+.financial-dashboard-container {
+margin-top: 3rem;
+display: flex;
+justify-content: center;
+}
+
+.button-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2rem;
+  }

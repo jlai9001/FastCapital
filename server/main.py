@@ -261,7 +261,6 @@ async def get_my_business(
     current_user: DBUser = Depends(get_auth_user),
     db: Session = Depends(get_db),
 ):
-    print(f"UserL {current_user}")
     try:
         business = db.query(DBBusiness).filter(DBBusiness.user_id == current_user.id).first()
     except Exception as e:
