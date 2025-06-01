@@ -1,4 +1,4 @@
-import NewInvestment from "./create-investment"
+import AddFinancials from "./create-financials";
 
 export default function TestPage() {
     return (<>
@@ -6,5 +6,6 @@ export default function TestPage() {
         <div>
             <h1>Test Page</h1>
         </div>
+        <AddFinancials />
         </>)
 }
