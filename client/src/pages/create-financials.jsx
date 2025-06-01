@@ -100,6 +100,7 @@ export default function AddFinancials() {
             <TextField
             type="number"
             label="Amount"
+            min="1"
             value={finAmount}
             onChange={(e) => setFinAmount(e.target.value)}
             />

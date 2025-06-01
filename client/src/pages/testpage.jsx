@@ -6,6 +6,5 @@ export default function TestPage() {
         <div>
             <h1>Test Page</h1>
         </div>
-        <AddFinancials />
         </>)
 }
