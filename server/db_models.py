@@ -80,13 +80,6 @@ class DBPurchase(Base):
     )
 
 
-class FinancialType(enum.Enum):
-    income = "income"
-    expense = "expense"
-    asset = "asset"
-    liability = "liability"
-
-
 class DBFinancials(Base):
     __tablename__ = "financials"
     id = Column(Integer, primary_key=True, index=True)
