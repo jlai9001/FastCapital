@@ -1,12 +1,14 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, validator
 from datetime import date, datetime
 from typing import Optional
 import enum
+import re  # this helps the Bowe validate date format
 
 
 class LoginCredentials(BaseModel):
     email: EmailStr
     password: str
+
 
 class SignupCredentials(BaseModel):
     name: str
@@ -27,6 +29,7 @@ class UserPublicDetails(BaseModel):
     email: str
     id: int
     # Add more public fields here if needed
+
 
 class UserCreate(BaseModel):
     name: str
@@ -59,8 +62,8 @@ class InvestmentCreate(BaseModel):
     shares_available: int
     price_per_share: float
     min_investment: int
-    start_date: date
-    expiration_date: date
+    start_date: datetime
+    expiration_date: datetime
 
 
 class InvestmentOut(InvestmentCreate):
@@ -113,6 +116,19 @@ class FinancialsCreate(BaseModel):
     date: date
     amount: float
     type: FinancialType
+
+    @validator("date", pre=True)
+    def parse_mm_yyyy(cls, v):
+        if isinstance(v, str):
+            # validates format MM/YYYY
+            if not re.match(r"^(0[1-9]|1[0-2])/\d{4}$", v):
+                raise ValueError("Date must be in 'MM/YYYY' format")
+            month, year = map(int, v.split("/"))
+            return date(year, month, 1)
+        elif isinstance(v, date):
+            # strips day in case it passed first validation
+            return date(v.year, v.month, 1)
+        raise ValueError("Invalid date format")
 
 
 class FinancialsOut(FinancialsCreate):
