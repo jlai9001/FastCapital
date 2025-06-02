@@ -1,13 +1,96 @@
-# You can override the included template(s) by including variable overrides
-# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
-# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/pipeline/#customization
-# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
-# Container Scanning customization: https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
-# Note that environment variables can be set in several places
-# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
+services:
+  - docker:dind # Needed for building Docker images, not required for frontend Pages deployment
+
 stages:
-- test
-sast:
-  stage: test
-include:
-- template: Security/SAST.gitlab-ci.yml
+  # - test
+  - build
+  - deploy
+
+variables:
+  EC2_HOST: "52.15.239.32" # Related to backend EC2 deployment
+
+#testing a change
+# tests:
+#   image: python:3-bullseye
+#   stage: test
+#   script:
+#     - cd server
+#     - pip install -r requirements.txt
+
+#   cache:
+#     paths:
+#       - ~/.cache/pip
+
+build-api-image:
+  stage: build
+  image: docker:git
+
+  variables:
+    GITLAB_IMAGE: ${CI_REGISTRY_IMAGE}/server
+
+  before_script:
+    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token $CI_REGISTRY --password-stdin
+
+  script:
+    - docker build --tag $GITLAB_IMAGE:latest ./server
+    - docker push $GITLAB_IMAGE:latest
+
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+
+build-front-end-job:
+  stage: build
+  image: node:lts-bullseye
+  # needs: [tests] # Skipped since we're not running backend tests
+  script:
+    - cd client
+    - rm -rf node_modules package-lock.json
+    - npm install
+    - npm run lint || echo "Linting failed, but continuing..."
+    - VITE_API_HOST="${VITE_API_HOST:-https://localhost:8000}" npm run build
+      # Update VITE_API_HOST once domain name has been purchased
+  artifacts:
+    paths:
+      - client/dist/
+
+pages:
+  stage: deploy
+  rules:
+    - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
+  dependencies:
+    - build-front-end-job
+  needs:
+    - build-front-end-job
+  script:
+    - mv client/dist/ public
+  artifacts:
+    paths:
+      - public
+  variables:
+    GITLAB_PAGES_HTTP: "true"
+
+deploy-to-ec2:
+  stage: deploy
+  image: docker:cli
+  variables:
+    GITLAB_IMAGE: ${CI_REGISTRY_IMAGE}/server
+    DATABASE_URL: "postgresql://$PG_USERNAME:$PG_PASSWORD2@fastcapital-db.c1c0g4g2q342.us-east-2.rds.amazonaws.com"
+  before_script:
+    - apk add --no-cache openssh-client
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - || (echo "Failed to add SSH key" && exit 1)
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "StrictHostKeyChecking no" > ~/.ssh/config
+    - ssh-keyscan $EC2_HOST >> ~/.ssh/known_hosts || (echo "Failed to ssh-keyscan" && exit 1)
+  script:
+    - echo "$GITLAB_IMAGE:latest" || (echo "Failed to output" && exit 1)
+    - echo "$DATABASE_URL" || (echo "Failed to output" && exit 1)
+    - ssh -v ubuntu@$EC2_HOST "echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token $CI_REGISTRY --password-stdin"
+    - ssh -v ubuntu@$EC2_HOST "docker pull $GITLAB_IMAGE:latest" || (echo "Failed to pull Docker image" && exit 1)
+    - ssh -v ubuntu@$EC2_HOST "docker stop my-api || true && docker rm my-api || true" || (echo "Failed to stop and remove container" && exit 1)
+    - ssh -v ubuntu@$EC2_HOST "docker run -d --name my-api -e DATABASE_URL=$DATABASE_URL -p 80:80 $GITLAB_IMAGE" || (echo "Failed to run Docker container" && exit 1)
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "dev"'

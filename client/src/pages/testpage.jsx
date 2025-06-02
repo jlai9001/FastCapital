@@ -1,17 +1,10 @@
-import React from "react"
-import OfferCards from "../components/investment-card.jsx"
-import FinancialDashboard from "../components/financials_table.jsx"
+import AddFinancials from "./create-financials";
 
 export default function TestPage() {
-    return (
-       <>
-       <div>
-            <FinancialDashboard businessId={1}/>
-        </div>
+    return (<>
+
         <div>
             <h1>Test Page</h1>
-            <OfferCards />
         </div>
-        </>
-    )
+        </>)
 }

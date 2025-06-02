@@ -7,6 +7,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from pydantic_schemas import (
     InvestmentOut,
     BusinessOut,
+    FinancialsCreate,
     FinancialsOut,
     PurchaseCreate,
     EnrichedPurchaseOut,
@@ -14,7 +15,7 @@ from pydantic_schemas import (
     LoginCredentials,
     SecretResponse,
     UserPublicDetails,
-    UserCreate,
+    InvestmentCreate,
     SignupCredentials,
     BusinessCreate,
 )
@@ -162,7 +163,9 @@ def get_financials_for_business(business_id: int):
     return financials
 
 
-@app.post("/api/purchases", status_code=201)  # status code 201 indicates success
+@app.post(
+    "/api/purchases", status_code=201
+)  # status code 201 indicates successful creation
 async def post_purchase(purchase_request: PurchaseCreate):
     try:
         purchase = db.add_purchase(purchase_request)
@@ -175,6 +178,30 @@ async def post_purchase(purchase_request: PurchaseCreate):
             raise HTTPException(
                 status_code=500, detail="Something went wrong on the server."
             )
+
+
+# create-financials --Bowe
+@app.post("/api/financials/", status_code=201)
+async def post_financials(new_finance: FinancialsCreate):
+    try:
+        finance = db.add_finance(new_finance)
+        return finance
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        raise HTTPException(
+            status_code=500, detail="Something went wrong on the server."
+        )
+
+
+# create investment endpoint --Bowe
+@app.post("/api/investment", status_code=201)
+async def post_investment(new_investment: InvestmentCreate):
+    try:
+        investment = db.add_investment(new_investment)
+        return investment
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        raise HTTPException(status_code=500, detail="Server could not post investment.")
 
 
 ###################################################### Login_Backend by Jonathan
@@ -286,7 +313,6 @@ async def secret() -> SecretResponse:
     """
     # it can be assumed that the user is logged in and has a valid session
     return SecretResponse(secret="info")
-
 
 
 @app.get("/{file_path}", response_class=FileResponse)

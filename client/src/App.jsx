@@ -10,6 +10,8 @@ import './App.css'
 import Nav from './components/Nav.jsx'
 import TestPage from './pages/testpage.jsx'
 import Signup from './pages/signup.jsx'
+import NewInvestment from './pages/create-investment.jsx'
+import AddFinancials from './pages/create-financials.jsx'
 import AddBusiness from './pages/add-business.jsx'
 import BusinessProfile from './pages/business-profile.jsx'
 import Footer from './components/footer.jsx'
@@ -34,6 +36,8 @@ function App() {
         <Route path='/login' element={<Login />}></Route>
         <Route path='/testpage' element={<TestPage />}></Route>
         <Route path='/not-found' element={<NotFound />}></Route>
+        <Route path='/create-investment-offer' element={<NewInvestment />}></Route>
+        <Route path='/create-financials' element={<AddFinancials />}></Route>
       </Routes >
       <Footer />
     </>

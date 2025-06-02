@@ -13,9 +13,11 @@ import bcrypt
 from secrets import token_urlsafe
 from datetime import datetime, timedelta
 from pydantic_schemas import (
+    InvestmentCreate,
     InvestmentOut,
     BusinessOut,
     FinancialsOut,
+    FinancialsCreate,
     PurchaseCreate,
     PurchaseOut,
     EnrichedPurchaseOut,
@@ -300,6 +302,31 @@ def get_financials_by_business_id(business_id: int) -> list[FinancialsOut]:
         return financials
 
 
+def add_finance(new_finance: FinancialsCreate) -> FinancialsOut:
+    with SessionLocal() as db:
+        db_business = (
+            db.query(DBBusiness)
+            .filter(DBBusiness.id == new_finance.business_id)
+            .first()
+        )
+        if not db_business:
+            raise ValueError("Business not found")
+        # transcribe new_finance to db_finance
+        db_financial = DBFinancials(**new_finance.dict())
+        db.add(db_financial)
+        db.commit()
+        db.refresh(db_financial)
+        # add, commit, refresh, return
+        finance = FinancialsOut(
+            id=db_financial.id,
+            business_id=db_financial.business_id,
+            date=db_financial.date,
+            amount=db_financial.amount,
+            type=db_financial.type,
+        )
+        return finance
+
+
 def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut | None:
     with SessionLocal() as db:
         db_investment = (
@@ -329,4 +356,31 @@ def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut | None:
             cost_per_share=db_purchase.cost_per_share,
             purchase_date=db_purchase.purchase_date,
             status=db_purchase.status.value,
+        )
+
+
+def add_investment(new_investment: InvestmentCreate) -> InvestmentOut:
+    with SessionLocal() as db:
+        # query by buisness id, return error if not found
+        db_business = (
+            db.query(DBBusiness)
+            .filter(DBBusiness.id == new_investment.business_id)
+            .first()
+        )
+        if not db_business:
+            raise ValueError("Business not found.")
+        # transcribe pydantic to db model
+        db_investment = DBInvestment(**new_investment.dict())
+        db.add(db_investment)
+        db.commit()
+        db.refresh(db_investment)
+        return InvestmentOut(
+            id=db_investment.id,
+            business_id=db_investment.business_id,
+            shares_available=db_investment.shares_available,
+            price_per_share=db_investment.price_per_share,
+            min_investment=db_investment.min_investment,
+            start_date=db_investment.start_date,
+            expiration_date=db_investment.expiration_date,
+            featured=db_investment.featured,
         )
