@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, validator
+from pydantic import BaseModel, EmailStr, validator, ConfigDict
 from datetime import date, datetime
 from typing import Optional
 import enum
@@ -43,9 +43,9 @@ class UserOut(UserCreate):
 
 class BusinessCreate(BaseModel):
     name: str
-    users_id: int
+    user_id: int
     website_url: str
-    image_url: str
+    image_url: Optional[str] = None
     address1: str
     address2: Optional[str] = None
     city: str
@@ -55,6 +55,8 @@ class BusinessCreate(BaseModel):
 
 class BusinessOut(BusinessCreate):
     id: int
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class InvestmentCreate(BaseModel):

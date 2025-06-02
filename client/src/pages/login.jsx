@@ -56,11 +56,6 @@ function Login() {
     }
 };
 
-
-  const SignUpClick = () => {
-    alert("Can't Sign Up - Developer 404"); //nav to sign-up
-  };
-
   const ForgetPasswordClick = () => {
     alert("Can't Change Password - Developer 404"); //future ticket
   };
@@ -92,7 +87,7 @@ function Login() {
             <div className="Login_Button_Container">
                 <button className="Login_Button" onClick={LoginClick}>Login</button>
                 <div className="SecondRow">
-                    <button className="Signup_Button" onClick={SignUpClick}>Sign Up</button>
+                <button className="Signup_Button" onClick={() => navigate("/signup")}>Sign Up</button>
                     <button className="Forget_Password_Button" onClick={ForgetPasswordClick}>Forget Password</button>
                 </div>
             </div>
