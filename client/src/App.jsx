@@ -12,6 +12,7 @@ import TestPage from './pages/testpage.jsx'
 import Signup from './pages/signup.jsx'
 import AddBusiness from './pages/add-business.jsx'
 import BusinessProfile from './pages/business-profile.jsx'
+import Footer from './components/footer.jsx'
 
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
         <Route path='/testpage' element={<TestPage />}></Route>
         <Route path='/not-found' element={<NotFound />}></Route>
       </Routes >
+      <Footer />
     </>
   )
 }
