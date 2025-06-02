@@ -3,7 +3,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import axios from "axios";
 import "./financials_table.css";
 
-function FinancialDashboard({ businessId }) {
+function FinancialDashboard({ businessId, refresh }) {
     const [tab, setTab] = useState('pl');
     const [financials, setFinancials] = useState([]);
     const [years, setYears] = useState([]);
@@ -31,7 +31,7 @@ function FinancialDashboard({ businessId }) {
                 if (sortedYears.length) setSelectedYear(sortedYears[0]);
             })
             .catch((err) => console.error('Failed to fetch financials', err));
-    }, [businessId]);
+    }, [businessId, refresh]);
 
     const getMonthlyData = (typeKeys) => {
         const monthly = Array(12).fill(0).map(() => ({}));
