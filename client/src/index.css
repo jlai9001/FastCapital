@@ -27,7 +27,6 @@ body {
   padding-top: 6rem;
   /* For the fixed header */
   margin: 0;
-  display: flex;
   /* May not be desired for overall page layout */
   place-items: center;
   /* May not be desired for overall page layout */

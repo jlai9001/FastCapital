@@ -94,7 +94,7 @@ VALUES
 
 INSERT INTO businesses(name, user_id, image_url, website_url, address1, address2, city, state, postal_code)
 VALUES
-    ('Best Burgers', 1, 'http://example.com/image1.jpg', 'http://www.hackreactor.com', '123 Main St', 'Apt 4B', 'Los Angeles', 'CA', '90001'),
+    ('Best Burgers', 1, './uploaded_images/image.jpg', 'http://www.hackreactor.com', '123 Main St', 'Apt 4B', 'Los Angeles', 'CA', '90001'),
     ('Tech Innovations', 2, 'http://example.com/image2.jpg', 'http://www.hackreactor.com', '456 Market St', NULL, 'San Francisco', 'CA', '94105'),
     ('Green Grocer', 3, 'http://example.com/image3.jpg', 'http://www.hackreactor.com', '789 Broadway', NULL, 'New York', 'NY', '10001'),
     ('Fitness Hub', 4, 'http://example.com/image4.jpg', 'http://www.hackreactor.com', '101 State St', NULL, 'Chicago', 'IL', '60601'),
