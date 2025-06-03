@@ -1,6 +1,8 @@
-from fastapi import FastAPI, HTTPException, Query, Request, Depends
+from fastapi import FastAPI, HTTPException, Query, Request, Depends, status, UploadFile, File, Form
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.orm import Session
 from starlette.middleware.sessions import SessionMiddleware
 from pydantic_schemas import (
     InvestmentOut,
@@ -15,24 +17,31 @@ from pydantic_schemas import (
     UserPublicDetails,
     InvestmentCreate,
     SignupCredentials,
+    BusinessCreate,
 )
 from pathlib import Path
 from typing import List
 import db
+import uuid, os, shutil
 from db import (
     get_purchases_by_status,
-    get_purchases_by_status,
     create_user,
+    create_business,
     invalidate_session,
     validate_email_password,
     get_user_public_details,
+    get_db,
 )
-from db_models import PurchaseStatus
+from db_models import PurchaseStatus, DBUser, DBBusiness, DBInvestment
 from auth import get_auth_user
 from rich import print  # debugging
 
 
 app = FastAPI()
+
+UPLOAD_DIR = "uploaded_images"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+app.mount("/uploaded_images", StaticFiles(directory="uploaded_images"), name="uploaded_images")
 
 origins = [
     "http://localhost.tiangolo.com",
@@ -41,6 +50,7 @@ origins = [
     "http://localhost:8080",
     "http://localhost",
     "http://localhost:8000",
+    "http://localhost:3000",
 ]
 
 app.add_middleware(
@@ -66,10 +76,60 @@ async def get_investment(investment_id: int) -> InvestmentOut:
         raise HTTPException(status_code=404, detail="Investment not found")
     return investment
 
+@app.get("/api/business_investments", response_model=List[InvestmentOut])
+async def get_investments_by_business(
+    business_id: int = Query(..., description="ID of the business to fetch investments for"),
+    db: Session = Depends(get_db),
+    current_user: DBUser = Depends(get_auth_user),
+):
+    investments = db.query(DBInvestment).filter(DBInvestment.business_id == business_id).all()
+    if not investments:
+        raise HTTPException(status_code=404, detail="No investments found for this business")
+    return investments
+
 
 @app.get("/api/investment")
 async def get_investments() -> list[InvestmentOut]:
     return db.get_investments()
+
+@app.post("/api/business", response_model=BusinessOut, status_code=status.HTTP_201_CREATED)
+async def create_business_api(
+    name: str = Form(...),
+    website_url: str = Form(...),
+    image: UploadFile = File(...),
+    address1: str = Form(...),
+    address2: str = Form(None),
+    city: str = Form(...),
+    state: str = Form(...),
+    postal_code: str = Form(...),
+    current_user: DBUser = Depends(get_auth_user),
+) -> BusinessOut:
+    try:
+        # Save image file to local storage
+        filename = f"{uuid.uuid4().hex}_{image.filename}"
+        file_path = os.path.join(UPLOAD_DIR, filename)
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(image.file, buffer)
+
+        image_url = f"http://localhost:8000/uploaded_images/{filename}"
+
+        business_data = {
+            "name": name,
+            "user_id": current_user.id,
+            "website_url": website_url,
+            "image_url": image_url,
+            "address1": address1,
+            "address2": address2,
+            "city": city,
+            "state": state,
+            "postal_code": postal_code,
+        }
+
+        return create_business(BusinessCreate(**business_data))
+
+    except Exception as e:
+        print(f"Error creating business: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create business.")
 
 
 @app.get("/api/business/{business_id}")
@@ -222,6 +282,21 @@ async def get_me(
     except Exception as e:
         print(f"Error in get_me: {e}")
         raise HTTPException(status_code=401, detail="Unauthorized")
+
+@app.get("/api/my_business", response_model=BusinessOut)
+async def get_my_business(
+    current_user: DBUser = Depends(get_auth_user),
+    db: Session = Depends(get_db),
+):
+    try:
+        business = db.query(DBBusiness).filter(DBBusiness.user_id == current_user.id).first()
+    except Exception as e:
+        print(f"Error retrieving business: {e}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+
+    if not business:
+        raise HTTPException(status_code=404, detail="Business not found")
+    return business
 
 
 # This is how to declare that a route is "protected" and requires
