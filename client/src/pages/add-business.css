@@ -5,21 +5,39 @@ body {
 }
 
 .add-business-container {
-    min-width: 500px;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 160px);
+    gap: 2rem;
+    padding: 2rem;
+    margin-top: 80px;
+    margin-bottom: 80px;
+    max-width: 1200px;
+}
+
+.business-form {
+    margin-top: 5px;
+    background-color: var(--element_background_color);
+    border-radius: var(--element_border_radius);
+    box-shadow: var(--element_shadow);
+    padding: 35px;
+    justify-content: center;
+    margin-bottom: 250px;
+    width: 600px;
+
 }
 
 .add-business-title {
-    justify-content: center;
-    margin-bottom: 20px;
+    color: rgb(0, 0, 0);
+    font-weight: Bold;
+    font-size: var(--large_fontsize);
+    font-family:var(--_font);
+    margin-bottom: 10px;
 }
 
-.add-business-form {
-    display: flex-start;
-    flex-direction: column;
-}
+
 
 input {
     margin: 12px 0;
@@ -41,6 +59,13 @@ input {
     margin: 0 5px;
     font-size: 1rem;
     cursor: pointer;
+}
+
+.add-business-button{
+    background-color:var(--main_button_color);
+    color:var(--main_button_textcolor);
+    border: 2px solid var(--main_button_color);
+
 }
 
 .message {
