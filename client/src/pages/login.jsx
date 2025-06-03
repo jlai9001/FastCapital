@@ -59,7 +59,7 @@ function Login() {
 
 
   const SignUpClick = () => {
-    alert("Can't Sign Up - Developer 404"); //nav to sign-up
+    navigate("/signup");
   };
 
   const ForgetPasswordClick = () => {
@@ -87,17 +87,22 @@ function Login() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter Your Password"
-                        />
-                    </div>
+                      />
+
+                      <button className="login-button" onClick={LoginClick}>Login</button>
+                          <div className="bottom-field">
+                            <div className="no-account-msg">
+                                Don't have an account?
+                                <span className="create-account-link" onClick={SignUpClick}>Create an Account</span>
+                            </div>
+                          </div>
+                      </div>
                 </div>
-            <div className="Login_Button_Container">
-                <button className="Login_Button" onClick={LoginClick}>Login</button>
-                <div className="SecondRow">
-                    <button className="Signup_Button" onClick={SignUpClick}>Sign Up</button>
-                    <button className="Forget_Password_Button" onClick={ForgetPasswordClick}>Forget Password</button>
-                </div>
-            </div>
           </div>
+
+
+
+
         </div>
     )
 }
