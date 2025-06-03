@@ -37,16 +37,39 @@ export default function InvestmentCard({ investment }) {
 
   return (
     <div className={`investment-card ${investment.featured ? 'featured' : ''}`}>
-      <h3>Business Name: {business.name}</h3>
+      <span><img src={business.image_url}></img>
+      <h3>Business Name: {business.name}</h3></span>
       <h3>Location: {business.city}, {business.state}</h3>
-      <div className="details">
-        <h3>Website: {business.website}</h3>
-        <h3>Shares Available: {investment.shares_available}</h3>
-        <h3>Price per Share: ${investment.price_per_share}</h3>
-        <h3>Minimum Investment: {investment.min_investment} shares</h3>
-        <h3>Investment opportunity starts on: {new Date(investment.start_date).toLocaleDateString()}</h3>
-        <h3>Investment opportunity ends on: {new Date(investment.expiration_date).toLocaleDateString()}</h3>
-      </div>
+      <h3>{business.website}</h3><br/><br/>
+      <table className="investment-table">
+        <tbody>
+          <tr>
+            <td className="label">Shares Available:</td>
+            <td className="spacer"></td>
+            <td>{investment.shares_available}</td>
+          </tr>
+          <tr>
+            <td className="label">Price per Share:</td>
+            <td className="spacer"></td>
+            <td>${investment.price_per_share}</td>
+          </tr>
+          <tr>
+            <td className="label">Minimum Investment:</td>
+            <td className="spacer"></td>
+            <td>{investment.min_investment} shares</td>
+          </tr>
+          <tr>
+            <td className="label">Starts On:</td>
+            <td className="spacer"></td>
+            <td>{new Date(investment.start_date).toLocaleDateString()}</td>
+          </tr>
+          <tr>
+            <td className="label">Ends On:</td>
+            <td className="spacer"></td>
+            <td>{new Date(investment.expiration_date).toLocaleDateString()}</td>
+          </tr>
+        </tbody>
+      </table>
       <div className="button-container">
         <button onClick={handleViewDetailsClick} className="view-details-button">
           View Details

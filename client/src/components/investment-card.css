@@ -1,44 +1,37 @@
-.offer-card {
-    background: #fff;
-    color:#1a202c;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    border-radius: 1rem;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.06);
-    border: 1px solid #eee;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.investment-card.featured{
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
-  .offer-card h2 {
-    font-size: 1.25rem;
-    margin-bottom: 0.5rem;
-    color: #1a202c;
-  }
-  .offer-card p {
-    margin-bottom: 0.25rem;
-    color: #4a5568;
-  }
-  .offer-card .details {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem 1rem;
-    margin: 1rem 0;
-  }
-  .view-details-button {
-    background-color: #2563eb;
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 0.75rem;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  .view-details-button:hover {
-    background-color: #1e40af;
-  }
+
+.investment-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+  max-height: 200px;
+}
+
+
+.button-container {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.view-details-button {
+  background-color: #2563eb;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 100%;
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+.view-details-button:hover {
+  background-color: #1e40af;
+}
