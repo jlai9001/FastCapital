@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './signup.css';
-import { useUser } from "../context/user-provider.jsx";
+import coin from '../assets/coin.svg'
 
 function SignupForm() {
     const navigate = useNavigate();
@@ -53,53 +53,61 @@ function SignupForm() {
 
   return (
     <div className="signup-container">
-      <h1 className="signup-title">Sign Up</h1>
-        <form onSubmit={handleSubmit}>
-          <input
-            name="name"
-            placeholder="Full Name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-          <input
-            name="email"
-            type="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-          <input
-            name="password"
+      <div className = "signup-form">
+        <img src={coin}></img>
+        <div className="signup-title">Get Started</div>
+        <div className="signup-subtitle">Enter the information below to start investing today.</div>
+          <form onSubmit={handleSubmit}>
+          <div className = "field-label">Full Name</div>
+            <input
+              name="name"
+              placeholder="Full Name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          <div className = "field-label">Email</div>
+            <input
+              name="email"
+              type="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          <div className = "field-label">Password</div>
+            <input
+              name="password"
+              type="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          <div className = "field-label">Confirm Password</div>
+            <input
+            name="confirmPassword"
             type="password"
-            placeholder="Password"
-            value={formData.password}
+            placeholder="Confirm Password"
+            value={formData.confirmPassword}
             onChange={handleChange}
             required
           />
-          <input
-          name="confirmPassword"
-          type="password"
-          placeholder="Confirm Password"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          required
-        />
 
-        <div className="button-group">
-          <button type="button" onClick={() => navigate("/")}>Cancel</button>
-          <button type="submit">
-            Sign Up
-          </button>
-          </div>
+          <div className="button-group">
+            <button className="cancel-button" type="button" onClick={() => navigate("/")}>Cancel</button>
+            <button className="signup-button" type="submit">
+              Sign Up
+            </button>
+            </div>
 
-          {message && <p>{message}</p>}
+            {message && <p>{message}</p>}
 
-          <p className="login-link">Already have an account? <a href="/login">Log in</a>
-      </p>
+            <p className="no-account">Already have an account? <a className="log-in" href="/login">Log in</a>
+        </p>
         </form>
         </div>
+      </div>
   );
 }
 
