@@ -125,6 +125,24 @@ function useBusinessForUser() {
   return { business, loading, error };
 }
 
+async function uploadBusinessImage(businessId, file) {
+  const formData = new FormData();
+  formData.append("image", file);
+
+  const res = await fetch(`http://localhost:8000/api/business/${businessId}/upload_image`, {
+    method: "POST",
+    body: formData,
+    credentials: "include",
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Error uploading image: ${errorText}`);
+  }
+
+  return await res.json();
+}
+
 function useFinancialsForBusiness(businessId) {
   const [financials, setFinancials] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -187,7 +205,7 @@ function useInvestmentsForBusiness(businessId) {
 }
 
 export { useInvestment, useBusiness, useBusinessForUser, useFinancialsForBusiness,
-  useInvestmentsForBusiness, useInvestmentPurchases };
+  useInvestmentsForBusiness, useInvestmentPurchases, uploadBusinessImage };
 
 
 export async function getInvestments() {
