@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastCapital</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- navbar -->
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="company-name">FastCapital</a>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="navbar-text">Portfolio</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="navbar-text">All Investments</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="navbar-text">Login</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- body text -->
+
+    <div class="content">
+        <div class="largetext">Featured Investments</div>
+        <div class="smalltext">Click on an offer for more information!</p>
+    </div>
+
+    <!-- offer card -->
+
+    <div class="investment-card">
+        <div class="image-placeholder">
+            <span>Image</span>
+        </div>
+
+        <div class="card-content">
+            <div class="left-section">
+                <h1 class="business-name">Bob's Coffee</h1>
+                <p class="location">Los Angeles, CA</p>
+                <p class="website">Website: bobscoffeela.com</p>
+                <p class="expiry">Offer Expires: May 31, 2025</p>
+            </div>
+
+            <div class="right-section">
+                <div class="investment-details">
+                    <p class="shares-available">Shares Available: 1000</p>
+                    <p class="minimum-investment">Minimum Investment: 100 Shares</p>
+                    <p class="price">Price: $1/share</p>
+                </div>
+                <button class="view-details-btn">VIEW DETAILS</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- login screen -->
+    <div class="login-container">
+        <div class="login-form">
+            <h2 class="login-title">LOG IN TO YOUR ACCOUNT</h2>
+
+            <form>
+                <input
+                    type="email"
+                    class="input-field"
+                    placeholder="johnnythedesigner@gmail.com"
+                    value="johnnythedesigner@gmail.com"
+                >
+
+                <input
+                    type="password"
+                    class="input-field"
+                    placeholder="••••••••"
+                >
+
+                <div class="checkbox-container">
+                    <input type="checkbox" id="keep-signed-in" checked>
+                    <label for="keep-signed-in">Keep me signed in</label>
+                </div>
+
+                <button type="submit" class="sign-in-btn">SIGN IN</button>
+
+                <div class="bottom-buttons">
+                    <button type="button" class="secondary-btn forgot-btn">Forgot Password</button>
+                    <button type="button" class="secondary-btn signup-btn">Sign Up</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- payment confirmation modal -->
+
+    <div class="modal-overlay">
+        <div class="payment-modal">
+
+
+            <h1 class="modal-title">Payment Confirmation</h1>
+
+            <div class="form-fields">
+                <div class="field-group">
+                    <label class="field-label">Account Number</label>
+                    <input
+                    class="input-field"
+                    placeholder="1234-56789">
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Routing Number</label>
+                    <input
+                    class="input-field"
+                    placeholder="1234-56789">
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Bank</label>
+                    <input
+                    class="input-field"
+                    placeholder="Fast Capital Financials">
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="cancel-btn">Cancel</button>
+                <button class="buy-btn">Buy</button>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

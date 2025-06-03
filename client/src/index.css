@@ -1,5 +1,9 @@
-/* :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+/* font import from google */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+:root {
+  font-family: system-ui,Helvetica, Arial, sans-serif;
+
   line-height: 1.5;
   font-weight: 400;
 
@@ -11,9 +15,39 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --main_button_color:#059669;
+  --main_button_textcolor:rgb(255, 255, 255);
+  --secondary_button_color:#8399ab;
+  --all_button_hover:#e24ffc;
+  --all_button_hover_textcolor: white;
+  --element_background_color: #ffffff;
+  --large_fontsize: 30px;
+  --small_fontsize: 16px;
+  --button_border_radius: 8px;
+  --primary_text_color:black;
+  --secondary_text_color:#6B7280;
+  --field_border_color:  #e1e1e1;
+  --field_background_color: #F9FAFB;
+  --page_background_color: #F9FAFB;
+  --button_font: Poppins;
+  --text_font: Roboto;
+
+
+
 }
 
-a {
+
+body {
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+
+
+/* a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
@@ -25,13 +59,17 @@ a:hover {
 
 body {
   padding-top: 6rem;
-  margin: 0;
-  place-items: center;
-  min-width: 320px;
+  /* For the fixed header */
+  /* margin: 0;
+  display: flex; */
+  /* May not be desired for overall page layout */
+  /* place-items: center; */
+  /* May not be desired for overall page layout */
+  /* min-width: 320px;
   min-height: 100vh;
-}
+} */
 
-h1 {
+/* h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }

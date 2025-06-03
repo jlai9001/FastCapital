@@ -1,11 +1,12 @@
 import './login.css';
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../context/user-provider.jsx';
 
 function Error_Message() {
   return (
-    <div className="Error_Message">Invalid email or Password</div>
+    <div className="Error_Message">INVALID EMAIL OR PASSWORD</div>
   );
 }
 
@@ -56,41 +57,48 @@ function Login() {
     }
 };
 
+
+  const SignUpClick = () => {
+    navigate("/signup");
+  };
+
   const ForgetPasswordClick = () => {
     alert("Can't Change Password - Developer 404"); //future ticket
   };
 
     return(
-        <div className="Login_Container">
-            <div className= "Login_Title">Login </div>
+        <div className="login_container">
+          <div className ="login-form">
+            <div className= "login-title">Login </div>
+            <div className= "login-subtitle">Enter your login credentials below. </div>
             {showError && <Error_Message />}
             <div className = "All_Fields_Container">
-                <div className= "Fields_Title_Container">
-                    <div className = "Field_Title">Email:</div>
-                    <div className = "Field_Title">Password:</div>
-                </div>
                 <div className= "Input_Container">
-                        <input className="Input_Field"
+                <div className = "field-label">Email</div>
+                      <input className="input-field"
                         type="text"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Enter Your Email"
-                        />
-                        <input className="Input_Field"
+                      />
+                <div className = "field-label">Password</div>
+                      <input className="input-field"
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter Your Password"
-                        />
-                    </div>
+                      />
+
+                      <button className="login-button" onClick={LoginClick}>Login</button>
+                          <div className="bottom-field">
+                            <div className="no-account-msg">
+                                Don't have an account?
+                                <span className="create-account-link" onClick={SignUpClick}>Create an Account</span>
+                            </div>
+                          </div>
+                      </div>
                 </div>
-            <div className="Login_Button_Container">
-                <button className="Login_Button" onClick={LoginClick}>Login</button>
-                <div className="SecondRow">
-                <button className="Signup_Button" onClick={() => navigate("/signup")}>Sign Up</button>
-                    <button className="Forget_Password_Button" onClick={ForgetPasswordClick}>Forget Password</button>
-                </div>
-            </div>
+          </div>
         </div>
     )
 }
