@@ -128,7 +128,7 @@ body{
 
 
 .login-button:hover{
-    background-color:var(--all_button_hover);
+    background-color:var(--main_button_hover);
 }
 
 
