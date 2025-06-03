@@ -10,11 +10,8 @@ export default function HomePageHero(){
     return (
         <section className="homepage-hero">
         <div className="hero-text">
-            <h1>FastCapital</h1>
-            <p>Your trusted partner in investment solutions.</p>
-        </div>
-        <div className="hero-action">
-            <button className="cta-button">Get Started</button>
+            <h1>Welcome to FastCapital</h1>
+            <p>Invest in local businesses. Empower communities. Grow your wealth.</p>
         </div>
         </section>
     )

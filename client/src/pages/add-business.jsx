@@ -77,7 +77,9 @@ function AddBusiness() {
 
   return (
     <div className="add-business-container">
-      <h1 className="add-business-title">Add Business</h1>
+      <div className = "business-form">
+      <div className="add-business-title">Add Business</div>
+      <div className = "field-label">Name</div>
         <form onSubmit={handleSubmit}>
           <input
             name="name"
@@ -86,6 +88,7 @@ function AddBusiness() {
             onChange={handleChange}
             required
           />
+        <div className = "field-label">Website</div>
           <input
             name="website_url"
             type="text"
@@ -94,12 +97,14 @@ function AddBusiness() {
             onChange={handleChange}
             required
           />
+        <div className = "field-label">Picture</div>
           <input
             name="image"
             type="file"
             accept="image/*"
             onChange={handleFileChange}
           />
+        <div className = "field-label">Address</div>
           <input
           name="address1"
           type="text"
@@ -115,6 +120,7 @@ function AddBusiness() {
           value={formData.address2}
           onChange={handleChange}
         />
+         <div className = "field-label">City</div>
         <input
           name="city"
           type="text"
@@ -123,6 +129,7 @@ function AddBusiness() {
           onChange={handleChange}
           required
         />
+        <div className = "field-label">State</div>
         <input
           name="state"
           type="text"
@@ -131,6 +138,7 @@ function AddBusiness() {
           onChange={handleChange}
           required
         />
+        <div className = "field-label">Postal Code</div>
         <input
           name="postal_code"
           type="text"
@@ -140,8 +148,8 @@ function AddBusiness() {
           required
         />
         <div className="button-group">
-          <button type="button" onClick={() => navigate("/")}>Cancel</button>
-          <button type="submit">
+          <button className="cancel-button"  type="button" onClick={() => navigate("/")}>Cancel</button>
+          <button className="add-business-button" type="submit">
             Add Business
           </button>
           </div>
@@ -150,6 +158,7 @@ function AddBusiness() {
 
         </form>
         </div>
+      </div>
   );
 }
 
