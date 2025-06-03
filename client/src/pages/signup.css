@@ -33,7 +33,10 @@ body {
     color: rgb(0, 0, 0);
     font-weight: Bold;
     font-size: var(--large_fontsize);
+<<<<<<< HEAD
     font-family:var(--_font);
+=======
+>>>>>>> dev
     margin-bottom: 10px;
 }
 

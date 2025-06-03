@@ -9,7 +9,7 @@ import NotFound from './pages/not-found.jsx'
 import './App.css'
 import Nav from './components/Nav.jsx'
 import TestPage from './pages/testpage.jsx'
-import Signup from './pages/signup.jsx'
+import SignupForm from './pages/signup.jsx'
 import NewInvestment from './pages/create-investment.jsx'
 import AddFinancials from './pages/create-financials.jsx'
 import AddBusiness from './pages/add-business.jsx'
@@ -24,9 +24,10 @@ function App() {
     <>
 
       <Nav />
+      <div style={{ height: '60px' }} />
       <Routes>
         <Route path='/' element={<Homepage />}></Route>
-        <Route path='/signup' element={<Signup />}></Route>
+        <Route path='/signup' element={<SignupForm />}></Route>
         <Route path='/all-investments' element={<AllInvestments />}></Route>
         <Route path='/investment-details/:investmentId' element={<InvestmentDetails />}></Route>
         <Route path='/investment-details/:investmentId/purchase' element={<Purchase />}></Route>
