@@ -96,11 +96,8 @@ function Login() {
                     <button className="Signup_Button" onClick={SignUpClick}>Sign Up</button>
                     <button className="Forget_Password_Button" onClick={ForgetPasswordClick}>Forget Password</button>
                 </div>
+            </div>
           </div>
-
-
-
-
         </div>
     )
 }
