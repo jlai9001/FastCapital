@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 :root {
-  font-family: system-ui,Helvetica, Arial, sans-serif;
+  font-family: 'Poppins', system-ui, Helvetica, Arial, sans-serif;
 
   line-height: 1.5;
   font-weight: 400;
@@ -19,8 +19,8 @@
   --main_button_color:#059669;
   --main_button_textcolor:rgb(255, 255, 255);
   --secondary_button_color:#8399ab;
-  --all_button_hover:#e24ffc;
-  --all_button_hover_textcolor: white;
+  --main_button_hover: #34D399;
+  --main_button_hover_textcolor: white;
   --element_background_color: #ffffff;
   --large_fontsize: 30px;
   --small_fontsize: 16px;
@@ -31,7 +31,7 @@
   --field_background_color: #F9FAFB;
   --page_background_color: #F9FAFB;
   --button_font: Poppins;
-  --text_font: Roboto;
+  --text_font: Poppins;
 
 
 
