@@ -24,6 +24,7 @@ function App() {
     <>
 
       <Nav />
+      <div style={{ height: '60px' }} />
       <Routes>
         <Route path='/' element={<Homepage />}></Route>
         <Route path='/signup' element={<Signup />}></Route>

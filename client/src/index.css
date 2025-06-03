@@ -1,4 +1,4 @@
-:root {
+/* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -25,11 +25,8 @@ a:hover {
 
 body {
   padding-top: 6rem;
-  /* For the fixed header */
   margin: 0;
-  /* May not be desired for overall page layout */
   place-items: center;
-  /* May not be desired for overall page layout */
   min-width: 320px;
   min-height: 100vh;
 }
@@ -73,4 +70,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */

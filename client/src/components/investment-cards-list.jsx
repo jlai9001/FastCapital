@@ -86,8 +86,9 @@ return (
         </div>
     </div>
 
+
     {filteredInvestments.length > 0 ? (
-      <ul>
+        <ul className="card-grid">
         {filteredInvestments.map((investment) => {
             const business = businesses.find(b => b.id === investment.business_id);
             if (!business) return null;
@@ -98,14 +99,29 @@ return (
             return (
                 <li key={investment.id} className="investment-card">
                     <div className="card-top">
+                        <img src={business.image_url}></img>
                         <div className="business-name">
                             <h2>{business.name}</h2>
                         </div>
-                        <div className="investment-details">
-                            <p>Shares Available: {investment.shares_available}</p>
-                            <p>Price per share: {investment.price_per_share}</p>
-                            <p>Minimum shares for investment: {investment.min_investment}</p>
-                        </div>
+                            <table className="investment-table">
+                                <tbody>
+                                <tr>
+                                    <td className="label">Shares Available:</td>
+                                    <td className="spacer"></td>
+                                    <td>{investment.shares_available}</td>
+                                </tr>
+                                <tr>
+                                    <td className="label">Price per Share:</td>
+                                    <td className="spacer"></td>
+                                    <td>${investment.price_per_share}</td>
+                                </tr>
+                                <tr>
+                                    <td className="label">Minimum Investment:</td>
+                                    <td className="spacer"></td>
+                                    <td>{investment.min_investment} shares</td>
+                                </tr>
+                                </tbody>
+                            </table>
                     </div>
                     <div className="card-bottom">
                         <div className="business-details">
