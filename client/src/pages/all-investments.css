@@ -1,3 +1,11 @@
-h1 {
-    display: flex;
+.all-investments-page {
+  padding: 2rem 2rem 2rem 2rem;
+  padding-top: 80px;
+  min-height: 100vh;
+}
+
+.investments-header {
+  text-align: center;
+  color: #1a202c;
+  margin-bottom: 2rem;
 }
