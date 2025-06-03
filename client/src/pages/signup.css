@@ -1,19 +1,46 @@
+
+
 body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
+    background-color: var(--page_background_color);
 }
 
 .signup-container {
-    min-width: 500px;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 160px);
+    gap: 2rem;
+    padding: 2rem;
+    margin-top: 80px;
+    margin-bottom: 80px;
+    max-width: 1200px;
+
+}
+
+.signup-form{
+    margin-top: 5px;
+    background-color: var(--element_background_color);
+    border-radius: var(--element_border_radius);
+    box-shadow: var(--element_shadow);
+    padding: 35px;
+    justify-content: center;
+    margin-bottom: 250px;
+    width: 600px;
 }
 
 .signup-title {
-    justify-content: center;
-    margin-bottom: 20px;
+    color: rgb(0, 0, 0);
+    font-weight: Bold;
+    font-size: var(--large_fontsize);
+    font-family:var(--_font);
+    margin-bottom: 10px;
+}
+
+.signup-subtitle {
+    color:var(--secondary_text_color);
+    font-size: var(--small_fontsize);
+    margin-bottom: 25px;
 }
 
 .signup-form {
@@ -22,11 +49,15 @@ body {
 }
 
 input {
-    margin: 12px 0;
     width: 100%;
-    box-sizing: border-box;
-    padding: 12px;
-    font-size: 1rem;
+    padding: 15px;
+    margin-bottom: 5px;
+    border: 2px solid var( --field_border_color);
+    background-color:var(--field_background_color);
+    border-radius: var(--button_border_radius);
+    font-size: var(--small_fontsize);
+    color: var(--secondary_text_color);
+    outline: none;
 }
 
 .button-group {
@@ -41,6 +72,28 @@ input {
     margin: 0 5px;
     font-size: 1rem;
     cursor: pointer;
+    border-radius: var(--button_border_radius);
+    font-family: var(--button_font);
+    font-size: var(--small_fontsize);
+    font-weight: 600;
+}
+
+.button-group button:hover{
+    background-color:var(--all_button_hover);
+    border: 2px solid var(--all_button_hover);
+    color: var(--main_button_textcolor);
+}
+
+.cancel-button{
+    background-color:var(--secondary_button_color);
+    color:var(--secondary_text_color);
+    border: 2px solid var( --field_border_color);
+}
+
+.signup-button{
+    background-color:var(--main_button_color);
+    color:var(--main_button_textcolor);
+    border: 2px solid var(--main_button_color);
 }
 
 .message {
@@ -49,17 +102,20 @@ input {
     color: red;
 }
 
-.login-link {
+.no-account {
     text-align: center;
     margin-top: 20px;
-    font-size: 0.95rem;
+    font-size: var(--small_fontsize);
+    color:var(--secondary_text_color);
+    margin-right: 5px;
+
 }
 
-.login-link a {
-    color: #007BFF;
+.log-in{
+
+    color: var(--main_button_color);
+    cursor: pointer;
     text-decoration: none;
-}
-
-.login-link a:hover {
+    font-weight: bold;
     text-decoration: underline;
 }
