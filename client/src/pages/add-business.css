@@ -47,6 +47,37 @@ input {
     font-size: 1rem;
 }
 
+
+input[type="file"]::file-selector-button {
+  background-color:var(--main_button_color);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background-color: var(--all_button_hover);
+  border: none;
+}
+
+
+
+
+
+
+.choose-file{
+    border: 2px solid var( --field_border_color);
+    border-radius: var(--button_border_radius);
+    padding: 10px 20px;
+    color:var(--secondary_text_color);
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
 .button-group {
     display: flex;
     justify-content: space-between;
