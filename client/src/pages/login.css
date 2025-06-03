@@ -1,94 +1,179 @@
-
-
-.Login_Container{
-    margin-top: -100px;
-    width:1000px;
-    height:500px;
-    background-color: white;
-
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
 }
 
-.Login_Title{
+body{
+    background-color: var(--page_background_color);
+}
+
+.Login_Button_Container{
+     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 160px);
+    gap: 2rem;
+    padding: 2rem;
+    margin-top: 80px;
+    margin-bottom: 80px;
+}
+
+.login-form{
+    margin-top: 100px;
+    background-color: var(--element_background_color);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    justify-content: center;
+    margin-bottom: 250px;
+}
+
+.login-title{
     color: rgb(0, 0, 0);
     font-weight: Bold;
-    font-size: 50px;
+    font-size: var(--large_fontsize);
+    font-family:var(--_font);
+}
+
+.login-subtitle{
+    color:var(--secondary_text_color);
+    font-size: var(--small_fontsize);
 }
 
 .Error_Message{
-    color: rgb(255, 0, 0);
+    margin-top: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    width:100%;
+    color: rgb(135, 82, 82);
     font-weight: Bold;
-    font-size: 25px;
-    background-color: rgb(255, 187, 187);
-    transform: translateY(50px);
+    font-size: var(--small_fontsize);
+    margin-bottom: 50px;
+    background-color: rgb(229, 200, 200);
 }
 
 .All_Fields_Container{
-    transform: translate(20px,-30px);
-
+ padding-left:25px;
+ padding-right:25px;
+ width: 100%;
 }
 
 .Fields_Title_Container{
     transform: translate(-600px,100px);
-
-}
-
-.Field_Title{
-    color: rgb(0, 0, 0);
-    font-weight: Bold;
-    font-size: 25px;
-    text-align: right;
-    margin-bottom: 10px;
 }
 
 .Input_Container{
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* vertical centering */
-    align-items: center; /* horizontal centering */
-    transform: translate(40px,12px);
+    width: 100%;
 }
 
-.Input_Field{
-    color:black;
-    background-color: rgb(208, 208, 208);
-    font-size: 20px;
-    margin-bottom: 20px;
+
+.field-label{
+    margin-top: 10px;
+    text-align: left;
+    color:var(--primary_text_color);
+    font-size: var(--small_fontsize);
+    font-weight: bold;
+    margin-bottom: -5px;
 }
 
-.Login_Button{
-    width:400px;
-    background-color: green;
+.input-field{
+    width: 100%;
+    padding: 15px;
     margin-bottom: 5px;
+    border: 2px solid var( --field_border_color);
+    background-color:var(--field_background_color);
+    border-radius: var(--button_border_radius);
+    font-size: 14px;
+    color: var(--secondary_text_color);
+    outline: none;
 }
 
-.Login_Button:hover{
-    width:400px;
-    background-color: rgb(195, 255, 0);
-    color: black;
+
+.checkbox-container {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 8px;
+}
+
+.checkbox-container input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--main_button_color);
+}
+
+.keep-signed-in{
+    color:black;
+    font-size: var(--small_fontsize);
+}
+
+.login-button{
+    width: 50%;
+    padding: 15px;
+    background-color: var(--main_button_color);
+    color:var(--main_button_textcolor);
     border: none;
+    border-radius: var(--button_border_radius);
+    font-size: var(--small_fontsize);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-family: var(--button_font);
 }
 
-.Login_Button_Container{
+
+.login-button:hover{
+    background-color:var(--all_button_hover);
+}
+
+
+.bottom-field {
     display: flex;
     flex-direction: column;
-    justify-content: center; /* vertical centering */
-    align-items: center; /* horizontal centering */
-}
-
-.Signup_Button{
-    width:198px;
-    background-color: rgb(5, 0, 150);
-    margin-right: 5px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
 
 }
 
-.SecondRow{
-    flex-direction: row;
-    transform: translateX(1.5px);
-
+.no-account-msg{
+    margin-right: 10px;
+    text-align: center;
+    color: var(--secondary_text_color);
+    font-size: var(--small_fontsize);
+    margin: 0;
 }
 
-.Forget_Password_Button{
-    width:198px;
-    background-color: rgb(96, 15, 15);
+.create-account-link {
+    margin-left:5px;
+    color: var(--main_button_color);
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.secondary-btn {
+    flex: 1;
+    padding: 12px 8px;
+
+    border: 0px solid #ccc;
+    background-color: var(--secondary_button_color);
+    color: var(--main_button_textcolor);
+    border-radius: var(--button_border_radius);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.secondary-btn:hover {
+    background-color:var(--all_button_hover);
+    color: #ffffff;
 }
