@@ -1,22 +1,89 @@
-.investment-card.featured{
+/* Responsive grid container */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+/* Square, responsive card */
+.investment-card {
+  aspect-ratio: 3 / 4;
   width: 100%;
-  box-sizing: border-box;
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
+  padding: 1rem;
+  box-sizing: border-box;
+  text-align: left;
+  overflow: hidden;
+  position: relative;
 }
 
-.investment-card img {
-  width: 100%;
-  height: auto;
+.investment-card.featured {
+  border: 2px solid #2563eb;
+}
+
+/* Top section: small square image + optional label */
+.top-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Small square image */
+.image-container {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
   border-radius: 8px;
-  object-fit: cover;
-  max-height: 200px;
+  overflow: hidden;
 }
 
+.web-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 8px;
+}
 
+/* Business info */
+.business-info h3 {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+/* Table */
+.investment-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.investment-table .label {
+  font-weight: 600;
+  text-align: left;
+}
+
+.investment-table td {
+  padding: 2px 4px;
+}
+
+.investment-table td:last-child {
+  text-align: right;
+}
+
+/* Button */
 .button-container {
+  margin-top: auto;
   text-align: center;
-  margin-top: 1rem;
 }
 
 .view-details-button {
@@ -34,4 +101,9 @@
 
 .view-details-button:hover {
   background-color: #1e40af;
+}
+
+.view-details-button:focus {
+  outline: 2px solid #1e40af;
+  outline-offset: 2px;
 }
