@@ -89,7 +89,7 @@ export default function NewInvestment() {
                     />
                 </div><br />
                 <div>
-                    <div className="field-label">What is the minimum investment required?</div>
+                    <div className="field-label">What is the minimum investment you need?</div>
                     <input
                         type="number"
                         value={minInvestment}
@@ -97,7 +97,7 @@ export default function NewInvestment() {
                         onChange={(e) => setMinInvestment(Number(e.target.value))}
                     />
                 </div><br />
-                    <div className="field-label">Price per share in USD?</div>
+                    <div className="field-label">What is the price per share in USD?</div>
 
 
                 <div >
