@@ -1,19 +1,21 @@
 import React from "react";
-import "./footer.css"; // Assuming this is in the same folder or adjust the path
+import "./footer.css";
+import logo from "../assets/logo.svg";
 
 const Footer = () => {
   return (
     <footer className="footer">
       <div className="footer__container">
-        {/* Logo / App Name */}
-        <div className="footer__section">
-          <h1 className="footer__title">Fast Capital</h1>
-          <p className="footer__copyright">
-            © {new Date().getFullYear()} Fast Capital. All rights reserved.
-          </p>
+
+        {/* Column 1: Logo */}
+        <div className="footer__section footer__logo-section">
+          <a href="/" className="footer__logo">
+            <img src={logo} alt="Fast Capital logo" className="nav-logo-image" />
+            Fast Capital
+          </a>
         </div>
 
-        {/* Navigation Links */}
+        {/* Column 2: Links */}
         <div className="footer__section">
           <h2 className="footer__heading">Links</h2>
           <ul className="footer__list">
@@ -23,7 +25,7 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Social Media */}
+        {/* Column 3: Follow Us */}
         <div className="footer__section">
           <h2 className="footer__heading">Follow Us</h2>
           <div className="footer__socials">
@@ -32,6 +34,14 @@ const Footer = () => {
             <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a>
           </div>
         </div>
+
+        {/* Column 4: Copyright */}
+        <div className="footer__section footer__copyright-section">
+          <p className="footer__copyright">
+            © {new Date().getFullYear()} Fast Capital. All rights reserved.
+          </p>
+        </div>
+
       </div>
     </footer>
   );
