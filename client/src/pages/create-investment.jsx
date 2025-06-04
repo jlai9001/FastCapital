@@ -75,9 +75,9 @@ export default function NewInvestment() {
     };
 
     return (
-        <>
-            <div className="title">Create Investment</div>
-            <section>
+        <div className='create-investment-container'>
+            <div className="create-investment-form">
+                <div className="title">Create Investment</div>
                 <div>
                     <div className="field-label">How many shares would you like to sell?</div>
                     <input
@@ -120,9 +120,11 @@ export default function NewInvestment() {
                         onChange={(e) => setExpirationDate(e.target.value)}
                     />
                 </div><br />
+            </div>
+            <section>
             </section><br />
             <button onClick={handleCancel}>Cancel</button>
             <button onClick={handlePost}>Post Offer</button>
-        </>
+        </div>
     );
 }
