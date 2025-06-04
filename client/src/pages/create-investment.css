@@ -1,0 +1,41 @@
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+}
+
+
+body{
+    background-color: var(--page_background_color);
+}
+
+.create-investment-form{
+    display: block;
+    margin: 0 auto;
+    margin-top: 50px;
+    background-color: var(--element_background_color);
+    border-radius: var(--element_border_radius);
+    box-shadow: var(--element_shadow);
+    padding: 35px;
+    justify-content: center;
+    margin-bottom: 250px;
+    width: 600px;
+}
+
+.title{
+    text-align: center;
+    color: rgb(0, 0, 0);
+    font-weight: Bold;
+    font-size: var(--large_fontsize);
+    font-family:var(--_font);
+    margin-bottom:10px;
+}
+
+
+.field-label{
+    margin-top: 10px;
+    text-align: left;
+    color:var(--secondary_text_color);
+    font-size: var(--small_fontsize);
+    font-weight: bold;
+    margin-bottom: -5px;
+}
