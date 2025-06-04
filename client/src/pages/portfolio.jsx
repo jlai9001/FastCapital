@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import PendingInvestmentsCard from '../components/pending-investments-card'
 import UserInvestments from "../components/your-investments_chart";
+import './portfolio.css';
 
 export default function Portfolio(){
   const [user, setUser] = useState(null);
@@ -51,24 +52,24 @@ export default function Portfolio(){
   }, [user]);
 
     return(
-        <>
-            <section className="your-investments">
-                <h2>Your Investments</h2>
-                <UserInvestments user={user} />
-            </section>
-            <section className="pending-investments">
-                <h2>Pending Investments</h2>
-                {loading && <p>Loading pending investments...</p>}
-                {error && <p>{error}</p>}
+      <div className="portfolio-page-container">
+         <h2>Investment Portfolio</h2>
+        <div className="your-investments-container">
+              <UserInvestments user={user} />
+          </div>
+          <div className="pending-investments-container">
+          <p className="pending-investments-title">Pending Investments</p>
+              {loading && <p>Loading pending investments...</p>}
+              {error && <p>{error}</p>}
 
-                {pendingPurchases.map((purchase) => (
-                  <PendingInvestmentsCard
-                  key={purchase.id}
-                  purchase={purchase}
-                />
-                )
-              )}
-            </section>
-        </>
+              {pendingPurchases.map((purchase) => (
+                <PendingInvestmentsCard
+                key={purchase.id}
+                purchase={purchase}
+              />
+              )
+            )}
+          </div>
+      </div>
     )
 }

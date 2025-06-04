@@ -1,4 +1,14 @@
-from fastapi import FastAPI, HTTPException, Query, Request, Depends, status, UploadFile, File, Form
+from fastapi import (
+    FastAPI,
+    HTTPException,
+    Query,
+    Request,
+    Depends,
+    status,
+    UploadFile,
+    File,
+    Form,
+)
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -31,6 +41,7 @@ from db import (
     validate_email_password,
     get_user_public_details,
     get_db,
+    update_business_image,
 )
 from db_models import PurchaseStatus, DBUser, DBBusiness, DBInvestment
 from auth import get_auth_user
@@ -41,7 +52,9 @@ app = FastAPI()
 
 UPLOAD_DIR = "uploaded_images"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
-app.mount("/uploaded_images", StaticFiles(directory="uploaded_images"), name="uploaded_images")
+app.mount(
+    "/uploaded_images", StaticFiles(directory="uploaded_images"), name="uploaded_images"
+)
 
 origins = [
     "http://localhost.tiangolo.com",
@@ -76,15 +89,22 @@ async def get_investment(investment_id: int) -> InvestmentOut:
         raise HTTPException(status_code=404, detail="Investment not found")
     return investment
 
+
 @app.get("/api/business_investments", response_model=List[InvestmentOut])
 async def get_investments_by_business(
-    business_id: int = Query(..., description="ID of the business to fetch investments for"),
+    business_id: int = Query(
+        ..., description="ID of the business to fetch investments for"
+    ),
     db: Session = Depends(get_db),
     current_user: DBUser = Depends(get_auth_user),
 ):
-    investments = db.query(DBInvestment).filter(DBInvestment.business_id == business_id).all()
+    investments = (
+        db.query(DBInvestment).filter(DBInvestment.business_id == business_id).all()
+    )
     if not investments:
-        raise HTTPException(status_code=404, detail="No investments found for this business")
+        raise HTTPException(
+            status_code=404, detail="No investments found for this business"
+        )
     return investments
 
 
@@ -92,7 +112,10 @@ async def get_investments_by_business(
 async def get_investments() -> list[InvestmentOut]:
     return db.get_investments()
 
-@app.post("/api/business", response_model=BusinessOut, status_code=status.HTTP_201_CREATED)
+
+@app.post(
+    "/api/business", response_model=BusinessOut, status_code=status.HTTP_201_CREATED
+)
 async def create_business_api(
     name: str = Form(...),
     website_url: str = Form(...),
@@ -130,6 +153,37 @@ async def create_business_api(
     except Exception as e:
         print(f"Error creating business: {e}")
         raise HTTPException(status_code=500, detail="Failed to create business.")
+
+
+@app.post("/api/business/{business_id}/upload_image")
+async def upload_business_image(
+    business_id: int,
+    image: UploadFile = File(...),
+    current_user: DBUser = Depends(get_auth_user),
+):
+    try:
+        # Save image to disk
+        filename = f"{uuid.uuid4().hex}_{image.filename}"
+        file_path = os.path.join(UPLOAD_DIR, filename)
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(image.file, buffer)
+
+        image_url = f"http://localhost:8000/uploaded_images/{filename}"
+
+        # Call DB function
+        updated_url = update_business_image(
+            business_id=business_id, user_id=current_user.id, image_url=image_url
+        )
+
+        return {"image_url": updated_url}
+
+    except ValueError as ve:
+        raise HTTPException(status_code=404, detail=str(ve))
+    except PermissionError as pe:
+        raise HTTPException(status_code=403, detail=str(pe))
+    except Exception as e:
+        print(f"Unhandled error during image upload: {e}")
+        raise HTTPException(status_code=500, detail="Failed to upload image.")
 
 
 @app.get("/api/business/{business_id}")
@@ -283,13 +337,16 @@ async def get_me(
         print(f"Error in get_me: {e}")
         raise HTTPException(status_code=401, detail="Unauthorized")
 
+
 @app.get("/api/my_business", response_model=BusinessOut)
 async def get_my_business(
     current_user: DBUser = Depends(get_auth_user),
     db: Session = Depends(get_db),
 ):
     try:
-        business = db.query(DBBusiness).filter(DBBusiness.user_id == current_user.id).first()
+        business = (
+            db.query(DBBusiness).filter(DBBusiness.user_id == current_user.id).first()
+        )
     except Exception as e:
         print(f"Error retrieving business: {e}")
         raise HTTPException(status_code=500, detail="Internal Server Error")

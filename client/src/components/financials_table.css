@@ -1,0 +1,25 @@
+.financial-dashboard-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .financial-dashboard-tabs button {
+    background-color: #f8f8f8;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .financial-dashboard-tabs button:hover {
+    background-color: #eaeaea;
+  }
+
+  .financial-dashboard-tabs button.active {
+    background-color: #059669;
+    color: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
