@@ -1,0 +1,31 @@
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+}
+
+
+.financials_title{
+    text-align: center;
+    color: rgb(0, 0, 0);
+    font-weight: Bold;
+    font-size: var(--large_fontsize);
+    font-family:var(--_font);
+    margin-bottom:10px;
+}
+
+.financials_subtitle{
+    text-align: center;
+    color: rgb(0, 0, 0);
+    font-size: var(--small_fontsize);
+    font-family:var(--_font);
+    margin-bottom:10px;
+}
+
+.financial_dashboard{
+    display: block;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

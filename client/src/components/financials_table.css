@@ -1,0 +1,30 @@
+.financial-dashboard-tabs {
+
+  gap: 3px;
+  justify-content: center;
+}
+
+.select-year{
+  color:var(--secondary_text_color);
+}
+
+.profit_loss_button{
+    background-color:var(--secondary_button_color);
+    color:var(--main_button_textcolor);
+    border: none;
+    font-size: var(--small_fontsize);
+    border-radius: var(--button_border_radius);
+    padding:10px;
+    padding-left: 100px;
+    padding-right: 100px;
+    font-family: var(--button_font);
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.financial-dashboard-tabs{
+    display: flex;
+    flex-direction: row;
+    margin:auto;
+    justify-content: center;
+}

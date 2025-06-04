@@ -1,3 +1,5 @@
+import "./create-financials.css"
+
 import { useState } from "react";
 import { TextField, Button, MenuItem, Box } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"; //you will have to install new dependancies
@@ -73,12 +75,14 @@ export default function AddFinancials() {
     return (
         <>
         <div>
-            <h2>Add Financials</h2>
-            <p>
+            <div className = "financials_title">Add Financials</div>
+            <div className = "financials_subtitle">
             Add financial details to your business in order to make it more
             attractive to potential investors.
-            </p>
+            </div >
+            <div className = "financial_dashboard">
             <FinancialDashboard businessId={businessId} refresh={refresh}/>
+            </div>
         </div>
         <br />
 
