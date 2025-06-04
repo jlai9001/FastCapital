@@ -99,25 +99,40 @@ function FinancialDashboard({ businessId, refresh }) {
     };
 
     return (
-        <div className="financial-dashboard">
 
-
-
-
-            {/* Chart */}
-            {selectedYear && renderChart()}
-
-            {/* Tabs */}
+    <div className="financial-dashboard">
+        <div className="dashboard-controls">
             <div className="financial-dashboard-tabs">
-                <button className="profit_loss_button" onClick={() => setTab('pl')}>Profit & Loss</button>
-                <button className="profit_loss_button" onClick={() => setTab('bs')}>Balance Sheet</button>
+                <div className="tab-slider">
+                    <button
+                        className={`tab-button ${tab === 'pl' ? 'active' : ''}`}
+                        onClick={() => setTab('pl')}
+                    >
+                        Income Statement
+                    </button>
+                    <button
+                        className={`tab-button ${tab === 'bs' ? 'active' : ''}`}
+                        onClick={() => setTab('bs')}
+                    >
+                        Balance Sheet
+                    </button>
+                    <div
+                        className="tab-indicator"
+                        style={{
+                            transform: tab === 'bs' ? 'translateX(calc(100% + 4px))' : 'translateX(0px)'
+                        }}
+                    ></div>
+                </div>
             </div>
-            {/* Dropdown */}
+
+
             <div className="financial-dashboard-dropdown">
-                {/* <label className="select-year">Select Year: </label> */}
+                <div className ="select-year-text">Select Year</div>
                 <select
                     className="year-dropdown"
-                    value={selectedYear || ''} onChange={(e) => setSelectedYear(Number(e.target.value))}>
+                    value={selectedYear || ''}
+                    onChange={(e) => setSelectedYear(Number(e.target.value))}
+                >
                     <option value="" disabled>Select Year</option>
                     {years.map((year) => (
                         <option key={year} value={year}>
@@ -126,8 +141,13 @@ function FinancialDashboard({ businessId, refresh }) {
                     ))}
                 </select>
             </div>
-
         </div>
-    );
+
+        {/* Chart */}
+        <div className="chart-render">
+            {selectedYear && renderChart()}
+        </div>
+    </div>
+);
 }
 export default FinancialDashboard;
