@@ -6,25 +6,71 @@
 
 .select-year{
   color:var(--secondary_text_color);
+  border: 2px solid var(--main_button_color);
+
+  padding-left:50px;
+  padding-right:50px;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .profit_loss_button{
-    background-color:var(--secondary_button_color);
-    color:var(--main_button_textcolor);
-    border: none;
+    background-color: transparent;
+    color: var(--main_button_color);
+    border: 2px solid var(--main_button_color);
     font-size: var(--small_fontsize);
     border-radius: var(--button_border_radius);
     padding:10px;
-    padding-left: 100px;
-    padding-right: 100px;
+    padding-left: 50px;
+    padding-right: 50px;
     font-family: var(--button_font);
     margin-right: 5px;
     margin-left: 5px;
 }
 
+.profit_loss_button:hover{
+  background-color:var(--main_button_hover);
+  color:white;
+}
+
+
+
 .financial-dashboard-tabs{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.financial-dashboard-dropdown{
+    margin-top: 50px;
     display: flex;
     flex-direction: row;
     margin:auto;
     justify-content: center;
+
+}
+
+.year-dropdown {
+    padding: 10px 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    width:430px;
+    text-align: center;
+    font-family: var(--button_font);
+    font-weight: bold;
+    background-color: white;
+    color: #ffffff;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease;
+    min-width: 150px;
+    background-color: var(--main_button_color);
+
+}
+
+.year-dropdown:hover{
+    background-color:var(--main_button_hover);
+    color:white;
 }

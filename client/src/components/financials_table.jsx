@@ -7,7 +7,7 @@ function FinancialDashboard({ businessId, refresh }) {
     const [tab, setTab] = useState('pl');
     const [financials, setFinancials] = useState([]);
     const [years, setYears] = useState([]);
-    const [selectedYear, setSelectedYear] = useState(null);
+    const [selectedYear, setSelectedYear] = useState('');
 
     useEffect(() => {
         axios
@@ -114,8 +114,11 @@ function FinancialDashboard({ businessId, refresh }) {
             </div>
             {/* Dropdown */}
             <div className="financial-dashboard-dropdown">
-                <label className="select-year">Select Year: </label>
-                <select value={selectedYear || ''} onChange={(e) => setSelectedYear(Number(e.target.value))}>
+                {/* <label className="select-year">Select Year: </label> */}
+                <select
+                    className="year-dropdown"
+                    value={selectedYear || ''} onChange={(e) => setSelectedYear(Number(e.target.value))}>
+                    <option value="" disabled>Select Year</option>
                     {years.map((year) => (
                         <option key={year} value={year}>
                             {year}
