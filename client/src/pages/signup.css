@@ -17,7 +17,7 @@ body{
     min-height: calc(100vh - 160px);
     gap: 2rem;
     padding: 2rem;
-    margin-top: 120px;
+    margin-top: 23px;
     margin-bottom: 80px;
     max-width: 1200px;
 }
