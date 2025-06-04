@@ -87,48 +87,52 @@ export default function AddFinancials() {
         <br />
 
         {/* Form Inputs */}
-        <Box display="flex" gap={2} my={2} alignItems="center">
-            <TextField
-            select
-            label="Type"
-            value={finType}
-            onChange={(e) => setFinType(e.target.value)}
-            sx={{ minWidth: 120 }}
-            >
-            <MenuItem value="income">Income</MenuItem>
-            <MenuItem value="expense">Expense</MenuItem>
-            <MenuItem value="asset">Asset</MenuItem>
-            <MenuItem value="liability">Liability</MenuItem>
-            </TextField>
+        <div className ="add-entry-container">
 
-            <TextField
-            type="number"
-            label="Amount"
-            min="1"
-            value={finAmount}
-            onChange={(e) => setFinAmount(e.target.value)}
-            />
+                <TextField
+                select
+                label="Type"
+                value={finType}
+                onChange={(e) => setFinType(e.target.value)}
+                sx={{ minWidth: 120 }}
+                >
+                <MenuItem value="income">Income</MenuItem>
+                <MenuItem value="expense">Expense</MenuItem>
+                <MenuItem value="asset">Asset</MenuItem>
+                <MenuItem value="liability">Liability</MenuItem>
+                </TextField>
 
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DatePicker
-                views={["year", "month"]}
-                label="Month and Year"
-                minDate={new Date("2000-01-01")}
-                maxDate={new Date("2100-12-31")}
-                value={finDate}
-                onChange={(newValue) => setFinDate(newValue)}
-                renderInput={(params) => <TextField {...params} helperText={null} />}
-            />
-            </LocalizationProvider>
+                <TextField
+                type="number"
+                label="Amount"
+                min="1"
+                value={finAmount}
+                onChange={(e) => setFinAmount(e.target.value)}
+                />
 
-            <Button variant="contained" onClick={handleAddEntry}>
-            Add Entry
-            </Button>
-        </Box>
-        <br />
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                    views={["year", "month"]}
+                    label="Month and Year"
+                    minDate={new Date("2000-01-01")}
+                    maxDate={new Date("2100-12-31")}
+                    value={finDate}
+                    onChange={(newValue) => setFinDate(newValue)}
+                    renderInput={(params) => <TextField {...params} helperText={null} />}
+                />
+                </LocalizationProvider>
+
+                <Button className="AddEntry_Button"  onClick={handleAddEntry}>
+                Add Entry
+                </Button>
+
+        </div>
+
         <div>
             <Button>I'm done adding financials.</Button>
         </div>
+
         </>
+
     );
 }

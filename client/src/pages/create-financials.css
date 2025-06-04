@@ -1,8 +1,4 @@
 /* Reset and base styles */
-* {
-  box-sizing: border-box;
-}
-
 
 .financials_title{
     text-align: center;
@@ -22,10 +18,31 @@
 }
 
 .financial_dashboard{
-    display: block;
-    margin: 0 auto;
     display: flex;
+    margin-top: 50px;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+.add-entry-container{
+    display: flex;
+    margin-top: 50px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap:10px
+}
+
+.AddEntry_Button{
+    margin-left: 20px !important;
+    background-color: var(--main_button_color) !important;
+    color: white !important;
+    border: 2px solid var(--main_button_color) !important;
+    padding: 15px !important;
+    padding-left:75px !important;
+    padding-right:75px !important;
+    border-radius: var(--button_border_radius) !important;
+    font-family: var(--_font) !important;
+    font-size: var(--small_fontsize);
 }
