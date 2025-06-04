@@ -1,3 +1,8 @@
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -5,6 +10,8 @@ body {
 }
 
 .add-business-container {
+    display: block;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -12,7 +19,7 @@ body {
     min-height: calc(100vh - 160px);
     gap: 2rem;
     padding: 2rem;
-    margin-top: 80px;
+    margin-top: 20px;
     margin-bottom: 80px;
     max-width: 1200px;
 }
@@ -35,6 +42,7 @@ body {
     font-size: var(--large_fontsize);
     font-family:var(--_font);
     margin-bottom: 10px;
+    text-align: center;
 }
 
 
@@ -64,10 +72,6 @@ input[type="file"]::file-selector-button:hover {
 }
 
 
-
-
-
-
 .choose-file{
     border: 2px solid var( --field_border_color);
     border-radius: var(--button_border_radius);
@@ -95,8 +99,7 @@ input[type="file"]::file-selector-button:hover {
 .add-business-button{
     background-color:var(--main_button_color);
     color:var(--main_button_textcolor);
-    border: 2px solid var(--main_button_color);
-
+    border: none;
 }
 
 .message {

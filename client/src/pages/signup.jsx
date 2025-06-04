@@ -54,7 +54,7 @@ function SignupForm() {
   return (
     <div className="signup-container">
       <div className = "signup-form">
-        <img src={coin}></img>
+        <img className = "coin" src={coin}></img>
         <div className="signup-title">Get Started</div>
         <div className="signup-subtitle">Enter the information below to start investing today.</div>
           <form onSubmit={handleSubmit}>
