@@ -32,8 +32,9 @@
   --field_background_color: #F9FAFB;
   --page_background_color: #F9FAFB;
   --button_font: Poppins;
-  --text_font: Poppins;
-
+  --text_font: Roboto;
+  --element_border_radius: 16px;
+  --element_shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 
 
 }
