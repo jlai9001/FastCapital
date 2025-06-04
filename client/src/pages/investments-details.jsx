@@ -3,6 +3,9 @@ import { useInvestment, useBusiness, useInvestmentPurchases, useBusinessForUser,
 import FinancialDashboard from "../components/financials_table";
 import { useState } from "react";
 import "./investments-details.css";
+import locationIcon from "../assets/location_icon.png";
+import urlIcon from "../assets/url_icon.png";
+import businessPlaceholder from "../assets/business_placeholder.png";
 
 export default function InvestmentDetails() {
     const { investmentId } = useParams();
@@ -44,52 +47,73 @@ export default function InvestmentDetails() {
       setSelectedFile(e.target.files[0]);
     };
 
-    const handleImageUpload = async (e) => {
-      e.preventDefault();
-      if (!selectedFile) return;
+    // const handleImageUpload = async (e) => {
+    //   e.preventDefault();
+    //   if (!selectedFile) return;
 
-      try {
-        const updated = await uploadBusinessImage(business.id, selectedFile);
-        // Ideally refetch business here
-        window.location.reload(); // or force re-render
-      } catch (err) {
-        console.error(err.message);
-      }
-    };
+    //   try {
+    //     const updated = await uploadBusinessImage(business.id, selectedFile);
+    //     // Ideally refetch business here
+    //     window.location.reload(); // or force re-render
+    //   } catch (err) {
+    //     console.error(err.message);
+    //   }
+    // };
 
     const handlePurchaseClick = () => {
         navigate (`/investment-details/${investment.id}/purchase`);
     };
 
     return (
-        <>
+        <div className="investment-details-page-container">
         <div className="investment-details-container">
           <div className="column column-1">
             <div className="box image-wrapper">
             <img
-                src={business.image_url || "https://via.placeholder.com/150"}
+                src={business.image_url || businessPlaceholder}
                 alt={business.name}
                 className="business-image"
               />
           </div>
-          {isOwner && (
+          {/* {isOwner && (
             <div className="box upload-box">
               <form className="upload-image-form" onSubmit={handleImageUpload}>
                 <input type="file" accept="image/*" onChange={handleFileChange} required />
                 <button type="submit">Upload Image</button>
               </form>
             </div>
-          )}
+          )} */}
           </div>
           <div className="column column-2">
             <div className="box">
-            <h2 className="business-name">{business.name}</h2>
-            </div>
-            <div className="box location">
-          <h4>{business.city}, {business.state}</h4>
+            <h2 className="business-detail-name">{business.name}</h2>
             </div>
             <div className="box">
-            <p><a href={business.website_url} target="_blank" rel="noopener noreferrer">{business.website_url}</a></p>
+          <h4 className="location-text">
+            <img
+              src={locationIcon}
+              alt="Location Icon"
+              className="location-icon"
+            />
+            &nbsp; {business.city}, {business.state}</h4>
+            </div>
+            <div className="box">
+            <p>
+              <a
+                className="business-website"
+                href={business.website_url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+              src={urlIcon}
+              alt="URL Icon"
+              className="website-icon"
+            />
+            &nbsp;&nbsp;
+                {business.website_url.replace(/^https?:\/\/(www\.)?/, '')}
+              </a>
+            </p>
             </div>
             </div>
             <div className="column column-3">
@@ -98,7 +122,7 @@ export default function InvestmentDetails() {
               <h3 className="box-quantity">{shares_available}</h3>
             </div>
               <div className="nested-box bottom">
-                <p>Shares Available</p>
+                <p className="business-detail-text">Shares Available</p>
               </div>
               </div>
               <div className="nested-column bottom">
@@ -106,7 +130,7 @@ export default function InvestmentDetails() {
                 <h3 className="box-quantity">{investment.min_investment}</h3>
                 </div>
                 <div className="nested-box bottom">
-                <p>Minimum Investment</p>
+                <p className="business-detail-text">Minimum Investment</p>
                 </div>
               </div>
             </div>
@@ -116,15 +140,21 @@ export default function InvestmentDetails() {
               <h3 className="box-quantity">${investment.price_per_share}</h3>
             </div>
               <div className="nested-box bottom">
-                <p>Price/Share</p>
+                <p className="business-detail-text">Price/Share</p>
               </div>
               </div>
               <div className="nested-column bottom">
                 <div className="nested-box top">
-                <h3 className="box-quantity">{new Date(investment.expiration_date).toLocaleDateString()}</h3>
+                <h3 className="box-quantity">
+                  {new Date(investment.expiration_date).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                  })}
+                </h3>
                 </div>
                 <div className="nested-box bottom">
-                <p>Offer Expires</p>
+                <p className="business-detail-text">Offer Expires</p>
                 </div>
               </div>
             </div>
@@ -136,7 +166,7 @@ export default function InvestmentDetails() {
                 <div className="progress-bar">
                   <div className="progress-fill" style={{ width: `${percentSold}%` }}></div>
                 </div>
-                <p>{percentSold}%</p>
+                <p className="funded-percentage">{percentSold}%</p>
               </div>
               </div>
             <button onClick={handlePurchaseClick} className="invest-now-button">
@@ -146,6 +176,6 @@ export default function InvestmentDetails() {
           <div className="financial-dashboard-container">
           {business?.id && <FinancialDashboard businessId={business.id} />}
           </div>
-          </>
+          </div>
       );
     }

@@ -19,8 +19,7 @@
   }
 
   .financial-dashboard-tabs button.active {
-    background-color: #007bff;
+    background-color: #059669;
     color: white;
-    border-color: #007bff;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   }

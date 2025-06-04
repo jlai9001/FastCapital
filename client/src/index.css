@@ -1,5 +1,5 @@
 :root {
-  --main_button_color:#00178d;
+  --main_button_color: #059669;
   --main_button_textcolor:rgb(255, 255, 255);
   --secondary_button_color:#8399ab;
   --all_button_hover:#e24ffc;
@@ -83,14 +83,12 @@ body {
   font-size: var(--large_fontsize);
   font-weight: bold;
   color: #333;
-  margin-bottom: 0.5rem;
 }
 
 .smalltext{
   font-size:var(--small_fontsize) ;
   font-weight: bold;
   color: #333;
-  margin-bottom: 1rem;
 }
 
 
@@ -132,31 +130,6 @@ body {
   margin-bottom: 50px;
 }
 
-.image-placeholder {
-  width: 180px;
-  height: 130px;
-  border: 2px solid var(--main_button_color);;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  color: #666;
-  font-weight: 500;
-  flex-shrink: 0;
-  background-color: #f4f4f4;
-}
-
-.card-content {
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.left-section {
-  flex: 1;
-}
 
 .business-name {
   font-size: var(--large_fontsize);
@@ -164,7 +137,6 @@ body {
 }
 
 .location {
-  font-size: 16px;
   color: #333;
 }
 
@@ -178,29 +150,6 @@ body {
   font-size: 16px;
   color: #333;
   margin: 0 0 5px 0;
-}
-
-.right-section {
-  text-align: right;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 20px;
-}
-
-.investment-details {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.shares-available,
-.minimum-investment,
-.price {
-  font-size: var(--small_fontsize);
-  color: #333;
-  margin: 0 0 5px 0;
-  font-weight: bold;
 }
 
 .view-details-btn {
