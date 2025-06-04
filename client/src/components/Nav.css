@@ -1,6 +1,6 @@
 /* Nav.css */
 
-/* Overall Header Styling */
+/* Header */
 header {
     background-color: #fff;
     border-bottom: 1px solid #eee;
@@ -8,82 +8,143 @@ header {
     top: 0;
     left: 0;
     width: 100%;
-    box-sizing: border-box;
     z-index: 1000;
-    max-height: 6rem;
-    /* Desktop max height */
+    box-sizing: border-box;
     overflow: hidden;
-}
+  }
 
-/* Main Navbar Styling */
-nav {
+  /* Nav Layout */
+  nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem 1.5rem;
-    max-height: 5rem;
-    /* Desktop max height */
     box-sizing: border-box;
     overflow: hidden;
     width: 100%;
+    max-height: 5rem;
     margin: 0 auto;
-}
+  }
 
-/* Brand logo */
-.nav-link.logo {
+  /* Logo */
+  .nav-link.logo {
+    font-family: var(--button_font);
     font-size: 1.5rem;
-    font-weight: bold;
+    font-weight: 700;
     color: #333;
     text-decoration: none;
     white-space: nowrap;
-}
+  }
 
-/* Navigation links (general) */
-.nav-link {
-    text-decoration: none;
-    color: #333;
+  .nav-logo-image {
+    height: 32px;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+  }
+
+  /* Nav Links */
+  .nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    min-width: 88px;
+    min-height: 42px;
+    border-radius: var(--button_border_radius);
+    font-family: var(--button_font);
     font-size: 1rem;
     font-weight: 500;
-    padding: 0.25rem 0.5rem;
-    /* Consistent base padding for links */
-}
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    color: var(--primary_text_color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
 
-#login.nav-link {
-    -ms-flex-align: end;
-}
+  .nav-link:hover {
+    font-weight: 600;
+  }
 
-/* Desktop: Center links container */
-.nav-center.desktop-only {
+  .nav-link:focus {
+    outline: 2px solid var(--main_button_hover);
+    outline-offset: 2px;
+  }
+
+  /* Button Styles */
+  #login.nav-link {
+    color: var(--main_button_textcolor);
+    background-color: var(--main_button_color);
+    border: none;
+  }
+
+  #signup.nav-link,
+  #logout.nav-link {
+    background-color: transparent;
+    color: var(--main_button_color);
+    border: 2px solid var(--main_button_color);
+  }
+
+  #login:hover,
+  #signup:hover,
+  #logout:hover {
+    background-color: var(--main_button_hover);
+    color: var(--main_button_hover_textcolor);
+    font-weight: 600;
+  }
+
+  /* Right-side buttons container */
+  .nav-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0 0.25rem;
+  }
+
+  /* Centered nav links (e.g. Portfolio) */
+  .nav-center.desktop-only {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 1.5rem;
     flex-grow: 1;
-}
+    gap: 1.5rem;
+  }
 
-/* "Add New Review" Button - Unified Style for consistent Width/Height */
-.nav-button {
-    padding: 0.5rem 1rem;
-    /* Consistent padding determines size with content */
-    background-color: #ff6347;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    /* Consistent font size */
-    font-weight: 500;
-    /* Consistent font weight */
-    line-height: 1.2;
-    /* Consistent line height for height calculation */
-    white-space: nowrap;
+  /* Mobile Menu */
+  .mobile-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* center horizontally */
+    justify-content: flex-start; /* or center if you want vertically too */
+    padding: 1rem;
+    gap: 0.75rem;
+    background-color: white;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: calc(var(--header-height, 6rem));
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-top: 1px solid #eee;
+    max-height: calc(100vh - 4.5rem);
+    overflow-y: auto;
+  }
+
+  .mobile-menu .nav-link {
+    width: 100%;
+    max-width: 320px;
     text-align: center;
-    display: inline-block;
-    /* Allows padding and respects text width */
-}
+    padding: 0.85rem 1.5rem;
+    margin: 0.25rem auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border-radius: var(--button_border_radius);
+  }
 
-/* Hamburger button - Hidden on desktop by default via .mobile-only */
-.hamburger {
+  /* Hamburger Button */
+  .hamburger {
     background: none;
     border: none;
     font-size: 1.5rem;
@@ -91,139 +152,35 @@ nav {
     cursor: pointer;
     padding: 0.25rem;
     line-height: 1;
-}
+  }
 
-/* Visibility classes */
-.desktop-only {
+  /* Visibility Classes */
+  .desktop-only {
     display: flex;
-    /* Default for nav-center container */
-}
+  }
 
-.nav-button.desktop-only {
-    /* Specific for the desktop button instance */
-    display: inline-block;
-}
-
-.mobile-only {
+  .mobile-only {
     display: none;
-    /* Hidden by default (on desktop) */
-}
+  }
 
-/* Mobile dropdown menu */
-.mobile-menu {
-    display: none;
-    /* Hidden by default; shown via media query when React renders it */
-    flex-direction: column;
-    /* THIS ENSURES ITEMS STACK VERTICALLY */
-    align-items: center;
-    /* Center-align items horizontally within the dropdown */
-    /* Use align-items: stretch; if you want nav-links to be full-width by default */
-    background-color: white;
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 4.5rem;
-    /* Positioned below mobile header (matches mobile header height) */
-    z-index: 999;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    border-top: 1px solid #eee;
-    padding: 0.5rem 0;
-    max-height: calc(100vh - 4.5rem);
-    overflow-y: auto;
-}
-
-/* Styling for links inside the mobile menu */
-.mobile-menu .nav-link {
-    padding: 0.85rem 1.5rem;
-    /* Generous padding for touch */
-    text-align: center;
-    /* Center text for links if they are not full width */
-    width: auto;
-    /* Allow link to size to its content, or set to 100% if preferred */
-    display: block;
-    /* Make link take block for easier full-width clicking if width:100% */
-    box-sizing: border-box;
-    color: #333;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.mobile-menu .nav-link:last-of-type {
-    /* If button is not considered last for border */
-    /* border-bottom: none; */
-    /* Handled by button potentially being last */
-}
-
-
-/* Styling for the button inside the mobile menu */
-.mobile-menu .nav-button {
-    /* Inherits visual style (padding, font-size, colors, border-radius) from base .nav-button */
-    margin-top: 0.75rem;
-    /* Space above the button */
-    /* align-self: center; /* Already centered by .mobile-menu align-items: center */
-    /* Width is now determined by content + padding, same as desktop */
-    border-bottom: none;
-    /* Typically no border under the last item */
-}
-
-
-/* --- Responsive layout - Mobile View (max-width: 767px) --- */
-@media (max-width: 767px) {
-    header {
-        max-height: none;
-        height: 4.5rem;
-        overflow: hidden;
-    }
-
-    nav {
-        max-height: none;
-        height: 100%;
-        padding: 0 1rem;
-        overflow: hidden;
-    }
-
+  /* Responsive Overrides */
+  @media (max-width: 767px) {
     .desktop-only {
-        display: none !important;
+      display: none !important;
     }
-
     .mobile-only {
-        display: inline-block !important;
+      display: inline-block !important;
     }
-
-    .hamburger.mobile-only {
-        display: inline-block;
-    }
-
     .mobile-menu {
-        /* Shown on mobile if React state menuOpen is true */
-        display: flex;
-        /* flex-direction: column; is already set in its global rule */
-        /* align-items: center; is already set in its global rule */
-        /* top: 4.5rem; is already set in its global rule */
+      display: flex;
     }
-}
+  }
 
-/* --- Desktop View (min-width: 768px) --- */
-@media (min-width: 768px) {
-    .desktop-only {
-        display: flex;
-        /* Default for nav-center */
-    }
-
-    .nav-button.desktop-only {
-        display: inline-block;
-        /* Default for desktop button */
-    }
-
+  @media (min-width: 768px) {
     .mobile-only {
-        display: none !important;
+      display: none !important;
     }
-
-    .hamburger.mobile-only {
-        display: none !important;
-    }
-
     .mobile-menu {
-        /* Explicitly hide .mobile-menu on desktop */
-        display: none !important;
+      display: none !important;
     }
-}
+  }

@@ -4,9 +4,9 @@ import "./all-investments.css"
 
 export default function AllInvestments() {
     return (
-       <>
+    <>
         <div>
-            <h1>All Investments</h1>
+            <h1>Investment Opportunities</h1>
         </div>
         <div>
         <InvestmentCardsList />

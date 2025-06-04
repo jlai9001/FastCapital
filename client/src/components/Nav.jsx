@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-// CRITICAL: Import from 'react-router-dom' for web projects
 import { NavLink, useNavigate} from "react-router-dom";
 import './Nav.css';
 import { useUser } from "../context/user-provider";
+import logo from "../assets/logo.svg"
 
 export default function Nav() {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -27,6 +27,7 @@ export default function Nav() {
         <header> {/* Using <header> tag is semantically good for main navigation */}
             <nav className="navbar">
                 <NavLink className="nav-link logo" to="/" onClick={closeMobileMenu}>
+                    <img src={logo} alt="Logo" className="nav-logo-image" />
                     Fast Capital
                 </NavLink>
 
@@ -71,14 +72,22 @@ export default function Nav() {
                         Logout
                         </button>
                 ) : (
-                    <NavLink
-                        className="nav-link desktop-only"
-                        id="login"
-                        to="/login"
-                        style={({ isActive }) => isActive ? { textDecoration: 'underline', fontWeight: 'bold' } : {}}
-                    >
-                        Login
-                    </NavLink>
+                    <div className="nav-buttons desktop-only">
+                        <NavLink
+                            className="nav-link"
+                            id="signup"
+                            to='/signup'
+                        >
+                            Sign Up
+                        </NavLink>
+                        <NavLink
+                            className="nav-link"
+                            id="login"
+                            to="/login"
+                        >
+                            Login
+                        </NavLink>
+                    </div>
                 )}
 
                 {/* Hamburger Icon for Mobile */}
@@ -109,16 +118,29 @@ export default function Nav() {
                     </NavLink>
                     {user ? (
                         <button
-                            className="nav-link"
-                            id="logout-mobile"
+                            className="nav-link mobile-only"
+                            id="logout"
                             onClick={handleLogout}
                         >
                             Logout
                         </button>
                     ) : (
-                    <NavLink className="nav-link" to="/login" onClick={closeMobileMenu}>
+                    <div>
+                    <NavLink
+                        className="nav-link"
+                        id="signup"
+                        to="/signup"
+                        onClick={closeMobileMenu}>
+                        Sign Up
+                    </NavLink>
+                    <NavLink className="nav-link"
+                    to="/login"
+                    id="login"
+                    onClick={closeMobileMenu}
+                    >
                         Login
                     </NavLink>
+                    </div>
             )}
                 </div>
             )}

@@ -1,170 +1,79 @@
+/* font import from google */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
 :root {
-  --main_button_color: #059669;
+  font-family: 'Poppins', system-ui, Helvetica, Arial, sans-serif;
+
+  line-height: 1.5;
+  font-weight: 400;
+  --header-height:6rem
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --main_button_color:#059669;
   --main_button_textcolor:rgb(255, 255, 255);
   --secondary_button_color:#8399ab;
-  --all_button_hover:#e24ffc;
-  --all_button_hover_textcolor: white;
-  --element_background_color: #a1c5ff;
+  --main_button_hover: #34D399;
+  --main_button_hover_textcolor: white;
+  --element_background_color: #ffffff;
   --large_fontsize: 30px;
   --small_fontsize: 16px;
+  --button_border_radius: 8px;
+  --primary_text_color:black;
+  --secondary_text_color:#6B7280;
+  --field_border_color:  #e1e1e1;
+  --field_background_color: #F9FAFB;
+  --page_background_color: #F9FAFB;
+  --button_font: Poppins;
+  --text_font: Roboto;
+  --element_border_radius: 16px;
+  --element_shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+
+/* body {
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+} */
+
+
+
+/* a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: #535bf2;
 }
 
 body {
-  font-family: Poppins, sans-serif;
-  background-color: #F8FAFC;
-}
+  padding-top: 6rem;
+  /* For the fixed header */
+  /* margin: 0;
+  display: flex; */
+  /* May not be desired for overall page layout */
+  /* place-items: center; */
+  /* May not be desired for overall page layout */
+  /* min-width: 320px;
+  min-height: 100vh;
+} */
 
-/* navbar */
-.navbar {
-  background-color:  var(--main_button_color);
-  padding: 1rem 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.nav-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 2rem;
-}
-
-.company-name {
-  color:  var(--main_button_textcolor);
-  font-size: 1.5rem;
-  font-weight: bold;
-  text-decoration: none;
-}
-
-
-.nav-menu {
-  display: flex;
-  list-style: none;
-  gap: 2rem;
-}
-
-.nav-item {
-  position: relative;
-}
-
-.navbar-text {
-  color:var(--main_button_textcolor);
-  text-decoration: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
-.navbar-text:hover {
-  background-color: var(--all_button_hover);
-  color:var(--all_button_hover_textcolor);
-}
-
-.navbar-text.active {
-  background-color: #007bff;
-}
-
-.content {
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 0 2rem;
-}
-
-/* typography */
-
-.largetext{
-  font-size: var(--large_fontsize);
-  font-weight: bold;
-  color: #333;
-}
-
-.smalltext{
-  font-size:var(--small_fontsize) ;
-  font-weight: bold;
-  color: #333;
-}
-
-
-/* cards */
-
-.cardtitle{
-  font-size: 35px;
-  font-weight: 600;
-  color: #333;
-  margin: 0 0 8px 0;
-  line-height: 1.2;
-}
-
-.card_details{
-  font-size: 16px;
-  color: #333;
-  margin: 0 0 5px 0;
-}
-
-.card_financials{
-  font-size: 16px;
-  color: #333;
-  margin: 0 0 5px 0;
-  font-weight: bold;
-}
-
-.investment-card {
-  background-color: var(--element_background_color);
-  border: 2px solid;
-  border-color:var(--main_button_color);
-  border-radius: 10px;
-  padding: 25px;
-  max-width: 900px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 25px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 50px;
-}
-
-
-.business-name {
-  font-size: var(--large_fontsize);
-  color: #333;
-}
-
-.location {
-  color: #333;
-}
-
-.website {
-  font-size: 16px;
-  color: #333;
-  margin: 0 0 5px 0;
-}
-
-.expiry {
-  font-size: 16px;
-  color: #333;
-  margin: 0 0 5px 0;
-}
-
-.view-details-btn {
-  background-color: var(--main_button_color);
-  color:var(--main_button_textcolor);
-  border: 0px solid #888;
-  border-color: black;
-  border-radius: 5px;
-  padding: 12px 24px;
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-
-  transition: background-color 0.2s ease;
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
 }
 
 .view-details-btn:hover {
@@ -311,59 +220,17 @@ body {
   margin-top: 10px;
 }
 
-.form-fields {
-  margin-bottom: 60px;
-}
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
 
-.field-group {
-  margin-top: -15px;
-  margin-bottom: 30px;
-}
+  a:hover {
+    color: #747bff;
+  }
 
-.field-label {
-  font-size: var(--small_fontsize);
-  display: block;
-  font-weight: bold;
-  color: #333;
-  font-weight: 600;
-  margin-bottom: 5px;
-
-}
-
-.button-group {
-  display: flex;
-  gap: 15px;
-  justify-content: flex-end;
-}
-
-.cancel-btn,
-.buy-btn {
-  padding: 12px 30px;
-  border: 0px solid #888;
-  border-radius: 5px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 100px;
-}
-
-.cancel-btn {
-  background-color: var(--secondary_button_color);
-  color: var(--main_button_textcolor);
-}
-
-.cancel-btn:hover {
-  background-color:var(--all_button_hover);
-  color: #ffffff;
-}
-
-.buy-btn {
-  background-color: var(--main_button_color);
-  color: var(--main_button_textcolor);
-}
-
-.buy-btn:hover {
-  background-color:var(--all_button_hover);
-   color:var(--all_button_hover_textcolor);
-}
+  button {
+    background-color: #f9f9f9;
+  }
+} */
