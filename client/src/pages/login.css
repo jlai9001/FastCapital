@@ -50,13 +50,17 @@ body{
 }
 
 .Error_Message{
+    display: block;
+    margin: 0 auto;
+    text-align: center;
     margin-top: 20px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    width:100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width:90%;
     color: rgb(135, 82, 82);
     font-weight: Bold;
     font-size: var(--small_fontsize);
+    border-radius: var(--button_border_radius);
     margin-bottom: 50px;
     background-color: rgb(229, 200, 200);
 }
