@@ -1,60 +1,106 @@
-/* pending-investments-card.css */
-
 .pending-investment-card {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    background-color: white;
-    border: 1px solid black;
+    background-color: #F9FAFB;
     border-radius: 12px;
-    min-width: 600px;
-    max-width: 800px;
-    margin: 0.5rem;
+    margin-bottom: 1rem;
     padding: 1rem;
-    box-sizing: border-box;
   }
 
-  .pending-investment-info {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
+.pending-investment-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
-  .pending-investment-info .name {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #000;
-  }
+.pending-investment-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
 
-  .pending-investment-info .location {
-    margin-top: 0.25rem;
-    font-size: 1rem;
-    color: #555;
-  }
+.pending-investment-location {
+  color: #555;
+  font-size: 0.95rem;
+}
 
-  .pending-investment-info #percent-complete {
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-    color: #555;
-  }
+.pending-investment-right {
+  flex: 1.5;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
 
-  .pending-investment-actions {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: space-between;
-  }
+.pending-info-column1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-  .pending-investment-actions .shares-bought {
-    font-size: 1rem;
-    font-weight: 500;
-    color: #333;
-  }
+.pending-info-column2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 160px;
+}
 
-  .view-details-button {
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    cursor: pointer;
-  }
+.pending-info-label {
+  font-size: 0.9rem;
+  color: #888;
+  margin-bottom: 0.25rem;
+}
+
+.pending-info-value {
+  font-size: 1rem;
+  font-weight: 600;;
+}
+
+.button-column {
+  justify-content: center;
+}
+
+.map-icon {
+  width: 20px;
+  height: 20px;
+  position: relative;
+  top: 5px;
+  object-fit: contain;
+}
+
+.progress-bar-wrapper {
+  flex-grow: 1;
+  flex-shrink: 0;
+  margin-top: 0.5rem;
+  max-width: 400px;
+  text-align: center;
+}
+
+.progress-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.progress-bar {
+  height: 20px;
+  background-color: #E0E9F4;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #6290C8;
+  transition: width 0.5s ease-in-out;
+  min-width: 4px;
+  border-radius: 10px 0 0 10px;
+}
+
+.funded-percentage {
+  font-size: 0.85rem;
+  color: #6290C8;
+  min-width: 35px;
+  text-align: right;
+}

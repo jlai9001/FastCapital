@@ -100,13 +100,21 @@ function FinancialDashboard({ businessId, refresh }) {
 
     return (
         <div className="financial-dashboard">
-            {/* Tabs */}
             <div className="financial-dashboard-tabs">
-                <button onClick={() => setTab('pl')}>Profit & Loss</button>
-                <button onClick={() => setTab('bs')}>Balance Sheet</button>
+                <button
+                onClick={() => setTab('pl')}
+                className={tab === 'pl' ? 'active' : ''}
+                >
+                Profit & Loss
+                </button>
+                <button
+                onClick={() => setTab('bs')}
+                className={tab === 'bs' ? 'active' : ''}
+                >
+                Balance Sheet
+                </button>
             </div>
 
-            {/* Dropdown */}
             <div className="financial-dashboard-dropdown">
                 <label>Select Year: </label>
                 <select value={selectedYear || ''} onChange={(e) => setSelectedYear(Number(e.target.value))}>

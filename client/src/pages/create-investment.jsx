@@ -1,3 +1,5 @@
+import './create-investment.css';
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -73,11 +75,11 @@ export default function NewInvestment() {
     };
 
     return (
-        <>
-            <h2>Create Investment</h2>
-            <section>
+        <div className='create-investment-container'>
+            <div className="create-investment-form">
+                <div className="title">Create Investment</div>
                 <div>
-                    <label>How many shares would you like to sell?</label><br />
+                    <div className="field-label">How many shares would you like to sell?</div>
                     <input
                         type="number"
                         value={sharesAvailable}
@@ -87,7 +89,7 @@ export default function NewInvestment() {
                     />
                 </div><br />
                 <div>
-                    <label>What is the minimum investment required?</label><br />
+                    <div className="field-label">What is the minimum investment you need?</div>
                     <input
                         type="number"
                         value={minInvestment}
@@ -95,24 +97,15 @@ export default function NewInvestment() {
                         onChange={(e) => setMinInvestment(Number(e.target.value))}
                     />
                 </div><br />
-                <div style={{ position: "relative", display: "inline-block" }}> {/* this div was made with AI */}
-                    <span style={{
-                        position: "absolute",
-                        left: "10px",
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        pointerEvents: "none",
-                        color: "#555"
-                    }}>$</span>
+                    <div className="field-label">What is the price per share in USD?</div>
+
+
+                <div >
                     <input
                         type="number"
                         value={pricePerShare}
                         min="1"
                         step="1"
-                        style={{
-                        paddingLeft: "20px",
-                        height: "30px"
-                        }}
                         onChange={(e) => {
                         const val = parseInt(e.target.value);
                         setPricePerShare(isNaN(val) ? 0 : val);
@@ -120,16 +113,18 @@ export default function NewInvestment() {
                     />
                 </div><br />
                 <div>
-                    <label>What is the expiration date?</label><br />
+                    <div className="field-label">What is the expiration date?</div>
                     <input
                         type="date"
                         value={expirationDate}
                         onChange={(e) => setExpirationDate(e.target.value)}
                     />
                 </div><br />
+            </div>
+            <section>
             </section><br />
             <button onClick={handleCancel}>Cancel</button>
             <button onClick={handlePost}>Post Offer</button>
-        </>
+        </div>
     );
 }

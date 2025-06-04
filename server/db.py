@@ -34,6 +34,7 @@ engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 SESSION_LIFE_MINUTES = 30
 
+
 def get_db():
     db = SessionLocal()
     try:
@@ -149,6 +150,7 @@ def get_user_public_details(email: str):
             return None
         return UserPublicDetails(id=account.id, email=account.email)
 
+
 def create_business(business: BusinessCreate) -> BusinessOut:
     with SessionLocal() as db:
         db_business = DBBusiness(**business.dict())
@@ -169,6 +171,20 @@ def create_business(business: BusinessCreate) -> BusinessOut:
             postal_code=db_business.postal_code,
         )
 
+
+def update_business_image(business_id: int, user_id: int, image_url: str) -> str:
+    with SessionLocal() as db:
+        db_business = db.query(DBBusiness).filter(DBBusiness.id == business_id).first()
+
+        if not db_business:
+            raise ValueError("Business not found")
+
+        if db_business.user_id != user_id:
+            raise PermissionError("User not authorized to update this business")
+
+        db_business.image_url = image_url
+        db.commit()
+        return image_url
 
 
 def get_businesses() -> list[BusinessOut]:

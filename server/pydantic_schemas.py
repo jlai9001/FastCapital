@@ -102,8 +102,19 @@ class EnrichedPurchaseOut(BaseModel):
     business_name: str
     business_city: str
     business_state: str
-    business_image_url: str
+    business_image_url: Optional[str] = None
     business_website_url: str
+
+    @validator("business_image_url", pre=True)
+    def sanitize_image_url(cls, v):
+        if not v or not isinstance(v, str):
+            return None
+        invalid_values = ["", "null", "undefined"]
+        if any(invalid in v.lower() for invalid in invalid_values):
+            return None
+        if "example.com" in v.lower():
+            return None
+        return v
 
 
 class FinancialType(str, enum.Enum):

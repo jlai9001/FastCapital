@@ -1,3 +1,8 @@
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -5,21 +10,42 @@ body {
 }
 
 .add-business-container {
-    min-width: 500px;
-    max-width: 800px;
+    display: block;
     margin: 0 auto;
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 160px);
+    gap: 2rem;
+    padding: 2rem;
+    margin-top: 20px;
+    margin-bottom: 80px;
+    max-width: 1200px;
+}
+
+.business-form {
+    margin-top: 5px;
+    background-color: var(--element_background_color);
+    border-radius: var(--element_border_radius);
+    box-shadow: var(--element_shadow);
+    padding: 35px;
+    justify-content: center;
+    margin-bottom: 250px;
+    width: 600px;
+
 }
 
 .add-business-title {
-    justify-content: center;
-    margin-bottom: 20px;
+    color: rgb(0, 0, 0);
+    font-weight: Bold;
+    font-size: var(--large_fontsize);
+    font-family:var(--_font);
+    margin-bottom: 10px;
+    text-align: center;
 }
 
-.add-business-form {
-    display: flex-start;
-    flex-direction: column;
-}
+
 
 input {
     margin: 12px 0;
@@ -27,6 +53,33 @@ input {
     box-sizing: border-box;
     padding: 12px;
     font-size: 1rem;
+}
+
+
+input[type="file"]::file-selector-button {
+  background-color:var(--main_button_color);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background-color: var(--all_button_hover);
+  border: none;
+}
+
+
+.choose-file{
+    border: 2px solid var( --field_border_color);
+    border-radius: var(--button_border_radius);
+    padding: 10px 20px;
+    color:var(--secondary_text_color);
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
 }
 
 .button-group {
@@ -41,6 +94,12 @@ input {
     margin: 0 5px;
     font-size: 1rem;
     cursor: pointer;
+}
+
+.add-business-button{
+    background-color:var(--main_button_color);
+    color:var(--main_button_textcolor);
+    border: none;
 }
 
 .message {
