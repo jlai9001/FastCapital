@@ -3,9 +3,17 @@ import axios from "axios";
 import './your-investments_chart.css';
 import { PieChart } from "@mui/x-charts/PieChart";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import businessPlaceholder from "../assets/business_placeholder.png";
 
 const chartTheme = createTheme({
   components: {
+    MuiChartsSurface: {
+      styleOverrides: {
+        root: {
+          height: 200, // Adjust height as needed
+        },
+      },
+    },
     MuiChartsLegend: {
       styleOverrides: {
         root: {
@@ -34,15 +42,27 @@ const chartTheme = createTheme({
 
 
 const InvestmentsCard = ({ investment }) => {
-  const { business_name, shares_purchased, cost_per_share } = investment;
+  const {
+    business_name,
+    shares_purchased,
+    cost_per_share,
+    business_image_url
+   } = investment;
+
   const totalInvestment = shares_purchased * cost_per_share;
+
   return (
     <div className="investments-card">
-      <div className="investments-header">
-        <h2 className="investments-title">{business_name}</h2>
+      <div className="investments-row">
+        <div className="investments-left">
+          <img
+            src={business_image_url && business_image_url.trim() !== "" ? business_image_url : businessPlaceholder}
+            alt={business_name}
+            className="investment-business-image"
+          />
+        <p className="investments-title">{business_name}</p>
       </div>
-      <div className="investments-details">
-        <p><strong>Value:</strong> ${totalInvestment.toFixed(2)}</p>
+      <p className="investment-amount"> ${totalInvestment.toFixed(2)}</p>
       </div>
     </div>
   );
@@ -89,9 +109,14 @@ const UserInvestments = () => {
 
   return (
     <ThemeProvider theme={chartTheme}>
-    <div className="investments-dashboard">
+    <div className="investments-dashboard-container">
+      <div className="investments-dashboard-header">
+      <p>Your Investments</p>
+      </div>
+      <div className="investments-dashboard">
       <div className="investments-chart">
-        <h3>Investments by Business</h3>
+        <p className="portfolio-title">Your Portfolio</p>
+        <div className="piechart-wrapper">
         <PieChart
           series={[{
             data: pieData }]}
@@ -100,19 +125,21 @@ const UserInvestments = () => {
           legend={{ position: "right" }}
           sx={{
             '& .MuiChartsLegend-series': {
-              color: '#fff'
+              color: '#374151'
             },
           }}
         />
+      </div>
       </div>
       <div className="investments-grid-wrapper">
         {investments.map((inv) => (
           <InvestmentsCard key={inv.id} investment={inv} />
         ))}
       <div className="portfolio-total">
-        <h3>Total Portfolio Value: ${totalPortfolioValue.toFixed(2)}</h3>
+        <p><span className="value-text">Total Value: &nbsp;  </span><span className="value">${totalPortfolioValue.toFixed(2)}</span></p>
       </div>
       </div>
+    </div>
     </div>
     </ThemeProvider>
   );}
