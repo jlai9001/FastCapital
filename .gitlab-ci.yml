@@ -60,8 +60,8 @@ deploy-to-ec2:
   image: docker:cli
   variables:
     GITLAB_IMAGE: ${CI_REGISTRY_IMAGE}/server
-    DATABASE_URL: "postgresql://$PG_USERNAME:$PG_PASSWORD2@fastcapital-db.c1c0g4g2q342.us-east-2.rds.amazonaws.com"
-    # NOTE: This needs to be replaced as this DB could not connect
+    DATABASE_URL: "postgresql://$PG_USERNAME:$PG_PASSWORD2@database-1.c1c0g4g2q342.us-east-2.rds.amazonaws.com"
+
   before_script:
     - apk add --no-cache openssh-client
     - eval $(ssh-agent -s)
