@@ -3,7 +3,7 @@ import axios from "axios";
 import './your-investments_chart.css';
 import { PieChart } from "@mui/x-charts/PieChart";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import businessPlaceholder from "../assets/business_placeholder.png";
+import placeholder from "../assets/business_placeholder.png";
 
 const chartTheme = createTheme({
   components: {
@@ -51,14 +51,24 @@ const InvestmentsCard = ({ investment }) => {
 
   const totalInvestment = shares_purchased * cost_per_share;
 
+const isValidImageUrl =
+  typeof business_image_url === "string" &&
+  business_image_url.trim() !== "" &&
+  business_image_url !== "null" &&
+  business_image_url !== "undefined";
+
   return (
     <div className="investments-card">
       <div className="investments-row">
         <div className="investments-left">
           <img
-            src={business_image_url && business_image_url.trim() !== "" ? business_image_url : businessPlaceholder}
+            src={isValidImageUrl ? business_image_url : placeholder}
             alt={business_name}
             className="investment-business-image"
+            onError={(e) => {
+              e.target.onerror = null; // Prevent infinite loop
+              e.target.src = placeholder;
+            }}
           />
         <p className="investments-title">{business_name}</p>
       </div>
