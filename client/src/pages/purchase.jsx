@@ -15,7 +15,7 @@ import businessPlaceholder from "../assets/business_placeholder.png";
 export default function Purchase() {
   const nav = useNavigate();
   const { investmentId } = useParams();
-  const { userId } = useUser();
+  const { user } = useUser();
 
   const {
     data: investment,
@@ -99,7 +99,7 @@ export default function Purchase() {
     nav(-1);
   }
 
-  return (
+  return (<>
     <div className="page-container">
       <div className="top-half">
         <div className="column column-1">
@@ -256,20 +256,21 @@ export default function Purchase() {
         </div>
     </div>
   </div>
-
-
+  </div>
       {showModal && investment && (
         <div className="modal-overlay">
           <div className="modal-content">
             <PaymentModal
               onClose={handleModalClose}
               investment={investment}
-              userId={userId}
+              userId={user.id}
               shareAmount={shareAmount}
             />
           </div>
         </div>
       )}
-    </div>
+
+</>
+
   );
 }
