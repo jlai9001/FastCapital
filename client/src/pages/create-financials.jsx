@@ -90,6 +90,11 @@ export default function AddFinancials() {
                 <FinancialDashboard businessId={businessId} refresh={refresh}/>
                 </div>
 
+                <div className = "field-label-container">
+                    <div className ="field-label-1">Financial Data Type</div>
+                    <div className ="field-label-2">Amount</div>
+                    <div className ="field-label-3">Date</div>
+                </div>
             {/* Form Inputs */}
             <div className ="add-entry-container">
 

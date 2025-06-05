@@ -2,7 +2,7 @@
 .create-financials-form{
     display: block;
     margin: 0 auto;
-    margin-top: 50px;
+    margin-top: 60px;
     background-color: var(--element_background_color);
     border-radius: var(--element_border_radius);
     box-shadow: var(--element_shadow);
@@ -36,9 +36,38 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    scale:0.9;
+}
+
+.field-label-container{
+    display: flex;
+    margin-top: 50px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 220px;
+    transform: translateX(-40px);
+    color: var(--secondary_text_color);
+    font-size: var(--small_fontsize);
+    margin-bottom: -45px;
 }
 
 
+.field-label-1{
+    text-align: left;
+    transform: translateX(-32px);
+}
+
+
+.field-label-2{
+    text-align: left;
+    transform: translateX(-110px);
+}
+
+.field-label-3{
+    text-align: left;
+    transform: translateX(-95px);
+}
 
 
 
@@ -67,7 +96,7 @@
     background-color: #f8f9fa !important;
     font-family: var(--_font);
     color: var(--secondary_text_color);
-    width:300px;
+    width:250px;
 }
 
 
@@ -113,7 +142,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap:530px
+    gap:420px
 }
 
 .AddEntry_Button{
