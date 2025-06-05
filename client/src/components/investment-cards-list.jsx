@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getInvestments } from "../hooks/getData";
 import InvestmentCard from "./investment-card";
 import "./investment-cards-list.css";
+import { Switch } from '@mui/material';
 
 export default function InvestmentCardsList() {
     const [error, setError] = useState(null);
@@ -53,21 +54,31 @@ export default function InvestmentCardsList() {
         <div className="investment-list-container">
         <div className="investment-controls">
             <div className="sort-filter">
+                <div className="invest-opp-title"> Investment Opportunities</div>
+                <label>
+                    {/* checkbox */}
+                    {/* <input
+                    type="checkbox"
+                    checked={filterExpiring}
+                    onChange={handleFilterToggle}
+                    /> */}
+
+                    <div className="switch-element">
+                        <Switch
+                        checked={filterExpiring}
+                        onChange={handleFilterToggle}>
+                        </Switch>
+                        Expires soon
+                    </div>
+                </label>
+            Sort by
             <label>
-                <input
-                type="checkbox"
-                checked={filterExpiring}
-                onChange={handleFilterToggle}
-                />
-                Expires in next 7 days
-            </label>
-            <label>
-                Sort by:
                 <select onChange={handleSortChange}>
-                <option value="">None</option>
-                <option value="price">Price per Share (Low → High)</option>
-                <option value="min">Minimum Investment (Low → High)</option>
+                    <option value="">Property</option>
+                    <option value="price">Price per Share (Low → High)</option>
+                    <option value="min">Minimum Investment (Low → High)</option>
                 </select>
+
             </label>
             </div>
         </div>
