@@ -13,23 +13,33 @@ import bcrypt
 from secrets import token_urlsafe
 from datetime import datetime, timedelta
 from pydantic_schemas import (
+    InvestmentCreate,
     InvestmentOut,
     BusinessOut,
     FinancialsOut,
+    FinancialsCreate,
     PurchaseCreate,
     PurchaseOut,
     EnrichedPurchaseOut,
     PurchaseStatus,
     UserPublicDetails,
+    BusinessCreate,
 )
+import os
 
-
-DATABASE_URL = "postgresql+psycopg://postgres:postgres@localhost:5432/fastcapital"
-
+DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql+psycopg://postgres:postgres@localhost:5432/fastcapital")
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 SESSION_LIFE_MINUTES = 30
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 def validate_email_password(email: str, password: str) -> str | None:
@@ -140,6 +150,42 @@ def get_user_public_details(email: str):
         return UserPublicDetails(id=account.id, email=account.email)
 
 
+def create_business(business: BusinessCreate) -> BusinessOut:
+    with SessionLocal() as db:
+        db_business = DBBusiness(**business.dict())
+        db.add(db_business)
+        db.commit()
+        db.refresh(db_business)
+        print(vars(db_business))
+        return BusinessOut(
+            id=db_business.id,
+            name=db_business.name,
+            user_id=db_business.user_id,
+            website_url=db_business.website_url,
+            image_url=db_business.image_url,
+            address1=db_business.address1,
+            address2=db_business.address2,
+            city=db_business.city,
+            state=db_business.state,
+            postal_code=db_business.postal_code,
+        )
+
+
+def update_business_image(business_id: int, user_id: int, image_url: str) -> str:
+    with SessionLocal() as db:
+        db_business = db.query(DBBusiness).filter(DBBusiness.id == business_id).first()
+
+        if not db_business:
+            raise ValueError("Business not found")
+
+        if db_business.user_id != user_id:
+            raise PermissionError("User not authorized to update this business")
+
+        db_business.image_url = image_url
+        db.commit()
+        return image_url
+
+
 def get_businesses() -> list[BusinessOut]:
     with SessionLocal() as db:
         db_businesses = db.query(DBBusiness).order_by(DBBusiness.name).all()
@@ -149,7 +195,7 @@ def get_businesses() -> list[BusinessOut]:
                 BusinessOut(
                     id=db_business.id,
                     name=db_business.name,
-                    users_id=db_business.user_id,
+                    user_id=db_business.user_id,
                     image_url=db_business.image_url,
                     website_url=db_business.website_url,
                     address1=db_business.address1,
@@ -169,7 +215,7 @@ def get_business(business_id: int) -> BusinessOut | None:
             return None
         return BusinessOut(
             id=db_business.id,
-            users_id=db_business.user_id,
+            user_id=db_business.user_id,
             name=db_business.name,
             image_url=db_business.image_url,
             website_url=db_business.website_url,
@@ -271,6 +317,31 @@ def get_financials_by_business_id(business_id: int) -> list[FinancialsOut]:
         return financials
 
 
+def add_finance(new_finance: FinancialsCreate) -> FinancialsOut:
+    with SessionLocal() as db:
+        db_business = (
+            db.query(DBBusiness)
+            .filter(DBBusiness.id == new_finance.business_id)
+            .first()
+        )
+        if not db_business:
+            raise ValueError("Business not found")
+        # transcribe new_finance to db_finance
+        db_financial = DBFinancials(**new_finance.dict())
+        db.add(db_financial)
+        db.commit()
+        db.refresh(db_financial)
+        # add, commit, refresh, return
+        finance = FinancialsOut(
+            id=db_financial.id,
+            business_id=db_financial.business_id,
+            date=db_financial.date,
+            amount=db_financial.amount,
+            type=db_financial.type,
+        )
+        return finance
+
+
 def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut | None:
     with SessionLocal() as db:
         db_investment = (
@@ -300,4 +371,31 @@ def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut | None:
             cost_per_share=db_purchase.cost_per_share,
             purchase_date=db_purchase.purchase_date,
             status=db_purchase.status.value,
+        )
+
+
+def add_investment(new_investment: InvestmentCreate) -> InvestmentOut:
+    with SessionLocal() as db:
+        # query by buisness id, return error if not found
+        db_business = (
+            db.query(DBBusiness)
+            .filter(DBBusiness.id == new_investment.business_id)
+            .first()
+        )
+        if not db_business:
+            raise ValueError("Business not found.")
+        # transcribe pydantic to db model
+        db_investment = DBInvestment(**new_investment.dict())
+        db.add(db_investment)
+        db.commit()
+        db.refresh(db_investment)
+        return InvestmentOut(
+            id=db_investment.id,
+            business_id=db_investment.business_id,
+            shares_available=db_investment.shares_available,
+            price_per_share=db_investment.price_per_share,
+            min_investment=db_investment.min_investment,
+            start_date=db_investment.start_date,
+            expiration_date=db_investment.expiration_date,
+            featured=db_investment.featured,
         )

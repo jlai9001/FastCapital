@@ -1,6 +1,10 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useInvestment, useBusiness } from "../hooks/getData";
+import { useInvestment, useBusiness, useInvestmentPurchases} from "../hooks/getData";
 import FinancialDashboard from "../components/financials_table";
+import "./investments-details.css";
+import locationIcon from "../assets/location_icon.png";
+import urlIcon from "../assets/url_icon.png";
+import placeholder from "../assets/business_placeholder.png";
 
 export default function InvestmentDetails() {
     const { investmentId } = useParams();
@@ -18,34 +22,134 @@ export default function InvestmentDetails() {
         data: business,
     } = useBusiness(investment?.business_id)
 
+    const {
+        loading: purchasesLoading,
+        error: purchasesError,
+        data: purchases,
+    } = useInvestmentPurchases(investmentId);
+
     if (investmentLoading || businessLoading) return <h1> Loading... </h1>
     if (investmentError || businessError) return <h1> {investmentError || businessError} </h1>
     if (!investment || !business) return <h1>Unable to retreive investment data.</h1>
 
-    const shares_available = investment.shares_available - (investment.shares_sold || 0)
-    const number_of_investors = investment.investors?.length || 0;
+    const totalSharesPurchased = purchases?.reduce((sum, purchase) => sum + purchase.shares_purchased, 0) || 0;
+    const shares_available = investment.shares_available - totalSharesPurchased;
+    const uniqueInvestorIds = new Set(purchases?.map(p => p.user_id));
+    const number_of_investors = uniqueInvestorIds.size;
+    const percentSold = (totalSharesPurchased / investment.shares_available) * 100;
 
     const handlePurchaseClick = () => {
         navigate (`/investment-details/${investment.id}/purchase`);
     };
 
     return (
-        <div className="offer-details-container">
-          <h2>Business Name: {business.name}</h2>
-          <h3>Location: {business.city}, {business.state}</h3>
-          <h3>Website: {business.website}</h3>
-          <h3>Total Shares Offered: {investment.shares_available}</h3>
-          <h3>Shares Available: {shares_available}</h3>
-          <h3>Price per share: ${investment.price_per_share}</h3>
-          <h3>Minimum shares for investment: {investment.min_investment}</h3>
-          <h3>Current number of investors: {number_of_investors}</h3>
-          <h3>Offer expires on: {new Date(investment.expiration_date).toLocaleDateString()}</h3>
-          <div className="button-container">
+        <div className="investment-details-page-container">
+        <div className="investment-details-container">
+          <div className="column column-1">
+            <div className="box image-wrapper">
+            <img
+              src={business.image_url || placeholder}
+              alt={business.name}
+              className="business-image"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = placeholder;
+              }}
+            />
+          </div>
+          </div>
+          <div className="column column-2">
+            <div className="box">
+            <h2 className="business-detail-name">{business.name}</h2>
+            </div>
+            <div className="box">
+          <h4 className="location-text">
+            <img
+              src={locationIcon}
+              alt="Location Icon"
+              className="location-icon"
+            />
+            &nbsp; {business.city}, {business.state}</h4>
+            </div>
+            <div className="box">
+            <p>
+              <a
+                className="business-website"
+                href={business.website_url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+              src={urlIcon}
+              alt="URL Icon"
+              className="website-icon"
+            />
+            &nbsp;&nbsp;
+                {business.website_url.replace(/^https?:\/\/(www\.)?/, '')}
+              </a>
+            </p>
+            </div>
+            </div>
+            <div className="column column-3">
+            <div className="nested-column top">
+              <div className="nested-box top">
+              <h3 className="box-quantity">{shares_available}</h3>
+            </div>
+              <div className="nested-box bottom">
+                <p className="business-detail-text">Shares Available</p>
+              </div>
+              </div>
+              <div className="nested-column bottom">
+                <div className="nested-box top">
+                <h3 className="box-quantity">{investment.min_investment}</h3>
+                </div>
+                <div className="nested-box bottom">
+                <p className="business-detail-text">Minimum Investment</p>
+                </div>
+              </div>
+            </div>
+            <div className="column column-4">
+            <div className="nested-column top">
+              <div className="nested-box top">
+              <h3 className="box-quantity">${investment.price_per_share}</h3>
+            </div>
+              <div className="nested-box bottom">
+                <p className="business-detail-text">Price/Share</p>
+              </div>
+              </div>
+              <div className="nested-column bottom">
+                <div className="nested-box top">
+                <h3 className="box-quantity">
+                  {new Date(investment.expiration_date).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                  })}
+                </h3>
+                </div>
+                <div className="nested-box bottom">
+                <p className="business-detail-text">Offer Expires</p>
+                </div>
+              </div>
+            </div>
+            </div>
+            <div className="progress-purchase-container">
+              <div className="progress-bar-wrapper">
+              <p className="progress-label">Funded</p>
+                <div className="progress-bar-row">
+                <div className="progress-bar">
+                  <div className="progress-fill" style={{ width: `${percentSold}%` }}></div>
+                </div>
+                <p className="funded-percentage">{percentSold}%</p>
+              </div>
+              </div>
             <button onClick={handlePurchaseClick} className="invest-now-button">
-              Invest Now!
+              Purchase Investment
             </button>
           </div>
+          <div className="financial-dashboard-container">
           {business?.id && <FinancialDashboard businessId={business.id} />}
-        </div>
+          </div>
+          </div>
       );
     }

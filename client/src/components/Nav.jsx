@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-// CRITICAL: Import from 'react-router-dom' for web projects
-import { NavLink} from "react-router-dom";
+import { NavLink, useNavigate} from "react-router-dom";
 import './Nav.css';
 import { useUser } from "../context/user-provider";
-import { useNavigate } from "react-router-dom";
+import logo from "../assets/logo.svg"
 
 export default function Nav() {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -28,19 +27,32 @@ export default function Nav() {
         <header> {/* Using <header> tag is semantically good for main navigation */}
             <nav className="navbar">
                 <NavLink className="nav-link logo" to="/" onClick={closeMobileMenu}>
+                    <img src={logo} alt="Logo" className="nav-logo-image" />
                     Fast Capital
                 </NavLink>
 
                 {/* Desktop Navigation Links */}
                 <div className="nav-center desktop-only">
-                    <NavLink
-                        className="nav-link"
-                        id="portfolio"
-                        to="/portfolio"
-                        style={({ isActive }) => isActive ? { textDecoration: 'underline', fontWeight: 'bold' } : {}}
-                    >
-                        Portfolio
-                    </NavLink>
+                    {user && (
+                        <>
+                            <NavLink
+                                className="nav-link"
+                                id="portfolio"
+                                to="/portfolio"
+                                style={({ isActive }) => isActive ? { textDecoration: 'underline', fontWeight: 'bold' } : {}}
+                            >
+                                Portfolio
+                            </NavLink>
+                            <NavLink
+                                className="nav-link"
+                                id="business-profile"
+                                to="/business-profile"
+                                style={({ isActive }) => isActive ? { textDecoration: 'underline', fontWeight: 'bold' } : {}}
+                            >
+                                Business Profile
+                            </NavLink>
+                        </>
+                    )}
                     <NavLink
                         className="nav-link"
                         id="all-investments"
@@ -60,14 +72,22 @@ export default function Nav() {
                         Logout
                         </button>
                 ) : (
-                    <NavLink
-                        className="nav-link desktop-only"
-                        id="login"
-                        to="/login"
-                        style={({ isActive }) => isActive ? { textDecoration: 'underline', fontWeight: 'bold' } : {}}
-                    >
-                        Login
-                    </NavLink>
+                    <div className="nav-buttons desktop-only">
+                        <NavLink
+                            className="nav-link"
+                            id="signup"
+                            to='/signup'
+                        >
+                            Sign Up
+                        </NavLink>
+                        <NavLink
+                            className="nav-link"
+                            id="login"
+                            to="/login"
+                        >
+                            Login
+                        </NavLink>
+                    </div>
                 )}
 
                 {/* Hamburger Icon for Mobile */}
@@ -83,24 +103,44 @@ export default function Nav() {
             {/* Mobile Menu (conditionally rendered) */}
             {menuOpen && (
                 <div className="mobile-menu mobile-only">
+                    {user && (
+                        <>
                     <NavLink className="nav-link" to="/portfolio" onClick={closeMobileMenu}>
                         Portfolio
                     </NavLink>
+                    <NavLink className="nav-link" to="/business-profile" onClick={closeMobileMenu}>
+                        Business Profile
+                    </NavLink>
+                    </>
+                    )}
                     <NavLink className="nav-link" to="/all-investments" onClick={closeMobileMenu}>
                         All Investments
                     </NavLink>
                     {user ? (
                         <button
-                            className="nav-link"
-                            id="logout-mobile"
+                            className="nav-link mobile-only"
+                            id="logout"
                             onClick={handleLogout}
                         >
                             Logout
                         </button>
                     ) : (
-                    <NavLink className="nav-link" to="/login" onClick={closeMobileMenu}>
+                    <div>
+                    <NavLink
+                        className="nav-link"
+                        id="signup"
+                        to="/signup"
+                        onClick={closeMobileMenu}>
+                        Sign Up
+                    </NavLink>
+                    <NavLink className="nav-link"
+                    to="/login"
+                    id="login"
+                    onClick={closeMobileMenu}
+                    >
                         Login
                     </NavLink>
+                    </div>
             )}
                 </div>
             )}

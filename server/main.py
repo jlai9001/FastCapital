@@ -1,10 +1,23 @@
-from fastapi import FastAPI, HTTPException, Query, Request, Depends
+from fastapi import (
+    FastAPI,
+    HTTPException,
+    Query,
+    Request,
+    Depends,
+    status,
+    UploadFile,
+    File,
+    Form,
+)
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.orm import Session, joinedload
 from starlette.middleware.sessions import SessionMiddleware
 from pydantic_schemas import (
     InvestmentOut,
     BusinessOut,
+    FinancialsCreate,
     FinancialsOut,
     PurchaseCreate,
     EnrichedPurchaseOut,
@@ -12,26 +25,37 @@ from pydantic_schemas import (
     LoginCredentials,
     SecretResponse,
     UserPublicDetails,
-    UserCreate,
+    InvestmentCreate,
     SignupCredentials,
+    BusinessCreate,
+    InvestmentWithPurchasesOut,
 )
 from pathlib import Path
 from typing import List
 import db
+import uuid, os, shutil
 from db import (
     get_purchases_by_status,
-    get_purchases_by_status,
     create_user,
+    create_business,
     invalidate_session,
     validate_email_password,
     get_user_public_details,
+    get_db,
+    update_business_image,
 )
-from db_models import PurchaseStatus
+from db_models import PurchaseStatus, DBUser, DBBusiness, DBInvestment
 from auth import get_auth_user
 from rich import print  # debugging
 
 
 app = FastAPI()
+
+UPLOAD_DIR = "uploaded_images"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+app.mount(
+    "/uploaded_images", StaticFiles(directory="uploaded_images"), name="uploaded_images"
+)
 
 origins = [
     "http://localhost.tiangolo.com",
@@ -40,6 +64,7 @@ origins = [
     "http://localhost:8080",
     "http://localhost",
     "http://localhost:8000",
+    "http://localhost:3000",
 ]
 
 app.add_middleware(
@@ -66,9 +91,102 @@ async def get_investment(investment_id: int) -> InvestmentOut:
     return investment
 
 
+@app.get("/api/business_investments", response_model=List[InvestmentWithPurchasesOut])
+async def get_investments_by_business(
+    business_id: int = Query(
+        ..., description="ID of the business to fetch investments for"
+    ),
+    db: Session = Depends(get_db),
+    current_user: DBUser = Depends(get_auth_user),
+):
+    investments = (
+        db.query(DBInvestment)
+        .options(joinedload(DBInvestment.purchases))
+        .filter(DBInvestment.business_id == business_id).all()
+    )
+    if not investments:
+        raise HTTPException(
+            status_code=404, detail="No investments found for this business"
+        )
+    return investments
+
+
 @app.get("/api/investment")
 async def get_investments() -> list[InvestmentOut]:
     return db.get_investments()
+
+
+@app.post(
+    "/api/business", response_model=BusinessOut, status_code=status.HTTP_201_CREATED
+)
+async def create_business_api(
+    name: str = Form(...),
+    website_url: str = Form(...),
+    image: UploadFile = File(...),
+    address1: str = Form(...),
+    address2: str = Form(None),
+    city: str = Form(...),
+    state: str = Form(...),
+    postal_code: str = Form(...),
+    current_user: DBUser = Depends(get_auth_user),
+) -> BusinessOut:
+    try:
+        # Save image file to local storage
+        filename = f"{uuid.uuid4().hex}_{image.filename}"
+        file_path = os.path.join(UPLOAD_DIR, filename)
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(image.file, buffer)
+
+        image_url = f"http://localhost:8000/uploaded_images/{filename}"
+
+        business_data = {
+            "name": name,
+            "user_id": current_user.id,
+            "website_url": website_url,
+            "image_url": image_url,
+            "address1": address1,
+            "address2": address2,
+            "city": city,
+            "state": state,
+            "postal_code": postal_code,
+        }
+
+        return create_business(BusinessCreate(**business_data))
+
+    except Exception as e:
+        print(f"Error creating business: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create business.")
+
+
+@app.post("/api/business/{business_id}/upload_image")
+async def upload_business_image(
+    business_id: int,
+    image: UploadFile = File(...),
+    current_user: DBUser = Depends(get_auth_user),
+):
+    try:
+        # Save image to disk
+        filename = f"{uuid.uuid4().hex}_{image.filename}"
+        file_path = os.path.join(UPLOAD_DIR, filename)
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(image.file, buffer)
+
+        image_url = f"http://localhost:8000/uploaded_images/{filename}"
+
+        # Call DB function
+        updated_url = update_business_image(
+            business_id=business_id, user_id=current_user.id, image_url=image_url
+        )
+
+        return {"image_url": updated_url}
+
+    except ValueError as ve:
+        raise HTTPException(status_code=404, detail=str(ve))
+    except PermissionError as pe:
+        raise HTTPException(status_code=403, detail=str(pe))
+    except Exception as e:
+        print(f"Unhandled error during image upload: {e}")
+        raise HTTPException(status_code=500, detail="Failed to upload image.")
 
 
 @app.get("/api/business/{business_id}")
@@ -102,7 +220,9 @@ def get_financials_for_business(business_id: int):
     return financials
 
 
-@app.post("/api/purchases", status_code=201)  # status code 201 indicates success
+@app.post(
+    "/api/purchases", status_code=201
+)  # status code 201 indicates successful creation
 async def post_purchase(purchase_request: PurchaseCreate):
     try:
         purchase = db.add_purchase(purchase_request)
@@ -115,6 +235,30 @@ async def post_purchase(purchase_request: PurchaseCreate):
             raise HTTPException(
                 status_code=500, detail="Something went wrong on the server."
             )
+
+
+# create-financials --Bowe
+@app.post("/api/financials/", status_code=201)
+async def post_financials(new_finance: FinancialsCreate):
+    try:
+        finance = db.add_finance(new_finance)
+        return finance
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        raise HTTPException(
+            status_code=500, detail="Something went wrong on the server."
+        )
+
+
+# create investment endpoint --Bowe
+@app.post("/api/investment", status_code=201)
+async def post_investment(new_investment: InvestmentCreate):
+    try:
+        investment = db.add_investment(new_investment)
+        return investment
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        raise HTTPException(status_code=500, detail="Server could not post investment.")
 
 
 ###################################################### Login_Backend by Jonathan
@@ -197,6 +341,24 @@ async def get_me(
         raise HTTPException(status_code=401, detail="Unauthorized")
 
 
+@app.get("/api/my_business", response_model=BusinessOut)
+async def get_my_business(
+    current_user: DBUser = Depends(get_auth_user),
+    db: Session = Depends(get_db),
+):
+    try:
+        business = (
+            db.query(DBBusiness).filter(DBBusiness.user_id == current_user.id).first()
+        )
+    except Exception as e:
+        print(f"Error retrieving business: {e}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+
+    if not business:
+        raise HTTPException(status_code=404, detail="Business not found")
+    return business
+
+
 # This is how to declare that a route is "protected" and requires
 # that the user be logged in to access the content.
 @app.get(
@@ -211,7 +373,6 @@ async def secret() -> SecretResponse:
     """
     # it can be assumed that the user is logged in and has a valid session
     return SecretResponse(secret="info")
-
 
 
 @app.get("/{file_path}", response_class=FileResponse)

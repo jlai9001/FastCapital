@@ -1,32 +1,69 @@
-body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
 }
 
-.signup-container {
-    min-width: 500px;
-    max-width: 800px;
+body{
+    background-color: var(--page_background_color);
+}
+
+.signup-container{
+    display: block;
     margin: 0 auto;
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 160px);
+    gap: 2rem;
+    padding: 2rem;
+    margin-top: 23px;
+    margin-bottom: 80px;
+    max-width: 1200px;
+}
+
+.signup-form{
+    background-color: var(--element_background_color);
+    border-radius: var(--element_border_radius);
+    box-shadow: var(--element_shadow);
+    padding: 35px;
+
+    margin-bottom: 250px;
+    width: 600px;
+}
+
+.coin{
+  display: block;
+  margin: 0 auto;
+
 }
 
 .signup-title {
-    justify-content: center;
-    margin-bottom: 20px;
+    text-align: center;
+    color: rgb(0, 0, 0);
+    font-weight: Bold;
+    font-size: var(--large_fontsize);
+    margin-bottom: 10px;
 }
 
-.signup-form {
-    display: flex-start;
-    flex-direction: column;
+.signup-subtitle {
+    text-align: center;
+    color:var(--secondary_text_color);
+    font-size: var(--small_fontsize);
+    margin-bottom: 25px;
 }
+
 
 input {
-    margin: 12px 0;
     width: 100%;
-    box-sizing: border-box;
-    padding: 12px;
-    font-size: 1rem;
+    padding: 15px;
+    margin-bottom: 5px;
+    border: 2px solid var( --field_border_color);
+    background-color:var(--field_background_color);
+    border-radius: var(--button_border_radius);
+    font-size: var(--small_fontsize);
+    color: var(--secondary_text_color);
+    outline: none;
 }
 
 .button-group {
@@ -41,6 +78,30 @@ input {
     margin: 0 5px;
     font-size: 1rem;
     cursor: pointer;
+    border-radius: var(--button_border_radius);
+    font-family: var(--button_font);
+    font-size: var(--small_fontsize);
+    font-weight: 600;
+}
+
+.button-group button:hover{
+   background-color:var(--main_button_hover);
+}
+
+.cancel-button{
+    background-color: transparent;
+    color: var(--main_button_color);
+    border: 2px solid var(--main_button_color);
+}
+
+.cancel-button:hover{
+    color: white;
+}
+
+.signup-button{
+    background-color:var(--main_button_color);
+    color:var(--main_button_textcolor);
+    border: none;
 }
 
 .message {
@@ -49,17 +110,78 @@ input {
     color: red;
 }
 
-.login-link {
+.no-account {
     text-align: center;
     margin-top: 20px;
-    font-size: 0.95rem;
+    font-size: var(--small_fontsize);
+    color:var(--secondary_text_color);
+    margin-right: 5px;
+
 }
 
-.login-link a {
-    color: #007BFF;
+.log-in{
+
+    color: var(--main_button_color);
+    cursor: pointer;
     text-decoration: none;
+    font-weight: bold;
+    text-decoration: underline;
 }
 
-.login-link a:hover {
-    text-decoration: underline;
+/* password match error */
+
+.custom-error-popup {
+  position: absolute;
+  background-color: white;
+  color: black;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 13px;
+  margin-top: 5px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.error-arrow {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid white;
+}
+
+.error-arrow::before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: -8px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #ccc;
+  z-index: -1;
+}
+
+.error-icon {
+  width: 16px;
+  height: 16px;
+  background-color: #ff8c00;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+  flex-shrink: 0;
 }

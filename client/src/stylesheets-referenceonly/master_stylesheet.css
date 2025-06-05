@@ -1,0 +1,24 @@
+:root {
+    --main_button_color:#00178d;
+    --main_button_textcolor:rgb(255, 255, 255);
+    --secondary_button_color:#8399ab;
+    --all_button_hover:#e24ffc;
+    --all_button_hover_textcolor: white;
+    --element_background_color: #ffffff;
+    --large_fontsize: 30px;
+    --small_fontsize: 16px;
+}
+
+
+/*
+
+use this import syntax in the individual stylesheets:
+
+    @import url("master_stylesheet.css");
+
+
+use this variable syntax for your child elements in the child stylesheets:
+    var(--main_button_color)
+
+    example: background-color:var(--main_button_color);
+*/

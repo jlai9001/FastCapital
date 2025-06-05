@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import HomePageHero from '../components/homepage_hero'
 import InvestmentCard from '../components/investment-card'
+import './homepage.css'
 
 export default function Homepage(){
     const [featuredInvestments, setFeaturedInvestments] = useState([])
@@ -36,9 +37,21 @@ export default function Homepage(){
     return(
         <>
             <HomePageHero />
-            <button onClick={handleViewAllClick} className='view-all-button'>View All Investments</button>
             <section className='featured-investments'>
-                <h2>Featured Investments</h2>
+                <table style={{ width: "100%" }}>
+                    <tbody>
+                    <tr>
+                        <td style={{ textAlign: "left" }}>
+                        <h2>Featured Investments</h2>
+                        </td>
+                        <td style={{ textAlign: "right" }}>
+                        <button onClick={handleViewAllClick} className='view-all-button'>
+                            View All Investments
+                        </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
                 {loading && <p>Loading featured investments...</p>}
                 {error && <p>{error}</p>}
                 {featuredInvestments.length > 0 && (

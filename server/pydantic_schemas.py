@@ -1,12 +1,14 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, validator, ConfigDict
 from datetime import date, datetime
-from typing import Optional
+from typing import Optional, List
 import enum
+import re  # this helps the Bowe validate date format
 
 
 class LoginCredentials(BaseModel):
     email: EmailStr
     password: str
+
 
 class SignupCredentials(BaseModel):
     name: str
@@ -28,6 +30,7 @@ class UserPublicDetails(BaseModel):
     id: int
     # Add more public fields here if needed
 
+
 class UserCreate(BaseModel):
     name: str
     email: str
@@ -40,9 +43,9 @@ class UserOut(UserCreate):
 
 class BusinessCreate(BaseModel):
     name: str
-    users_id: int
+    user_id: int
     website_url: str
-    image_url: str
+    image_url: Optional[str] = None
     address1: str
     address2: Optional[str] = None
     city: str
@@ -53,14 +56,16 @@ class BusinessCreate(BaseModel):
 class BusinessOut(BusinessCreate):
     id: int
 
+    model_config = ConfigDict(from_attributes=True)
+
 
 class InvestmentCreate(BaseModel):
     business_id: int
     shares_available: int
     price_per_share: float
     min_investment: int
-    start_date: date
-    expiration_date: date
+    start_date: datetime
+    expiration_date: datetime
 
 
 class InvestmentOut(InvestmentCreate):
@@ -87,6 +92,17 @@ class PurchaseOut(PurchaseCreate):
     status: PurchaseStatus
 
 
+class PurchaseSummaryOut(BaseModel):
+    id: int
+    shares_purchased: int
+
+    model_config = ConfigDict(from_attributes=True)
+
+class InvestmentWithPurchasesOut(InvestmentOut):
+    purchases: List[PurchaseSummaryOut] = []
+
+    model_config = ConfigDict(from_attributes=True)
+
 class EnrichedPurchaseOut(BaseModel):
     id: int
     investment_id: int
@@ -97,7 +113,7 @@ class EnrichedPurchaseOut(BaseModel):
     business_name: str
     business_city: str
     business_state: str
-    business_image_url: str
+    business_image_url: Optional[str] = None
     business_website_url: str
 
 
@@ -113,6 +129,19 @@ class FinancialsCreate(BaseModel):
     date: date
     amount: float
     type: FinancialType
+
+    @validator("date", pre=True)
+    def parse_mm_yyyy(cls, v):
+        if isinstance(v, str):
+            # validates format MM/YYYY
+            if not re.match(r"^(0[1-9]|1[0-2])/\d{4}$", v):
+                raise ValueError("Date must be in 'MM/YYYY' format")
+            month, year = map(int, v.split("/"))
+            return date(year, month, 1)
+        elif isinstance(v, date):
+            # strips day in case it passed first validation
+            return date(v.year, v.month, 1)
+        raise ValueError("Invalid date format")
 
 
 class FinancialsOut(FinancialsCreate):
