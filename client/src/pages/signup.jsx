@@ -13,21 +13,30 @@ function SignupForm() {
         confirmPassword: "",
   });
 
-  const [message, setMessage] = useState("");
+  //const [message, setMessage] = useState("");
   const { refreshUser } = useUser();
+  const [showPasswordError, setShowPasswordError] = useState(false);   // Jonathan
+
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+
+    // Hide password error when user starts typing
+    if (showPasswordError) {
+      setShowPasswordError(false);
+  }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // password match error by Jonathan
     if (formData.password !== formData.confirmPassword) {
-      setMessage("Passwords do not match.");
+      // setMessage("Passwords do not match.");
+      setShowPasswordError(true);
       return;
     }
 
@@ -86,6 +95,16 @@ function SignupForm() {
               onChange={handleChange}
               required
             />
+          {/* password match error by Jonathan */}
+
+          {showPasswordError && (
+            <div className="custom-error-popup">
+              <div className="error-arrow"></div>
+              <div className="error-icon">!</div>
+              Passwords do not match
+            </div>
+          )}
+
           <div className = "field-label">Confirm Password</div>
             <input
             name="confirmPassword"
@@ -103,7 +122,8 @@ function SignupForm() {
             </button>
             </div>
 
-            {message && <p>{message}</p>}
+          {/* replaced with default pop up instead by Jonathan */}
+          {/* {message && <p>{message}</p>} */}
 
             <p className="no-account">Already have an account? <a className="log-in" href="/login">Log in</a>
         </p>
