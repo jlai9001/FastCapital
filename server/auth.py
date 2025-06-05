@@ -4,6 +4,11 @@ from pydantic_schemas import UserPublicDetails
 
 
 def get_auth_user(request: Request) -> UserPublicDetails:
+    """
+    Get the authenticated user from the request session.
+    Raises:
+        HTTPException: If the user is not authenticated or session is invalid.
+    """
     email = request.session.get("email")
     session_token = request.session.get("session_token")
 
