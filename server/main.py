@@ -65,6 +65,7 @@ origins = [
     "http://localhost",
     "http://localhost:8000",
     "http://localhost:3000",
+    #Need to add the EC2 URL here
 ]
 
 app.add_middleware(
