@@ -1,9 +1,8 @@
 .investment-list-container {
-    max-width: 800px;
-    margin: 2rem auto 0 auto;
-    min-height: 80vh;
-    display: flex;
-    flex-direction: column;
+  max-width: 1200px;
+  padding: 0 1rem;
+  margin: 2rem auto 0 auto;
+  min-height: 80vh;
 }
 
 .investment-card {
@@ -14,10 +13,7 @@
     border-radius: 1rem;
     box-shadow: 0 4px 8px rgba(0,0,0,0.06);
     border: 1px solid #eee;
-    min-width: 600px;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
+
   }
 
 .investment-card h2 {
@@ -81,6 +77,12 @@ ul {
   background-color: #1e40af;
 }
 
+.card-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
 .investment-controls {
   display: flex;
   justify-content: flex-end;
@@ -102,4 +104,14 @@ ul {
   text-align: center;
   color: #4a5568;
   margin-top: 2rem;
+}
+
+.investment-table {
+  width: 100%;
+  margin-top: 1rem;
+  border-collapse: collapse;
+}
+
+.investment-table td {
+  padding: 0.25rem 0;
 }
