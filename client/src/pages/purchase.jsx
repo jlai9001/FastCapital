@@ -99,10 +99,6 @@ export default function Purchase() {
     nav(-1);
   }
 
-  function handlePurchaseClick() {
-    modalPop();
-  }
-
   return (
     <div className="investment-details-page-container">
       <div className="investment-details-container">
@@ -259,7 +255,6 @@ export default function Purchase() {
           </button>
         </div>
     </div>
-
   </div>
 
 
