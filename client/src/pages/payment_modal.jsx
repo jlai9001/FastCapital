@@ -25,7 +25,7 @@ function ButtonsContainer({ isVisible, onCancel, onBuy }) {
     return (
         <>
             <button className="cancel_button" onClick={onCancel}>Cancel</button>
-            <button className="buy_button" onClick={onBuy}>Buy</button>
+            <button className="buy_button" onClick={onBuy}>Confirm & Purchase</button>
         </>
     );
 }
@@ -98,6 +98,10 @@ function PaymentModal({ onClose, investment, shareAmount, userId }) {
                 <div className="payment_title">Payment Confirmation</div>
             </div>
 
+            <div className="fields_container">
+                            <FieldContainer isVisible={showFields} />
+            </div>
+
             <div className="buttons_container">
                 <ButtonsContainer
                     isVisible={showButtons}
@@ -116,10 +120,6 @@ function PaymentModal({ onClose, investment, shareAmount, userId }) {
             {showCompletionMessage && (
                 <div className="completion_message">Transaction Completed</div>
             )}
-
-            <div className="fields_container">
-                <FieldContainer isVisible={showFields} />
-            </div>
         </div>
     );
 }
