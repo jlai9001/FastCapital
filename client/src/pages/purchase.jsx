@@ -58,6 +58,10 @@ export default function Purchase() {
     );
   if (!investment || !business) return <p>Data not found.</p>;
 
+  const resolvedImageUrl = business.image_url
+        ? `http://localhost:8000/uploaded_images/${business.image_url}`
+        : businessPlaceholder;
+
   const totalSharesPurchased =
     purchases?.reduce((sum, purchase) => sum + purchase.shares_purchased, 0) ||
     0;
@@ -104,11 +108,15 @@ export default function Purchase() {
       <div className="top-half">
         <div className="column column-1">
           <div className="box image-wrapper">
-            <img
-              src={business.image_url || businessPlaceholder}
-              alt={business.name}
-              className="business-image"
-            />
+                    <img
+                      src={resolvedImageUrl}
+                      alt={business.name}
+                      className="business-image"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = businessPlaceholder;
+                      }}
+                    />
           </div>
         </div>
         <div className="column column-2">
