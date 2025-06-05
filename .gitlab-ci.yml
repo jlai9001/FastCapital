@@ -76,7 +76,7 @@ deploy-to-ec2:
     - ssh -v ubuntu@$EC2_HOST "echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token $CI_REGISTRY --password-stdin"
     - ssh -v ubuntu@$EC2_HOST "docker pull $GITLAB_IMAGE:latest" || (echo "Failed to pull Docker image" && exit 1)
     - ssh -v ubuntu@$EC2_HOST "docker stop my-api || true && docker rm my-api || true" || (echo "Failed to stop and remove container" && exit 1)
-    - ssh -v ubuntu@$EC2_HOST "docker run -d --name my-api -e DATABASE_URL=$DATABASE_URL -p 80:80 $GITLAB_IMAGE" || (echo "Failed to run Docker container" && exit 1)
+    - ssh -v ubuntu@$EC2_HOST "docker run -d --name my-api -e DATABASE_URL=$DATABASE_URL -e CORS_ORIGIN=$CORS_ORIGIN -p 80:80 $GITLAB_IMAGE" || (echo "Failed to run Docker container" && exit 1)
     - ssh -v ubuntu@$EC2_HOST "docker image prune -f" || (echo "Failed to prune Docker images" && exit 1)
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'

@@ -46,7 +46,7 @@ from db import (
 )
 from db_models import PurchaseStatus, DBUser, DBBusiness, DBInvestment
 from auth import get_auth_user
-from rich import print  # debugging
+from rich import print
 
 
 
@@ -73,6 +73,7 @@ CORS_ORIGIN = os.environ.get("CORS_ORIGIN")
 if CORS_ORIGIN:
     origins.append(CORS_ORIGIN)
 
+
 app.add_middleware(
     SessionMiddleware,
     secret_key="some-random-string",
@@ -91,6 +92,10 @@ app.add_middleware(
 
 @app.get("/api/investment/{investment_id}")
 async def get_investment(investment_id: int) -> InvestmentOut:
+    """
+    Fetches a specific investment by its ID.
+    If the investment does not exist, raises a 404 error.
+    """
     investment = db.get_investment(investment_id)
     if not investment:
         raise HTTPException(status_code=404, detail="Investment not found")
@@ -105,6 +110,10 @@ async def get_investments_by_business(
     db: Session = Depends(get_db),
     current_user: DBUser = Depends(get_auth_user),
 ):
+    """
+    Fetches all investments for a specific business.
+    If the business does not exist or has no investments, raises a 404 error.
+    """
     investments = (
         db.query(DBInvestment)
         .options(joinedload(DBInvestment.purchases))
@@ -119,6 +128,10 @@ async def get_investments_by_business(
 
 @app.get("/api/investment")
 async def get_investments() -> list[InvestmentOut]:
+    """
+    Fetches all investments.
+    Returns a list of investments.
+    """
     return db.get_investments()
 
 
@@ -136,8 +149,12 @@ async def create_business_api(
     postal_code: str = Form(...),
     current_user: DBUser = Depends(get_auth_user),
 ) -> BusinessOut:
+    """
+    Create a new business with the provided details.
+    The business will be associated with the currently authenticated user.
+    The image will be saved to the local storage and its URL will be returned.
+    """
     try:
-        # Save image file to local storage
         filename = f"{uuid.uuid4().hex}_{image.filename}"
         file_path = os.path.join(UPLOAD_DIR, filename)
         with open(file_path, "wb") as buffer:
@@ -170,8 +187,14 @@ async def upload_business_image(
     image: UploadFile = File(...),
     current_user: DBUser = Depends(get_auth_user),
 ):
+    """
+    Uploads an image for a specific business.
+    The image will be saved to the local storage and its URL will be updated
+    in the business record.
+    Raises HTTP exceptions for various error conditions.
+    """
     try:
-        # Save image to disk
+
         filename = f"{uuid.uuid4().hex}_{image.filename}"
         file_path = os.path.join(UPLOAD_DIR, filename)
         with open(file_path, "wb") as buffer:
@@ -179,7 +202,6 @@ async def upload_business_image(
 
         image_url = f"http://localhost:8000/uploaded_images/{filename}"
 
-        # Call DB function
         updated_url = update_business_image(
             business_id=business_id, user_id=current_user.id, image_url=image_url
         )
@@ -197,6 +219,10 @@ async def upload_business_image(
 
 @app.get("/api/business/{business_id}")
 async def get_business(business_id: int) -> BusinessOut:
+    """
+    Fetches a specific business by its ID.
+    If the business does not exist, raises a 404 error.
+    """
     business = db.get_business(business_id)
     if not business:
         raise HTTPException(status_code=404, detail="Business not found")
@@ -205,6 +231,10 @@ async def get_business(business_id: int) -> BusinessOut:
 
 @app.get("/api/business")
 async def get_businesses() -> list[BusinessOut]:
+    """
+    Fetches all businesses.
+    Returns a list of businesses.
+    """
     return db.get_businesses()
 
 
@@ -213,6 +243,11 @@ async def get_user_purchases(
     status: PurchaseStatus = Query(PurchaseStatus.pending),
     current_user: UserPublicDetails = Depends(get_auth_user),
 ):
+    """
+    Fetches all purchases for the current user filtered by status.
+    The status can be 'pending', 'completed', or 'cancelled'.
+    Returns a list of enriched purchases.
+    """
     user_id = current_user.id
     purchases = get_purchases_by_status(user_id, status)
     return purchases
@@ -220,6 +255,10 @@ async def get_user_purchases(
 
 @app.get("/api/financials/{business_id}", response_model=list[FinancialsOut])
 def get_financials_for_business(business_id: int):
+    """
+    Fetches financial records for a specific business by its ID.
+    If no financial records are found, raises a 404 error.
+    """
     financials = db.get_financials_by_business_id(business_id)
     if not financials:
         raise HTTPException(status_code=404, detail="Financials not found for business")
@@ -228,8 +267,14 @@ def get_financials_for_business(business_id: int):
 
 @app.post(
     "/api/purchases", status_code=201
-)  # status code 201 indicates successful creation
+)
 async def post_purchase(purchase_request: PurchaseCreate):
+    """
+    Creates a new purchase.
+    The purchase_request should contain the necessary details for the purchase.
+    If the purchase cannot be created due to insufficient shares, raises a 400 error.
+    If any other error occurs, raises a 500 error.
+    """
     try:
         purchase = db.add_purchase(purchase_request)
         return purchase
@@ -243,9 +288,15 @@ async def post_purchase(purchase_request: PurchaseCreate):
             )
 
 
-# create-financials --Bowe
 @app.post("/api/financials/", status_code=201)
 async def post_financials(new_finance: FinancialsCreate):
+    """
+    Creates a new financial record.
+    The new_finance should contain the necessary details for the financial record.
+    If the financial record cannot be created due to validation errors,
+    raises a 400 error.
+    If any other error occurs, raises a 500 error.
+    """
     try:
         finance = db.add_finance(new_finance)
         return finance
@@ -256,18 +307,21 @@ async def post_financials(new_finance: FinancialsCreate):
         )
 
 
-# create investment endpoint --Bowe
 @app.post("/api/investment", status_code=201)
 async def post_investment(new_investment: InvestmentCreate):
+    """
+    Creates a new investment.
+    The new_investment should contain the necessary details for the investment.
+    If the investment cannot be created due to validation errors,
+    raises a 400 error.
+    If any other error occurs, raises a 500 error.
+    """
     try:
         investment = db.add_investment(new_investment)
         return investment
     except Exception as e:
         print(f"Unexpected error: {e}")
         raise HTTPException(status_code=500, detail="Server could not post investment.")
-
-
-###################################################### Login_Backend by Jonathan
 
 
 @app.post("/api/login", response_model=SuccessResponse)
@@ -277,17 +331,13 @@ async def login(credentials: LoginCredentials, request: Request) -> SuccessRespo
     Validates credentials, creates a session, and stores session info
     in cookies. Returns success if login is valid, else raises 401.
     """
-    # validate the username and password
     email = credentials.email
     password = credentials.password
     new_session_token = validate_email_password(email, password)
 
-    # return a 401 (unauthorized) if invalid username/password combo
     if not new_session_token:
         raise HTTPException(status_code=401)
 
-    # store the user's username and the generated session_token
-    # in the user's session
     request.session["email"] = email
     request.session["session_token"] = new_session_token
     return SuccessResponse(success=True)
@@ -300,7 +350,6 @@ async def logout(request: Request) -> SuccessResponse:
     Invalidates the session in the database and clears session data
     from cookies. Returns success status.
     """
-    # invalidate the session in the database
     email = request.session.get("email")
     if not email or not isinstance(email, str):
         return SuccessResponse(success=False)
@@ -309,13 +358,18 @@ async def logout(request: Request) -> SuccessResponse:
         return SuccessResponse(success=False)
     invalidate_session(email, session_token)
 
-    # clear out the session data
     request.session.clear()
     return SuccessResponse(success=True)
 
 
 @app.post("/api/signup", response_model=SuccessResponse)
 async def signup(credentials: SignupCredentials, request: Request) -> SuccessResponse:
+    """
+    Handle user signup.
+    Validates the provided credentials, creates a new user,
+    and automatically logs in the user by creating a session.
+    Returns success if signup is valid, else raises 400 or 409.
+    """
     name = credentials.name
     email = credentials.email
     password = credentials.password
@@ -324,22 +378,20 @@ async def signup(credentials: SignupCredentials, request: Request) -> SuccessRes
     success = create_user(name, email, password)
     if not success:
         raise HTTPException(status_code=409, detail="Email already exists")
-    # Automatically log in the user after signup
     new_session_token = validate_email_password(email, password)
     request.session["email"] = email
     request.session["session_token"] = new_session_token
     return SuccessResponse(success=True)
 
 
-# a "protected" route which should only be reachable by a logged-in user
-# example: background metadeta
-# ex:  can't navigate to purchase if not logged in
-# ex: sending sensitive information (need encryption)
-# ex: sending password to server to check credentials
 @app.get("/api/me", response_model=UserPublicDetails)
 async def get_me(
     current_user: UserPublicDetails = Depends(get_auth_user),
 ) -> UserPublicDetails:
+    """
+    Returns the currently authenticated user's public details.
+    If the user is not authenticated, raises a 401 error.
+    """
     try:
         return current_user
     except Exception as e:
@@ -352,6 +404,11 @@ async def get_my_business(
     current_user: DBUser = Depends(get_auth_user),
     db: Session = Depends(get_db),
 ):
+    """
+    Returns the business associated with the currently authenticated user.
+    If the user does not have a business, raises a 404 error.
+    If there is an error retrieving the business, raises a 500 error.
+    """
     try:
         business = (
             db.query(DBBusiness).filter(DBBusiness.user_id == current_user.id).first()
@@ -383,6 +440,10 @@ async def secret() -> SecretResponse:
 
 @app.get("/{file_path}", response_class=FileResponse)
 def get_static_file(file_path: str):
+    """
+    Serves static files from the 'static' directory.
+    If the file does not exist, raises a 404 error.
+    """
     if Path("static/" + file_path).is_file():
         return FileResponse("static/" + file_path)
     raise HTTPException(status_code=404, detail="Item not found")
