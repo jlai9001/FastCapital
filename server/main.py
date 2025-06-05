@@ -12,7 +12,7 @@ from fastapi import (
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from starlette.middleware.sessions import SessionMiddleware
 from pydantic_schemas import (
     InvestmentOut,
@@ -28,6 +28,7 @@ from pydantic_schemas import (
     InvestmentCreate,
     SignupCredentials,
     BusinessCreate,
+    InvestmentWithPurchasesOut,
 )
 from pathlib import Path
 from typing import List
@@ -90,7 +91,7 @@ async def get_investment(investment_id: int) -> InvestmentOut:
     return investment
 
 
-@app.get("/api/business_investments", response_model=List[InvestmentOut])
+@app.get("/api/business_investments", response_model=List[InvestmentWithPurchasesOut])
 async def get_investments_by_business(
     business_id: int = Query(
         ..., description="ID of the business to fetch investments for"
@@ -99,7 +100,9 @@ async def get_investments_by_business(
     current_user: DBUser = Depends(get_auth_user),
 ):
     investments = (
-        db.query(DBInvestment).filter(DBInvestment.business_id == business_id).all()
+        db.query(DBInvestment)
+        .options(joinedload(DBInvestment.purchases))
+        .filter(DBInvestment.business_id == business_id).all()
     )
     if not investments:
         raise HTTPException(

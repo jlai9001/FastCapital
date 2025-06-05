@@ -89,9 +89,13 @@ input {
 }
 
 .cancel-button{
-    background-color:var(--secondary_button_color);
-    color:var(--secondary_text_color);
-    border:none;
+    background-color: transparent;
+    color: var(--main_button_color);
+    border: 2px solid var(--main_button_color);
+}
+
+.cancel-button:hover{
+    color: white;
 }
 
 .signup-button{
