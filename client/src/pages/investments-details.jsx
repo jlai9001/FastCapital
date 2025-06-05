@@ -1,7 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useInvestment, useBusiness, useInvestmentPurchases, useBusinessForUser, uploadBusinessImage } from "../hooks/getData";
+import { useInvestment, useBusiness, useInvestmentPurchases} from "../hooks/getData";
 import FinancialDashboard from "../components/financials_table";
-import { useState } from "react";
 import "./investments-details.css";
 import locationIcon from "../assets/location_icon.png";
 import urlIcon from "../assets/url_icon.png";
@@ -10,8 +9,6 @@ import businessPlaceholder from "../assets/business_placeholder.png";
 export default function InvestmentDetails() {
     const { investmentId } = useParams();
     const navigate = useNavigate();
-    const { business: userBusiness, loading: userBusinessLoading } = useBusinessForUser();
-    const [selectedFile, setSelectedFile] = useState(null);
 
     const {
         loading: investmentLoading,
@@ -35,30 +32,15 @@ export default function InvestmentDetails() {
     if (investmentError || businessError) return <h1> {investmentError || businessError} </h1>
     if (!investment || !business) return <h1>Unable to retreive investment data.</h1>
 
-    const isOwner = userBusiness?.id === business.id;
+    const resolvedImageUrl = business.image_url
+      ? `http://localhost:8000/uploaded_images/${business.image_url}`
+      : businessPlaceholder;
 
     const totalSharesPurchased = purchases?.reduce((sum, purchase) => sum + purchase.shares_purchased, 0) || 0;
     const shares_available = investment.shares_available - totalSharesPurchased;
     const uniqueInvestorIds = new Set(purchases?.map(p => p.user_id));
     const number_of_investors = uniqueInvestorIds.size;
     const percentSold = (totalSharesPurchased / investment.shares_available) * 100;
-
-    const handleFileChange = (e) => {
-      setSelectedFile(e.target.files[0]);
-    };
-
-    // const handleImageUpload = async (e) => {
-    //   e.preventDefault();
-    //   if (!selectedFile) return;
-
-    //   try {
-    //     const updated = await uploadBusinessImage(business.id, selectedFile);
-    //     // Ideally refetch business here
-    //     window.location.reload(); // or force re-render
-    //   } catch (err) {
-    //     console.error(err.message);
-    //   }
-    // };
 
     const handlePurchaseClick = () => {
         navigate (`/investment-details/${investment.id}/purchase`);
@@ -70,19 +52,15 @@ export default function InvestmentDetails() {
           <div className="column column-1">
             <div className="box image-wrapper">
             <img
-                src={business.image_url || businessPlaceholder}
-                alt={business.name}
-                className="business-image"
-              />
+              src={resolvedImageUrl}
+              alt={business.name}
+              className="business-image"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = businessPlaceholder;
+              }}
+            />
           </div>
-          {/* {isOwner && (
-            <div className="box upload-box">
-              <form className="upload-image-form" onSubmit={handleImageUpload}>
-                <input type="file" accept="image/*" onChange={handleFileChange} required />
-                <button type="submit">Upload Image</button>
-              </form>
-            </div>
-          )} */}
           </div>
           <div className="column column-2">
             <div className="box">

@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr, validator, ConfigDict
 from datetime import date, datetime
-from typing import Optional
+from typing import Optional, List
 import enum
 import re  # this helps the Bowe validate date format
 
@@ -91,6 +91,17 @@ class PurchaseOut(PurchaseCreate):
     id: int
     status: PurchaseStatus
 
+
+class PurchaseSummaryOut(BaseModel):
+    id: int
+    shares_purchased: int
+
+    model_config = ConfigDict(from_attributes=True)
+
+class InvestmentWithPurchasesOut(InvestmentOut):
+    purchases: List[PurchaseSummaryOut] = []
+
+    model_config = ConfigDict(from_attributes=True)
 
 class EnrichedPurchaseOut(BaseModel):
     id: int
