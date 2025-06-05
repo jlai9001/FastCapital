@@ -49,6 +49,7 @@ from auth import get_auth_user
 from rich import print  # debugging
 
 
+
 app = FastAPI()
 
 UPLOAD_DIR = "uploaded_images"
@@ -65,8 +66,12 @@ origins = [
     "http://localhost",
     "http://localhost:8000",
     "http://localhost:3000",
-    #Need to add the EC2 URL here
 ]
+
+CORS_ORIGIN = os.environ.get("CORS_ORIGIN")
+
+if CORS_ORIGIN:
+    origins.append(CORS_ORIGIN)
 
 app.add_middleware(
     SessionMiddleware,
