@@ -1,0 +1,169 @@
+/* Your existing CSS - keeping everything as is */
+.create-financials-form{
+    display: block;
+    margin: 0 auto;
+    margin-top: 60px;
+    background-color: var(--element_background_color);
+    border-radius: var(--element_border_radius);
+    box-shadow: var(--element_shadow);
+    padding: 35px;
+    justify-content: center;
+    margin-bottom: 250px;
+    width: 1400px;
+}
+
+
+.financials_title{
+    text-align: center;
+    color: rgb(0, 0, 0);
+    font-weight: Bold;
+    font-size: var(--large_fontsize);
+    font-family:var(--_font);
+    margin-bottom:10px;
+}
+
+.financials_subtitle{
+    text-align: center;
+    color: rgb(0, 0, 0);
+    font-size: var(--small_fontsize);
+    font-family:var(--_font);
+    margin-bottom:10px;
+}
+
+.financial_dashboard{
+    display: flex;
+    margin-top: 50px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    scale:0.9;
+}
+
+.field-label-container{
+    display: flex;
+    margin-top: 50px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 220px;
+    transform: translateX(-40px);
+    color: var(--secondary_text_color);
+    font-size: var(--small_fontsize);
+    margin-bottom: -45px;
+}
+
+
+.field-label-1{
+    text-align: left;
+    transform: translateX(-32px);
+}
+
+
+.field-label-2{
+    text-align: left;
+    transform: translateX(-110px);
+}
+
+.field-label-3{
+    text-align: left;
+    transform: translateX(-95px);
+}
+
+
+
+/* Change the hover highlight color for menu items */
+.MuiMenuItem-root:hover {
+    background-color: var(--main_button_color) !important; /* Light green instead of grey */
+}
+
+/* Optional: Change the selected item color too */
+.MuiMenuItem-root.Mui-selected {
+    background-color:var(--main_button_color) !important; /* Green background */
+    color:white;
+}
+
+/* Optional: Selected item hover state */
+.MuiMenuItem-root.Mui-selected:hover {
+    background-color: #66BB6A !important; /* Lighter green */
+}
+
+
+
+/* NEW: Material-UI specific overrides for the clean look */
+.create-financials-pulldown .MuiOutlinedInput-root {
+    border: none !important;
+    border-radius: var(--button_border_radius) !important;
+    background-color: #f8f9fa !important;
+    font-family: var(--_font);
+    color: var(--secondary_text_color);
+    width:250px;
+}
+
+
+.create-financials-pulldown .MuiOutlinedInput-root:hover .MuiSelect-icon {
+    color: #4CAF50 !important; /* Green on hover */
+}
+
+
+.create-financials-pulldown .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: #4CAF50 !important; /* Green border on hover */
+}
+
+
+
+
+/* Default border color */
+.date-styling .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+    border-color: #e0e0e0 !important;
+}
+
+/* Hover border color */
+.date-styling .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: #4CAF50 !important;
+}
+
+/* Focused border color */
+.date-styling .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #4CAF50 !important;
+}
+
+.add-entry-container{
+    display: flex;
+    margin-top: 50px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap:50px
+}
+
+.bottom-container{
+    display: flex;
+    margin-top: 30px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap:420px
+}
+
+.AddEntry_Button{
+    background-color: var(--main_button_color) !important;
+    color: white !important;
+    border: 2px solid var(--main_button_color) !important;
+    padding: 10px !important;
+    padding-left:40px !important;
+    padding-right:40px !important;
+    border-radius: var(--button_border_radius) !important;
+    font-family: var(--_font) !important;
+    font-size: var(--small_fontsize);
+
+}
+
+
+
+
+.im-done-text{
+    font-family: var(--_font);
+    font-size: var(--small_fontsize);
+    font-weight: bolder;
+    color: var(--main_button_color);
+}
