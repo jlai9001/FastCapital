@@ -79,6 +79,7 @@ app.add_middleware(
     secret_key="some-random-string",
     session_cookie="session",
     max_age=60 * 60 * 2,  # 2 hours in seconds
+    https_only=True if CORS_ORIGIN else False
 )
 
 app.add_middleware(

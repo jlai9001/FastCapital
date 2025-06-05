@@ -42,7 +42,8 @@ build-front-end-job:
 pages:
   stage: deploy
   rules:
-    - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "dev"'
   dependencies:
     - build-front-end-job
   needs:
@@ -80,3 +81,4 @@ deploy-to-ec2:
     - ssh -v ubuntu@$EC2_HOST "docker image prune -f" || (echo "Failed to prune Docker images" && exit 1)
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "dev"'
