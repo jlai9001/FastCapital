@@ -4,7 +4,7 @@ import FinancialDashboard from "../components/financials_table";
 import "./investments-details.css";
 import locationIcon from "../assets/location_icon.png";
 import urlIcon from "../assets/url_icon.png";
-import businessPlaceholder from "../assets/business_placeholder.png";
+import placeholder from "../assets/business_placeholder.png";
 
 export default function InvestmentDetails() {
     const { investmentId } = useParams();
@@ -32,10 +32,6 @@ export default function InvestmentDetails() {
     if (investmentError || businessError) return <h1> {investmentError || businessError} </h1>
     if (!investment || !business) return <h1>Unable to retreive investment data.</h1>
 
-    const resolvedImageUrl = business.image_url
-      ? `http://localhost:8000/uploaded_images/${business.image_url}`
-      : businessPlaceholder;
-
     const totalSharesPurchased = purchases?.reduce((sum, purchase) => sum + purchase.shares_purchased, 0) || 0;
     const shares_available = investment.shares_available - totalSharesPurchased;
     const uniqueInvestorIds = new Set(purchases?.map(p => p.user_id));
@@ -52,12 +48,12 @@ export default function InvestmentDetails() {
           <div className="column column-1">
             <div className="box image-wrapper">
             <img
-              src={resolvedImageUrl}
+              src={business.image_url || placeholder}
               alt={business.name}
               className="business-image"
               onError={(e) => {
                 e.target.onerror = null;
-                e.target.src = businessPlaceholder;
+                e.target.src = placeholder;
               }}
             />
           </div>

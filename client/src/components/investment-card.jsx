@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getBusinesses } from "../hooks/getData";
 import "../components/investment-card.css";
-import placeholder from "../assets/placeholder.png";
+import placeholder from "../assets/business_placeholder.png";
 
 export default function InvestmentCard({ investment }) {
   const [business, setBusiness] = useState(null);
@@ -36,11 +36,25 @@ export default function InvestmentCard({ investment }) {
     navigate(`/investment-details/${investment.id}`);
   };
 
+  const isValidImageUrl =
+    typeof business.image_url === "string" &&
+    business.image_url.trim() !== "" &&
+    business.image_url !== "null" &&
+    business.image_url !== "undefined";
+
   return (
     <div className={`investment-card ${investment.featured ? 'featured' : ''}`}>
   <div className="top-section">
     <div className="image-container">
-      <img src={placeholder} alt={`${business.name} logo`} className="web-icon" />
+      <img
+        src={isValidImageUrl ? business.image_url : placeholder}
+        alt={`${business.name} logo`}
+        className="web-icon"
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = placeholder;
+        }}
+      />
     </div>
     <div className="business-info">
       <h3>{business.name}</h3>
