@@ -84,6 +84,7 @@
     align-items: center;
     gap: 12px;
 
+
 }
 
 .select-year-text{
@@ -93,8 +94,8 @@
 .dropdown-label {
     font-family: var(--button_font);
     font-size: var(--small_fontsize);
-    color: var(--secondary_text_color);
     font-weight: 500;
+
 }
 
 /* Year dropdown styling */
@@ -106,6 +107,8 @@
     min-width: 180px;
     text-align: center;
     font-family: var(--button_font);
+    background-color:transparent;
+
 
 }
 

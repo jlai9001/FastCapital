@@ -6,13 +6,19 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import FinancialDashboard from "../components/financials_table";
+import {useNavigate} from "react-router-dom";
 
 export default function AddFinancials() {
     const [finType, setFinType] = useState("");
     const [finAmount, setFinAmount] = useState("");
     const [finDate, setFinDate] = useState(null);
     const [refresh, setRefresh] = useState(0) // refresh dashboard after submission, this will require Financial Dashboard to accept this as a prop
-     const businessId = 1; //make this dynamic
+    const businessId = 1; //make this dynamic
+    const nav = useNavigate();
+
+    const handleCancel = async () => {
+        nav(-1);
+    }
 
     // handle post entry
     const handleAddEntry = async () => {
@@ -73,66 +79,69 @@ export default function AddFinancials() {
     };
 
     return (
-        <>
-        <div>
-            <div className = "financials_title">Add Financials</div>
-            <div className = "financials_subtitle">
-            Add financial details to your business in order to make it more
-            attractive to potential investors.
-            </div >
-            <div className = "financial_dashboard">
-            <FinancialDashboard businessId={businessId} refresh={refresh}/>
+        <div className="create-financials-form">
+
+                <div className = "financials_title">Add Financials</div>
+                <div className = "financials_subtitle">
+                Add financial details to your business in order to make it more
+                attractive to potential investors.
+                </div >
+                <div className = "financial_dashboard">
+                <FinancialDashboard businessId={businessId} refresh={refresh}/>
+                </div>
+
+            {/* Form Inputs */}
+            <div className ="add-entry-container">
+
+                    <TextField className="create-financials-pulldown"
+                        select
+                        // label="Type"
+                        value={finType}
+                        onChange={(e) => setFinType(e.target.value)}
+                        sx={{ minWidth: 120 }}
+                        >
+                        <MenuItem value="income">Income</MenuItem>
+                        <MenuItem value="expense">Expense</MenuItem>
+                        <MenuItem value="asset">Asset</MenuItem>
+                        <MenuItem value="liability">Liability</MenuItem>
+                    </TextField>
+
+                    <TextField className="create-financials-pulldown"
+                    type="number"
+                    // label="Amount"
+                    min="1"
+                    value={finAmount}
+                    onChange={(e) => setFinAmount(e.target.value)}
+                    />
+
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                        views={["year", "month"]}
+                        // label="Month and Year"
+                        minDate={new Date("2000-01-01")}
+                        maxDate={new Date("2100-12-31")}
+                        value={finDate}
+                        onChange={(newValue) => setFinDate(newValue)}
+                     renderInput={(params) =>
+                    <TextField
+                        {...params}
+                        className="date-styling"
+                        helperText={null}
+
+                    />}
+                    />
+                    </LocalizationProvider>
+
             </div>
-        </div>
-        <br />
-
-        {/* Form Inputs */}
-        <div className ="add-entry-container">
-
-                <TextField
-                select
-                label="Type"
-                value={finType}
-                onChange={(e) => setFinType(e.target.value)}
-                sx={{ minWidth: 120 }}
-                >
-                <MenuItem value="income">Income</MenuItem>
-                <MenuItem value="expense">Expense</MenuItem>
-                <MenuItem value="asset">Asset</MenuItem>
-                <MenuItem value="liability">Liability</MenuItem>
-                </TextField>
-
-                <TextField
-                type="number"
-                label="Amount"
-                min="1"
-                value={finAmount}
-                onChange={(e) => setFinAmount(e.target.value)}
-                />
-
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DatePicker
-                    views={["year", "month"]}
-                    label="Month and Year"
-                    minDate={new Date("2000-01-01")}
-                    maxDate={new Date("2100-12-31")}
-                    value={finDate}
-                    onChange={(newValue) => setFinDate(newValue)}
-                    renderInput={(params) => <TextField {...params} helperText={null} />}
-                />
-                </LocalizationProvider>
-
-                <Button className="AddEntry_Button"  onClick={handleAddEntry}>
-                Add Entry
-                </Button>
-
-        </div>
-
-        <div>
-            <Button>I'm done adding financials.</Button>
-        </div>
-
-        </>
+            <div className = "bottom-container">
+                <Button className="im-done" onClick={handleCancel}>
+                    <div className="im-done-text">
+                         I'm Done Adding Financials
+                    </div>
+                   </Button>
+                <Button className="AddEntry_Button"  onClick={handleAddEntry}>Add Entry</Button>
+            </div>
+    </div>
 
     );
 }
