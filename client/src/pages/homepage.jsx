@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import HomePageHero from '../components/homepage_hero'
 import InvestmentCard from '../components/investment-card'
 import './homepage.css'
+import { base_url } from '../api'
 
 export default function Homepage(){
     const [featuredInvestments, setFeaturedInvestments] = useState([])
@@ -14,7 +15,7 @@ export default function Homepage(){
     useEffect (() => {
         const fetchFeaturedInvestments = async () => {
             try {
-                const result = await fetch('http://localhost:8000/api/investment')
+                const result = await fetch(`${base_url}/api/investment`)
                 if(!result.ok) throw new Error("Failed to fetch investments")
 
                 const data = await result.json();
