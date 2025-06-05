@@ -39,18 +39,6 @@
   justify-content: center;
 }
 
-.upload-box {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.upload-image-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
 .nested-column {
   display: flex;
   flex-direction: column;

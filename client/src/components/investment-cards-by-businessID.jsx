@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./investment-card.css";
+import "./investment-cards-by-businessID.css";
 
 export default function InvestmentCardsByBusinessId({ businessId }) {
   const [investments, setInvestments] = useState(null);
@@ -30,18 +30,61 @@ export default function InvestmentCardsByBusinessId({ businessId }) {
   if (!investments) return <h1>Loading investments...</h1>;
   if (investments.length === 0) return <h1>No investments found for this business.</h1>;
 
+
   return (
-    <div className="investment-list">
-      {investments.map((investment) => (
-        <div key={investment.id} className="investment-card">
-          <h3>Shares Available: {investment.shares_available}</h3>
-          <h3>Price per Share: ${investment.price_per_share}</h3>
-          <h3>Minimum Investment: {investment.min_investment} shares</h3>
-          <h3>Investment Starts: {new Date(investment.start_date).toLocaleDateString()}</h3>
-          <h3>Investment Ends: {new Date(investment.expiration_date).toLocaleDateString()}</h3>
-          <button onClick={() => navigate(`/investment-details/${investment.id}`)}>View Details</button>
+    <div>
+      {investments.map((investment) => {
+        const totalSharesPurchased = Array.isArray(investment.purchases)
+        ? investment.purchases.reduce((sum, p) => sum + p.shares_purchased, 0)
+        : 0;
+        const percentSold = investment.shares_available
+        ? ((totalSharesPurchased / investment.shares_available) * 100)
+        : "0.0";
+        const uniqueInvestorIds = new Set(
+          investment.purchases?.map((p) => p.user_id)
+        );
+        const investorCount = uniqueInvestorIds.size;
+
+        return (
+          <div key={investment.id} className="business-investment-card">
+            <div className="custom-grid">
+        {/* Row 1: Labels */}
+        <div className="cell investment-card-label">Shares Available</div>
+        <div className="cell investment-card-label">Min. Investment</div>
+        <div className="cell investment-card-label">Price/Share</div>
+        <div className="cell investment-card-label">Offer Expiry</div>
+        <div className="cell investment-card-label">Current Investors</div>
+        <div className="column-6">
+        <button className="view-details-button" onClick={() => navigate(`/investment-details/${investment.id}`)}>View Details</button>
         </div>
-      ))}
+
+        {/* Row 2: Values */}
+        <div className="cell investment-card-value">{investment.shares_available}</div>
+        <div className="cell investment-card-value">{investment.min_investment} shares</div>
+        <div className="cell investment-card-value">${investment.price_per_share}</div>
+        <div className="cell investment-card-value">
+          {new Date(investment.expiration_date).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          })}
+        </div>
+        <div className="cell investment-card-value">{investorCount}</div>
+
+        {/* Row 3: Crowdfunded */}
+        <div className="span-cell funded">Funded</div>
+
+        {/* Row 4: Progress Bar */}
+        <div className="span-cell progress-bar-row">
+                    <div className="progress-bar">
+                      <div className="progress-fill" style={{ width: `${percentSold}%` }}></div>
+                    </div>
+                    <p className="funded-percentage">{percentSold}%</p>
+                  </div>
+                </div>
+              </div>
+        );
+      })}
     </div>
   );
 }

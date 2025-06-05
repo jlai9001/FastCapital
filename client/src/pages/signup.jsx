@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './signup.css';
 import coin from '../assets/coin.svg'
+import { useUser } from "../context/user-provider.jsx";
 
 function SignupForm() {
     const navigate = useNavigate();
@@ -13,6 +14,7 @@ function SignupForm() {
   });
 
   const [message, setMessage] = useState("");
+  const { refreshUser } = useUser();
 
   const handleChange = (e) => {
     setFormData({
