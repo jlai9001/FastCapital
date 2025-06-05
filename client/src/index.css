@@ -8,9 +8,6 @@
   font-weight: 400;
   --header-height:6rem
 
-
-  background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -18,7 +15,8 @@
 
   --main_button_color:#059669;
   --main_button_textcolor:rgb(255, 255, 255);
-  --secondary_button_color:#8399ab;
+  --secondary_button_color:#ffffff;
+  --secondary_button_border_color: var(--main_button_color);
   --main_button_hover: #34D399;
   --main_button_hover_textcolor: white;
   --element_background_color: #ffffff;
@@ -80,6 +78,11 @@ h1 {
   color:var(--all_button_hover_textcolor);
 }
 
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 
 /* login_screen */
 

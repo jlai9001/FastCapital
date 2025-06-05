@@ -7,7 +7,7 @@ function FinancialDashboard({ businessId, refresh }) {
     const [tab, setTab] = useState('pl');
     const [financials, setFinancials] = useState([]);
     const [years, setYears] = useState([]);
-    const [selectedYear, setSelectedYear] = useState(null);
+    const [selectedYear, setSelectedYear] = useState('');
 
     useEffect(() => {
         axios
@@ -99,25 +99,41 @@ function FinancialDashboard({ businessId, refresh }) {
     };
 
     return (
-        <div className="financial-dashboard">
+
+    <div className="financial-dashboard">
+        <div className="dashboard-controls">
             <div className="financial-dashboard-tabs">
-                <button
-                onClick={() => setTab('pl')}
-                className={tab === 'pl' ? 'active' : ''}
-                >
-                Profit & Loss
-                </button>
-                <button
-                onClick={() => setTab('bs')}
-                className={tab === 'bs' ? 'active' : ''}
-                >
-                Balance Sheet
-                </button>
+                <div className="tab-slider">
+                    <button
+                        className={`tab-button ${tab === 'pl' ? 'active' : ''}`}
+                        onClick={() => setTab('pl')}
+                    >
+                        Income Statement
+                    </button>
+                    <button
+                        className={`tab-button ${tab === 'bs' ? 'active' : ''}`}
+                        onClick={() => setTab('bs')}
+                    >
+                        Balance Sheet
+                    </button>
+                    <div
+                        className="tab-indicator"
+                        style={{
+                            transform: tab === 'bs' ? 'translateX(calc(100% + 4px))' : 'translateX(0px)'
+                        }}
+                    ></div>
+                </div>
             </div>
 
+
             <div className="financial-dashboard-dropdown">
-                <label>Select Year: </label>
-                <select value={selectedYear || ''} onChange={(e) => setSelectedYear(Number(e.target.value))}>
+                <div className ="select-year-text">Select Year</div>
+                <select
+                    className="year-dropdown"
+                    value={selectedYear || ''}
+                    onChange={(e) => setSelectedYear(Number(e.target.value))}
+                >
+                    <option value="" disabled>Select Year</option>
                     {years.map((year) => (
                         <option key={year} value={year}>
                             {year}
@@ -125,10 +141,13 @@ function FinancialDashboard({ businessId, refresh }) {
                     ))}
                 </select>
             </div>
+        </div>
 
-            {/* Chart */}
+        {/* Chart */}
+        <div className="chart-render">
             {selectedYear && renderChart()}
         </div>
-    );
+    </div>
+);
 }
 export default FinancialDashboard;

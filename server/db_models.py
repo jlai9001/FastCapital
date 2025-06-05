@@ -8,7 +8,7 @@ from sqlalchemy import (
     Boolean,
     Enum,
 )
-from sqlalchemy.orm import declarative_base, mapped_column, Mapped
+from sqlalchemy.orm import declarative_base, mapped_column, Mapped, relationship
 from sqlalchemy.sql import func
 from datetime import datetime
 import enum
@@ -58,6 +58,8 @@ class DBInvestment(Base):
     expiration_date = Column(DateTime(timezone=True), default=func.now())
     featured = Column(Boolean, default=False)
 
+    purchases = relationship("DBPurchase", back_populates="investment")
+
 
 class PurchaseStatus(str, enum.Enum):
     pending = "pending"
@@ -78,6 +80,7 @@ class DBPurchase(Base):
         default=PurchaseStatusEnum.pending,
         nullable=False,
     )
+    investment = relationship("DBInvestment", back_populates="purchases")
 
 
 class DBFinancials(Base):
