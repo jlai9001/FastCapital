@@ -25,10 +25,9 @@ from pydantic_schemas import (
     UserPublicDetails,
     BusinessCreate,
 )
+import os
 
-
-DATABASE_URL = "postgresql+psycopg://postgres:postgres@localhost:5432/fastcapital"
-
+DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql+psycopg://postgres:postgres@localhost:5432/fastcapital")
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
