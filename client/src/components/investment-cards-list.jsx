@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getInvestments } from "../hooks/getData";
 import InvestmentCard from "./investment-card";
 import "./investment-cards-list.css";
+import { Switch } from '@mui/material';
 
 export default function InvestmentCardsList() {
     const [error, setError] = useState(null);
@@ -54,11 +55,19 @@ export default function InvestmentCardsList() {
         <div className="investment-controls">
             <div className="sort-filter">
             <label>
-                <input
+                {/* checkbox */}
+                {/* <input
                 type="checkbox"
                 checked={filterExpiring}
                 onChange={handleFilterToggle}
-                />
+                /> */}
+
+                <Switch
+                checked={filterExpiring}
+                onChange={handleFilterToggle}
+                >
+                </Switch>
+
                 Expires in next 7 days
             </label>
             <label>
