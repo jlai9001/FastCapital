@@ -7,7 +7,7 @@ import "./business-profile.css";
 import locationIcon from "../assets/location_icon.png";
 import urlIcon from "../assets/url_icon.png";
 import coinIcon from "../assets/coin.svg";
-import { set } from "date-fns";
+import placeholder from "../assets/business_placeholder.png";
 
 export default function BusinessProfile() {
     const navigate = useNavigate();
@@ -72,7 +72,7 @@ export default function BusinessProfile() {
                 <div className="business-image-container">
                   <div className="image-wrapper">
                     <img
-                      src={business.image_url || "https://via.placeholder.com/150"}
+                      src={business.image_url || placeholder}
                       alt={business.name}
                       className="business-image"
                     />

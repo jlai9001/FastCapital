@@ -25,10 +25,9 @@ from pydantic_schemas import (
     UserPublicDetails,
     BusinessCreate,
 )
+import os
 
-
-DATABASE_URL = "postgresql+psycopg://postgres:postgres@localhost:5432/fastcapital"
-
+DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql+psycopg://postgres:postgres@localhost:5432/fastcapital")
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
@@ -49,24 +48,20 @@ def validate_email_password(email: str, password: str) -> str | None:
     generates a new session token, updates the session expiration, and
     returns the session token. Returns None if credentials are invalid.
     """
-    # retrieve the user account from the database
     with SessionLocal() as db:
         account = db.query(DBUser).filter(DBUser.email == email).first()
         if not account:
             return None
 
-        # validate the provided credentials (email & password)
         valid_credentials = bcrypt.checkpw(
             password.encode(), account.hashed_password.encode()
         )
         if not valid_credentials:
             return None
 
-        # create a new session token and set the expiration date
         session_token = token_urlsafe()
         account.session_token = session_token
         expires = datetime.now() + timedelta(minutes=SESSION_LIFE_MINUTES)
-        # assign as datetime, not isoformat
         account.session_expires_at = expires
         db.commit()
         return session_token
@@ -78,7 +73,6 @@ def validate_session(email: str, session_token: str) -> bool:
     session is valid and not expired, and updates the session expiration.
     Returns False otherwise.
     """
-    # retrieve the user account for the given session token
     with SessionLocal() as db:
         account = (
             db.query(DBUser)
@@ -91,13 +85,10 @@ def validate_session(email: str, session_token: str) -> bool:
         if not account:
             return False
 
-        # validate that it is not expired
         if datetime.now() >= account.session_expires_at:
             return False
 
-        # update the expiration date and save to the database
         expires = datetime.now() + timedelta(minutes=SESSION_LIFE_MINUTES)
-        # assign as datetime, not isoformat
         account.session_expires_at = expires
         db.commit()
         return True
@@ -108,7 +99,6 @@ def invalidate_session(email: str, session_token: str) -> None:
     Invalidate a user's session by setting the session token to a unique
     expired value.
     """
-    # retrieve the user account for the given session token
     with SessionLocal() as db:
         account = (
             db.query(DBUser)
@@ -121,12 +111,15 @@ def invalidate_session(email: str, session_token: str) -> None:
         if not account:
             return
 
-        # set the token to an invalid value that is unique
         account.session_token = f"expired-{token_urlsafe()}"
         db.commit()
 
 
 def create_user(name: str, email: str, password: str) -> bool:
+    """
+    Creates a new user account with the given name,
+    email, and password. Returns True if the account was created successfully,
+    """
     with SessionLocal() as db:
         if db.query(DBUser).filter(DBUser.email == email).first():
             return False
@@ -144,6 +137,10 @@ def create_user(name: str, email: str, password: str) -> bool:
 
 
 def get_user_public_details(email: str):
+    """
+    Retrieve public details of a user by email. Returns a UserPublicDetails object
+    containing the user's ID and email, or None if the user does not exist.
+    """
     with SessionLocal() as db:
         account = db.query(DBUser).filter(DBUser.email == email).first()
         if not account:
@@ -152,6 +149,10 @@ def get_user_public_details(email: str):
 
 
 def create_business(business: BusinessCreate) -> BusinessOut:
+    """
+    Create a new business entry in the database. The business will be associated with logged in user.
+    Returns a BusinessOut object containing the created business details.
+    """
     with SessionLocal() as db:
         db_business = DBBusiness(**business.dict())
         db.add(db_business)
@@ -173,6 +174,9 @@ def create_business(business: BusinessCreate) -> BusinessOut:
 
 
 def update_business_image(business_id: int, user_id: int, image_url: str) -> str:
+    """
+    Update the image URL for a business on the Business Profile Page. Ensures the user is authorized to make the update.
+    """
     with SessionLocal() as db:
         db_business = db.query(DBBusiness).filter(DBBusiness.id == business_id).first()
 
@@ -188,6 +192,10 @@ def update_business_image(business_id: int, user_id: int, image_url: str) -> str
 
 
 def get_businesses() -> list[BusinessOut]:
+    """
+    Retrieve all businesses from the database, ordered by name.
+    Returns a list of BusinessOut objects containing business details.
+    """
     with SessionLocal() as db:
         db_businesses = db.query(DBBusiness).order_by(DBBusiness.name).all()
         businesses = []
@@ -210,6 +218,10 @@ def get_businesses() -> list[BusinessOut]:
 
 
 def get_business(business_id: int) -> BusinessOut | None:
+    """
+    Retrieve a specific business by its ID. Returns a BusinessOut object containing the business details,
+    or None if the business does not exist.
+    """
     with SessionLocal() as db:
         db_business = db.query(DBBusiness).filter(DBBusiness.id == business_id).first()
         if db_business is None:
@@ -229,6 +241,10 @@ def get_business(business_id: int) -> BusinessOut | None:
 
 
 def get_investments() -> list[InvestmentOut]:
+    """
+    Retrieve all investments from the database, ordered by ID.
+    Returns a list of InvestmentOut objects containing investment details.
+    """
     with SessionLocal() as db:
         db_investments = db.query(DBInvestment).order_by(DBInvestment.id).all()
         investments = []
@@ -249,6 +265,10 @@ def get_investments() -> list[InvestmentOut]:
 
 
 def get_investment(investment_id: int) -> InvestmentOut | None:
+    """
+    Retrieve a specific investment by its ID. Returns an InvestmentOut object containing the investment details,
+    or None if the investment does not exist.
+    """
     with SessionLocal() as db:
         db_investment = (
             db.query(DBInvestment).filter(DBInvestment.id == investment_id).first()
@@ -267,9 +287,13 @@ def get_investment(investment_id: int) -> InvestmentOut | None:
         )
 
 
-def get_purchases_by_status(
-    user_id: int, status: PurchaseStatus
-) -> list[EnrichedPurchaseOut]:
+def get_purchases_by_status(user_id: int, status: PurchaseStatus
+    ) -> list[EnrichedPurchaseOut]:
+    """
+    Retrieve all purchases made by a user with a specific status.
+    Returns a list of EnrichedPurchaseOut objects containing purchase details,
+    enriched with business information.
+    """
     with SessionLocal() as db:
         results = (
             db.query(DBPurchase, DBBusiness)
@@ -300,6 +324,10 @@ def get_purchases_by_status(
 
 
 def get_financials_by_business_id(business_id: int) -> list[FinancialsOut]:
+    """
+    Retrieve all financial records for a specific business by its ID.
+    Returns a list of FinancialsOut objects containing financial details.
+    """
     with SessionLocal() as db:
         db_financial_records = (
             db.query(DBFinancials).filter(DBFinancials.business_id == business_id).all()
@@ -319,6 +347,10 @@ def get_financials_by_business_id(business_id: int) -> list[FinancialsOut]:
 
 
 def add_finance(new_finance: FinancialsCreate) -> FinancialsOut:
+    """
+    Add a new financial record for a business. The business must exist in the database.
+    Returns a FinancialsOut object containing the created financial record details.
+    """
     with SessionLocal() as db:
         db_business = (
             db.query(DBBusiness)
@@ -344,6 +376,11 @@ def add_finance(new_finance: FinancialsCreate) -> FinancialsOut:
 
 
 def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut | None:
+    """
+    Add a new purchase to the database. The purchase must be valid and the investment must have enough shares available.
+    Returns a PurchaseOut object containing the created purchase details.
+    Raises an exception if the investment does not have enough shares available.
+    """
     with SessionLocal() as db:
         db_investment = (
             db.query(DBInvestment)
@@ -376,6 +413,11 @@ def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut | None:
 
 
 def add_investment(new_investment: InvestmentCreate) -> InvestmentOut:
+    """
+    Add a new investment to the database. The investment must be associated with an existing business.
+    Returns an InvestmentOut object containing the created investment details.
+    Raises a ValueError if the business does not exist.
+    """
     with SessionLocal() as db:
         # query by buisness id, return error if not found
         db_business = (

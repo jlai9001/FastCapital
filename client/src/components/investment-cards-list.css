@@ -94,6 +94,7 @@ ul {
   gap: 1rem;
   align-items: center;
   font-size: 0.9rem;
+  flex-direction: row;
 }
 .sort-filter select,
 .sort-filter input[type="checkbox"] {
@@ -114,4 +115,42 @@ ul {
 
 .investment-table td {
   padding: 0.25rem 0;
+}
+
+
+.sort-filter label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.sort-filter select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.sort-filter select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.invest-opp-title{
+  text-align: left;
+  font-size:20px;
+  margin-right:340px;
+
+  flex-direction: row;
+
+}
+
+.switch-element{
+  margin-right:50px;
 }
