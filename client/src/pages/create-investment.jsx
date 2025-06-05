@@ -120,11 +120,12 @@ export default function NewInvestment() {
                         onChange={(e) => setExpirationDate(e.target.value)}
                     />
                 </div><br />
+                <div className="button-container">
+                    <button className="cancel-button" onClick={handleCancel}>Cancel</button>
+                    <button className="post-button" onClick={handlePost}>Post Offer</button>
+                </div>
             </div>
-            <section>
-            </section><br />
-            <button onClick={handleCancel}>Cancel</button>
-            <button onClick={handlePost}>Post Offer</button>
+
         </div>
     );
 }

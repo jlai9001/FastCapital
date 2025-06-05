@@ -39,3 +39,54 @@ body{
     font-weight: bold;
     margin-bottom: -5px;
 }
+
+.button-container{
+    gap:10px
+}
+
+.cancel-button{
+    display: block;
+    width: 50%;
+    padding: 15px;
+    background-color: transparent;
+    color:var(--main_button_color);
+    border: none;
+    border-radius: var(--button_border_radius);
+    font-size: var(--small_fontsize);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-family: var(--button_font);
+    align-items: center;
+    padding: 12px;
+    border: 2px solid var(--main_button_color);
+}
+
+.cancel-button:hover{
+    background-color: var(--main_button_hover);
+
+}
+
+.post-button{
+    display: block;
+    width: 50%;
+    padding: 15px;
+    background-color:var(--main_button_color);
+    border-radius: var(--button_border_radius);
+    font-size: var(--small_fontsize);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-family: var(--button_font);
+    align-items: center;
+    padding: 12px;
+    border: 2px solid var(--main_button_color);
+    color:white;
+}
+
+.post-button:hover{
+    background-color:var(--main_button_hover);
+    border: 2px solid var(--main_button_hover);
+}
