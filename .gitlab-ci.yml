@@ -2,24 +2,11 @@ services:
   - docker:dind # Needed for building Docker images, not required for frontend Pages deployment
 
 stages:
-  # - test
   - build
   - deploy
 
 variables:
-  EC2_HOST: "52.15.239.32" # Related to backend EC2 deployment
-
-#testing a change
-# tests:
-#   image: python:3-bullseye
-#   stage: test
-#   script:
-#     - cd server
-#     - pip install -r requirements.txt
-
-#   cache:
-#     paths:
-#       - ~/.cache/pip
+  EC2_HOST: "18.223.30.241" # Related to backend EC2 deployment
 
 build-api-image:
   stage: build
@@ -37,12 +24,10 @@ build-api-image:
 
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
-    - if: '$CI_COMMIT_BRANCH == "dev"'
 
 build-front-end-job:
   stage: build
   image: node:lts-bullseye
-  # needs: [tests] # Skipped since we're not running backend tests
   script:
     - cd client
     - rm -rf node_modules package-lock.json
@@ -75,7 +60,8 @@ deploy-to-ec2:
   image: docker:cli
   variables:
     GITLAB_IMAGE: ${CI_REGISTRY_IMAGE}/server
-    DATABASE_URL: "postgresql://$PG_USERNAME:$PG_PASSWORD2@fastcapital-db.c1c0g4g2q342.us-east-2.rds.amazonaws.com"
+    DATABASE_URL: "postgresql://$PG_USERNAME:$PG_PASSWORD2@database-1.c1c0g4g2q342.us-east-2.rds.amazonaws.com"
+
   before_script:
     - apk add --no-cache openssh-client
     - eval $(ssh-agent -s)
@@ -91,6 +77,6 @@ deploy-to-ec2:
     - ssh -v ubuntu@$EC2_HOST "docker pull $GITLAB_IMAGE:latest" || (echo "Failed to pull Docker image" && exit 1)
     - ssh -v ubuntu@$EC2_HOST "docker stop my-api || true && docker rm my-api || true" || (echo "Failed to stop and remove container" && exit 1)
     - ssh -v ubuntu@$EC2_HOST "docker run -d --name my-api -e DATABASE_URL=$DATABASE_URL -p 80:80 $GITLAB_IMAGE" || (echo "Failed to run Docker container" && exit 1)
+    - ssh -v ubuntu@$EC2_HOST "docker image prune -f" || (echo "Failed to prune Docker images" && exit 1)
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
-    - if: '$CI_COMMIT_BRANCH == "dev"'
