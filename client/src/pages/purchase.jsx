@@ -100,8 +100,8 @@ export default function Purchase() {
   }
 
   return (
-    <div className="investment-details-page-container">
-      <div className="investment-details-container">
+    <div className="page-container">
+      <div className="top-half">
         <div className="column column-1">
           <div className="box image-wrapper">
             <img

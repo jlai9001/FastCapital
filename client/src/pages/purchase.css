@@ -1,27 +1,27 @@
 .terms-and-conditions {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: var(--secondary-text-color);
-  margin: 16px 0;
-  cursor: pointer;
-  user-select: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--secondary-text-color);
+    margin: 16px 0;
+    cursor: pointer;
+    user-select: none;
 }
 
 .terms-and-conditions input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
+    width: 16px;
+    height: 16px;
 }
 
 .terms-link {
-  color: var(--main-button-color);
-  text-decoration: underline;
+    color: var(--main-button-color);
+    text-decoration: underline;
 }
 
 
 /* Container for entire purchase page */
-.investment-details-page-container {
+.page-container {
     margin: 125px 100px 50px 100px;
     padding: 10px;
     background-color: #FFFFFF;
@@ -33,7 +33,7 @@
 }
 
 /* Main details flex container */
-.investment-details-container {
+.top-half {
     margin-top: 50px;
     display: flex;
     padding: 10px;
@@ -319,7 +319,7 @@
 .modal-overlay {
     position: fixed;;
     width: 100%;
-    height: auto;
+    height: 100vh;
     top: 0; left: 0; right: 0; bottom: 0;
     background-color: rgba(0,0,0,0.5);
     display: flex;
