@@ -54,29 +54,31 @@ export default function InvestmentCardsList() {
         <div className="investment-list-container">
         <div className="investment-controls">
             <div className="sort-filter">
-            <label>
-                {/* checkbox */}
-                {/* <input
-                type="checkbox"
-                checked={filterExpiring}
-                onChange={handleFilterToggle}
-                /> */}
+                <div className="invest-opp-title"> Investment Opportunities</div>
+                <label>
+                    {/* checkbox */}
+                    {/* <input
+                    type="checkbox"
+                    checked={filterExpiring}
+                    onChange={handleFilterToggle}
+                    /> */}
 
-                <Switch
-                checked={filterExpiring}
-                onChange={handleFilterToggle}
-                >
-                </Switch>
-
-                Expires in next 7 days
-            </label>
+                    <div className="switch-element">
+                        <Switch
+                        checked={filterExpiring}
+                        onChange={handleFilterToggle}>
+                        </Switch>
+                        Expires soon
+                    </div>
+                </label>
+            Sort by
             <label>
-                Sort by:
                 <select onChange={handleSortChange}>
-                <option value="">None</option>
-                <option value="price">Price per Share (Low → High)</option>
-                <option value="min">Minimum Investment (Low → High)</option>
+                    <option value="">Property</option>
+                    <option value="price">Price per Share (Low → High)</option>
+                    <option value="min">Minimum Investment (Low → High)</option>
                 </select>
+
             </label>
             </div>
         </div>
