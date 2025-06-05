@@ -73,6 +73,7 @@ CORS_ORIGIN = os.environ.get("CORS_ORIGIN")
 if CORS_ORIGIN:
     origins.append(CORS_ORIGIN)
 
+
 app.add_middleware(
     SessionMiddleware,
     secret_key="some-random-string",
