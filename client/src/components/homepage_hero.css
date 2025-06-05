@@ -1,5 +1,55 @@
 .homepage-hero {
-    background-color: #007BFF;
+    background-color: #E5F5F0;
     padding: 60px 20px;
     text-align: center;
+}
+
+.hero-text{
+    margin-top: -45px;
+    font-size: 14px;
+}
+
+.hero-subtext{
+    margin-top: -23px;
+    font-size: 20px;
+}
+
+.browse-opp-button{
+    margin-top: 15px;
+    background-color: white;
+    padding: 12px;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-size: var(--small_fontsize);
+    border-radius: var(--button_border_radius);
+    border: 2px solid var( --main_button_color);
+    font-family: var(--font);
+
+}
+
+.browse-opp-button:hover{
+    background-color: var(--main_button_hover);
+    color:white;
+}
+
+
+.view-all-button{
+    margin-top: 15px;
+    background-color:var( --main_button_color);
+    color:white;
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-size: var(--small_fontsize);
+    border-radius: var(--button_border_radius);
+    border: 2px solid var( --main_button_color);
+    font-family: var(--font);
+
+}
+
+
+
+.view-all-button:hover{
+    background-color: var(--main_button_hover);
+    color:white;
 }
