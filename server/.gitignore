@@ -1,2 +1,4 @@
 __pycache__
 .venv
+uploaded_images/*
+!uploaded_images/image.png
