@@ -95,15 +95,15 @@ VALUES
 INSERT INTO businesses(name, user_id, image_url, website_url, address1, address2, city, state, postal_code)
 VALUES
     ('Best Burgers', 1, './uploaded_images/image.jpg', 'http://www.hackreactor.com', '123 Main St', 'Apt 4B', 'Los Angeles', 'CA', '90001'),
-    ('Tech Innovations', 2, 'http://example.com/image2.jpg', 'http://www.hackreactor.com', '456 Market St', NULL, 'San Francisco', 'CA', '94105'),
-    ('Green Grocer', 3, 'http://example.com/image3.jpg', 'http://www.hackreactor.com', '789 Broadway', NULL, 'New York', 'NY', '10001'),
-    ('Fitness Hub', 4, 'http://example.com/image4.jpg', 'http://www.hackreactor.com', '101 State St', NULL, 'Chicago', 'IL', '60601'),
-    ('Fashion Forward', 5, 'http://example.com/image5.jpg', 'http://www.hackreactor.com', '202 Ocean Dr', NULL, 'Miami', 'FL', '33101'),
-    ('Gourmet Coffee Co.', 6, 'http://example.com/image6.jpg', 'http://www.hackreactor.com', '303 Pike St', NULL, 'Seattle', 'WA', '98101'),
-    ('Home Decor Haven', 7, 'http://example.com/image7.jpg', 'http://www.hackreactor.com', '404 Congress Ave', NULL, 'Austin', 'TX', '73301'),
-    ('Pet Paradise', 8, 'http://example.com/image8.jpg', 'http://www.hackreactor.com', '505 Colfax Ave', NULL, 'Denver', 'CO', '80201'),
-    ('Travel Adventures Inc.', 9, 'http://example.com/image9.jpg', 'http://www.hackreactor.com', '606 Boylston St', NULL, 'Boston', 'MA', '02101'),
-    ('Digital Marketing Pros', 10, 'http://example.com/image10.jpg', 'http://www.hackreactor.com', '707 Pike St', NULL, 'Seattle', 'WA', '98101');
+    ('Tech Innovations', 2, './uploaded_images/image.jpg', 'http://www.hackreactor.com', '456 Market St', NULL, 'San Francisco', 'CA', '94105'),
+    ('Green Grocer', 3, './uploaded_images/image.jpg', 'http://www.hackreactor.com', '789 Broadway', NULL, 'New York', 'NY', '10001'),
+    ('Fitness Hub', 4, './uploaded_images/image.jpg', 'http://www.hackreactor.com', '101 State St', NULL, 'Chicago', 'IL', '60601'),
+    ('Fashion Forward', 5, './uploaded_images/image.jpg', 'http://www.hackreactor.com', '202 Ocean Dr', NULL, 'Miami', 'FL', '33101'),
+    ('Gourmet Coffee Co.', 6, './uploaded_images/image.jpg', 'http://www.hackreactor.com', '303 Pike St', NULL, 'Seattle', 'WA', '98101'),
+    ('Home Decor Haven', 7, './uploaded_images/image.jpg', 'http://www.hackreactor.com', '404 Congress Ave', NULL, 'Austin', 'TX', '73301'),
+    ('Pet Paradise', 8, './uploaded_images/image.jpg', 'http://www.hackreactor.com', '505 Colfax Ave', NULL, 'Denver', 'CO', '80201'),
+    ('Travel Adventures Inc.', 9, './uploaded_images/image.jpg', 'http://www.hackreactor.com', '606 Boylston St', NULL, 'Boston', 'MA', '02101'),
+    ('Digital Marketing Pros', 10, './uploaded_images/image.jpg', 'http://www.hackreactor.com', '707 Pike St', NULL, 'Seattle', 'WA', '98101');
 
 INSERT INTO financials(business_id, date, amount, type)
 VALUES
