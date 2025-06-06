@@ -1,6 +1,7 @@
 import React from "react";
 import "./footer.css";
 import logo from "../assets/logo.svg";
+import { NavLink} from 'react-router-dom'
 
 const Footer = () => {
   return (
@@ -15,17 +16,32 @@ const Footer = () => {
           </a>
         </div>
 
-        {/* Column 2: Logo */}
+        {/* Column 2: Links */}
         <div className="links-section">
-            Fast Capital
+          <NavLink
+              className="nav-link"
+              to=''>
+              Terms
+          </NavLink>
+
+          <NavLink
+              className="nav-link"
+              to=''>
+              Privacy
+          </NavLink>
+
+          <NavLink
+              className="nav-link"
+              to=''>
+              Contact
+          </NavLink>
 
         </div>
 
 
-
         {/* Column 4: Copyright */}
         <div className="footer__section footer__copyright-section">
-          <p className="footer__copyright">
+          <p className="footer__copyright_msg">
             © {new Date().getFullYear()} Fast Capital. All rights reserved.
           </p>
         </div>
