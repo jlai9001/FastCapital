@@ -45,9 +45,9 @@
 }
 
 .website-text{
-   font-size: 14px;
-   color: var(--main_button_color);
-
+  font-size: 14px;
+  color: var(--main_button_color);
+  text-decoration: none;
 }
 
 /* Top section: small square image + optional label */
