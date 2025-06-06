@@ -66,7 +66,7 @@ export default function BusinessProfile() {
         <div className="business-profile-container">
           <div className="business-profile-header-row">
             <p className="business-profile-header">Business profile</p>
-            <a className="business-profile-page-button" href="/edit-business">Edit Profile Details</a>
+            <a className="business-profile-page-button" href="/add-business">Edit Profile Details</a>
           </div>
             <div className="business-info">
                 <div className="business-image-container">
