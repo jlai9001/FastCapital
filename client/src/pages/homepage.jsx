@@ -47,9 +47,9 @@ export default function Homepage(){
                         <td style={{ textAlign: "right" }}>
                         <NavLink
                             className="home-nav-link"
-                            to='/signup'
+                            to='/all-investments'
                         >
-                            Sign Up
+                            View All
                         </NavLink>
                         </td>
                     </tr>
