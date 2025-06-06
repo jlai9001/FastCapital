@@ -37,7 +37,7 @@ function App() {
         <Route path='/login' element={<Login />}></Route>
         <Route path='/testpage' element={<TestPage />}></Route>
         <Route path='/not-found' element={<NotFound />}></Route>
-        <Route path='/create-investment-offer' element={<NewInvestment />}></Route>
+        <Route path='/create-investment' element={<NewInvestment />}></Route>
         <Route path='/create-financials' element={<AddFinancials />}></Route>
       </Routes >
       <Footer />
