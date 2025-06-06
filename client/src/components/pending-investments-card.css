@@ -1,6 +1,7 @@
 .pending-investment-card {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     background-color: #F9FAFB;
     border-radius: 12px;
     margin-bottom: 1rem;
@@ -42,7 +43,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 160px;
 }
 
 .pending-info-label {
@@ -68,21 +68,19 @@
   object-fit: contain;
 }
 
-.progress-bar-wrapper {
-  flex-grow: 1;
-  flex-shrink: 0;
-  margin-top: 0.5rem;
+.pending-investment-progress-bar-wrapper {
   max-width: 400px;
   text-align: center;
 }
 
-.progress-bar-row {
+.pending-investment-progress-bar-row {
   display: flex;
   align-items: center;
   gap: 10px;
+  width: 200px;
 }
 
-.progress-bar {
+.pending-investment-progress-bar {
   height: 20px;
   background-color: #E0E9F4;
   border-radius: 10px;

@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi import HTTPException, status
 from db_models import (
     DBBusiness,
     DBInvestment,
@@ -171,6 +172,31 @@ def create_business(business: BusinessCreate) -> BusinessOut:
             state=db_business.state,
             postal_code=db_business.postal_code,
         )
+
+def update_business_details(
+    db: Session,
+    business_id: int,
+    user_id: int,
+    updated_data: BusinessCreate,
+) -> DBBusiness:
+    """
+    Update the details of an existing business. Ensures the user is authorized to make the update.
+    Raises HTTPException if the business does not exist or the user is not authorized.
+    """
+    business = db.query(DBBusiness).filter(DBBusiness.id == business_id).first()
+
+    if not business:
+        raise HTTPException(status_code=404, detail="Business not found")
+
+    if business.user_id != user_id:
+        raise HTTPException(status_code=403, detail="Not authorized to update this business")
+
+    for field, value in updated_data.dict(exclude_unset=True).items():
+        setattr(business, field, value)
+
+    db.commit()
+    db.refresh(business)
+    return business
 
 
 def update_business_image(business_id: int, user_id: int, image_url: str) -> str:

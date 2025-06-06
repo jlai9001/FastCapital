@@ -34,7 +34,7 @@ build-front-end-job:
     - npm install
     - npm run lint || echo "Linting failed, but continuing..."
     - VITE_API_HOST="${VITE_API_HOST:-https://localhost:8000}" npm run build
-      # Update VITE_API_HOST once domain name has been purchased
+    - echo "/* /index.html 200" > dist/_redirects
   artifacts:
     paths:
       - client/dist/
@@ -43,7 +43,6 @@ pages:
   stage: deploy
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
-    - if: '$CI_COMMIT_BRANCH == "dev"'
   dependencies:
     - build-front-end-job
   needs:
@@ -81,4 +80,3 @@ deploy-to-ec2:
     - ssh -v ubuntu@$EC2_HOST "docker image prune -f" || (echo "Failed to prune Docker images" && exit 1)
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
-    - if: '$CI_COMMIT_BRANCH == "dev"'
