@@ -32,7 +32,9 @@ This would be marketed and targeted towards those passionate about local communi
 3. Simulate the purchase of an investment.
 4. View a personally instanced portfolio unique to the user.
 
-## App in Action
+## Wireframe
+
+(https://www.figma.com/design/XyKf78WNlcN6fm9udXtfwk/FastCapital---Hifis?node-id=0-1&p=f&t=mqE0kHehvHPZrceG-0)
 
 ## Techstack
 
