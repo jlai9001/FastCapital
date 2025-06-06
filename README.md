@@ -38,7 +38,6 @@ npm install @mui/material @emotion/react @emotion/styled @mui/x-charts axios
 
 <!-- Create and switch to the fastcapital DB -->
 
-
     \c fastcapital
 
 <!-- Seed Test Data in the fastcapital db -->
@@ -54,6 +53,9 @@ npm install @mui/material @emotion/react @emotion/styled @mui/x-charts axios
 <!-- Start fastapi server (defaults to main.py) -->
 
     visit [text](http://localhost:8000/docs) to test APIs
+    for testing purposes:
+        email: jsmith@email.com
+        password: admin123
 
 ## Git Branching Workflow
 
