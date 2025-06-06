@@ -10,14 +10,9 @@
 }
 
 .footer__container {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
-  align-items: flex-start;
-  width: 100vw;
-  padding: 0.5rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
 }
 
@@ -33,6 +28,7 @@
   font-size: 1.2rem;
   color: #333;
   text-decoration: none;
+  margin-left: 50px;
 }
 
 .nav-logo-image {
@@ -83,10 +79,23 @@
 .footer__copyright-section {
   display: flex;
   align-items: flex-start;
-  font-size: 0.9rem;
-  color: #666;
-  font-size: xx-small;
+  color:var(--secondary_text_color);
+  font-size: var(--small-font-size);
+  margin-right:50px;
 }
+
+.links-section{
+   display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-link{
+  color:var(--secondary_text_color);
+}
+
+
+
 
 /* Mobile responsive */
 @media (max-width: 768px) {
@@ -99,5 +108,5 @@
   .footer__copyright-section {
     flex-direction: row;
     align-items: center;
-  }
+    font-size: 50px;
 }
