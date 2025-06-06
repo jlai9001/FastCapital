@@ -59,13 +59,7 @@ app.mount(
 )
 
 origins = [
-    "http://localhost.tiangolo.com",
-    "https://localhost.tiangolo.com",
-    "http://localhost:5173",
-    "http://localhost:8080",
-    "http://localhost",
-    "http://localhost:8000",
-    "http://localhost:3000",
+    "http://localhost:5173"
 ]
 
 CORS_ORIGIN = os.environ.get("CORS_ORIGIN")
@@ -89,6 +83,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+image_base_url = os.environ.get("IMAGE_BASE_URL", "http://localhost:8000")
+
 
 
 @app.get("/api/investment/{investment_id}")
@@ -161,7 +158,8 @@ async def create_business_api(
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(image.file, buffer)
 
-        image_url = f"http://localhost:8000/uploaded_images/{filename}"
+        image_url = f'{image_base_url}/uploaded_images/{filename}'
+        # Add env variable api.fastcapital.site
 
         business_data = {
             "name": name,
@@ -201,7 +199,7 @@ async def upload_business_image(
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(image.file, buffer)
 
-        image_url = f"http://localhost:8000/uploaded_images/{filename}"
+        image_url = f"{image_base_url}/uploaded_images/{filename}"
 
         updated_url = update_business_image(
             business_id=business_id, user_id=current_user.id, image_url=image_url

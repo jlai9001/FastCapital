@@ -8,6 +8,7 @@ import { base_url } from '../api'
 export default function Portfolio(){
   const [user, setUser] = useState(null);
   const [pendingPurchases, setPendingPurchases] = useState([]);
+  const [investments, setInvestments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -34,22 +35,37 @@ export default function Portfolio(){
   useEffect (() => {
     if (!user) return;
 
-    const fetchPastPurchases = async () => {
+    const fetchPurchasesAndInvestments = async () => {
       try {
-        const result = await fetch(`${base_url}/api/purchases?status=pending`,
+        const res = await fetch(`${base_url}/api/purchases?status=pending`,
           { credentials: "include" }
         );
-        if(!result.ok) throw new Error("Failed to fetch past purchases");
 
-        const data = await result.json();
-        setPendingPurchases(data)
+        if(!res.ok) throw new Error("Failed to fetch purchases");
+
+        const purchaseData = await res.json();
+        setPendingPurchases(purchaseData);
+
+        const investmentId = purchaseData.map(p => p.investment_id);
+
+        const investmentResults = await Promise.all(
+          investmentId.map(id =>
+            fetch(`${base_url}/api/investment/${id}`, {
+              credentials: "include",
+            }).then(res => res.ok ? res.json() : null)
+          )
+        );
+
+        const validInvestments = investmentResults.filter(Boolean);
+        setInvestments(validInvestments);
       } catch (error) {
-        setError("Could not load past purchases.");
+        setError("Could not load purchases or investments.");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     };
-    fetchPastPurchases();
+
+    fetchPurchasesAndInvestments();
   }, [user]);
 
     return(
@@ -63,13 +79,19 @@ export default function Portfolio(){
               {loading && <p>Loading pending investments...</p>}
               {error && <p>{error}</p>}
 
-              {pendingPurchases.map((purchase) => (
+              {pendingPurchases.map((purchase) => {
+                const matchingInvestment = investments.find(
+                  (inv) => inv.id === purchase.investment_id
+                );
+
+                return (
                 <PendingInvestmentsCard
                 key={purchase.id}
                 purchase={purchase}
+                investment={matchingInvestment}
               />
-              )
-            )}
+              );
+    })}
           </div>
       </div>
     )
