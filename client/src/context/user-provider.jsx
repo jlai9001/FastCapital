@@ -5,6 +5,7 @@ import {
     useCallback,
     useEffect,
 } from "react";
+import { base_url } from "../api";
 
 
 const UserContext = createContext({ user: null, refreshUser: async () => {} });
@@ -18,7 +19,7 @@ export default function UserProvider({children}){
     const refreshUser = useCallback(async () => {
        try {
         if (DEBUG) console.log("refreshUser: fetching /api/me");
-        const res = await fetch(`http://localhost:8000/api/me`, {
+        const res = await fetch(`${base_url}/api/me`, {
             credentials: "include",
         });
 

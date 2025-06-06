@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { base_url } from "../api";
 
 function useInvestment(investmentId) {
   const [loading, setLoading] = useState(false);
@@ -13,7 +14,7 @@ function useInvestment(investmentId) {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(`http://localhost:8000/api/investment/${investmentId}`);
+        const response = await fetch(`${base_url}/api/investment/${investmentId}`);
         if (!response.ok) {
           throw new Error("Failed to fetch investment data");
         }
@@ -44,7 +45,7 @@ function useInvestmentPurchases(investmentId) {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get(`http://localhost:8000/api/purchases`, {
+        const response = await axios.get(`${base_url}/api/purchases`, {
           params: { investment_id: investmentId },
           withCredentials: true,
         });
@@ -74,7 +75,7 @@ function useBusiness(businessId) {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(`http://localhost:8000/api/business/${businessId}`);
+        const response = await fetch(`${base_url}/api/business/${businessId}`);
         if (!response.ok) {
           throw new Error("Failed to fetch business data");
         }
@@ -101,7 +102,7 @@ function useBusinessForUser() {
   useEffect(() => {
       async function fetchBusiness() {
           try {
-              const res = await fetch('http://localhost:8000/api/my_business', { credentials: "include" });
+              const res = await fetch(`${base_url}/api/my_business`, { credentials: "include" });
 
               if (res.status === 401 || res.status === 404) {
                   setBusiness(null);
@@ -129,7 +130,7 @@ async function uploadBusinessImage(businessId, file) {
   const formData = new FormData();
   formData.append("image", file);
 
-  const res = await fetch(`http://localhost:8000/api/business/${businessId}/upload_image`, {
+  const res = await fetch(`${base_url}/api/business/${businessId}/upload_image`, {
     method: "POST",
     body: formData,
     credentials: "include",
@@ -151,7 +152,7 @@ function useFinancialsForBusiness(businessId) {
   useEffect(() => {
       async function fetchData() {
         try {
-          const res = await axios.get(`http://localhost:8000/api/financials/${businessId}`);
+          const res = await axios.get(`${base_url}/api/financials/${businessId}`);
           setFinancials(res.data);
           } catch (err) {
             if (err.response.status === 404) {
@@ -180,7 +181,7 @@ function useInvestmentsForBusiness(businessId) {
     useEffect(() => {
         async function fetchData() {
           try {
-            const res = await axios.get(`http://localhost:8000/api/business_investments`, {
+            const res = await axios.get(`${base_url}/api/business_investments`, {
                 params: { business_id: businessId },
                 withCredentials: true,
                 });
@@ -209,13 +210,13 @@ export { useInvestment, useBusiness, useBusinessForUser, useFinancialsForBusines
 
 
 export async function getInvestments() {
-  const response = await fetch("http://localhost:8000/api/investment");
+  const response = await fetch(`${base_url}/api/investment`);
   if (!response.ok) throw new Error("Failed to fetch investments");
   return await response.json();
 }
 
 export async function getBusinesses() {
-  const response = await fetch("http://localhost:8000/api/business");
+  const response = await fetch(`${base_url}/api/business`);
   if (!response.ok) throw new Error("Failed to fetch businesses");
   return await response.json();
 }
