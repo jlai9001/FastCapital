@@ -10,8 +10,8 @@
 
 .featured-investments ul {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 5rem;
+    grid-template-columns: repeat(3, minmax(250px, 1fr));
+    gap: 0.8 rem;
     margin: 0;
     box-shadow: 50px;
 }
