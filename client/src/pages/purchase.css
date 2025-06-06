@@ -1,0 +1,342 @@
+.terms-and-conditions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--secondary-text-color);
+    margin: 16px 0;
+    cursor: pointer;
+    user-select: none;
+}
+
+.terms-and-conditions input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+}
+
+.terms-link {
+    color: var(--main-button-color);
+    text-decoration: underline;
+}
+
+
+/* Container for entire purchase page */
+.page-container {
+    margin: 125px 100px 50px 100px;
+    padding: 10px;
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    box-shadow: var(--element-shadow);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* Main details flex container */
+.top-half {
+    margin-top: 50px;
+    display: flex;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow: hidden;
+    }
+
+/* Columns */
+.column {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.column-1, .column {
+    align-items: center;
+}
+
+.column-2 {
+    align-items: flex-start;
+}
+
+/* Boxes inside columns */
+.box, .nested-box {
+    display: flex;
+    justify-content: center;
+}
+
+.nested-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.business-detail-name {
+    font-weight: 700;
+    font-size: 36px;
+    color: black;
+}
+
+.location-icon, .website-icon {
+    object-fit: contain;
+    position: relative;
+    top: 5px;
+}
+
+.location-icon {
+    width: 21px;
+    height: 33px;
+}
+
+.website-icon {
+    width: 19px;
+    height: 30px;
+}
+
+.location-text {
+    color: var(--secondary-text-color);
+    font-size: 24px;
+    font-weight: 400;
+    margin-bottom: 10px;
+}
+
+.business-website {
+    color: var(--main-button-color);
+    font-size: 24px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.image-wrapper {
+    width: 180px;
+    height: 180px;
+    background-color: #f9f9f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.business-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.box-quantity {
+    font-weight: 600;
+    font-size: 28px;
+    color: black;
+}
+
+.business-detail-text {
+    color: var(--secondary-text-color);
+    font-weight: 400;
+    font-size: 16px;
+}
+
+/* Funded percentage and progress bar */
+.funded-percentage {
+    color: #6290C8;
+    font-weight: 600;
+    font-size: 32px;
+}
+
+.progress-purchase-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin: 10px 30px 0 30px;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.progress-bar-wrapper {
+    flex: 1 1 400px;
+    max-width: 400px;
+    text-align: center;
+}
+
+.progress-label {
+    color: var(--secondary-text-color);
+    text-align: left;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.progress-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.progress-bar {
+    height: 20px;
+    background-color: #E0E9F4;
+    border-radius: 10px;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #6290C8;
+    transition: width 0.5s ease-in-out;
+}
+
+/* Buttons */
+.invest-now-button,
+.buy-btn {
+    background-color: var(--main-button-color);
+    color: var(--main-button-textcolor);
+    border: none;
+    padding: 12px 24px;
+    border-radius: var(--button-border-radius);
+    font-weight: 600;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    min-width: 180px;
+}
+
+.invest-now-button:hover,
+.buy-btn:hover:not(:disabled) {
+    background-color: var(--main-button-hover);
+    color: var(--main-button-hover-textcolor);
+}
+
+.buy-btn:disabled {
+    background-color: #cbd5e1;
+    cursor: not-allowed;
+}
+
+.cancel-btn {
+    background-color: #ddd;
+    color: black;
+    border: none;
+    padding: 12px 24px;
+    border-radius: var(--button-border-radius);
+    font-weight: 600;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    min-width: 120px;
+}
+
+.cancel-btn:hover {
+    background-color: #bbb;
+}
+
+/* Bottom half with price per share, shares input, total price */
+.bottom-half {
+    margin-top: 30px;
+    padding: 10px 30px;
+    border-top: 1px solid #E5E7EB;
+    max-width: 480px;
+    width: 100%;
+}
+
+.price-row,
+.total-price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.price-label,
+.total-label,
+.shares-label {
+    font-weight: 600;
+    font-size: 18px;
+    color: black;
+}
+
+.price-value,
+.total-value {
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--main-button-color);
+}
+
+/* Shares input container */
+.shares-input-container {
+    margin-bottom: 20px;
+}
+
+.shares-input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.share-btn {
+    background-color: var(--main-button-color);
+    color: var(--main-button-textcolor);
+    border: none;
+    font-weight: 700;
+    font-size: 24px;
+    width: 38px;
+    height: 38px;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+}
+
+.share-btn:hover {
+    background-color: var(--main-button-hover);
+}
+
+.share-input {
+    width: 100px;
+    height: 38px;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border: 1px solid var(--field-border-color);
+    border-radius: var(--button-border-radius);
+    text-align: center;
+    box-sizing: border-box;
+
+}
+
+.share-input::-webkit-inner-spin-button,
+.share-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Purchase actions buttons container */
+.purchase-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 20px;
+    padding: 0 30px 20px 30px;
+}
+
+/* Modal overlay & content */
+.modal-overlay {
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 24px;
+    max-width: 600px;
+    width: 90%;
+    box-shadow: var(--element-shadow);
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

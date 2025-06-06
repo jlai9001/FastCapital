@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./investment-cards-by-businessID.css";
+import { base_url } from "../api";
 
 export default function InvestmentCardsByBusinessId({ businessId }) {
   const [investments, setInvestments] = useState(null);
@@ -10,7 +11,7 @@ export default function InvestmentCardsByBusinessId({ businessId }) {
   useEffect(() => {
     async function fetchInvestments() {
       try {
-        const res = await fetch(`http://localhost:8000/api/business_investments?business_id=${businessId}`, {
+        const res = await fetch(`${base_url}/api/business_investments?business_id=${businessId}`, {
           credentials: "include",
         });
         if (!res.ok) throw new Error("Investments not found");

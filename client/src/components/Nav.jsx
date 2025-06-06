@@ -3,6 +3,7 @@ import { NavLink, useNavigate} from "react-router-dom";
 import './Nav.css';
 import { useUser } from "../context/user-provider";
 import logo from "../assets/logo.svg"
+import { base_url } from "../api";
 
 export default function Nav() {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -14,7 +15,7 @@ export default function Nav() {
     };
 
     const handleLogout = async () => {
-        await fetch('http://localhost:8000/api/logout', {
+        await fetch(`${base_url}/api/logout`, {
             method: 'POST',
             credentials: 'include',
         });

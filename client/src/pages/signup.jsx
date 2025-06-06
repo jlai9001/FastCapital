@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import './signup.css';
 import coin from '../assets/coin.svg'
 import { useUser } from "../context/user-provider.jsx";
+import { base_url } from '../api'
 
 function SignupForm() {
     const navigate = useNavigate();
@@ -42,7 +43,7 @@ function SignupForm() {
 
     const { confirmPassword, ...submitData } = formData;
 
-    const res = await fetch("http://localhost:8000/api/signup", {
+    const res = await fetch(`${base_url}/api/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
