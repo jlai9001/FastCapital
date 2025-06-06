@@ -189,17 +189,6 @@
     cursor: not-allowed;
   }
 
-  .invest-now-button:hover,
-.buy-btn:hover:not(:disabled) {
-    background-color: var(--main-button-hover);
-    color: var(--main-button-hover-textcolor);
-}
-
-.buy-btn:disabled {
-    background-color: #cbd5e1;
-    cursor: not-allowed;
-}
-
 .login-message {
   margin-top: 10px;
   font-size: 16px;
