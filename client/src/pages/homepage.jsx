@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { NavLink,useNavigate } from 'react-router-dom'
 import HomePageHero from '../components/homepage_hero'
 import InvestmentCard from '../components/investment-card'
 import './homepage.css'
 import { base_url } from '../api'
+
 
 export default function Homepage(){
     const [featuredInvestments, setFeaturedInvestments] = useState([])
@@ -31,9 +32,7 @@ export default function Homepage(){
         fetchFeaturedInvestments();
     }, []);
 
-    const handleViewAllClick = () => {
-        navigate('/all-investments');
-    };
+
 
     return(
         <>
@@ -46,9 +45,12 @@ export default function Homepage(){
                         <h2>Featured Investments</h2>
                         </td>
                         <td style={{ textAlign: "right" }}>
-                        <button onClick={handleViewAllClick} className='view-all-button'>
-                            View All Investments
-                        </button>
+                        <NavLink
+                            className="home-nav-link"
+                            to='/signup'
+                        >
+                            Sign Up
+                        </NavLink>
                         </td>
                     </tr>
                     </tbody>
