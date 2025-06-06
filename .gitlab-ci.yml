@@ -34,7 +34,7 @@ build-front-end-job:
     - npm install
     - npm run lint || echo "Linting failed, but continuing..."
     - VITE_API_HOST="${VITE_API_HOST:-https://localhost:8000}" npm run build
-      # Update VITE_API_HOST once domain name has been purchased
+    - echo "/* /index.html 200" > dist/_redirects
   artifacts:
     paths:
       - client/dist/
