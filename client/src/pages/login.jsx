@@ -5,29 +5,43 @@ import { useNavigate } from 'react-router-dom';
 import { useUser } from '../context/user-provider.jsx';
 import { base_url } from '../api'
 
-function Error_Message() {
+function Blank_Message() {
   return (
-    <div className="Error_Message">INVALID EMAIL OR PASSWORD</div>
+    <div className="Error_Message">EMAIL AND PASSWORD REQUIRED</div>
+  );
+}
+
+function Invalid_Message() {
+  return (
+    <div className="Error_Message">INVALID EMAIL AND/OR PASSWORD</div>
+  );
+}
+
+function Failed_Message() {
+  return (
+    <div className="Error_Message">LOGIN FAILED, PLEASE TRY AGAIN.</div>
   );
 }
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showError, setShowError] = useState(false);
+  const [errorType, setErrorType] = useState(null); // 'empty_fields' | 'login_failed' | null
   const [loading, setLoading] = useState(false)
 
-  const { refreshUser } = useUser();   // useUser hook inside main Login component
+  const { refreshUser } = useUser();
   const navigate = useNavigate();
 
 
     const LoginClick = async () => {
     if (!email || !password) {
-      setShowError(true);
+      setErrorType('empty_fields');
       return;
     }
 
     setLoading(true);
+    setErrorType(null);
+
     try {
         const response = await fetch(`${base_url}/api/login`, {
           method: "POST",
@@ -42,7 +56,7 @@ function Login() {
 
         if (!response.ok || !data.success) {
             console.error("Login failed:", data.detail || "Unknown error");
-            setShowError(true);
+            setErrorType('invalid');
             return;
         }
 
@@ -52,7 +66,7 @@ function Login() {
 
     } catch (error) {
         console.error("Login error:", error);
-        setShowError(true);
+        setErrorType('login_failed');
     } finally {
         setLoading(false);
     }
@@ -72,7 +86,11 @@ function Login() {
           <div className ="login-form">
             <div className= "login-title">Login </div>
             <div className= "login-subtitle">Enter your login credentials below. </div>
-            {showError && <Error_Message />}
+
+            {errorType === 'empty_fields' && <Blank_Message />}
+            {errorType === 'invalid' && <Invalid_Message />}
+            {errorType === 'login_failed' && <Failed_Message />}
+
             <div className = "All_Fields_Container">
                 <div className= "Input_Container">
                 <div className = "field-label">Email</div>
