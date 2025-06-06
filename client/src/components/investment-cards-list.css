@@ -11,10 +11,11 @@
     padding: 1.5rem;
     margin-bottom: 1.5rem;
     border-radius: 1rem;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+    box-shadow: 0 15px 15px rgba(0,0,0,0.3);
     border: 1px solid #eee;
 
   }
+
 
 .investment-card h2 {
   margin: 0.25rem 0;
@@ -65,7 +66,7 @@ ul {
 }
 
 .view-details-button {
-  background-color: #2563eb;
+  background-color: var(--main_button_color);
   color: white;
   padding: 0.5rem 1rem;
   border-radius: 0.75rem;
@@ -74,7 +75,7 @@ ul {
   transition: background-color 0.2s ease;
 }
 .view-details-button:hover {
-  background-color: #1e40af;
+  background-color: var(--main_button_hover);
 }
 
 .card-grid{
