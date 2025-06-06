@@ -11,6 +11,7 @@ import "./purchase.css";
 import locationIcon from "../assets/location_icon.png";
 import urlIcon from "../assets/url_icon.png";
 import businessPlaceholder from "../assets/business_placeholder.png";
+import { base_url } from '../api'
 
 export default function Purchase() {
   const nav = useNavigate();
@@ -59,7 +60,7 @@ export default function Purchase() {
   if (!investment || !business) return <p>Data not found.</p>;
 
   const resolvedImageUrl = business.image_url
-        ? `http://localhost:8000/uploaded_images/${business.image_url}`
+        ? `${base_url}/uploaded_images/${business.image_url}`
         : businessPlaceholder;
 
   const totalSharesPurchased =

@@ -3,6 +3,7 @@ import './login.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../context/user-provider.jsx';
+import { base_url } from '../api'
 
 function Error_Message() {
   return (
@@ -28,7 +29,7 @@ function Login() {
 
     setLoading(true);
     try {
-        const response = await fetch("http://localhost:8000/api/login", {
+        const response = await fetch(`${base_url}/api/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

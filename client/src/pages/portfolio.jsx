@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import PendingInvestmentsCard from '../components/pending-investments-card'
 import UserInvestments from "../components/your-investments_chart";
 import './portfolio.css';
+import { base_url } from '../api'
 
 export default function Portfolio(){
   const [user, setUser] = useState(null);
@@ -14,7 +15,7 @@ export default function Portfolio(){
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/me", {
+        const res = await fetch(`${base_url}/api/me`, {
           credentials: "include",
         });
 
@@ -35,7 +36,7 @@ export default function Portfolio(){
 
     const fetchPastPurchases = async () => {
       try {
-        const result = await fetch(`http://localhost:8000/api/purchases?status=pending`,
+        const result = await fetch(`${base_url}/api/purchases?status=pending`,
           { credentials: "include" }
         );
         if(!result.ok) throw new Error("Failed to fetch past purchases");

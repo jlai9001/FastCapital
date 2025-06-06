@@ -1,5 +1,6 @@
 import './payment_modal.css'
 import React, { useState } from 'react';
+import { base_url } from '../api'
 
 function FieldContainer({ isVisible }) {
     if (!isVisible) return null;
@@ -65,7 +66,7 @@ function PaymentModal({ onClose, investment, shareAmount, userId }) {
         });
 
         try {
-          const response = await fetch(`http://localhost:8000/api/purchases`, {
+          const response = await fetch(`${base_url}/api/purchases`, {
             method: 'POST',
             headers,
             body
