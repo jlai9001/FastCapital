@@ -38,6 +38,14 @@ export default function Nav() {
                         <>
                             <NavLink
                                 className="nav-link"
+                                id="all-investments"
+                                to="/all-investments"
+                                style={({ isActive }) => isActive ? { textDecoration: 'underline', fontWeight: 'bold' } : {}}
+                            >
+                                All Investments
+                            </NavLink>
+                            <NavLink
+                                className="nav-link"
                                 id="portfolio"
                                 to="/portfolio"
                                 style={({ isActive }) => isActive ? { textDecoration: 'underline', fontWeight: 'bold' } : {}}
@@ -54,14 +62,6 @@ export default function Nav() {
                             </NavLink>
                         </>
                     )}
-                    <NavLink
-                        className="nav-link"
-                        id="all-investments"
-                        to="/all-investments"
-                        style={({ isActive }) => isActive ? { textDecoration: 'underline', fontWeight: 'bold' } : {}}
-                    >
-                        All Investments
-                    </NavLink>
                 </div>
 
                 {user ? (
@@ -106,17 +106,17 @@ export default function Nav() {
                 <div className="mobile-menu mobile-only">
                     {user && (
                         <>
-                    <NavLink className="nav-link" to="/portfolio" onClick={closeMobileMenu}>
-                        Portfolio
-                    </NavLink>
-                    <NavLink className="nav-link" to="/business-profile" onClick={closeMobileMenu}>
-                        Business Profile
-                    </NavLink>
-                    </>
+                            <NavLink className="nav-link" to="/all-investments" onClick={closeMobileMenu}>
+                                All Investments
+                            </NavLink>
+                            <NavLink className="nav-link" to="/portfolio" onClick={closeMobileMenu}>
+                                Portfolio
+                            </NavLink>
+                            <NavLink className="nav-link" to="/business-profile" onClick={closeMobileMenu}>
+                                Business Profile
+                            </NavLink>
+                        </>
                     )}
-                    <NavLink className="nav-link" to="/all-investments" onClick={closeMobileMenu}>
-                        All Investments
-                    </NavLink>
                     {user ? (
                         <button
                             className="nav-link mobile-only"
