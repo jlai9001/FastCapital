@@ -32,11 +32,9 @@ export default function InvestmentDetails() {
     if (investmentError || businessError) return <h1> {investmentError || businessError} </h1>
     if (!investment || !business) return <h1>Unable to retreive investment data.</h1>
 
-    const totalSharesPurchased = purchases?.reduce((sum, purchase) => sum + purchase.shares_purchased, 0) || 0;
-    const shares_available = investment.shares_available - totalSharesPurchased;
-    const uniqueInvestorIds = new Set(purchases?.map(p => p.user_id));
-    const number_of_investors = uniqueInvestorIds.size;
-    const percentSold = (totalSharesPurchased / investment.shares_available) * 100;
+    const totalSharesPurchased = purchases?.reduce((sum, p) => sum + p.shares_purchased, 0) || 0;
+    const totalShares = totalSharesPurchased + investment.shares_available;
+    const percentSold = (totalSharesPurchased / totalShares) * 100;
 
     const handlePurchaseClick = () => {
         navigate (`/investment-details/${investment.id}/purchase`);
@@ -44,13 +42,13 @@ export default function InvestmentDetails() {
 
     return (
         <div className="investment-details-page-container">
-        <div className="investment-details-container">
-          <div className="column column-1">
-            <div className="box image-wrapper">
+        <div className="investment-details-info-container">
+          <div className="investment-column investment-column-1">
+            <div className="box business-detail-image-wrapper">
             <img
               src={business.image_url || placeholder}
               alt={business.name}
-              className="business-image"
+              className="business-detail-image"
               onError={(e) => {
                 e.target.onerror = null;
                 e.target.src = placeholder;
@@ -58,20 +56,20 @@ export default function InvestmentDetails() {
             />
           </div>
           </div>
-          <div className="column column-2">
-            <div className="box">
-            <h2 className="business-detail-name">{business.name}</h2>
+          <div className="investment-column investment-column-2">
+            <div className="investment-box">
+            <p className="investment-detail-business-name">{business.name}</p>
             </div>
-            <div className="box">
-          <h4 className="location-text">
+            <div className="investment-box">
+          <p className="location-text">
             <img
               src={locationIcon}
               alt="Location Icon"
               className="location-icon"
             />
-            &nbsp; {business.city}, {business.state}</h4>
+            &nbsp; {business.city}, {business.state}</p>
             </div>
-            <div className="box">
+            <div className="investment-box">
             <p>
               <a
                 className="business-website"
@@ -90,45 +88,45 @@ export default function InvestmentDetails() {
             </p>
             </div>
             </div>
-            <div className="column column-3">
-            <div className="nested-column top">
-              <div className="nested-box top">
-              <h3 className="box-quantity">{shares_available}</h3>
+            <div className="investment-column investment-column-3">
+            <div className="investment-nested-column investment-top">
+              <div className="investment-nested-box investment-top">
+              <p className="investment-box-quantity">{investment.shares_available}</p>
             </div>
-              <div className="nested-box bottom">
-                <p className="business-detail-text">Shares Available</p>
+              <div className="investment-nested-box investment-bottom">
+                <p className="investment-business-detail-text">Shares Available</p>
               </div>
               </div>
-              <div className="nested-column bottom">
-                <div className="nested-box top">
-                <h3 className="box-quantity">{investment.min_investment}</h3>
+              <div className="investment-nested-column investment-bottom">
+                <div className="investment-nested-box investment-top">
+                <p className="investment-box-quantity">{investment.min_investment}</p>
                 </div>
-                <div className="nested-box bottom">
-                <p className="business-detail-text">Minimum Investment</p>
+                <div className="investment-nested-box investment-bottom">
+                <p className="investment-business-detail-text">Minimum Investment</p>
                 </div>
               </div>
             </div>
-            <div className="column column-4">
-            <div className="nested-column top">
-              <div className="nested-box top">
-              <h3 className="box-quantity">${investment.price_per_share}</h3>
+            <div className="investment-column investment-column-4">
+            <div className="investment-nested-column investment-top">
+              <div className="investment-nested-box investment-top">
+              <p className="investment-box-quantity">${investment.price_per_share}</p>
             </div>
-              <div className="nested-box bottom">
-                <p className="business-detail-text">Price/Share</p>
+              <div className="investment-nested-box investment-bottom">
+                <p className="investment-business-detail-text">Price/Share</p>
               </div>
               </div>
-              <div className="nested-column bottom">
-                <div className="nested-box top">
-                <h3 className="box-quantity">
+              <div className="investment-nested-column investment-bottom">
+                <div className="investment-nested-box investment-top">
+                <p className="investment-box-quantity">
                   {new Date(investment.expiration_date).toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric',
                     year: 'numeric',
                   })}
-                </h3>
+                </p>
                 </div>
-                <div className="nested-box bottom">
-                <p className="business-detail-text">Offer Expires</p>
+                <div className="investment-nested-box investment-bottom">
+                <p className="investment-business-detail-text">Offer Expires</p>
                 </div>
               </div>
             </div>
@@ -140,7 +138,7 @@ export default function InvestmentDetails() {
                 <div className="progress-bar">
                   <div className="progress-fill" style={{ width: `${percentSold}%` }}></div>
                 </div>
-                <p className="funded-percentage">{percentSold}%</p>
+                <p className="funded-percentage">{percentSold.toFixed(0)}%</p>
               </div>
               </div>
             <button onClick={handlePurchaseClick} className="invest-now-button">

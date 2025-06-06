@@ -64,19 +64,19 @@ export default function Purchase() {
         : businessPlaceholder;
 
   const totalSharesPurchased =
-    purchases?.reduce((sum, purchase) => sum + purchase.shares_purchased, 0) ||
-    0;
-  const shares_available = investment.shares_available - totalSharesPurchased;
-  const percentSold = (
-    (totalSharesPurchased / investment.shares_available) *
-    100
-  ).toFixed(1);
+    purchases?.reduce((sum, purchase) => sum + purchase.shares_purchased, 0) || 0;
+
+  const totalSharesIssued = totalSharesPurchased + investment.shares_available;
+
+  const percentSold = totalSharesIssued > 0
+    ? ((totalSharesPurchased / totalSharesIssued) * 100).toFixed(0)
+    : 0;
 
   function handleShareAmount(e) {
     if (!investment) return;
 
     let value = parseInt(e.target.value, 10);
-    const max = shares_available;
+    const max = investment.shares_available;
     const min = investment.min_investment;
 
     if (isNaN(value) || value < 0) value = 0;
@@ -156,7 +156,7 @@ export default function Purchase() {
         <div className="column column-3">
           <div className="nested-column top">
             <div className="nested-box top">
-              <h3 className="box-quantity">{shares_available}</h3>
+              <h3 className="box-quantity">{investment.shares_available}</h3>
             </div>
             <div className="nested-box bottom">
               <p className="business-detail-text">Shares Available</p>
