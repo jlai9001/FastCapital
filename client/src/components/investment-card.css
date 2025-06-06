@@ -24,7 +24,31 @@
   position: relative;
 }
 
+.pin-icon{
+  margin-right:17px;
+}
 
+.business-name-text{
+  font-size: 20px;
+  font-weight:bold;
+  margin-bottom: 12px;
+}
+
+.link-icon{
+  scale:1;
+  margin-right:10px;
+}
+
+.city-state-text{
+  font-size: 14px;
+
+}
+
+.website-text{
+   font-size: 14px;
+   color: var(--main_button_color);
+
+}
 
 /* Top section: small square image + optional label */
 .top-section {
@@ -58,12 +82,19 @@
   line-height: 1.2;
 }
 
+.business-name{
+   font-size: 14px;
+   margin-bottom: -250px;
+}
+
 /* Table */
 .investment-table {
+
   width: 100%;
   border-collapse: collapse;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
   font-size: 0.85rem;
+
 }
 
 .investment-table .label {
