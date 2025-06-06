@@ -69,10 +69,15 @@ export default function InvestmentCard({ investment }) {
     <img className="pin-icon" src={locationIcon}></img>
     {business.city}, {business.state}
   </div>
-  <div className="website-text">
+  <a
+  className="website-text"
+  href={business.website_url}
+  target="_blank"
+  rel="noopener noreferrer"
+  >
     <img className="link-icon" src={urlIcon}></img>
-    {business.website_url}
-  </div>
+    {business.website_url.replace(/^https?:\/\/(www\.)?/, '')}
+  </a>
 
   <table className="investment-table">
     <tbody>
