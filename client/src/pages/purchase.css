@@ -206,8 +206,15 @@
 
 .buy-btn:disabled {
     background-color: #cbd5e1;
+    color: #6b7280; /* Tailwind gray-500 */
     cursor: not-allowed;
 }
+
+.buy-btn:disabled:hover {
+    background-color: #d1d5dbd4; /* Tailwind gray-300 */
+    color: #6b7280; /* Tailwind gray-500 */
+    cursor: not-allowed;
+  }
 
 .cancel-btn {
     background-color: #ddd;
