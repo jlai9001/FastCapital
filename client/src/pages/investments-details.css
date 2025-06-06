@@ -178,7 +178,7 @@
   }
 
   .invest-now-button:disabled {
-    background-color: #d1d5db; /* Tailwind gray-300 */
+    background-color: #cbd5e1; /* Tailwind gray-300 */
     color: #6b7280; /* Tailwind gray-500 */
     cursor: not-allowed;
   }
@@ -188,6 +188,17 @@
     color: #6b7280; /* Tailwind gray-500 */
     cursor: not-allowed;
   }
+
+  .invest-now-button:hover,
+.buy-btn:hover:not(:disabled) {
+    background-color: var(--main-button-hover);
+    color: var(--main-button-hover-textcolor);
+}
+
+.buy-btn:disabled {
+    background-color: #cbd5e1;
+    cursor: not-allowed;
+}
 
 .login-message {
   margin-top: 10px;
