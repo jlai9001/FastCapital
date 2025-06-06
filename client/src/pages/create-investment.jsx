@@ -2,6 +2,7 @@ import './create-investment.css';
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { base_url } from '../api'
 
 export default function NewInvestment() {
     const [sharesAvailable, setSharesAvailable] = useState(0);
@@ -48,7 +49,7 @@ export default function NewInvestment() {
                 expiration_date: expirationDate
             });
 
-            const response = await fetch(`http://localhost:8000/api/investment`, {
+            const response = await fetch(`${base_url}/api/investment`, {
                 method: "POST",
                 headers,
                 body

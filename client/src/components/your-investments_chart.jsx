@@ -4,6 +4,7 @@ import './your-investments_chart.css';
 import { PieChart } from "@mui/x-charts/PieChart";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import placeholder from "../assets/business_placeholder.png";
+import { base_url } from "../api";
 
 const chartTheme = createTheme({
   components: {
@@ -82,7 +83,7 @@ const UserInvestments = () => {
   const [investments, setInvestments] = useState([]);
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/api/purchases?status=completed`, {
+      .get(`${base_url}/api/purchases?status=completed`, {
       withCredentials: true
       })
       .then(res => {

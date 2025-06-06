@@ -2,6 +2,7 @@ import React, { useState, useEffect} from "react";
 import { BarChart } from '@mui/x-charts/BarChart';
 import axios from "axios";
 import "./financials_table.css";
+import { base_url } from "../api";
 
 function FinancialDashboard({ businessId, refresh }) {
     const [tab, setTab] = useState('pl');
@@ -11,7 +12,7 @@ function FinancialDashboard({ businessId, refresh }) {
 
     useEffect(() => {
         axios
-            .get(`http://localhost:8000/api/financials/${businessId}`)
+            .get(`${base_url}/api/financials/${businessId}`)
             .then((res) => {
                 const data = res.data;
 

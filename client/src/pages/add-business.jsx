@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './add-business.css';
+import { base_url } from '../api'
 
 function AddBusiness() {
     const navigate = useNavigate();
@@ -54,7 +55,7 @@ function AddBusiness() {
       form.append("image", logoFile);
     }
 
-    const res = await fetch("http://localhost:8000/api/business", {
+    const res = await fetch(`${base_url}/api/business`, {
       method: "POST",
       body: form,
       credentials: "include",
