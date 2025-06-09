@@ -13,7 +13,7 @@ export default function PendingInvestmentsCard({ purchase, investment }){
     }
 
     const handleViewDetails = () => {
-        navigate(`/investment-details/${purchase.id}`)
+        navigate(`/investment-details/${investment.id}`)
     };
 
     const percentSold = investment && investment.shares_available
@@ -43,9 +43,9 @@ export default function PendingInvestmentsCard({ purchase, investment }){
                     </div>
             <div className='pending-info-column2'>
             <p className='pending-info-label'>Funded</p>
-            <div className="progress-bar-wrapper">
-                <div className="progress-bar-row">
-                    <div className="progress-bar">
+            <div className="pending-investment-progress-bar-wrapper">
+                <div className="pending-investment-progress-bar-row">
+                    <div className="pending-investment-progress-bar">
                         <div className="progress-fill" style={{ width: `${percentSold}%` }}></div>
                     </div>
                     <p className="funded-percentage">{percentSold}%</p>
@@ -55,7 +55,7 @@ export default function PendingInvestmentsCard({ purchase, investment }){
             <div className='pending-info-column3'>
                 <button
                 onClick={handleViewDetails}
-                className='action-button view-details-button'>
+                className='action-button view-all-button'>
                     View Details
                 </button>
             </div>

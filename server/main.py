@@ -29,6 +29,7 @@ from pydantic_schemas import (
     SignupCredentials,
     BusinessCreate,
     InvestmentWithPurchasesOut,
+    BusinessUpdate,
 )
 from pathlib import Path
 from typing import List
@@ -43,6 +44,7 @@ from db import (
     get_user_public_details,
     get_db,
     update_business_image,
+    update_business_details,
 )
 from db_models import PurchaseStatus, DBUser, DBBusiness, DBInvestment
 from auth import get_auth_user
@@ -59,13 +61,7 @@ app.mount(
 )
 
 origins = [
-    "http://localhost.tiangolo.com",
-    "https://localhost.tiangolo.com",
-    "http://localhost:5173",
-    "http://localhost:8080",
-    "http://localhost",
-    "http://localhost:8000",
-    "http://localhost:3000",
+    "http://localhost:5173"
 ]
 
 CORS_ORIGIN = os.environ.get("CORS_ORIGIN")
@@ -89,6 +85,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+image_base_url = os.environ.get("IMAGE_BASE_URL", "http://localhost:8000")
+
 
 
 @app.get("/api/investment/{investment_id}")
@@ -161,7 +160,8 @@ async def create_business_api(
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(image.file, buffer)
 
-        image_url = f"http://localhost:8000/uploaded_images/{filename}"
+        image_url = f'{image_base_url}/uploaded_images/{filename}'
+        # Add env variable api.fastcapital.site
 
         business_data = {
             "name": name,
@@ -201,7 +201,7 @@ async def upload_business_image(
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(image.file, buffer)
 
-        image_url = f"http://localhost:8000/uploaded_images/{filename}"
+        image_url = f"{image_base_url}/uploaded_images/{filename}"
 
         updated_url = update_business_image(
             business_id=business_id, user_id=current_user.id, image_url=image_url
@@ -217,6 +217,21 @@ async def upload_business_image(
         print(f"Unhandled error during image upload: {e}")
         raise HTTPException(status_code=500, detail="Failed to upload image.")
 
+@app.get("/api/business/me", response_model=BusinessOut)
+def get_my_business(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    current_user = get_auth_user(request)
+    """
+    Returns the business associated with the currently authenticated user.
+    If the user does not have a business, raises a 404 error.
+    If there is an error retrieving the business, raises a 500 error.
+    """
+    business = db.query(DBBusiness).filter(DBBusiness.user_id == current_user.id).first()
+    if not business:
+        raise HTTPException(status_code=404, detail="No business linked to this user")
+    return business
 
 @app.get("/api/business/{business_id}")
 async def get_business(business_id: int) -> BusinessOut:
@@ -229,6 +244,19 @@ async def get_business(business_id: int) -> BusinessOut:
         raise HTTPException(status_code=404, detail="Business not found")
     return business
 
+@app.put("/api/business/{business_id}", response_model=BusinessOut)
+async def put_business(
+    business_id: int,
+    updated_business: BusinessUpdate,
+    db: Session = Depends(get_db),
+    current_user: DBUser = Depends(get_auth_user),
+) -> BusinessOut:
+    return update_business_details(
+        db=db,
+        business_id=business_id,
+        user_id=current_user.id,
+        updated_data=updated_business,
+    )
 
 @app.get("/api/business")
 async def get_businesses() -> list[BusinessOut]:

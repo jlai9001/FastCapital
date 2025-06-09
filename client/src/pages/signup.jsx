@@ -14,7 +14,7 @@ function SignupForm() {
         confirmPassword: "",
   });
 
-  //const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("");
   const { refreshUser } = useUser();
   const [showPasswordError, setShowPasswordError] = useState(false);   // Jonathan
 

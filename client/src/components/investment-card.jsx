@@ -2,7 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getBusinesses } from "../hooks/getData";
 import "../components/investment-card.css";
+
+import locationIcon from "../assets/location_icon.png";
+import urlIcon from "../assets/link_vector.svg";
 import placeholder from "../assets/business_placeholder.png";
+
+
+
 
 export default function InvestmentCard({ investment }) {
   const [business, setBusiness] = useState(null);
@@ -56,35 +62,49 @@ export default function InvestmentCard({ investment }) {
         }}
       />
     </div>
-    <div className="business-info">
-      <h3>{business.name}</h3>
-      <h3>{business.city}, {business.state}</h3>
-      <h3 style={{ fontWeight: 'normal', fontSize: '0.85rem' }}>{business.website}</h3>
-    </div>
   </div>
+
+  <div className="business-name-text">{business.name}</div>
+  <div className="city-state-text">
+    <img className="pin-icon" src={locationIcon}></img>
+    {business.city}, {business.state}
+  </div>
+  <a
+  className="website-text"
+  href={business.website_url}
+  target="_blank"
+  rel="noopener noreferrer"
+  >
+    <img className="link-icon" src={urlIcon}></img>
+    {business.website_url.replace(/^https?:\/\/(www\.)?/, '')}
+  </a>
 
   <table className="investment-table">
     <tbody>
+
+
+
+      <tr>
+        <td className="label">Offer Expiry:</td>
+        <td>{new Date(investment.expiration_date).toLocaleDateString()}</td>
+      </tr>
       <tr>
         <td className="label">Shares Available:</td>
         <td>{investment.shares_available}</td>
       </tr>
       <tr>
-        <td className="label">Price per Share:</td>
-        <td>${investment.price_per_share}</td>
-      </tr>
-      <tr>
-        <td className="label">Minimum Investment:</td>
+        <td className="label">Min. Investment:</td>
         <td>{investment.min_investment} shares</td>
       </tr>
       <tr>
+        <td className="label">Price per Share:</td>
+        <td>${investment.price_per_share}</td>
+      </tr>
+      {/* <tr>
         <td className="label">Starts On:</td>
         <td>{new Date(investment.start_date).toLocaleDateString()}</td>
-      </tr>
-      <tr>
-        <td className="label">Ends On:</td>
-        <td>{new Date(investment.expiration_date).toLocaleDateString()}</td>
-      </tr>
+      </tr> */}
+
     </tbody>
   </table>
 
