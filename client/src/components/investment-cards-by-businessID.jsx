@@ -38,9 +38,12 @@ export default function InvestmentCardsByBusinessId({ businessId }) {
         const totalSharesPurchased = Array.isArray(investment.purchases)
         ? investment.purchases.reduce((sum, p) => sum + p.shares_purchased, 0)
         : 0;
-        const percentSold = investment.shares_available
-        ? ((totalSharesPurchased / investment.shares_available) * 100)
-        : "0.0";
+
+        const totalShares = totalSharesPurchased + investment.shares_available;
+
+        const percentSold = totalShares > 0
+          ? (totalSharesPurchased / totalShares) * 100
+        : 0;
         const uniqueInvestorIds = new Set(
           investment.purchases?.map((p) => p.user_id)
         );
@@ -80,7 +83,7 @@ export default function InvestmentCardsByBusinessId({ businessId }) {
                     <div className="progress-bar">
                       <div className="progress-fill" style={{ width: `${percentSold}%` }}></div>
                     </div>
-                    <p className="funded-percentage">{percentSold}%</p>
+                    <p className="funded-percentage">{percentSold.toFixed(0)}%</p>
                   </div>
                 </div>
               </div>

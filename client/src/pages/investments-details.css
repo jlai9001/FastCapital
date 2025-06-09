@@ -11,7 +11,7 @@
   box-sizing: border-box;
 }
 
-.investment-details-container {
+.investment-details-info-container {
   margin-top: 50px;
   display: flex;
   padding: 10px;
@@ -19,39 +19,40 @@
   box-sizing: border-box;
   }
 
-.column {
+.investment-column {
   display: flex;
   flex-direction: column;
   flex: 1;
   padding: 10px;
 }
 
-.column, .column-1 {
+.investment-column, .investment-column-1 {
   align-items: center;
 }
 
-.column-2 {
+.investment-column-2 {
   align-items: flex-start;
 }
 
-.box, .nested-box {
+.investment-box, .investment-nested-box {
   display: flex;
   justify-content: center;
 }
 
-.nested-column {
+.investment-nested-column {
   display: flex;
   flex-direction: column;
 }
 
-.nested-column, .top {
+.investment-nested-column, .investment-top {
   margin-top: 10px;
   margin-bottom: 3px;
 }
 
-.business-detail-name {
+.investment-detail-business-name {
   font-weight: 700;
   font-size: 36px;
+  margin: 5px;
 }
 
 .location-icon {
@@ -83,29 +84,30 @@
   text-decoration: none;
 }
 
-.image-wrapper {
+.business-detail-image-wrapper{
   width: 180px;
   height: 180px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f9f9f9;
 }
 
-.business-image {
+.business-detail-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   }
 
-.box-quantity {
+.investment-box-quantity {
   font-weight: 600;
+  margin: 5px;
 }
 
-.business-detail-text {
+.investment-business-detail-text {
   color: #64748B;
   font-weight: 400;
-  font-size: 16px;;
+  font-size: 16px;
+  margin: 5px;
 }
 
 .funded-percentage {
@@ -118,7 +120,8 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
-  margin-top: 10px;
+  text-align: center;
+  margin-top: 15px;
   margin-left: 30px;
   margin-right: 30px;
 }
@@ -161,3 +164,43 @@
   display: flex;
   justify-content: center;
   }
+
+  .invest-now-button {
+    padding: 10px 20px;
+    background-color: var(--main_button_color); /* Use your defined variable or a default */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .invest-now-button:disabled {
+    background-color: #cbd5e1; /* Tailwind gray-300 */
+    color: #6b7280; /* Tailwind gray-500 */
+    cursor: not-allowed;
+  }
+
+  .invest-now-button:disabled:hover {
+    background-color: #d1d5dbd4; /* Tailwind gray-300 */
+    color: #6b7280; /* Tailwind gray-500 */
+    cursor: not-allowed;
+  }
+
+.login-message {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #374151; /* Tailwind's gray-700 */
+  text-align: center;
+  }
+
+
+.login-link{
+  color: var(--main_button_color);
+}
+
+.login-link:hover{
+  color: var(--main_button_hover);
+}
