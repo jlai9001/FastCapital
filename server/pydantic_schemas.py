@@ -1,4 +1,5 @@
-from pydantic import BaseModel, EmailStr, validator, ConfigDict
+from db_models import PurchaseStatus
+from pydantic import BaseModel, EmailStr, ConfigDict, field_validator
 from datetime import date, datetime
 from typing import Optional, List
 import enum
@@ -83,7 +84,6 @@ class InvestmentOut(InvestmentCreate):
     id: int
     featured: bool
 
-
 class PurchaseCreate(BaseModel):
     investment_id: int
     user_id: int
@@ -91,17 +91,9 @@ class PurchaseCreate(BaseModel):
     cost_per_share: float
     purchase_date: datetime
 
-
-class PurchaseStatus(str, enum.Enum):
-    pending = "pending"
-    completed = "completed"
-    expired = "expired"
-
-
 class PurchaseOut(PurchaseCreate):
     id: int
     status: PurchaseStatus
-
 
 class PurchaseSummaryOut(BaseModel):
     id: int
@@ -127,7 +119,6 @@ class EnrichedPurchaseOut(BaseModel):
     business_image_url: Optional[str] = None
     business_website_url: str
 
-
 class FinancialType(str, enum.Enum):
     income = "income"
     expense = "expense"
@@ -141,7 +132,8 @@ class FinancialsCreate(BaseModel):
     amount: float
     type: FinancialType
 
-    @validator("date", pre=True)
+    @field_validator("date", mode="before")
+    @classmethod
     def parse_mm_yyyy(cls, v):
         if isinstance(v, str):
             # validates format MM/YYYY

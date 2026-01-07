@@ -1,14 +1,18 @@
+from secrets import token_urlsafe
+from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi import (
-    FastAPI,
-    HTTPException,
-    Query,
+    Response,
     Request,
+    HTTPException,
+    FastAPI,
+    Query,
     Depends,
     status,
     UploadFile,
     File,
     Form,
 )
+
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -41,18 +45,23 @@ from db import (
     create_business,
     invalidate_session,
     validate_email_password,
-    get_user_public_details,
     get_db,
     update_business_image,
     update_business_details,
 )
-from db_models import PurchaseStatus, DBUser, DBBusiness, DBInvestment
+from db_models import PurchaseStatus, DBBusiness, DBInvestment
 from auth import get_auth_user
 from rich import print
 
+# add ENV detection
+ENV = os.environ.get("ENV","development")
 
-
-app = FastAPI()
+# disable docs for production
+app = FastAPI(
+    docs_url=None if ENV == "production" else "/docs",
+    redoc_url=None if ENV == "production" else "/redoc",
+    openapi_url=None if ENV == "production" else "/openapi.json",
+)
 
 UPLOAD_DIR = "uploaded_images"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
@@ -70,25 +79,87 @@ if CORS_ORIGIN:
     origins.append(CORS_ORIGIN)
 
 
+SESSION_SECRET = os.environ.get("SESSION_SECRET")
+
+if ENV == "production" and not SESSION_SECRET:
+    raise RuntimeError("SESSION_SECRET must be set in production")
+
+# Hardened SessionMiddleWare (Updated - 2026)
 app.add_middleware(
     SessionMiddleware,
-    secret_key="some-random-string",
+    secret_key=SESSION_SECRET or "dev-secret",
     session_cookie="session",
-    max_age=60 * 60 * 2,  # 2 hours in seconds
-    https_only=True if CORS_ORIGIN else False
+    max_age=60 * 30,  # 30 minutes (matches DB session)
+    same_site="lax",
+    https_only=ENV == "production",
 )
 
+# Tighten CORS(cookie-safe) (Updated - 2026)
+FRONTEND_ORIGIN = os.environ.get("CORS_ORIGIN", "http://localhost:5173")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=[FRONTEND_ORIGIN],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allow_headers=["Content-Type", "X-CSRF-Token"],
 )
 
 image_base_url = os.environ.get("IMAGE_BASE_URL", "http://localhost:8000")
 
+# CSRF middleware
 
+SAFE_METHODS = {"GET", "HEAD", "OPTIONS"}
+
+class CSRFMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        # 1️⃣ SAFE METHODS: allow, but seed CSRF cookie if missing
+        if request.method in SAFE_METHODS:
+            response = await call_next(request)
+
+            if "csrf_token" not in request.cookies:
+                token = token_urlsafe(32)
+                response.set_cookie(
+                    "csrf_token",
+                    token,
+                    httponly=False,              # must be readable by frontend
+                    secure=ENV == "production", # HTTPS only in prod
+                    samesite="lax",              # CSRF-safe default
+                )
+
+            return response
+
+        # 2️⃣ Auth bootstrap routes: allow without CSRF
+        if request.url.path in {"/api/login", "/api/signup", "/api/logout"}:
+            return await call_next(request)
+
+        # 3️⃣ ENFORCE CSRF on unsafe methods
+        csrf_cookie = request.cookies.get("csrf_token")
+        csrf_header = request.headers.get("X-CSRF-Token")
+
+        if not csrf_cookie or not csrf_header or csrf_cookie != csrf_header:
+            raise HTTPException(
+                status_code=403,
+                detail="CSRF validation failed"
+            )
+
+        return await call_next(request)
+
+# Register CSRF middleware
+app.add_middleware(CSRFMiddleware)
+
+
+# Add CSRF token endpoint
+@app.get("/api/csrf")
+def get_csrf_token(response: Response):
+    token = token_urlsafe(32)
+    response.set_cookie(
+        "csrf_token",
+        token,
+        httponly=False,
+        secure=ENV == "production",
+        samesite="lax",
+    )
+    return {"csrf_token": token}
 
 @app.get("/api/investment/{investment_id}")
 async def get_investment(investment_id: int) -> InvestmentOut:
@@ -104,11 +175,9 @@ async def get_investment(investment_id: int) -> InvestmentOut:
 
 @app.get("/api/business_investments", response_model=List[InvestmentWithPurchasesOut])
 async def get_investments_by_business(
-    business_id: int = Query(
-        ..., description="ID of the business to fetch investments for"
-    ),
+    business_id: int = Query(...),
     db: Session = Depends(get_db),
-    current_user: DBUser = Depends(get_auth_user),
+    current_user: UserPublicDetails = Depends(get_auth_user),
 ):
     """
     Fetches all investments for a specific business.
@@ -147,7 +216,7 @@ async def create_business_api(
     city: str = Form(...),
     state: str = Form(...),
     postal_code: str = Form(...),
-    current_user: DBUser = Depends(get_auth_user),
+    current_user: UserPublicDetails = Depends(get_auth_user),
 ) -> BusinessOut:
     """
     Create a new business with the provided details.
@@ -186,7 +255,7 @@ async def create_business_api(
 async def upload_business_image(
     business_id: int,
     image: UploadFile = File(...),
-    current_user: DBUser = Depends(get_auth_user),
+    current_user: UserPublicDetails = Depends(get_auth_user),
 ):
     """
     Uploads an image for a specific business.
@@ -218,19 +287,20 @@ async def upload_business_image(
         raise HTTPException(status_code=500, detail="Failed to upload image.")
 
 @app.get("/api/business/me", response_model=BusinessOut)
-def get_my_business(
-    request: Request,
+def get_my_business_by_request(
+    current_user: UserPublicDetails = Depends(get_auth_user),
     db: Session = Depends(get_db),
 ):
-    current_user = get_auth_user(request)
-    """
-    Returns the business associated with the currently authenticated user.
-    If the user does not have a business, raises a 404 error.
-    If there is an error retrieving the business, raises a 500 error.
-    """
-    business = db.query(DBBusiness).filter(DBBusiness.user_id == current_user.id).first()
+    business = (
+        db.query(DBBusiness)
+        .filter(DBBusiness.user_id == current_user.id)
+        .first()
+    )
     if not business:
-        raise HTTPException(status_code=404, detail="No business linked to this user")
+        raise HTTPException(
+            status_code=404,
+            detail="No business linked to this user"
+        )
     return business
 
 @app.get("/api/business/{business_id}")
@@ -249,7 +319,7 @@ async def put_business(
     business_id: int,
     updated_business: BusinessUpdate,
     db: Session = Depends(get_db),
-    current_user: DBUser = Depends(get_auth_user),
+    current_user: UserPublicDetails = Depends(get_auth_user),
 ) -> BusinessOut:
     return update_business_details(
         db=db,
@@ -258,12 +328,8 @@ async def put_business(
         updated_data=updated_business,
     )
 
-@app.get("/api/business")
-async def get_businesses() -> list[BusinessOut]:
-    """
-    Fetches all businesses.
-    Returns a list of businesses.
-    """
+@app.get("/api/business", response_model=List[BusinessOut])
+async def get_businesses():
     return db.get_businesses()
 
 
@@ -430,24 +496,18 @@ async def get_me(
 
 @app.get("/api/my_business", response_model=BusinessOut)
 async def get_my_business(
-    current_user: DBUser = Depends(get_auth_user),
+    current_user: UserPublicDetails = Depends(get_auth_user),
     db: Session = Depends(get_db),
 ):
-    """
-    Returns the business associated with the currently authenticated user.
-    If the user does not have a business, raises a 404 error.
-    If there is an error retrieving the business, raises a 500 error.
-    """
-    try:
-        business = (
-            db.query(DBBusiness).filter(DBBusiness.user_id == current_user.id).first()
-        )
-    except Exception as e:
-        print(f"Error retrieving business: {e}")
-        raise HTTPException(status_code=500, detail="Internal Server Error")
+    business = (
+        db.query(DBBusiness)
+        .filter(DBBusiness.user_id == current_user.id)
+        .first()
+    )
 
     if not business:
         raise HTTPException(status_code=404, detail="Business not found")
+
     return business
 
 

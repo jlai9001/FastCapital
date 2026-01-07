@@ -22,9 +22,9 @@ from pydantic_schemas import (
     PurchaseCreate,
     PurchaseOut,
     EnrichedPurchaseOut,
-    PurchaseStatus,
     UserPublicDetails,
     BusinessCreate,
+    BusinessUpdate
 )
 import os
 
@@ -177,7 +177,7 @@ def update_business_details(
     db: Session,
     business_id: int,
     user_id: int,
-    updated_data: BusinessCreate,
+    updated_data: BusinessUpdate,
 ) -> DBBusiness:
     """
     Update the details of an existing business. Ensures the user is authorized to make the update.
