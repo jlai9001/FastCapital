@@ -1,5 +1,11 @@
+import enum
+
+class PurchaseStatus(str, enum.Enum):
+    pending = "pending"
+    completed = "completed"
+    expired = "expired"
+
 from enums import FinancialType
-from db_models import PurchaseStatus
 from pydantic import BaseModel, EmailStr, ConfigDict, field_validator
 from datetime import date, datetime
 from typing import Optional, List
