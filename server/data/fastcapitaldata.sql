@@ -74,23 +74,7 @@ VALUES
     ('John Smith', 'jsmith@email.com', '$2b$12$B.u84R0iEfuKtPFW2r13DOhAu6iHKm2erZD0icf8NjYCIVDW0L.RW'), --pass:admin123
     ('Jane Doe', 'jdoe@email.com', '$2b$12$APvM26Vbbc8fvxFfrIGAKudul24SGcuA7znlfTxrUcr8rW9zk7WF2'), --pass: demo2024
     ('Alice Johnson', 'alicej@email.com', '$2b$12$IWnYtBj9p2wzpR9A8cn5Sets.dh9zBCbe.GSMRUydmURrodxt/UIq'), --pas: dummypass
-    ('Bob Williams', 'bwilliams@email.com', 'password'),
-    ('Carol Taylor', 'ctaylor@email.com', 'password'),
-    ('David Brown', 'dbrown@email.com', 'password'),
-    ('Emily Davis', 'edavis@email.com', 'password'),
-    ('Frank Miller', 'fmiller@email.com', 'password'),
-    ('Grace Wilson', 'gwilson@email.com', 'password'),
-    ('Henry Moore', 'hmoore@email.com', 'password'),
-    ('Isla Thomas', 'ithomas@email.com', 'password'),
-    ('Jack Lee', 'jlee@email.com', 'password'),
-    ('Karen Hall', 'khall@email.com', 'password'),
-    ('Liam Young', 'lyoung@email.com', 'password'),
-    ('Mia King', 'mking@email.com', 'password'),
-    ('Noah Wright', 'nwright@email.com', 'password'),
-    ('Olivia Scott', 'oscott@email.com', 'password'),
-    ('Paul Green', 'pgreen@email.com', 'password'),
-    ('Quinn Adams', 'qadams@email.com', 'password'),
-    ('Ruby Baker', 'rbaker@email.com', 'password');
+
 
 INSERT INTO businesses(name, user_id, image_url, website_url, address1, address2, city, state, postal_code)
 VALUES
