@@ -1,21 +1,15 @@
 from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    Float,
     ForeignKey,
     Date,
     DateTime,
     Boolean,
     Enum,
 )
-from sqlalchemy.orm import declarative_base, mapped_column, Mapped, relationship
-from sqlalchemy.sql import func
-from datetime import datetime
+from sqlalchemy.orm import declarative_base, mapped_column, Mapped
+from datetime import datetime as DateTimeType
+from datetime import date as DateType
 from enums import FinancialType
-
 import enum
-
 
 Base = declarative_base()
 
@@ -28,60 +22,71 @@ class PurchaseStatusEnum(str, enum.Enum):
 
 class DBUser(Base):
     __tablename__ = "users"
+
     id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
     name: Mapped[str] = mapped_column(nullable=False)
     email: Mapped[str] = mapped_column(unique=True, nullable=False)
     hashed_password: Mapped[str] = mapped_column(nullable=False)
-    session_token: Mapped[str] = mapped_column(nullable=True)
-    session_expires_at: Mapped[datetime] = mapped_column(nullable=True)
+    session_token: Mapped[str | None] = mapped_column(nullable=True)
+    session_expires_at: Mapped[DateTimeType | None] = mapped_column(
+        DateTime, nullable=True
+    )
 
 
 class DBBusiness(Base):
     __tablename__ = "businesses"
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    image_url = Column(String)
-    website_url = Column(String)
-    address1 = Column(String)
-    address2 = Column(String)
-    city = Column(String)
-    state = Column(String)
-    postal_code = Column(String)
+
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    name: Mapped[str] = mapped_column(nullable=False)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    image_url: Mapped[str | None] = mapped_column(nullable=True)
+    website_url: Mapped[str | None] = mapped_column(nullable=True)
+    address1: Mapped[str | None] = mapped_column(nullable=True)
+    address2: Mapped[str | None] = mapped_column(nullable=True)
+    city: Mapped[str | None] = mapped_column(nullable=True)
+    state: Mapped[str | None] = mapped_column(nullable=True)
+    postal_code: Mapped[str | None] = mapped_column(nullable=True)
 
 
 class DBInvestment(Base):
     __tablename__ = "investments"
-    id = Column(Integer, primary_key=True, index=True)
-    business_id = Column(Integer, ForeignKey("businesses.id"))
-    shares_available = Column(Integer)
-    price_per_share = Column(Float)
-    min_investment = Column(Integer)
-    start_date = Column(DateTime(timezone=True), default=func.now())
-    expiration_date = Column(DateTime(timezone=True), default=func.now())
-    featured = Column(Boolean, default=False)
-    purchases = relationship("DBPurchase", back_populates="investment")
+
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    business_id: Mapped[int] = mapped_column(ForeignKey("businesses.id"))
+    shares_available: Mapped[int] = mapped_column(nullable=False)
+    price_per_share: Mapped[float] = mapped_column(nullable=False)
+    min_investment: Mapped[int] = mapped_column(nullable=False)
+    start_date: Mapped[DateTimeType] = mapped_column(DateTime, nullable=False)
+    expiration_date: Mapped[DateTimeType] = mapped_column(DateTime, nullable=False)
+    featured: Mapped[bool] = mapped_column(Boolean, default=False)
+
 
 class DBPurchase(Base):
     __tablename__ = "purchases"
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    investment_id = Column(Integer, ForeignKey("investments.id"))
-    user_id = Column(Integer, ForeignKey("users.id"))
-    shares_purchased = Column(Integer)
-    cost_per_share = Column(Float)
-    purchase_date = Column(DateTime(timezone=True), server_default=func.now())
-    status = Column(
-        Enum(PurchaseStatusEnum, name="purchase_status"),
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    investment_id: Mapped[int] = mapped_column(ForeignKey("investments.id"))
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    shares_purchased: Mapped[int] = mapped_column(nullable=False)
+    cost_per_share: Mapped[float] = mapped_column(nullable=False)
+    purchase_date: Mapped[DateTimeType] = mapped_column(
+        DateTime, nullable=False
+    )
+    status: Mapped[PurchaseStatusEnum] = mapped_column(
+        Enum(PurchaseStatusEnum),
         default=PurchaseStatusEnum.pending,
         nullable=False,
     )
-    investment = relationship("DBInvestment", back_populates="purchases")
 
 
 class DBFinancials(Base):
     __tablename__ = "financials"
-    id = Column(Integer, primary_key=True, index=True)
-    business_id = Column(Integer, ForeignKey("businesses.id"))
-    date = Column(Date, nullable=False)
-    amount = Column(Float)
-    type = Column(Enum(FinancialType), nullable=False)
+
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    business_id: Mapped[int] = mapped_column(ForeignKey("businesses.id"))
+    date: Mapped[DateType] = mapped_column(Date, nullable=False)
+    amount: Mapped[float] = mapped_column(nullable=False)
+    type: Mapped[FinancialType] = mapped_column(
+        Enum(FinancialType),
+        nullable=False,
+    )
