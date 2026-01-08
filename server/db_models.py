@@ -4,6 +4,7 @@ from sqlalchemy import (
     String,
     Float,
     ForeignKey,
+    Date,
     DateTime,
     Boolean,
     Enum,
@@ -11,8 +12,10 @@ from sqlalchemy import (
 from sqlalchemy.orm import declarative_base, mapped_column, Mapped, relationship
 from sqlalchemy.sql import func
 from datetime import datetime
+from enums import FinancialType
+
 import enum
-from pydantic_schemas import FinancialType
+
 
 Base = declarative_base()
 
@@ -57,15 +60,7 @@ class DBInvestment(Base):
     start_date = Column(DateTime(timezone=True), default=func.now())
     expiration_date = Column(DateTime(timezone=True), default=func.now())
     featured = Column(Boolean, default=False)
-
     purchases = relationship("DBPurchase", back_populates="investment")
-
-
-class PurchaseStatus(str, enum.Enum):
-    pending = "pending"
-    completed = "completed"
-    expired = "expired"
-
 
 class DBPurchase(Base):
     __tablename__ = "purchases"
@@ -76,7 +71,7 @@ class DBPurchase(Base):
     cost_per_share = Column(Float)
     purchase_date = Column(DateTime(timezone=True), server_default=func.now())
     status = Column(
-        Enum(PurchaseStatusEnum, name="purchase_status", create_type=False),
+        Enum(PurchaseStatusEnum, name="purchase_status"),
         default=PurchaseStatusEnum.pending,
         nullable=False,
     )
@@ -87,6 +82,6 @@ class DBFinancials(Base):
     __tablename__ = "financials"
     id = Column(Integer, primary_key=True, index=True)
     business_id = Column(Integer, ForeignKey("businesses.id"))
-    date = Column(DateTime(timezone=True), server_default=func.now())
+    date = Column(Date, nullable=False)
     amount = Column(Float)
     type = Column(Enum(FinancialType), nullable=False)
