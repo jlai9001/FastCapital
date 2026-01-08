@@ -49,7 +49,8 @@ from db import (
     update_business_image,
     update_business_details,
 )
-from db_models import PurchaseStatusEnum, DBBusiness, DBInvestment
+from db_models import DBBusiness, DBInvestment
+from pydantic_schemas import PurchaseStatus
 from auth import get_auth_user
 from rich import print
 
