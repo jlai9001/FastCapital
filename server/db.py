@@ -7,7 +7,7 @@ from db_models import (
     DBInvestment,
     DBFinancials,
     DBPurchase,
-    PurchaseStatus,
+    PurchaseStatusEnum,
     DBUser,
 )
 import bcrypt
