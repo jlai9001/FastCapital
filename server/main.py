@@ -49,7 +49,7 @@ from db import (
     update_business_image,
     update_business_details,
 )
-from db_models import PurchaseStatus, DBBusiness, DBInvestment
+from db_models import PurchaseStatusEnum, DBBusiness, DBInvestment
 from auth import get_auth_user
 from rich import print
 
