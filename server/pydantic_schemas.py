@@ -89,6 +89,7 @@ class InvestmentCreate(BaseModel):
 class InvestmentOut(InvestmentCreate):
     id: int
     featured: bool
+    model_config = ConfigDict(from_attributes=True)
 
 class PurchaseCreate(BaseModel):
     investment_id: int
@@ -100,6 +101,7 @@ class PurchaseCreate(BaseModel):
 class PurchaseOut(PurchaseCreate):
     id: int
     status: PurchaseStatus
+    model_config = ConfigDict(from_attributes=True)
 
 class PurchaseSummaryOut(BaseModel):
     id: int
@@ -124,6 +126,7 @@ class EnrichedPurchaseOut(BaseModel):
     business_state: str
     business_image_url: Optional[str] = None
     business_website_url: str
+    model_config = ConfigDict(from_attributes=True)
 
 class FinancialsCreate(BaseModel):
     business_id: int
@@ -146,3 +149,4 @@ class FinancialsCreate(BaseModel):
 
 class FinancialsOut(FinancialsCreate):
     id: int
+    model_config = ConfigDict(from_attributes=True)
