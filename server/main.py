@@ -59,7 +59,7 @@ ENV = os.environ.get("ENV","development")
 
 FRONTEND_ORIGIN = os.environ.get(
     "CORS_ORIGIN",
-    "http://localhost:5173"
+    "http://localhost:5173" if ENV != "production" else None
 )
 
 # disable docs for production
@@ -68,6 +68,9 @@ app = FastAPI(
     redoc_url=None if ENV == "production" else "/redoc",
     openapi_url=None if ENV == "production" else "/openapi.json",
 )
+
+if not FRONTEND_ORIGIN:
+    raise RuntimeError("CORS_ORIGIN env var must be set")
 
 # =========================
 # CORS (MUST COME FIRST)
