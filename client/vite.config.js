@@ -1,23 +1,24 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+
+  // Local dev only (safe to keep)
   server: {
     proxy: {
-      'api': {
+      '/api': {
         target: 'http://localhost:8000',
         changeOrigin: true,
         secure: false,
-      }
-    }
+      },
+    },
   },
 
-  // 👇 THIS IS THE FIX FOR RENDER
+  // REQUIRED for Render (this fixes your error)
   preview: {
     allowedHosts: [
-      'fastcapital-client.onrender.com'
-    ]
-  }
+      'fastcapital-client.onrender.com',
+    ],
+  },
 })

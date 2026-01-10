@@ -57,6 +57,11 @@ from rich import print
 # add ENV detection
 ENV = os.environ.get("ENV","development")
 
+FRONTEND_ORIGIN = os.environ.get(
+    "CORS_ORIGIN",
+    "http://localhost:5173"
+)
+
 # disable docs for production
 app = FastAPI(
     docs_url=None if ENV == "production" else "/docs",
@@ -64,21 +69,22 @@ app = FastAPI(
     openapi_url=None if ENV == "production" else "/openapi.json",
 )
 
+# =========================
+# CORS (MUST COME FIRST)
+# =========================
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[FRONTEND_ORIGIN],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 UPLOAD_DIR = "uploaded_images"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 app.mount(
     "/uploaded_images", StaticFiles(directory="uploaded_images"), name="uploaded_images"
 )
-
-origins = [
-    "http://localhost:5173"
-]
-
-CORS_ORIGIN = os.environ.get("CORS_ORIGIN")
-
-if CORS_ORIGIN:
-    origins.append(CORS_ORIGIN)
-
 
 SESSION_SECRET = os.environ.get("SESSION_SECRET")
 
@@ -91,18 +97,8 @@ app.add_middleware(
     secret_key=SESSION_SECRET or "dev-secret",
     session_cookie="session",
     max_age=60 * 30,  # 30 minutes (matches DB session)
-    same_site="lax",
-    https_only=ENV == "production",
-)
-
-# Tighten CORS(cookie-safe) (Updated - 2026)
-FRONTEND_ORIGIN = os.environ.get("CORS_ORIGIN", "http://localhost:5173")
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[FRONTEND_ORIGIN],
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
-    allow_headers=["Content-Type", "X-CSRF-Token"],
+    same_site="none",
+    https_only=True,
 )
 
 image_base_url = os.environ.get("IMAGE_BASE_URL", "http://localhost:8000")
