@@ -1,13 +1,20 @@
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import react from '@vitejs/plugin-react-swc'
 
+// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
-    allowedHosts: [
-      'fastcapital-client.onrender.com'
-    ]
+    proxy: {
+      'api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        secure: false,
+      }
+    }
   },
+
+  // 👇 THIS IS THE FIX FOR RENDER
   preview: {
     allowedHosts: [
       'fastcapital-client.onrender.com'
