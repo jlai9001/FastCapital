@@ -51,7 +51,7 @@ from db import (
 )
 from db_models import DBBusiness, DBInvestment
 from pydantic_schemas import PurchaseStatus
-from auth import get_auth_user
+from auth import get_auth_user,get_optional_auth_user
 from rich import print
 
 # add ENV detection
@@ -258,7 +258,7 @@ async def upload_business_image(
     Uploads an image for a specific business.
     The image will be saved to the local storage and its URL will be updated
     in the business record.
-    Raises HTTP exceptions for various error conditions.
+    Rais for various error conditions.
     """
     try:
 
@@ -476,16 +476,13 @@ async def signup(credentials: SignupCredentials, request: Request) -> SuccessRes
     return SuccessResponse(success=True)
 
 
-@app.get("/api/me", response_model=UserPublicDetails)
-async def get_me(
-    current_user: UserPublicDetails = Depends(get_auth_user),
-) -> UserPublicDetails:
-    """
-    Returns the currently authenticated user's public details.
-    If the user is not authenticated, FastAPI will automatically return 401.
-    """
-    return current_user
+from typing import Optional
 
+@app.get("/api/me", response_model=Optional[UserPublicDetails])
+async def get_me(
+    current_user: Optional[UserPublicDetails] = Depends(get_optional_auth_user),
+):
+    return current_user
 
 @app.get("/api/my_business", response_model=BusinessOut)
 async def get_my_business(

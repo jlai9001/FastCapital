@@ -32,3 +32,21 @@ def get_auth_user(request: Request) -> UserPublicDetails:
         )
 
     return user
+
+
+def get_optional_auth_user(request: Request) -> UserPublicDetails | None:
+    """
+    Optional authentication.
+    Returns user if logged in, otherwise returns None.
+    NEVER raises 401.
+    """
+    email = request.session.get("email")
+    session_token = request.session.get("session_token")
+
+    if not email or not session_token:
+        return None
+
+    if not db.validate_session(email, session_token):
+        return None
+
+    return db.get_user_public_details(email)
