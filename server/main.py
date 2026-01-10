@@ -112,8 +112,13 @@ SAFE_METHODS = {"GET", "HEAD", "OPTIONS"}
 
 class CSRFMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
-        # 1️⃣ SAFE METHODS: allow, but seed CSRF cookie if missing
-        if request.method in SAFE_METHODS:
+
+        # ✅ FIX: allow CORS preflight immediately
+        if request.method == "OPTIONS":
+            return Response(status_code=200)
+
+        # SAFE read-only methods
+        if request.method in {"GET", "HEAD"}:
             response = await call_next(request)
 
             if "csrf_token" not in request.cookies:
@@ -121,17 +126,16 @@ class CSRFMiddleware(BaseHTTPMiddleware):
                 response.set_cookie(
                     "csrf_token",
                     token,
-                    httponly=False,              # must be readable by frontend
-                    secure=ENV == "production", # HTTPS only in prod
-                    samesite="lax",              # CSRF-safe default
+                    httponly=False,
+                    secure=ENV == "production",
+                    samesite="lax",
                 )
 
             return response
 
-        # 2️⃣ Auth bootstrap routes: allow without CSRF
+        # Auth bootstrap routes
         if request.url.path in {"/api/login", "/api/signup", "/api/logout"}:
             return await call_next(request)
-
         # 3️⃣ ENFORCE CSRF on unsafe methods
         csrf_cookie = request.cookies.get("csrf_token")
         csrf_header = request.headers.get("X-CSRF-Token")
