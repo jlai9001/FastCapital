@@ -185,7 +185,6 @@ async def get_investment(investment_id: int) -> InvestmentOut:
 async def get_investments_by_business(
     business_id: int = Query(...),
     db: Session = Depends(get_db),
-    current_user: Optional[UserPublicDetails] = Depends(get_optional_auth_user),
 ):
     investments = (
         db.query(DBInvestment)
@@ -194,7 +193,21 @@ async def get_investments_by_business(
         .all()
     )
 
-    return investments
+    result = []
+    for inv in investments:
+        result.append({
+            **InvestmentOut.model_validate(inv).model_dump(),
+            "purchases": [
+                {
+                    "id": p.id,
+                    "shares_purchased": p.shares_purchased,
+                }
+                for p in inv.purchases
+            ]
+        })
+
+    return result
+
 
 
 @app.get("/api/investment")
