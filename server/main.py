@@ -77,7 +77,10 @@ if not FRONTEND_ORIGIN:
 # =========================
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[FRONTEND_ORIGIN,"http://localhost:5173"],
+    allow_origins=[
+        "https://fastcapital-client.onrender.com",
+        "http://localhost:5173",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -181,21 +184,15 @@ async def get_investment(investment_id: int) -> InvestmentOut:
 async def get_investments_by_business(
     business_id: int = Query(...),
     db: Session = Depends(get_db),
-    current_user: UserPublicDetails = Depends(get_auth_user),
+    current_user: Optional[UserPublicDetails] = Depends(get_optional_auth_user),
 ):
-    """
-    Fetches all investments for a specific business.
-    If the business does not exist or has no investments, raises a 404 error.
-    """
     investments = (
         db.query(DBInvestment)
         .options(joinedload(DBInvestment.purchases))
-        .filter(DBInvestment.business_id == business_id).all()
+        .filter(DBInvestment.business_id == business_id)
+        .all()
     )
-    if not investments:
-        raise HTTPException(
-            status_code=404, detail="No investments found for this business"
-        )
+
     return investments
 
 

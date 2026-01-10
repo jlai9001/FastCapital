@@ -12,6 +12,8 @@ def get_auth_user(request: Request) -> UserPublicDetails:
     email = request.session.get("email")
     session_token = request.session.get("session_token")
 
+    print("SESSION CONTENTS:", request.session)
+
     if not email or not isinstance(email, str):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated"
