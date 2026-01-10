@@ -5,7 +5,8 @@ from sqlalchemy import (
     Boolean,
     Enum,
 )
-from sqlalchemy.orm import declarative_base, mapped_column, Mapped
+from sqlalchemy.orm import declarative_base, mapped_column, Mapped, relationship
+from typing import List, Optional
 from datetime import datetime as DateTimeType
 from datetime import date as DateType
 from enums import FinancialType
@@ -31,6 +32,9 @@ class DBUser(Base):
     session_expires_at: Mapped[DateTimeType | None] = mapped_column(
         DateTime, nullable=True
     )
+    # ✅ relationships
+    businesses: Mapped[List["DBBusiness"]] = relationship(back_populates="user")
+    purchases: Mapped[List["DBPurchase"]] = relationship(back_populates="user")
 
 
 class DBBusiness(Base):
@@ -47,10 +51,14 @@ class DBBusiness(Base):
     state: Mapped[str | None] = mapped_column(nullable=True)
     postal_code: Mapped[str | None] = mapped_column(nullable=True)
 
+    # ✅ relationships
+    user: Mapped["DBUser"] = relationship(back_populates="businesses")
+    investments: Mapped[List["DBInvestment"]] = relationship(back_populates="business")
+    financials: Mapped[List["DBFinancials"]] = relationship(back_populates="business")
+
 
 class DBInvestment(Base):
     __tablename__ = "investments"
-
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     business_id: Mapped[int] = mapped_column(ForeignKey("businesses.id"))
     shares_available: Mapped[int] = mapped_column(nullable=False)
@@ -59,6 +67,10 @@ class DBInvestment(Base):
     start_date: Mapped[DateTimeType] = mapped_column(DateTime, nullable=False)
     expiration_date: Mapped[DateTimeType] = mapped_column(DateTime, nullable=False)
     featured: Mapped[bool] = mapped_column(Boolean, default=False)
+
+    # ✅ relationships (THIS is what your API needs)
+    business: Mapped["DBBusiness"] = relationship(back_populates="investments")
+    purchases: Mapped[List["DBPurchase"]] = relationship(back_populates="investment")
 
 
 class DBPurchase(Base):
@@ -78,6 +90,10 @@ class DBPurchase(Base):
         nullable=False,
     )
 
+    # ✅ relationships
+    investment: Mapped["DBInvestment"] = relationship(back_populates="purchases")
+    user: Mapped["DBUser"] = relationship(back_populates="purchases")
+
 
 class DBFinancials(Base):
     __tablename__ = "financials"
@@ -90,3 +106,5 @@ class DBFinancials(Base):
         Enum(FinancialType),
         nullable=False,
     )
+    # ✅ relationship
+    business: Mapped["DBBusiness"] = relationship(back_populates="financials")
