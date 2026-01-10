@@ -72,19 +72,7 @@ app = FastAPI(
 if not FRONTEND_ORIGIN:
     raise RuntimeError("CORS_ORIGIN env var must be set")
 
-# =========================
-# CORS (MUST COME FIRST)
-# =========================
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "https://fastcapital-client.onrender.com",
-        "http://localhost:5173",
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+
 
 UPLOAD_DIR = "uploaded_images"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
@@ -118,7 +106,7 @@ class CSRFMiddleware(BaseHTTPMiddleware):
 
         # ✅ FIX: allow CORS preflight immediately
         if request.method == "OPTIONS":
-            return await call_next(request)
+            return Response(status_code=204)
 
         # SAFE read-only methods
         if request.method in {"GET", "HEAD"}:
@@ -154,6 +142,19 @@ class CSRFMiddleware(BaseHTTPMiddleware):
 # Register CSRF middleware
 app.add_middleware(CSRFMiddleware)
 
+# =========================
+# CORS (MUST COME LAST)
+# =========================
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://fastcapital-client.onrender.com",
+        "http://localhost:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Add CSRF token endpoint
 @app.get("/api/csrf")
