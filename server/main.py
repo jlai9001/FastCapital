@@ -482,13 +482,9 @@ async def get_me(
 ) -> UserPublicDetails:
     """
     Returns the currently authenticated user's public details.
-    If the user is not authenticated, raises a 401 error.
+    If the user is not authenticated, FastAPI will automatically return 401.
     """
-    try:
-        return current_user
-    except Exception as e:
-        print(f"Error in get_me: {e}")
-        raise HTTPException(status_code=401, detail="Unauthorized")
+    return current_user
 
 
 @app.get("/api/my_business", response_model=BusinessOut)
