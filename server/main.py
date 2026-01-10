@@ -77,7 +77,7 @@ if not FRONTEND_ORIGIN:
 # =========================
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[FRONTEND_ORIGIN],
+    allow_origins=[FRONTEND_ORIGIN,"http://localhost:5173"]
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
