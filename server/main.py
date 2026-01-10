@@ -36,7 +36,7 @@ from pydantic_schemas import (
     BusinessUpdate,
 )
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 import db
 import uuid, os, shutil
 from db import (
