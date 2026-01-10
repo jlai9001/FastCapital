@@ -115,7 +115,7 @@ class CSRFMiddleware(BaseHTTPMiddleware):
 
         # ✅ FIX: allow CORS preflight immediately
         if request.method == "OPTIONS":
-            return Response(status_code=200)
+            return await call_next(request)
 
         # SAFE read-only methods
         if request.method in {"GET", "HEAD"}:
