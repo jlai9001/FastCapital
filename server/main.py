@@ -90,7 +90,7 @@ app.add_middleware(
     SessionMiddleware,
     secret_key=SESSION_SECRET or "dev-secret",
     session_cookie="session",
-    max_age=60 * 30,  # 30 minutes (matches DB session)
+    max_age = None,
     same_site="none",
     https_only=True,
 )
@@ -106,7 +106,7 @@ class CSRFMiddleware(BaseHTTPMiddleware):
 
         # ✅ FIX: allow CORS preflight immediately
         if request.method == "OPTIONS":
-            return Response(status_code=204)
+            return await call_next(request)
 
         # SAFE read-only methods
         if request.method in {"GET", "HEAD"}:
@@ -185,6 +185,7 @@ async def get_investment(investment_id: int) -> InvestmentOut:
 async def get_investments_by_business(
     business_id: int = Query(...),
     db: Session = Depends(get_db),
+    current_user: Optional[UserPublicDetails] = Depends(get_optional_auth_user),
 ):
     investments = (
         db.query(DBInvestment)
@@ -193,21 +194,7 @@ async def get_investments_by_business(
         .all()
     )
 
-    result = []
-    for inv in investments:
-        result.append({
-            **InvestmentOut.model_validate(inv).model_dump(),
-            "purchases": [
-                {
-                    "id": p.id,
-                    "shares_purchased": p.shares_purchased,
-                }
-                for p in inv.purchases
-            ]
-        })
-
-    return result
-
+    return investments
 
 
 @app.get("/api/investment")
