@@ -117,8 +117,13 @@ export default function BusinessProfile() {
 
           <div className="business-profile-header-row">
             <p className="business-profile-subheader">Financial Details</p>
-            <a className="business-profile-page-button" href="/create-financials">Add Financial Details</a>
-          </div>
+              <a
+              className="business-profile-page-button"
+              href={`/create-financials/${business.id}`}
+              >
+                Add Financial Details
+              </a>
+            </div>
           <div className="financial-dashboard-container">
             {financialsLoading ? (
               <h3>Loading Financials...</h3>
