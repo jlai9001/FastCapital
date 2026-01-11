@@ -73,7 +73,7 @@ const isValidImageUrl =
           />
         <p className="investments-title">{business_name}</p>
       </div>
-      <p className="investment-amount"> ${totalInvestment.toFixed(2)}</p>
+      <p className="investment-amount">${totalInvestment.toFixed(2)}</p>
       </div>
     </div>
   );
@@ -168,7 +168,6 @@ const UserInvestments = () => {
     </div>
   </ThemeProvider>
 );
-
-;
+}
 
 export default UserInvestments;
