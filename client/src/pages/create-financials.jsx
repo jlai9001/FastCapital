@@ -8,13 +8,14 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import FinancialDashboard from "../components/financials_table";
 import {useNavigate} from "react-router-dom";
 import { base_url } from '../api'
+import { useParams } from "react-router-dom";
 
 export default function AddFinancials() {
     const [finType, setFinType] = useState("");
     const [finAmount, setFinAmount] = useState("");
     const [finDate, setFinDate] = useState(null);
     const [refresh, setRefresh] = useState(0) // refresh dashboard after submission, this will require Financial Dashboard to accept this as a prop
-    const businessId = 1; //make this dynamic
+    const { businessId } = useParams();
     const nav = useNavigate();
 
     const handleCancel = async () => {
