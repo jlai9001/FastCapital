@@ -79,6 +79,10 @@ export default function Portfolio(){
               {loading && <p>Loading pending investments...</p>}
               {error && <p>{error}</p>}
 
+              {!loading && !error && pendingPurchases.length === 0 && (
+                <p className="empty-pending">Please purchase an investment.</p>
+              )}
+
               {pendingPurchases.map((purchase) => {
                 const matchingInvestment = investments.find(
                   (inv) => inv.id === purchase.investment_id
