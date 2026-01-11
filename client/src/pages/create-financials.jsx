@@ -15,7 +15,8 @@ export default function AddFinancials() {
     const [finAmount, setFinAmount] = useState("");
     const [finDate, setFinDate] = useState(null);
     const [refresh, setRefresh] = useState(0) // refresh dashboard after submission, this will require Financial Dashboard to accept this as a prop
-    const { businessId } = useParams();
+    const { businessId: businessIdParam } = useParams();
+    const businessId = Number(businessIdParam);
     const nav = useNavigate();
 
     const handleCancel = async () => {
