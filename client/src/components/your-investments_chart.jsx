@@ -122,17 +122,15 @@ const UserInvestments = () => {
   return (
   <ThemeProvider theme={chartTheme}>
     <div className="investments-dashboard-container">
-
-
       {!hasCompletedInvestments ? (
         <div className="empty-investments">
           <p>You currently have no active investments that are fully funded.</p>
-          <div className="investments-dashboard-header">
-            <p>Your Investments</p>
-          </div>
         </div>
       ) : (
         <div className="investments-dashboard">
+          <div className="investments-dashboard-header">
+            <p>Your Investments</p>
+          </div>
           <div className="investments-chart">
             <p className="portfolio-title">Your Portfolio</p>
             <div className="piechart-wrapper">

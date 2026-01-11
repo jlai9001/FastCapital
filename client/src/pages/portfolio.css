@@ -1,9 +1,9 @@
 .empty-pending {
-  text-align: center;
-  opacity: 0.8;
-  margin-top: 16px;
-  font-size: 20px;
-  background-color: rgb(181, 180, 180);
+    text-align: center;
+    opacity: 0.8;
+    margin-top: 16px;
+    font-size: 20px;
+    background-color: lightgrey;
 }
 
 .portfolio-page-container {
