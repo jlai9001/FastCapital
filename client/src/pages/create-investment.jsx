@@ -3,18 +3,28 @@ import './create-investment.css';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { base_url } from '../api'
+import { useBusinessForUser } from "../hooks/getData";
 
 export default function NewInvestment() {
     const [sharesAvailable, setSharesAvailable] = useState(0);
     const [pricePerShare, setPricePerShare] = useState(0);
     const [minInvestment, setMinInvestment] = useState(0);
     const [expirationDate, setExpirationDate] = useState("");
+    const [submitting, setSubmitting] = useState(false);
+    const {business} = useBusinessForUser();
 
     const nav = useNavigate();
-    const businessId = 1; // TODO: make dynamic
+    const businessId = business?.id;
+
 
     const handlePost = async () => {
         try {
+            // business ID guard
+            if (!businessId) {
+                alert("Business not loaded yet. Please wait and try again.");
+                return;
+            }
+            setSubmitting(true);
 
             //this provides some input validation
             const validate = () => {
@@ -45,7 +55,7 @@ export default function NewInvestment() {
                 shares_available: sharesAvailable,
                 price_per_share: pricePerShare,
                 min_investment: minInvestment,
-                start_date: new Date().toISOString(),
+                start_date: new Date().toISOString().split("T")[0],
                 expiration_date: expirationDate
             });
 
@@ -68,6 +78,8 @@ export default function NewInvestment() {
         } catch (error) {
             console.error("Error submitting:", error);
             alert("Failed to submit, please try again.");
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -123,7 +135,11 @@ export default function NewInvestment() {
                 </div><br />
                 <div className="button-container">
                     <button className="cancel-button" onClick={handleCancel}>Cancel</button>
-                    <button className="post-button" onClick={handlePost}>Post Offer</button>
+                    <button className="post-button"
+                        onClick={handlePost}
+                        disabled={!business || submitting}>
+                            {submitting ? "Posting..." : "Post Offer"}
+                    </button>
                 </div>
             </div>
 
