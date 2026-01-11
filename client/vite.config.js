@@ -4,6 +4,11 @@ import react from '@vitejs/plugin-react-swc'
 export default defineConfig({
   plugins: [react()],
 
+    // 👇 Silence large-chunk warning (in kB)
+  build: {
+    chunkSizeWarningLimit: 1000, // default is 500
+  },
+
   // Local dev only (safe to keep)
   server: {
     proxy: {
