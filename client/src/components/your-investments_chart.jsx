@@ -128,7 +128,7 @@ const UserInvestments = () => {
 
       {!hasCompletedInvestments ? (
         <div className="empty-investments">
-          <p>You have no active investments that are fully funded.</p>
+          <p>You currently have no active investments that are fully funded.</p>
         </div>
       ) : (
         <div className="investments-dashboard">
