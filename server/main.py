@@ -348,9 +348,7 @@ def get_financials_for_business(business_id: int):
     If no financial records are found, raises a 404 error.
     """
     financials = db.get_financials_by_business_id(business_id)
-    if not financials:
-        raise HTTPException(status_code=404, detail="Financials not found for business")
-    return financials
+    return financials or []
 
 
 @app.post(
