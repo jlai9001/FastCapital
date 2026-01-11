@@ -105,7 +105,6 @@ const UserInvestments = () => {
               id: inv.business_name,
               value: 0,
               label: inv.business_name,
-              label: inv.business_name,
             };
           }
           acc[inv.business_name].value += total;
