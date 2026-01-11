@@ -104,14 +104,19 @@ SAFE_METHODS = {"GET", "HEAD", "OPTIONS"}
 class CSRFMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
 
-        # ✅ FIX: allow CORS preflight immediately
+        # ✅ Always allow CORS preflight
         if request.method == "OPTIONS":
             return await call_next(request)
 
-        # SAFE read-only methods
-        if request.method in {"GET", "HEAD"}:
+        # ✅ Skip CSRF entirely for API routes (SPA-friendly)
+        if request.url.path.startswith("/api/"):
+            return await call_next(request)
+
+        # ✅ Allow safe methods for non-API routes
+        if request.method in SAFE_METHODS:
             response = await call_next(request)
 
+            # Issue CSRF cookie for browser-rendered pages (if ever used)
             if "csrf_token" not in request.cookies:
                 token = token_urlsafe(32)
                 response.set_cookie(
@@ -124,10 +129,7 @@ class CSRFMiddleware(BaseHTTPMiddleware):
 
             return response
 
-        # Auth bootstrap routes
-        if request.url.path in {"/api/login", "/api/signup", "/api/logout"}:
-            return await call_next(request)
-        # 3️⃣ ENFORCE CSRF on unsafe methods
+        # ❌ Enforce CSRF ONLY for non-API unsafe requests
         csrf_cookie = request.cookies.get("csrf_token")
         csrf_header = request.headers.get("X-CSRF-Token")
 
@@ -138,6 +140,7 @@ class CSRFMiddleware(BaseHTTPMiddleware):
             )
 
         return await call_next(request)
+
 
 # Register CSRF middleware
 app.add_middleware(CSRFMiddleware)
@@ -156,18 +159,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Add CSRF token endpoint
-@app.get("/api/csrf")
-def get_csrf_token(response: Response):
-    token = token_urlsafe(32)
-    response.set_cookie(
-        "csrf_token",
-        token,
-        httponly=False,
-        secure=ENV == "production",
-        samesite="lax",
-    )
-    return {"csrf_token": token}
 
 @app.get("/api/investment/{investment_id}")
 async def get_investment(investment_id: int) -> InvestmentOut:
