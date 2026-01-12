@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import './add-business.css';
 import { base_url } from '../api'
+import businessPlaceholder from "../assets/business_placeholder.png";
+
 
 function AddBusiness() {
     const navigate = useNavigate();
@@ -98,23 +100,37 @@ function AddBusiness() {
 
     } else {
       // Create: send multipart/form-data including file upload
-      const form = new FormData();
-      for (const key in formData) {
-        let value = formData[key];
-        if (key === "website_url") {
-          value = normalizeUrl(value);
-        }
-        form.append(key, value);
-      }
-      if (logoFile) {
-        form.append("image", logoFile);
-      }
+      // Create: send multipart/form-data including file upload
+const form = new FormData();
+for (const key in formData) {
+  let value = formData[key];
+  if (key === "website_url") value = normalizeUrl(value);
+  form.append(key, value);
+}
 
-      const res = await fetch(`${base_url}/api/business`, {
-        method: "POST",
-        body: form,
-        credentials: "include",
-      });
+// ✅ Always include an image:
+// - If user picked one => use it
+// - Else => convert placeholder PNG into a File and use that
+if (logoFile) {
+  form.append("image", logoFile);
+} else {
+  const resp = await fetch(businessPlaceholder);
+  const blob = await resp.blob();
+
+  // Make it a File so backend receives UploadFile normally
+  const placeholderFile = new File([blob], "business_placeholder.png", {
+    type: blob.type || "image/png",
+  });
+
+  form.append("image", placeholderFile);
+}
+
+const res = await fetch(`${base_url}/api/business`, {
+  method: "POST",
+  body: form,
+  credentials: "include",
+});
+
 
       const data = await res.json();
 

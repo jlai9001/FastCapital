@@ -1,7 +1,6 @@
 from secrets import token_urlsafe
 from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi import (
-    Response,
     Request,
     HTTPException,
     FastAPI,
@@ -54,6 +53,11 @@ from pydantic_schemas import PurchaseStatus
 from auth import get_auth_user,get_optional_auth_user
 from rich import print
 
+UPLOAD_ROOT = "/data/uploaded_images"
+os.makedirs(UPLOAD_ROOT, exist_ok=True)
+DEFAULT_IMAGE_URL = "/uploads/business_placeholder.png"
+
+
 # add ENV detection
 ENV = os.environ.get("ENV","development")
 
@@ -73,12 +77,12 @@ if not FRONTEND_ORIGIN:
     raise RuntimeError("CORS_ORIGIN env var must be set")
 
 
-
-UPLOAD_DIR = "uploaded_images"
-os.makedirs(UPLOAD_DIR, exist_ok=True)
 app.mount(
-    "/uploaded_images", StaticFiles(directory="uploaded_images"), name="uploaded_images"
+    "/uploads",
+    StaticFiles(directory=UPLOAD_ROOT),
+    name="uploads"
 )
+
 
 SESSION_SECRET = os.environ.get("SESSION_SECRET")
 
@@ -95,7 +99,6 @@ app.add_middleware(
     https_only=True,
 )
 
-image_base_url = os.environ.get("IMAGE_BASE_URL", "http://localhost:8000")
 
 # CSRF middleware
 
@@ -203,7 +206,7 @@ async def get_investments() -> list[InvestmentOut]:
 async def create_business_api(
     name: str = Form(...),
     website_url: str = Form(...),
-    image: UploadFile = File(...),
+    image: UploadFile | None = File(None),
     address1: str = Form(...),
     address2: str = Form(None),
     city: str = Form(...),
@@ -217,12 +220,24 @@ async def create_business_api(
     The image will be saved to the local storage and its URL will be returned.
     """
     try:
-        filename = f"{uuid.uuid4().hex}_{image.filename}"
-        file_path = os.path.join(UPLOAD_DIR, filename)
-        with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(image.file, buffer)
+        image_url = DEFAULT_IMAGE_URL
 
-        image_url = f'{image_base_url}/uploaded_images/{filename}'
+        if image and image.filename:
+            ext = image.filename.rsplit(".", 1)[-1].lower()
+            if ext not in ("jpg", "jpeg", "png", "svg"):
+                raise HTTPException(status_code=400, detail="Only JPG, PNG, SVG allowed")
+
+            filename = f"{uuid.uuid4().hex}.{ext}"
+            disk_path = os.path.join(UPLOAD_ROOT, filename)
+            image_url = f"/uploads/{filename}"
+
+            with open(disk_path, "wb") as buffer:
+                shutil.copyfileobj(image.file, buffer)
+
+
+
+
+
         # Add env variable api.fastcapital.site
 
         business_data = {
@@ -244,40 +259,40 @@ async def create_business_api(
         raise HTTPException(status_code=500, detail="Failed to create business.")
 
 
-@app.post("/api/business/{business_id}/upload_image")
-async def upload_business_image(
-    business_id: int,
-    image: UploadFile = File(...),
-    current_user: UserPublicDetails = Depends(get_auth_user),
-):
-    """
-    Uploads an image for a specific business.
-    The image will be saved to the local storage and its URL will be updated
-    in the business record.
-    Rais for various error conditions.
-    """
-    try:
+# @app.post("/api/business/{business_id}/upload_image")
+# async def upload_business_image(
+#     business_id: int,
+#     image: UploadFile = File(...),
+#     current_user: UserPublicDetails = Depends(get_auth_user),
+# ):
+#     """
+#     Uploads an image for a specific business.
+#     The image will be saved to the local storage and its URL will be updated
+#     in the business record.
+#     Rais for various error conditions.
+#     """
+#     try:
 
-        filename = f"{uuid.uuid4().hex}_{image.filename}"
-        file_path = os.path.join(UPLOAD_DIR, filename)
-        with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(image.file, buffer)
+#         filename = f"{uuid.uuid4().hex}_{image.filename}"
+#         file_path = os.path.join(UPLOAD_DIR, filename)
+#         with open(file_path, "wb") as buffer:
+#             shutil.copyfileobj(image.file, buffer)
 
-        image_url = f"{image_base_url}/uploaded_images/{filename}"
+#         image_url = f"{image_base_url}/uploaded_images/{filename}"
 
-        updated_url = update_business_image(
-            business_id=business_id, user_id=current_user.id, image_url=image_url
-        )
+#         updated_url = update_business_image(
+#             business_id=business_id, user_id=current_user.id, image_url=image_url
+#         )
 
-        return {"image_url": updated_url}
+#         return {"image_url": updated_url}
 
-    except ValueError as ve:
-        raise HTTPException(status_code=404, detail=str(ve))
-    except PermissionError as pe:
-        raise HTTPException(status_code=403, detail=str(pe))
-    except Exception as e:
-        print(f"Unhandled error during image upload: {e}")
-        raise HTTPException(status_code=500, detail="Failed to upload image.")
+#     except ValueError as ve:
+#         raise HTTPException(status_code=404, detail=str(ve))
+#     except PermissionError as pe:
+#         raise HTTPException(status_code=403, detail=str(pe))
+#     except Exception as e:
+#         print(f"Unhandled error during image upload: {e}")
+#         raise HTTPException(status_code=500, detail="Failed to upload image.")
 
 @app.get("/api/business/me", response_model=BusinessOut)
 def get_my_business_by_request(
@@ -509,14 +524,3 @@ async def secret() -> SecretResponse:
     """
     # it can be assumed that the user is logged in and has a valid session
     return SecretResponse(secret="info")
-
-
-@app.get("/{file_path}", response_class=FileResponse)
-def get_static_file(file_path: str):
-    """
-    Serves static files from the 'static' directory.
-    If the file does not exist, raises a 404 error.
-    """
-    if Path("static/" + file_path).is_file():
-        return FileResponse("static/" + file_path)
-    raise HTTPException(status_code=404, detail="Item not found")
