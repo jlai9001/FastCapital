@@ -138,7 +138,7 @@ export default function BusinessProfile() {
               <FinancialDashboard businessId={business.id} />
             ) : (
                 <div className="no-financials-container">
-                  <p className="no-financials-text">Add your data from your income statement and balance sheet to attract more investors.</p>
+                  <p className="no-financials-text">Add financial details to attract more investors.</p>
                 </div>
             )}
           </div>
