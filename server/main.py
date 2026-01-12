@@ -79,11 +79,11 @@ if not FRONTEND_ORIGIN:
 IMAGE_ROOT = "/data/business_images"
 os.makedirs(IMAGE_ROOT, exist_ok=True)
 
-app.mount(
-    "/images",
-    StaticFiles(directory=IMAGE_ROOT),
-    name="images"
-)
+# app.mount(
+#     "/images",
+#     StaticFiles(directory=IMAGE_ROOT),
+#     name="images"
+# )
 
 SESSION_SECRET = os.environ.get("SESSION_SECRET")
 
@@ -163,6 +163,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# add explicit image-serving route
+@app.get("/images/{filename}")
+def get_business_image(filename: str):
+    file_path = os.path.join(IMAGE_ROOT, filename)
+
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="Image not found")
+
+    return FileResponse(file_path)
+
 
 @app.get("/api/investment/{investment_id}")
 async def get_investment(investment_id: int) -> InvestmentOut:
@@ -219,7 +229,6 @@ async def create_business_api(
     db: Session = Depends(get_db),
 ) -> BusinessOut:
     try:
-        # image upload
         image_url = None
         if image and image.filename:
             ext = Path(image.filename).suffix.lower() or ".png"

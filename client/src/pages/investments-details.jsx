@@ -55,7 +55,11 @@ export default function InvestmentDetails() {
         <div className="investment-column investment-column-1">
           <div className="box business-detail-image-wrapper">
             <img
-              src={business.image_url || placeholder}
+              src={
+                business.image_url
+                  ? `${base_url}${business.image_url}`
+                  : placeholder
+              }
               alt={business.name}
               className="business-detail-image"
               onError={(e) => {
