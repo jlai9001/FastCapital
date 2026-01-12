@@ -54,6 +54,7 @@
 
 .no-investment-text {
   display:flex;
+  margin: auto;
   font-size: 24px;
   text-align: center;
 }
