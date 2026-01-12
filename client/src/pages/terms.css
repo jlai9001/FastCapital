@@ -1,0 +1,133 @@
+/* Terms page wrapper */
+.terms-page {
+  min-height: 100vh;
+  padding: 40px 16px;
+  background-color: var(--page_background_color);
+  display: flex;
+  justify-content: center;
+  font-family: var(--button_font), system-ui, Helvetica, Arial, sans-serif;
+  color: var(--primary_text_color);
+}
+
+/* Main card */
+.terms-card {
+  width: 100%;
+  max-width: 900px;
+  background-color: var(--element_background_color);
+  border-radius: var(--element_border_radius);
+  padding: 36px 40px;
+  box-shadow: var(--element_shadow);
+  border: 1px solid var(--field_border_color);
+}
+
+/* Header */
+.terms-header {
+  margin-bottom: 20px;
+}
+
+.terms-title {
+  font-size: var(--large_fontsize);
+  font-weight: 600;
+  margin: 0;
+  color: var(--primary_text_color);
+}
+
+.terms-subtitle {
+  margin-top: 10px;
+  font-size: var(--small_fontsize);
+  color: var(--secondary_text_color);
+  line-height: 1.6;
+}
+
+.terms-meta {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--secondary_text_color);
+}
+
+/* Divider */
+.terms-divider {
+  border: none;
+  border-top: 1px solid var(--field_border_color);
+  margin: 26px 0;
+}
+
+/* Sections */
+.terms-section {
+  margin-bottom: 28px;
+}
+
+.terms-section h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--primary_text_color);
+}
+
+.terms-section p {
+  font-size: var(--small_fontsize);
+  line-height: 1.7;
+  color: var(--primary_text_color);
+  margin-bottom: 10px;
+}
+
+/* Lists */
+.terms-section ul {
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.terms-section li {
+  font-size: var(--small_fontsize);
+  margin-bottom: 8px;
+  line-height: 1.6;
+  color: var(--primary_text_color);
+}
+
+/* Callout / highlighted note */
+.terms-callout {
+  margin-top: 12px;
+  padding: 14px 16px;
+  border-left: 4px solid var(--main_button_color);
+  background-color: var(--field_background_color);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--primary_text_color);
+}
+
+/* Inline code */
+.terms-section code {
+  background-color: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: "Ubuntu Mono", monospace;
+  font-size: 13px;
+}
+
+/* Footer */
+.terms-footer {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--field_border_color);
+}
+
+.terms-footer p {
+  font-size: 13px;
+  color: var(--secondary_text_color);
+  line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .terms-card {
+    padding: 26px 22px;
+  }
+
+  .terms-title {
+    font-size: 26px;
+  }
+
+  .terms-subtitle {
+    font-size: 15px;
+  }
+}

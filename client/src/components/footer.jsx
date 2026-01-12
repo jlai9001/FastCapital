@@ -1,7 +1,7 @@
 import React from "react";
 import "./footer.css";
 import logo from "../assets/logo.svg";
-import { NavLink} from 'react-router-dom'
+import {NavLink} from 'react-router-dom'
 
 const Footer = () => {
   return (
@@ -20,19 +20,19 @@ const Footer = () => {
         <div className="links-section">
           <NavLink
               className="nav-link"
-              to=''>
+              to='/terms'>
               Terms
           </NavLink>
 
           <NavLink
               className="nav-link"
-              to=''>
-              Privacy
+              to='/about'>
+              About
           </NavLink>
 
           <NavLink
               className="nav-link"
-              to=''>
+              to='/contact'>
               Contact
           </NavLink>
 

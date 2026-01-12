@@ -1,0 +1,119 @@
+/* About page wrapper */
+.about-page {
+  min-height: 100vh;
+  padding: 40px 16px;
+  background-color: var(--page_background_color);
+  display: flex;
+  justify-content: center;
+  font-family: var(--button_font), system-ui, Helvetica, Arial, sans-serif;
+  color: var(--primary_text_color);
+}
+
+/* Main card */
+.about-card {
+  width: 100%;
+  max-width: 900px;
+  background-color: var(--element_background_color);
+  border-radius: var(--element_border_radius);
+  padding: 36px 40px;
+  box-shadow: var(--element_shadow);
+  border: 1px solid var(--field_border_color);
+}
+
+/* Header */
+.about-header {
+  margin-bottom: 20px;
+}
+
+.about-title {
+  font-size: var(--large_fontsize);
+  font-weight: 600;
+  margin: 0;
+}
+
+.about-subtitle {
+  margin-top: 10px;
+  font-size: var(--small_fontsize);
+  color: var(--secondary_text_color);
+  line-height: 1.6;
+}
+
+.about-meta {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--secondary_text_color);
+}
+
+/* Divider */
+.about-divider {
+  border: none;
+  border-top: 1px solid var(--field_border_color);
+  margin: 26px 0;
+}
+
+/* Sections */
+.about-section {
+  margin-bottom: 28px;
+}
+
+.about-section h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.about-section p {
+  font-size: var(--small_fontsize);
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+
+/* Lists */
+.about-section ul {
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.about-section li {
+  font-size: var(--small_fontsize);
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+/* Callout */
+.about-callout {
+  margin-top: 12px;
+  padding: 14px 16px;
+  border-left: 4px solid var(--main_button_color);
+  background-color: var(--field_background_color);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* Footer */
+.about-footer {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--field_border_color);
+}
+
+.about-footer p {
+  font-size: 13px;
+  color: var(--secondary_text_color);
+  line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .about-card {
+    padding: 26px 22px;
+  }
+
+  .about-title {
+    font-size: 26px;
+  }
+
+  .about-subtitle {
+    font-size: 15px;
+  }
+}

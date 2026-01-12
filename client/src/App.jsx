@@ -15,7 +15,9 @@ import AddFinancials from './pages/create-financials.jsx'
 import AddBusiness from './pages/add-business.jsx'
 import BusinessProfile from './pages/business-profile.jsx'
 import Footer from './components/footer.jsx'
-
+import Terms from './pages/terms.jsx'
+import About from './pages/about.jsx'
+import Contact from './pages/contact.jsx'
 
 function App() {
 
@@ -35,6 +37,9 @@ function App() {
         <Route path='/business-profile' element={<BusinessProfile />}></Route>
         <Route path='/add-business' element={<AddBusiness />}></Route>
         <Route path='/login' element={<Login />}></Route>
+        <Route path='/terms' element={<Terms />}></Route>
+        <Route path='/about' element={<About />}></Route>
+        <Route path='/contact' element={<Contact />}></Route>
         <Route path='/testpage' element={<TestPage />}></Route>
         <Route path='/not-found' element={<NotFound />}></Route>
         <Route path='/create-investment' element={<NewInvestment />}></Route>
