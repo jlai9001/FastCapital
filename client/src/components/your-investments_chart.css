@@ -19,7 +19,7 @@ align-items: flex-start;
 
 .investments-dashboard-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   background-color: #FFFFFF;
   min-width: 800px;
   margin-top: 30px;
