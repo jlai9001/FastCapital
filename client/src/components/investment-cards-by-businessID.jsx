@@ -29,8 +29,7 @@ export default function InvestmentCardsByBusinessId({ businessId }) {
 
   if (error) return <h1>{error}</h1>;
   if (!investments) return <h1>Loading investments...</h1>;
-  if (investments.length === 0) return <h1>No investments found for this business.</h1>;
-
+  if (investments.length === 0) return <div class=".no-investments">No investments found for this business.</div>;
 
   return (
     <div>
