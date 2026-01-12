@@ -53,9 +53,9 @@ from pydantic_schemas import PurchaseStatus
 from auth import get_auth_user,get_optional_auth_user
 from rich import print
 
-UPLOAD_ROOT = "/data/uploaded_images"
+UPLOAD_ROOT = "/data"
 os.makedirs(UPLOAD_ROOT, exist_ok=True)
-DEFAULT_IMAGE_URL = "/uploads/business_placeholder.png"
+DEFAULT_IMAGE_URL = "/uploaded_images/business_placeholder.png"
 
 
 # add ENV detection
@@ -78,7 +78,7 @@ if not FRONTEND_ORIGIN:
 
 
 app.mount(
-    "/uploads",
+    "/disk",
     StaticFiles(directory=UPLOAD_ROOT),
     name="uploads"
 )
@@ -229,7 +229,7 @@ async def create_business_api(
 
             filename = f"{uuid.uuid4().hex}.{ext}"
             disk_path = os.path.join(UPLOAD_ROOT, filename)
-            image_url = f"/uploads/{filename}"
+            image_url = f"/disk/{filename}"
 
             with open(disk_path, "wb") as buffer:
                 shutil.copyfileobj(image.file, buffer)
