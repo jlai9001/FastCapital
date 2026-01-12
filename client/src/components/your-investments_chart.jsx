@@ -122,6 +122,16 @@ const UserInvestments = () => {
   return (
   <ThemeProvider theme={chartTheme}>
     <div className="investments-dashboard-container">
+      <div className="investments-chart">
+        <p className="portfolio-title">Your Portfolio</p>
+
+        <div className="piechart-wrapper">
+          <PieChart
+            series={[{ data: pieData }]}
+            sx={{ width: "100%", height: "100%" }}
+          />
+        </div>
+      </div>
     {/* HEADER AREA – fixed height */}
     <div className="investments-dashboard-header">
       {hasCompletedInvestments && <p>Your Investments</p>}
@@ -134,18 +144,6 @@ const UserInvestments = () => {
         </div>
       ) : (
     <div className="investments-dashboard">
-
-      <div className="investments-chart">
-        <p className="portfolio-title">Your Portfolio</p>
-
-        <div className="piechart-wrapper">
-          <PieChart
-            series={[{ data: pieData }]}
-            sx={{ width: "100%", height: "100%" }}
-          />
-        </div>
-      </div>
-
       <div className="investments-grid-wrapper">
         {investments.map((inv) => (
           <InvestmentsCard key={inv.id} investment={inv} />
