@@ -67,6 +67,8 @@
 
   .piechart-wrapper {
     scale:100%;
+    display: flex;
+    align-items: center; /* vertical */
   }
 
   .investments-grid-wrapper {
