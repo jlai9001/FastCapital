@@ -47,12 +47,7 @@ align-items: flex-start;
   align-items: flex-start; /* 🔑 top alignment */
 }
 
-.portfolio-title {
-  font-weight: bold;
-  font-size: 24px;
-  text-align: center;
-  margin-bottom: 4px;
-}
+
 
 .value-text {
   font-weight: 600;
@@ -70,6 +65,21 @@ align-items: flex-start;
   display: flex;
   flex-direction: column;
   align-items: center; /* horizontal centering only */
+  margin:none;
+}
+
+.portfolio-title {
+  font-weight: bold;
+  font-size: 24px;
+  text-align: center;
+  margin:none;
+}
+
+.piechart-wrapper {
+  width: 100%;
+  max-width: 320px;
+  aspect-ratio: 1 / 1;
+  margin:none;
 }
 
 .chart-fill {
@@ -79,11 +89,7 @@ align-items: center;     /* vertical center */
 justify-content: center; /* horizontal center */
 }
 
-.piechart-wrapper {
-  width: 100%;
-  max-width: 320px;
-  aspect-ratio: 1 / 1;
-}
+
 
 .investments-grid-wrapper {
   display: flex;

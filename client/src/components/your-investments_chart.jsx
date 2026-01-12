@@ -121,8 +121,8 @@ const UserInvestments = () => {
 
 return (
   <ThemeProvider theme={chartTheme}>
+    {/* flex column */}
     <div className="investments-dashboard-container">
-
       {/* EMPTY STATE — FULL WIDTH */}
       {!hasCompletedInvestments && (
         <div className="empty-investments">
@@ -138,12 +138,12 @@ return (
 
       {/* DATA STATE — TWO COLUMN LAYOUT */}
       {hasCompletedInvestments && (
+        // flex row
         <div className="investments-dashboard-shell">
           <div className="investments-dashboard">
-
             {/* Left: Portfolio Chart */}
             <div className="investments-chart">
-              <p className="portfolio-title">Your Portfolio</p>
+              <div className="portfolio-title">Your Portfolio</div>
               <div className="piechart-wrapper">
                 <PieChart
                   series={[{ data: pieData }]}
