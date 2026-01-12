@@ -8,6 +8,7 @@ from fastapi import (
     Depends,
     status,
     UploadFile,
+    Response,
     File,
     Form,
 )
@@ -79,11 +80,11 @@ if not FRONTEND_ORIGIN:
 IMAGE_ROOT = "/data/business_images"
 os.makedirs(IMAGE_ROOT, exist_ok=True)
 
-app.mount(
-    "/images",
-    StaticFiles(directory=IMAGE_ROOT),
-    name="images"
-)
+# app.mount(
+#     "/images",
+#     StaticFiles(directory=IMAGE_ROOT),
+#     name="images"
+# )
 
 SESSION_SECRET = os.environ.get("SESSION_SECRET")
 
@@ -163,6 +164,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# browser cache validation
+
+@app.head("/images/{filename}")
+def image_head(filename: str):
+    path = os.path.join("/data/business_images", filename)
+    if not os.path.isfile(path):
+        raise HTTPException(status_code=404)
+    return Response(status_code=200)
+
+# dynatmic file-serving
+
+@app.get("/images/{filename}")
+def serve_image(filename: str):
+    path = os.path.join("/data/business_images", filename)
+    if not os.path.isfile(path):
+        raise HTTPException(status_code=404)
+    return FileResponse(path)
 
 
 @app.get("/api/investment/{investment_id}")
