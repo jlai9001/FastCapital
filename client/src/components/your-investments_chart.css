@@ -66,9 +66,7 @@
   }
 
   .piechart-wrapper {
-    width: 100%;
-    max-width: 300px;
-    overflow: hidden;
+    scale:100%;
   }
 
   .investments-grid-wrapper {
