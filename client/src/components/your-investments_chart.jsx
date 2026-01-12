@@ -145,10 +145,12 @@ return (
             <div className="investments-chart">
               <div className="portfolio-title">Your Portfolio</div>
               <div className="piechart-wrapper">
-                <PieChart
-                  series={[{ data: pieData }]}
-                  sx={{ width: "100%", height: "100%" }}
-                />
+              <PieChart
+                series={[{ data: pieData }]}
+                legend={{ hidden: true }}
+                margin={{ top: 0, bottom: 0, left: 0, right: 0 }}
+                sx={{ width: "100%", height: "100%" }}
+              />
               </div>
             </div>
 
