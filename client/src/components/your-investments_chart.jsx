@@ -123,17 +123,18 @@ return (
   <ThemeProvider theme={chartTheme}>
     <div className="investments-dashboard-container">
 
-      {/* Header */}
-      <div className="investments-dashboard-header">
-        {hasCompletedInvestments && <p>Your Investments</p>}
-      </div>
-
       {/* EMPTY STATE — FULL WIDTH */}
       {!hasCompletedInvestments && (
         <div className="empty-investments">
           <p>You currently have no active investments that are fully funded.</p>
         </div>
       )}
+
+      {/* Header */}
+      <div className="investments-dashboard-header">
+        {hasCompletedInvestments && <p>Your Investments</p>}
+      </div>
+
 
       {/* DATA STATE — TWO COLUMN LAYOUT */}
       {hasCompletedInvestments && (

@@ -12,6 +12,7 @@ border-radius: 10px;
 width: 100%;
 min-height: 240px; /* IMPORTANT */
 display: flex;
+flex-direction: row;
 align-items: center;
 justify-content: center;
 align-items: flex-start;
@@ -19,7 +20,7 @@ align-items: flex-start;
 
 .investments-dashboard-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   background-color: #FFFFFF;
   min-width: 800px;
   margin-top: 30px;
