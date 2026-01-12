@@ -42,6 +42,7 @@ justify-content: center;
   display: flex;
   width: 100%;
   gap: 20px;
+  align-items: flex-start; /* 🔑 top alignment */
 }
 
 .portfolio-title {
@@ -62,8 +63,10 @@ justify-content: center;
 
 .investments-chart {
   flex: 1;
+  min-width: 300px;
   display: flex;
   flex-direction: column;
+  align-items: center; /* horizontal centering only */
 }
 
 .chart-fill {

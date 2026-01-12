@@ -134,19 +134,14 @@ const UserInvestments = () => {
         </div>
       ) : (
     <div className="investments-dashboard">
+
       <div className="investments-chart">
         <p className="portfolio-title">Your Portfolio</p>
+
         <div className="piechart-wrapper">
           <PieChart
             series={[{ data: pieData }]}
-            width={300}
-            height={300}
-            legend={{ position: "right" }}
-            sx={{
-              "& .MuiChartsLegend-series": {
-                color: "#374151",
-              },
-            }}
+            sx={{ width: "100%", height: "100%" }}
           />
         </div>
       </div>
