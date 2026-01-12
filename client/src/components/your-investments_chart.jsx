@@ -119,51 +119,57 @@ const UserInvestments = () => {
 
   const hasCompletedInvestments = Array.isArray(investments) && investments.length > 0;
 
-  return (
+return (
   <ThemeProvider theme={chartTheme}>
     <div className="investments-dashboard-container">
-      <div className="investments-chart">
-        <p className="portfolio-title">Your Portfolio</p>
-        <div className="piechart-wrapper">
-          <PieChart
-            series={[{ data: pieData }]}
-            sx={{ width: "100%", height: "100%" }}
-          />
-        </div>
-      </div>
-    {/* HEADER AREA – fixed height */}
-    <div className="investments-dashboard-header">
-      {hasCompletedInvestments && <p>Your Investments</p>}
-      {/* investment list */}
-         <div className="investments-dashboard-shell">
-      {!hasCompletedInvestments ? (
-        <div className="empty-investments">
-          <p>You currently have no active investments that are fully funded.</p>
-        </div>
-      ) : (
-    <div className="investments-dashboard">
-      <div className="investments-grid-wrapper">
-        {investments.map((inv) => (
-          <InvestmentsCard key={inv.id} investment={inv} />
-        ))}
 
-        <div className="portfolio-total">
-          <p>
-            <span className="value-text">Total Value:&nbsp;</span>
-            <span className="value">
-              ${totalPortfolioValue.toFixed(2)}
-            </span>
-          </p>
-        </div>
+      {/* Header */}
+      <div className="investments-dashboard-header">
+        {hasCompletedInvestments && <p>Your Investments</p>}
       </div>
-    </div>
-      )}
-    </div>
-  </div>
 
-  </div>
+      {/* Content */}
+      <div className="investments-dashboard-shell">
+        {!hasCompletedInvestments ? (
+          <div className="empty-investments">
+            <p>You currently have no active investments that are fully funded.</p>
+          </div>
+        ) : (
+          <div className="investments-dashboard">
+
+            {/* ✅ CHART — only rendered when investments exist */}
+            <div className="investments-chart">
+              <p className="portfolio-title">Your Portfolio</p>
+              <div className="piechart-wrapper">
+                <PieChart
+                  series={[{ data: pieData }]}
+                  sx={{ width: "100%", height: "100%" }}
+                />
+              </div>
+            </div>
+
+            {/* Investment list */}
+            <div className="investments-grid-wrapper">
+              {investments.map((inv) => (
+                <InvestmentsCard key={inv.id} investment={inv} />
+              ))}
+
+              <div className="portfolio-total">
+                <p>
+                  <span className="value-text">Total Value:&nbsp;</span>
+                  <span className="value">
+                    ${totalPortfolioValue.toFixed(2)}
+                  </span>
+                </p>
+              </div>
+            </div>
+
+          </div>
+        )}
+      </div>
+
+    </div>
   </ThemeProvider>
 );
-}
 
 export default UserInvestments;
