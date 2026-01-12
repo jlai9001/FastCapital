@@ -128,16 +128,19 @@ return (
         {hasCompletedInvestments && <p>Your Investments</p>}
       </div>
 
-      {/* Content */}
-      <div className="investments-dashboard-shell">
-        {!hasCompletedInvestments ? (
-          <div className="empty-investments">
-            <p>You currently have no active investments that are fully funded.</p>
-          </div>
-        ) : (
+      {/* EMPTY STATE — FULL WIDTH */}
+      {!hasCompletedInvestments && (
+        <div className="empty-investments">
+          <p>You currently have no active investments that are fully funded.</p>
+        </div>
+      )}
+
+      {/* DATA STATE — TWO COLUMN LAYOUT */}
+      {hasCompletedInvestments && (
+        <div className="investments-dashboard-shell">
           <div className="investments-dashboard">
 
-            {/* ✅ CHART — only rendered when investments exist */}
+            {/* Left: Portfolio Chart */}
             <div className="investments-chart">
               <p className="portfolio-title">Your Portfolio</p>
               <div className="piechart-wrapper">
@@ -148,10 +151,13 @@ return (
               </div>
             </div>
 
-            {/* Investment list */}
+            {/* Right: Investments List */}
             <div className="investments-grid-wrapper">
               {investments.map((inv) => (
-                <InvestmentsCard key={inv.id} investment={inv} />
+                <InvestmentsCard
+                  key={inv.id}
+                  investment={inv}
+                />
               ))}
 
               <div className="portfolio-total">
@@ -165,13 +171,11 @@ return (
             </div>
 
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
     </div>
   </ThemeProvider>
 );
-};
-
 
 export default UserInvestments;
