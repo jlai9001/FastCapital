@@ -53,9 +53,8 @@ from pydantic_schemas import PurchaseStatus
 from auth import get_auth_user,get_optional_auth_user
 from rich import print
 
-UPLOAD_ROOT = "/data"
-os.makedirs(UPLOAD_ROOT, exist_ok=True)
-DEFAULT_IMAGE_URL = "/uploaded_images/business_placeholder.png"
+
+DEFAULT_IMAGE_URL = "/data/business_placeholder.png"
 
 
 # add ENV detection
@@ -76,13 +75,13 @@ app = FastAPI(
 if not FRONTEND_ORIGIN:
     raise RuntimeError("CORS_ORIGIN env var must be set")
 
+DATA_DIR = "/var/data"
 
 app.mount(
     "/data",
-    StaticFiles(directory=UPLOAD_ROOT),
-    name="uploads"
+    StaticFiles(directory=DATA_DIR),
+    name="data"
 )
-
 
 SESSION_SECRET = os.environ.get("SESSION_SECRET")
 
@@ -201,7 +200,9 @@ async def get_investments() -> list[InvestmentOut]:
 
 
 @app.post(
-    "/api/business", response_model=BusinessOut, status_code=status.HTTP_201_CREATED
+    "/api/business",
+    response_model=BusinessOut,
+    status_code=status.HTTP_201_CREATED
 )
 async def create_business_api(
     name: str = Form(...),
@@ -213,38 +214,33 @@ async def create_business_api(
     state: str = Form(...),
     postal_code: str = Form(...),
     current_user: UserPublicDetails = Depends(get_auth_user),
+    db: Session = Depends(get_db),
 ) -> BusinessOut:
-    """
-    Create a new business with the provided details.
-    The business will be associated with the currently authenticated user.
-    The image will be saved to the local storage and its URL will be returned.
-    """
     try:
         image_url = DEFAULT_IMAGE_URL
 
-        if image and image.filename:
-            ext = image.filename.rsplit(".", 1)[-1].lower()
-            if ext not in ("jpg", "jpeg", "png", "svg"):
-                raise HTTPException(status_code=400, detail="Only JPG, PNG, SVG allowed")
+        if image:
+            # 1️⃣ Generate UUID filename
+            original_name = image.filename or ""
+            ext = Path(original_name).suffix.lower() or ".png"
+            filename = f"{uuid.uuid4()}{ext}"
 
-            filename = f"{uuid.uuid4().hex}.{ext}"
-            disk_path = os.path.join(UPLOAD_ROOT, filename)
-            image_url = f"/data/{filename}"
+            # 2️⃣ Disk + URL paths
+            disk_path = f"/var/data/{filename}"
+            url_path = f"/data/{filename}"
 
-            with open(disk_path, "wb") as buffer:
-                shutil.copyfileobj(image.file, buffer)
+            # 3️⃣ Save file to disk
+            with open(disk_path, "wb") as f:
+                shutil.copyfileobj(image.file, f)
 
-
-
-
-
-        # Add env variable api.fastcapital.site
+            # 4️⃣ Store PUBLIC URL
+            image_url = url_path
 
         business_data = {
             "name": name,
             "user_id": current_user.id,
             "website_url": website_url,
-            "image_url": image_url,
+            "image_url": image_url,   # ✅ THIS is what frontend sees
             "address1": address1,
             "address2": address2,
             "city": city,
@@ -254,9 +250,13 @@ async def create_business_api(
 
         return create_business(BusinessCreate(**business_data))
 
+
     except Exception as e:
         print(f"Error creating business: {e}")
         raise HTTPException(status_code=500, detail="Failed to create business.")
+
+
+
 
 
 # @app.post("/api/business/{business_id}/upload_image")
