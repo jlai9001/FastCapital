@@ -171,5 +171,7 @@ return (
     </div>
   </ThemeProvider>
 );
+};
+
 
 export default UserInvestments;
