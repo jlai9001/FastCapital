@@ -15,9 +15,9 @@
 }
 
 .no-investments{
+    display:flex;
+    margin: auto;
     font-size: 24px;
-    font-weight: 700;
-    text-align: center;
 }
 
 .investment-card-label {

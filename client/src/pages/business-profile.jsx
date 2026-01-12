@@ -153,9 +153,7 @@ export default function BusinessProfile() {
 
   {!investmentsLoading && !investments && (
     <div className="no-investments-container">
-      <p className="no-investment-header">Create an Investment Offer</p>
-      <p className="no-investment-text">You haven't created any offers yet.</p>
-      <p className="no-investment-text">Create an offer so that potential investors know what you're looking for.</p>
+      <div className="no-investment-text">Create an offer so that potential investors know what you're looking for.</div>
     </div>
   )}
 
