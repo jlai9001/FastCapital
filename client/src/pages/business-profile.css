@@ -52,9 +52,14 @@
   margin-top: 15px;
 }
 
-.no-investment-text {
+  .no-investments-container{
   display:flex;
-  margin: auto;
+  margin:auto;
+  align-items: center;
+  }
+
+
+.no-investment-text {
   font-size: 24px;
   text-align: center;
 }
@@ -83,7 +88,6 @@
   font-size: 16px;
   color: #047857;
 }
-
 
 .business-profile-name {
 text-align: left;
