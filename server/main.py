@@ -78,7 +78,7 @@ if not FRONTEND_ORIGIN:
 
 
 app.mount(
-    "/disk",
+    "/data",
     StaticFiles(directory=UPLOAD_ROOT),
     name="uploads"
 )
