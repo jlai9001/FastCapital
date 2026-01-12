@@ -164,6 +164,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+# debug route:
+
+@app.get("/debug/file-check/{filename}")
+def debug_file_check(filename: str):
+    path = f"/data/business_images/{filename}"
+    return {
+        "path": path,
+        "exists": os.path.exists(path),
+        "is_file": os.path.isfile(path),
+        "cwd": os.getcwd(),
+        "dir_list": os.listdir("/data/business_images"),
+    }
 # browser cache validation
 
 @app.head("/images/{filename}")
