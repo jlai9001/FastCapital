@@ -113,17 +113,8 @@ for (const key in formData) {
 // - Else => convert placeholder PNG into a File and use that
 if (logoFile) {
   form.append("image", logoFile);
-} else {
-  const resp = await fetch(businessPlaceholder);
-  const blob = await resp.blob();
-
-  // Make it a File so backend receives UploadFile normally
-  const placeholderFile = new File([blob], "business_placeholder.png", {
-    type: blob.type || "image/png",
-  });
-
-  form.append("image", placeholderFile);
 }
+
 
 const res = await fetch(`${base_url}/api/business`, {
   method: "POST",

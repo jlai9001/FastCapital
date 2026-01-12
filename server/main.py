@@ -54,7 +54,7 @@ from auth import get_auth_user,get_optional_auth_user
 from rich import print
 
 
-DEFAULT_IMAGE_URL = "/data/business_placeholder.png"
+DEFAULT_IMAGE_URL = None
 
 
 # add ENV detection
@@ -75,12 +75,14 @@ app = FastAPI(
 if not FRONTEND_ORIGIN:
     raise RuntimeError("CORS_ORIGIN env var must be set")
 
-DATA_DIR = "/var/data"
+# data
+IMAGE_ROOT = "/data/business_images"
+os.makedirs(IMAGE_ROOT, exist_ok=True)
 
 app.mount(
-    "/data",
-    StaticFiles(directory=DATA_DIR),
-    name="data"
+    "/images",
+    StaticFiles(directory=IMAGE_ROOT),
+    name="images"
 )
 
 SESSION_SECRET = os.environ.get("SESSION_SECRET")
@@ -217,24 +219,15 @@ async def create_business_api(
     db: Session = Depends(get_db),
 ) -> BusinessOut:
     try:
-        image_url = DEFAULT_IMAGE_URL
-
-        if image:
-            # 1️⃣ Generate UUID filename
-            original_name = image.filename or ""
-            ext = Path(original_name).suffix.lower() or ".png"
+        # image upload
+        image_url = None
+        if image and image.filename:
+            ext = Path(image.filename).suffix.lower() or ".png"
             filename = f"{uuid.uuid4()}{ext}"
-
-            # 2️⃣ Disk + URL paths
-            disk_path = f"/var/data/{filename}"
-            url_path = f"/data/{filename}"
-
-            # 3️⃣ Save file to disk
+            disk_path = os.path.join(IMAGE_ROOT, filename)
             with open(disk_path, "wb") as f:
                 shutil.copyfileobj(image.file, f)
-
-            # 4️⃣ Store PUBLIC URL
-            image_url = url_path
+            image_url = f"/images/{filename}"
 
         business_data = {
             "name": name,
