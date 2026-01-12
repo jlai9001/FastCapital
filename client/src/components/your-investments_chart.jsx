@@ -11,7 +11,6 @@ const chartTheme = createTheme({
     MuiChartsSurface: {
       styleOverrides: {
         root: {
-          height: 200, // Adjust height as needed
         },
       },
     },
@@ -149,7 +148,7 @@ return (
                 series={[{ data: pieData }]}
                 legend={{ hidden: true }}
                 margin={{ top: 0, bottom: 0, left: 0, right: 0 }}
-                sx={{ width: "100%", height: "100%" }}
+                sx={{ width: "100%",height:"100%"}}
               />
               </div>
             </div>
