@@ -63,6 +63,7 @@
   .investments-chart {
     display: flex;
     align-items: center; /* vertical */
+    gap: 30px;
   }
 
   .piechart-wrapper {
