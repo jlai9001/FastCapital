@@ -124,7 +124,6 @@ const UserInvestments = () => {
     <div className="investments-dashboard-container">
       <div className="investments-chart">
         <p className="portfolio-title">Your Portfolio</p>
-
         <div className="piechart-wrapper">
           <PieChart
             series={[{ data: pieData }]}
@@ -135,9 +134,8 @@ const UserInvestments = () => {
     {/* HEADER AREA – fixed height */}
     <div className="investments-dashboard-header">
       {hasCompletedInvestments && <p>Your Investments</p>}
-    </div>
-    {/* CONTENT AREA – consistent shell */}
-    <div className="investments-dashboard-shell">
+      {/* investment list */}
+         <div className="investments-dashboard-shell">
       {!hasCompletedInvestments ? (
         <div className="empty-investments">
           <p>You currently have no active investments that are fully funded.</p>
@@ -161,6 +159,8 @@ const UserInvestments = () => {
     </div>
       )}
     </div>
+  </div>
+
   </div>
   </ThemeProvider>
 );
