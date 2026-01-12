@@ -122,49 +122,53 @@ const UserInvestments = () => {
   return (
   <ThemeProvider theme={chartTheme}>
     <div className="investments-dashboard-container">
+    {/* HEADER AREA – fixed height */}
+    <div className="investments-dashboard-header">
+      {hasCompletedInvestments && <p>Your Investments</p>}
+    </div>
+    {/* CONTENT AREA – consistent shell */}
+    <div className="investments-dashboard-shell">
       {!hasCompletedInvestments ? (
         <div className="empty-investments">
           <p>You currently have no active investments that are fully funded.</p>
         </div>
       ) : (
-        <div className="investments-dashboard">
-          <div className="investments-dashboard-header">
-            <p>Your Investments</p>
-          </div>
-          <div className="investments-chart">
-            <p className="portfolio-title">Your Portfolio</p>
-            <div className="piechart-wrapper">
-              <PieChart
-                series={[{ data: pieData }]}
-                width={300}
-                height={300}
-                legend={{ position: "right" }}
-                sx={{
-                  "& .MuiChartsLegend-series": {
-                    color: "#374151",
-                  },
-                }}
-              />
-            </div>
-          </div>
-
-          <div className="investments-grid-wrapper">
-            {investments.map((inv) => (
-              <InvestmentsCard key={inv.id} investment={inv} />
-            ))}
-
-            <div className="portfolio-total">
-              <p>
-                <span className="value-text">Total Value:&nbsp;</span>
-                <span className="value">
-                  ${totalPortfolioValue.toFixed(2)}
-                </span>
-              </p>
-            </div>
-          </div>
+    <div className="investments-dashboard">
+      <div className="investments-chart">
+        <p className="portfolio-title">Your Portfolio</p>
+        <div className="piechart-wrapper">
+          <PieChart
+            series={[{ data: pieData }]}
+            width={300}
+            height={300}
+            legend={{ position: "right" }}
+            sx={{
+              "& .MuiChartsLegend-series": {
+                color: "#374151",
+              },
+            }}
+          />
         </div>
+      </div>
+
+      <div className="investments-grid-wrapper">
+        {investments.map((inv) => (
+          <InvestmentsCard key={inv.id} investment={inv} />
+        ))}
+
+        <div className="portfolio-total">
+          <p>
+            <span className="value-text">Total Value:&nbsp;</span>
+            <span className="value">
+              ${totalPortfolioValue.toFixed(2)}
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
       )}
     </div>
+  </div>
   </ThemeProvider>
 );
 }

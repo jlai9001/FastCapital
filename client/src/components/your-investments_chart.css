@@ -7,6 +7,14 @@
   border-radius: 10px;
 }
 
+.investments-dashboard-shell {
+  width: 100%;
+  min-height: 240px; /* IMPORTANT */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .investments-dashboard-container {
     display: flex;
     flex-direction: column;

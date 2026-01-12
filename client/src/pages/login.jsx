@@ -13,7 +13,7 @@ function Blank_Message() {
 
 function Invalid_Message() {
   return (
-    <div className="Error_Message">INVALID EMAIL AND/OR PASSWORD</div>
+    <div className="Error_Message">INVALID CREDENTIALS</div>
   );
 }
 
