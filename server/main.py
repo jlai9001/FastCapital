@@ -229,7 +229,7 @@ async def create_business_api(
 
             filename = f"{uuid.uuid4().hex}.{ext}"
             disk_path = os.path.join(UPLOAD_ROOT, filename)
-            image_url = f"/disk/{filename}"
+            image_url = f"/data/{filename}"
 
             with open(disk_path, "wb") as buffer:
                 shutil.copyfileobj(image.file, buffer)
