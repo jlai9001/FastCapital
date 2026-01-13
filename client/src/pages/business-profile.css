@@ -53,6 +53,7 @@
 
 .no-financials-text {
   font-size: 20px;
+
 }
 
 .no-investment-header {
@@ -76,6 +77,7 @@
   text-align: center;
   background-color: #F9FAFB;
   width:100%;
+  border-radius: 15px;
 }
 
 .business-profile-container {
