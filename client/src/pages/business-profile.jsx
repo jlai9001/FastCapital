@@ -48,22 +48,27 @@ export default function BusinessProfile() {
   );
 }
 
-      const handleFileChange = (e) => {
-        setSelectedFile(e.target.files[0]);
-      };
+const handleFileChange = (e) => {
+  setSelectedFile(e.target.files[0]);
+};
 
-      const handleImageUpload = async (e) => {
-    e.preventDefault();
-    if (!selectedFile) return;
+const handleImageUpload = async (e) => {
+  e.preventDefault();
+  if (!selectedFile) return;
 
-    try {
-      const updated = await uploadBusinessImage(business.id, selectedFile);
-      // Ideally refetch business here
-      window.location.reload(); // or force re-render
-    } catch (err) {
-      console.error(err.message);
-    }
-  };
+  try {
+    const updated = await uploadBusinessImage(business.id, selectedFile);
+    // Ideally refetch business here
+    window.location.reload(); // or force re-render
+  } catch (err) {
+    console.error(err.message);
+  }
+};
+
+  const isValidImagePath =
+  business?.image_url &&
+  !business.image_url.startsWith("data:image");
+
 
     return (
         <div className="business-profile-container">
@@ -74,9 +79,10 @@ export default function BusinessProfile() {
             <div className="business-info">
                 <div className="business-image-container">
                   <div className="image-wrapper">
+
                   <img
                     src={
-                      business.image_url
+                      isValidImagePath
                         ? business.image_url.startsWith("http")
                           ? business.image_url
                           : `${API_BASE}${business.image_url}`
@@ -88,6 +94,8 @@ export default function BusinessProfile() {
                       e.currentTarget.src = placeholder;
                     }}
                   />
+
+
                   </div>
                   {/* {isOwner && (
                     <div className="upload-box">
