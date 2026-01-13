@@ -9,7 +9,7 @@ export default function About() {
           <h1 className="about-title">About Fast Capital</h1>
           <p className="about-subtitle">
             Invest in local businesses. Empower communities. Grow your wealth. <br></br>
-            Source Code: <a href="https://gitlab.com/fastcapital/fastcapitaltest/">Github Repository</a>
+            Source Code: <a href="https://github.com/jlai9001/FastCapital">Github Repository</a>
           </p>
 
         <hr className="about-divider" />
