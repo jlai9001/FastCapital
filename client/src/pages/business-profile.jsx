@@ -74,7 +74,12 @@ const handleImageUpload = async (e) => {
         <div className="business-profile-container">
           <div className="business-profile-header-row">
             <p className="business-profile-header">Business profile</p>
-            <a className="business-profile-page-button" href="/add-business">Edit Profile Details</a>
+            <button
+              className="business-profile-page-button"
+              onClick={() => navigate("/add-business")}
+            >
+              Edit Profile Details
+            </button>
           </div>
             <div className="business-info">
                 <div className="business-image-container">
