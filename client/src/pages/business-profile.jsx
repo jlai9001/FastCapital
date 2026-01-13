@@ -9,6 +9,9 @@ import urlIcon from "../assets/url_icon.png";
 import coinIcon from "../assets/coin.svg";
 import placeholder from "../assets/business_placeholder.png";
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
+
 export default function BusinessProfile() {
     const navigate = useNavigate();
     const { business, loading, error } = useBusinessForUser();
@@ -71,13 +74,21 @@ export default function BusinessProfile() {
             <div className="business-info">
                 <div className="business-image-container">
                   <div className="image-wrapper">
-                    <img
-                      src={business.image_url}
-                      alt={business.name}
-                      className="business-image"
-                    />
+                  <img
+                    src={
+                      business.image_url
+                        ? business.image_url.startsWith("http")
+                          ? business.image_url
+                          : `${API_BASE}${business.image_url}`
+                        : placeholder
+                    }
+                    alt={business.name}
+                    className="business-image"
+                    onError={(e) => {
+                      e.currentTarget.src = placeholder;
+                    }}
+                  />
                   </div>
-
                   {/* {isOwner && (
                     <div className="upload-box">
                       <form className="upload-image-form" onSubmit={handleImageUpload}>
