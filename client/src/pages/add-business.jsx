@@ -98,6 +98,11 @@ function AddBusiness() {
         body: JSON.stringify(payload),
       });
 
+      // force fresh image when profile loads
+      navigate("/business-profile", {
+        state: { refreshImage: Date.now() },
+      });
+
       const data = await res.json();
 
       if (!res.ok) {

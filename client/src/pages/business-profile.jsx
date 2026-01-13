@@ -1,8 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FinancialDashboard from "../components/financials_table";
 import InvestmentCardsByBusinessId from "../components/investment-cards-by-businessID.jsx";
-import { useBusinessForUser, useFinancialsForBusiness, useInvestmentsForBusiness, useBusiness, uploadBusinessImage } from "../hooks/getData.jsx";
+import {
+  useBusinessForUser,
+  useFinancialsForBusiness,
+  useInvestmentsForBusiness,
+} from "../hooks/getData.jsx";
 import "./business-profile.css";
 import locationIcon from "../assets/location_icon.png";
 import urlIcon from "../assets/url_icon.png";
@@ -11,178 +15,163 @@ import placeholder from "../assets/business_placeholder.png";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
-
 export default function BusinessProfile() {
-    const navigate = useNavigate();
-    const { business, loading, error } = useBusinessForUser();
-    const isOwner = business?.id !== undefined;
-    const [selectedFile, setSelectedFile] = useState(null);
+  const navigate = useNavigate();
 
-    const {
-      financials, loading: financialsLoading, error: financialsError
-    } = useFinancialsForBusiness(business?.id);
+  const { business, loading, error } = useBusinessForUser();
+  const [imageVersion, setImageVersion] = useState(0);
 
-    const {
-      investments,
-      loading: investmentsLoading,
-      error: investmentsError,
-    } = useInvestmentsForBusiness(business?.id);
+  const {
+    financials,
+    loading: financialsLoading,
+    error: financialsError,
+  } = useFinancialsForBusiness(business?.id);
 
-    if (loading) return <h1> Loading... </h1>
-    if (error) return <h1> {error.message} </h1>
+  const {
+    investments,
+    loading: investmentsLoading,
+    error: investmentsError,
+  } = useInvestmentsForBusiness(business?.id);
 
-    if (!business) {
+  // 🔑 FORCE IMAGE REFRESH WHEN IMAGE_URL CHANGES
+  useEffect(() => {
+    if (business?.image_url) {
+      setImageVersion(Date.now());
+    }
+  }, [business?.image_url]);
+
+  if (loading) return <h1>Loading...</h1>;
+  if (error) return <h1>{error.message}</h1>;
+
+  if (!business) {
     return (
       <div className="full-screen-wrapper">
         <div className="no-business-container">
-          <img
-            src={coinIcon}
-            alt="Coin Icon"
-            className="profil-coin-icon"
-          />
-            <p className="no-business-header">Create a Business Profile</p>
-            <p className="no-business-text">It looks like you don't have a business profile yet.</p>
-            <button className="no-business-button" onClick={() => navigate("/add-business")}>Add Your Business</button>
+          <img src={coinIcon} alt="Coin Icon" className="profil-coin-icon" />
+          <p className="no-business-header">Create a Business Profile</p>
+          <p className="no-business-text">
+            It looks like you don't have a business profile yet.
+          </p>
+          <button
+            className="no-business-button"
+            onClick={() => navigate("/add-business")}
+          >
+            Add Your Business
+          </button>
         </div>
       </div>
-  );
-}
-
-const handleFileChange = (e) => {
-  setSelectedFile(e.target.files[0]);
-};
-
-const handleImageUpload = async (e) => {
-  e.preventDefault();
-  if (!selectedFile) return;
-
-  try {
-    const updated = await uploadBusinessImage(business.id, selectedFile);
-    // Ideally refetch business here
-    window.location.reload(); // or force re-render
-  } catch (err) {
-    console.error(err.message);
+    );
   }
-};
 
   const isValidImagePath =
-  business?.image_url &&
-  !business.image_url.startsWith("data:image");
+    business.image_url && !business.image_url.startsWith("data:image");
 
+  return (
+    <div className="business-profile-container">
+      <div className="business-profile-header-row">
+        <p className="business-profile-header">Business profile</p>
+        <button
+          className="business-profile-page-button"
+          onClick={() => navigate("/add-business")}
+        >
+          Edit Profile Details
+        </button>
+      </div>
 
-    return (
-        <div className="business-profile-container">
-          <div className="business-profile-header-row">
-            <p className="business-profile-header">Business profile</p>
-            <button
-              className="business-profile-page-button"
-              onClick={() => navigate("/add-business")}
+      <div className="business-info">
+        <div className="business-image-container">
+          <div className="image-wrapper">
+            <img
+              src={
+                isValidImagePath
+                  ? `${
+                      business.image_url.startsWith("http")
+                        ? business.image_url
+                        : `${API_BASE}${business.image_url}`
+                    }?v=${imageVersion}`
+                  : placeholder
+              }
+              alt={business.name}
+              className="business-image"
+              onError={(e) => {
+                e.currentTarget.src = placeholder;
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="business-details">
+          <p className="business-profile-name">{business.name}</p>
+
+          <p className="business-location">
+            <img
+              src={locationIcon}
+              alt="Location Icon"
+              className="location-icon"
+            />
+            &nbsp;{business.city}, {business.state}
+          </p>
+
+          <p>
+            <a
+              className="business-website"
+              href={business.website_url}
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              Edit Profile Details
-            </button>
-          </div>
-            <div className="business-info">
-                <div className="business-image-container">
-                  <div className="image-wrapper">
+              <img
+                src={urlIcon}
+                alt="URL Icon"
+                className="website-icon"
+              />
+              &nbsp;&nbsp;
+              {business.website_url.replace(/^https?:\/\/(www\.)?/, "")}
+            </a>
+          </p>
+        </div>
+      </div>
 
-                  <img
-                    src={
-                      isValidImagePath
-                        ? `${
-                            business.image_url.startsWith("http")
-                              ? business.image_url
-                              : `${API_BASE}${business.image_url}`
-                          }?v=${Date.now()}`
-                        : placeholder
-                    }
-                    alt={business.name}
-                    className="business-image"
-                    onError={(e) => {
-                      e.currentTarget.src = placeholder;
-                    }}
-                  />
+      <div className="business-profile-header-row">
+        <p className="business-profile-subheader">Financial Details</p>
+        <a
+          className="business-profile-page-button"
+          href={`/create-financials/${business.id}`}
+        >
+          Add Financial Details
+        </a>
+      </div>
 
-                  </div>
-                  {/* {isOwner && (
-                    <div className="upload-box">
-                      <form className="upload-image-form" onSubmit={handleImageUpload}>
-                        <input className="choose-file-button" type="file" accept="image/*" onChange={handleFileChange} required />
-                        <button className="upload-image-button" type="submit">Upload Image</button>
-                      </form>
-                    </div>
-                  )} */}
-                </div>
-                <div className="business-details">
-                  <p className="business-profile-name">{business.name}</p>
-                  <p className="business-location">
-                    <img
-                      src={locationIcon}
-                      alt="Location Icon"
-                      className="location-icon"
-                    />
-                    &nbsp;{business.city}, {business.state}
-                  </p>
-                  <p>
-                    <a
-                      className="business-website"
-                      href={business.website_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <img
-                        src={urlIcon}
-                        alt="URL Icon"
-                        className="website-icon"
-                      />
-                      &nbsp;&nbsp;{business.website_url.replace(/^https?:\/\/(www\.)?/, '')}
-                    </a>
-                  </p>
-                </div>
-              </div>
-
-          <div className="business-profile-header-row">
-            <p className="business-profile-subheader">Financial Details</p>
-              <a
-              className="business-profile-page-button"
-              href={`/create-financials/${business.id}`}
-              >
-                Add Financial Details
-              </a>
+      <div className="financial-dashboard-container">
+        {financialsLoading ? (
+          <h3>Loading Financials...</h3>
+        ) : financialsError ? (
+          <h2>Error loading financials</h2>
+        ) : financials && financials.length > 0 ? (
+          <FinancialDashboard businessId={business.id} />
+        ) : (
+          <div className="no-financials-container">
+            <div className="no-financials-text">
+              Add financial details to attract more investors.
             </div>
-          <div className="financial-dashboard-container">
-            {financialsLoading ? (
-              <h3>Loading Financials...</h3>
-            ) : financialsError ? (
-              <h2>Error loading financials: {financialsError.message}</h2>
-            ) : financials && financials.length > 0 ? (
-              <FinancialDashboard businessId={business.id} />
-            ) : (
-                <div className="no-financials-container">
-                  <div className="no-financials-text">Add financial details to attract more investors.</div>
-                </div>
-            )}
           </div>
-          <div className="business-profile-header-row">
-            <p className="business-profile-subheader">Investment Offers</p>
-            <a className="business-profile-page-button" href="/create-investment">Add Investment Offer</a>
-          </div>
-          <div className="business-investment-container">
+        )}
+      </div>
 
-  {investmentsLoading && <p>Loading investments...</p>}
-  {investmentsError && <p>Error loading investments.</p>}
+      <div className="business-profile-header-row">
+        <p className="business-profile-subheader">Investment Offers</p>
+        <a className="business-profile-page-button" href="/create-investment">
+          Add Investment Offer
+        </a>
+      </div>
 
-  {/* {!investmentsLoading && !investments && (
-    <div className="no-investments-container">
-      <div className="no-investment-text">Create an offer so that potential investors know what you're looking for.</div>
+      <div className="business-investment-container">
+        {investmentsLoading && <p>Loading investments...</p>}
+        {investmentsError && <p>Error loading investments.</p>}
+
+        {!investmentsLoading && investments && (
+          <InvestmentCardsByBusinessId businessId={business.id} />
+        )}
+      </div>
     </div>
-  )} */}
-
-  {!investmentsLoading && investments && (
-    <>
-      <InvestmentCardsByBusinessId businessId={business.id} />
-    </>
-  )}
-        </div>
-        </div>
-      );
-    }
+  );
+}

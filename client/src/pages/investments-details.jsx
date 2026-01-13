@@ -10,8 +10,10 @@ import locationIcon from "../assets/location_icon.png";
 import urlIcon from "../assets/url_icon.png";
 import placeholder from "../assets/business_placeholder.png";
 import { useUser } from "../context/user-provider";
+import { useState, useEffect } from "react";
 
 export default function InvestmentDetails() {
+  const [imageVersion, setImageVersion] = useState(0);
   const { investmentId } = useParams();
   const navigate = useNavigate();
   const { user } = useUser();
@@ -27,6 +29,12 @@ export default function InvestmentDetails() {
     error: businessError,
     data: business,
   } = useBusiness(investment?.business_id);
+
+  useEffect(() => {
+  if (business?.image_url) {
+    setImageVersion(Date.now());
+  }
+  }, [business?.image_url]);
 
   const {
     loading: purchasesLoading,
@@ -55,22 +63,22 @@ export default function InvestmentDetails() {
         <div className="investment-column investment-column-1">
           <div className="box business-detail-image-wrapper">
 
-
           <img
             src={
-              business.image_url
-                ? `${base_url}${business.image_url}`
+              business?.image_url
+                ? `${
+                    business.image_url.startsWith("http")
+                      ? business.image_url
+                      : `${base_url}${business.image_url}`
+                  }?v=${imageVersion}`
                 : placeholder
             }
             alt={business.name}
             className="business-detail-image"
             onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = placeholder;
+              e.currentTarget.src = placeholder;
             }}
           />
-
-
 
           </div>
         </div>
