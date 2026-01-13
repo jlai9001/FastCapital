@@ -90,7 +90,10 @@ function AddBusiness() {
 
       const res = await fetch(`${base_url}/api/business/${businessId}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
         credentials: "include",
         body: JSON.stringify(payload),
       });
