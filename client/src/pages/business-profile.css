@@ -34,6 +34,11 @@
   border-radius: 10px;
 }
 
+.no-business-container{
+  width:100%;
+  background-color: #F9FAFB;
+}
+
 .no-financials-header {
   text-align: center;
   margin-top: 15px;
@@ -42,9 +47,6 @@
 
 .no-financials-text {
   font-size: 20px;
-  text-align: center;
-  background-color: #F9FAFB;
-  width:100%;
 }
 
 .no-investment-header {
