@@ -35,6 +35,8 @@
 }
 
 .no-financials-container{
+  display:flex;
+  margin:auto;
   border-radius:15px;
   width:100%;
   background-color: #F9FAFB;
@@ -44,12 +46,10 @@
   text-align: center;
   margin-top: 15px;
   width:100%;
-  background-color: #F9FAFB;
 }
 
 .no-financials-text {
   font-size: 20px;
-  background-color: #F9FAFB;
 }
 
 .no-investment-header {
