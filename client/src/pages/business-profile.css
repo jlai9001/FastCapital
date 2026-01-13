@@ -63,12 +63,13 @@
 
 .no-investments-container{
   justify-content: center;   /* 👈 THIS */
-  width: 100%;
+  display:flex;
+  margin:auto;
+  align-items: center;
   text-align: center;
-  opacity: 0.8;
-  font-size: 20px;
+  border-radius:15px;
+  width:100%;
   background-color: #F9FAFB;
-  border-radius: 15px;
 }
 
 
