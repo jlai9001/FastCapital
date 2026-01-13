@@ -37,6 +37,7 @@
 .no-financials-container{
   display:flex;
   margin:auto;
+  align-items: center;
   border-radius:15px;
   width:100%;
   background-color: #F9FAFB;
