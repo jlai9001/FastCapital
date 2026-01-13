@@ -44,6 +44,7 @@
 .no-financials-text {
   font-size: 24px;
   text-align: center;
+  background-color: #F9FAFB;
 }
 
 .no-investment-header {
@@ -54,7 +55,6 @@
 
   .no-investments-container{
     width: 100%;
-    padding: 24px;
     text-align: center;
     opacity: 0.8;
     font-size: 20px;
@@ -66,6 +66,7 @@
 .no-investment-text {
   font-size: 20px;
   text-align: center;
+  background-color: #F9FAFB;
 }
 
 .business-profile-container {
