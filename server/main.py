@@ -264,9 +264,12 @@ async def create_business_api(
             ext = Path(image.filename).suffix.lower() or ".png"
             filename = f"{uuid.uuid4()}{ext}"
             disk_path = os.path.join(IMAGE_ROOT, filename)
+
             with open(disk_path, "wb") as f:
                 shutil.copyfileobj(image.file, f)
-            image_url = f"/images/{filename}"
+
+            # 🔒 LOCKED absolute URL (production)
+            image_url = f"https://fastcapital.onrender.com/images/{filename}"
 
         business_data = {
             "name": name,
