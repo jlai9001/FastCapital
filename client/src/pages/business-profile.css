@@ -61,6 +61,7 @@
 }
 
 .no-investments-container{
+  justify-content: center;   /* 👈 THIS */
   width: 100%;
   text-align: center;
   opacity: 0.8;
