@@ -88,9 +88,11 @@ const handleImageUpload = async (e) => {
                   <img
                     src={
                       isValidImagePath
-                        ? business.image_url.startsWith("http")
-                          ? business.image_url
-                          : `${API_BASE}${business.image_url}`
+                        ? `${
+                            business.image_url.startsWith("http")
+                              ? business.image_url
+                              : `${API_BASE}${business.image_url}`
+                          }?v=${Date.now()}`
                         : placeholder
                     }
                     alt={business.name}
@@ -99,7 +101,6 @@ const handleImageUpload = async (e) => {
                       e.currentTarget.src = placeholder;
                     }}
                   />
-
 
                   </div>
                   {/* {isOwner && (
