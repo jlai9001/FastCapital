@@ -35,16 +35,18 @@
 }
 
 .no-financials-container{
+  justify-content: center;   /* 👈 THIS */
   display:flex;
   margin:auto;
   align-items: center;
+  text-align: center;
   border-radius:15px;
   width:100%;
   background-color: #F9FAFB;
 }
 
 .no-financials-header {
-  text-align: center;
+
   margin-top: 15px;
   width:100%;
 }
