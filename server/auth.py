@@ -12,7 +12,7 @@ def get_auth_user(request: Request) -> UserPublicDetails:
     email = request.session.get("email")
     session_token = request.session.get("session_token")
 
-    print("SESSION CONTENTS:", request.session)
+    # print("SESSION CONTENTS:", request.session)
 
     if not email or not isinstance(email, str):
         raise HTTPException(
@@ -24,7 +24,7 @@ def get_auth_user(request: Request) -> UserPublicDetails:
         )
     if not db.validate_session(email, session_token):
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail="Session expired or invalid"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Session expired or invalid"
         )
 
     user = db.get_user_public_details(email)

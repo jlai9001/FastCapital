@@ -8,10 +8,9 @@ export async function apiFetch(path, options = {}) {
 });
 
 // 🔥 Redirect ONLY after next protected request fails
-if (res.status === 401) {
-window.location.replace('/login');
+if (response.status === 401) {
+window.location.href('/login');
 return;
 }
-
-return res;
+return response;
 }
