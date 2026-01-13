@@ -35,38 +35,37 @@
 }
 
 .no-financials-header {
-  font-size: 24px;
-  font-weight: 700;
   text-align: center;
   margin-top: 15px;
 }
 
 .no-financials-text {
-  font-size: 24px;
+  font-size: 20px;
   text-align: center;
   background-color: #F9FAFB;
+  width:100%;
 }
 
 .no-investment-header {
-  font-size: 24px;
   text-align: center;
   margin-top: 15px;
 }
 
-  .no-investments-container{
-    width: 100%;
-    text-align: center;
-    opacity: 0.8;
-    font-size: 20px;
-    background-color: #F9FAFB;
-    border-radius: 10px;
-  }
+.no-investments-container{
+  width: 100%;
+  text-align: center;
+  opacity: 0.8;
+  font-size: 20px;
+  background-color: #F9FAFB;
+  border-radius: 10px;
+}
 
 
 .no-investment-text {
   font-size: 20px;
   text-align: center;
   background-color: #F9FAFB;
+  width:100%;
 }
 
 .business-profile-container {

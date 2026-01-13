@@ -29,7 +29,7 @@ export default function InvestmentCardsByBusinessId({ businessId }) {
 
   if (error) return <h1>{error}</h1>;
   if (!investments) return <h1>Loading investments...</h1>;
-  if (investments.length === 0) return <div class="no-investment-text">Create an offer so that potential investors know what you're looking for.</div>;
+  // if (investments.length === 0) return <div class="no-investment-text">Create an offer so that potential investors know what you're looking for.</div>;
 
   return (
     <div>
