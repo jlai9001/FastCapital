@@ -72,12 +72,7 @@ export default function BusinessProfile() {
                 <div className="business-image-container">
                   <div className="image-wrapper">
                     <img
-                      src={
-                        business.image_url
-                          ? `${base_url}${business.image_url}`
-                          : placeholder
-                      }
-
+                      src={business.image_url}
                       alt={business.name}
                       className="business-image"
                     />
