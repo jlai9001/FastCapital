@@ -1,32 +1,35 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import './add-business.css';
-import { base_url } from '../api'
-import businessPlaceholder from "../assets/business_placeholder.png";
-
+import "./add-business.css";
+import { base_url } from "../api";
 
 function AddBusiness() {
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        name: "",
-        website_url: "",
-        address1: "",
-        address2: "",
-        city: "",
-        state: "",
-        postal_code: "",
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    name: "",
+    website_url: "",
+    address1: "",
+    address2: "",
+    city: "",
+    state: "",
+    postal_code: "",
   });
 
   const [businessId, setBusinessId] = useState(null);
   const [logoFile, setLogoFile] = useState(null);
   const [message, setMessage] = useState("");
 
+  // ----------------------------------
+  // Fetch existing business (edit mode)
+  // ----------------------------------
   useEffect(() => {
     const fetchBusiness = async () => {
       try {
         const res = await fetch(`${base_url}/api/business/me`, {
           credentials: "include",
         });
+
         if (res.ok) {
           const data = await res.json();
           setFormData({
@@ -38,16 +41,19 @@ function AddBusiness() {
             state: data.state || "",
             postal_code: data.postal_code || "",
           });
-          setBusinessId(data.id); // used to determine PUT vs POST
+          setBusinessId(data.id);
         }
       } catch (err) {
-        console.error("Failed to fetch business data:", err);
+        console.error("Failed to fetch business:", err);
       }
     };
 
     fetchBusiness();
   }, []);
 
+  // ----------------------------------
+  // Handlers
+  // ----------------------------------
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -59,16 +65,23 @@ function AddBusiness() {
     setLogoFile(e.target.files[0]);
   };
 
-  function normalizeUrl(url) {
+  const normalizeUrl = (url) => {
     if (!/^https?:\/\//i.test(url)) {
       return "https://" + url;
     }
     return url;
-  }
+  };
 
+  // ----------------------------------
+  // Submit
+  // ----------------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage("");
 
+    // ================================
+    // UPDATE EXISTING BUSINESS
+    // ================================
     if (businessId) {
       const payload = {
         ...formData,
@@ -76,160 +89,165 @@ function AddBusiness() {
       };
 
       const res = await fetch(`${base_url}/api/business/${businessId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify(payload),
       });
 
       const data = await res.json();
 
-      if (res.ok) {
-        setMessage("Business updated!");
-        navigate("/business-profile");
-      } else {
-        if (Array.isArray(data.detail)) {
-          const messages = data.detail.map((err) => err.msg).join(", ");
-          setMessage(messages);
-        } else {
-          setMessage(data.detail || "Failed to update business.");
+      if (!res.ok) {
+        setMessage(data.detail || "Failed to update business.");
+        return;
+      }
+
+      // 🔹 Upload image AFTER business update
+      if (logoFile) {
+        const imageForm = new FormData();
+        imageForm.append("image", logoFile);
+
+        const imageRes = await fetch(
+          `${base_url}/api/business/${businessId}/image`,
+          {
+            method: "PATCH",
+            credentials: "include",
+            body: imageForm,
+          }
+        );
+
+        if (!imageRes.ok) {
+          setMessage("Business updated, but image upload failed.");
+          return;
         }
       }
 
-    } else {
-      // Create: send multipart/form-data including file upload
-      // Create: send multipart/form-data including file upload
-const form = new FormData();
-for (const key in formData) {
-  let value = formData[key];
-  if (key === "website_url") value = normalizeUrl(value);
-  form.append(key, value);
-}
-
-// ✅ Always include an image:
-// - If user picked one => use it
-// - Else => convert placeholder PNG into a File and use that
-if (logoFile) {
-  form.append("image", logoFile);
-}
-
-
-const res = await fetch(`${base_url}/api/business`, {
-  method: "POST",
-  body: form,
-  credentials: "include",
-});
-
-
-      const data = await res.json();
-
-      if (res.ok) {
-        setMessage("Business added!");
-        navigate("/portfolio");
-      } else {
-        if (Array.isArray(data.detail)) {
-          const messages = data.detail.map((err) => err.msg).join(", ");
-          setMessage(messages);
-        } else {
-          setMessage(data.detail || "Failed to save business.");
-        }
-      }
+      setMessage("Business updated!");
+      navigate("/business-profile");
+      return;
     }
+
+    // ================================
+    // CREATE NEW BUSINESS
+    // ================================
+    const form = new FormData();
+
+    for (const key in formData) {
+      let value = formData[key];
+      if (key === "website_url") value = normalizeUrl(value);
+      form.append(key, value);
+    }
+
+    if (logoFile) {
+      form.append("image", logoFile);
+    }
+
+    const res = await fetch(`${base_url}/api/business`, {
+      method: "POST",
+      body: form,
+      credentials: "include",
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      setMessage(data.detail || "Failed to create business.");
+      return;
+    }
+
+    setMessage("Business added!");
+    navigate("/portfolio");
   };
 
-
+  // ----------------------------------
+  // Render
+  // ----------------------------------
   return (
     <div className="add-business-container">
-      <div className = "business-form">
-      <div className="add-business-title">
-        {businessId ? "Edit Business" : "Add Business"}
-      </div>
-      <form onSubmit={handleSubmit}>
-        <div className = "field-label">Name</div>
+      <div className="business-form">
+        <div className="add-business-title">
+          {businessId ? "Edit Business" : "Add Business"}
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <div className="field-label">Name</div>
           <input
             name="name"
-            placeholder="Business Name"
             value={formData.name}
             onChange={handleChange}
             required
           />
-        <div className = "field-label">Website</div>
+
+          <div className="field-label">Website</div>
           <input
             name="website_url"
-            type="text"
-            placeholder="https://www.business.com"
             value={formData.website_url}
             onChange={handleChange}
             required
           />
-        <div className = "field-label">Picture</div>
+
+          <div className="field-label">Picture</div>
           <input
-            name="image"
             type="file"
             accept="image/*"
             onChange={handleFileChange}
           />
-        <div className = "field-label">Address</div>
+
+          <div className="field-label">Address</div>
           <input
-          name="address1"
-          type="text"
-          placeholder="Address1"
-          value={formData.address1}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="address2"
-          type="text"
-          placeholder="Address2"
-          value={formData.address2}
-          onChange={handleChange}
-        />
-         <div className = "field-label">City</div>
-        <input
-          name="city"
-          type="text"
-          placeholder="City"
-          value={formData.city}
-          onChange={handleChange}
-          required
-        />
-        <div className = "field-label">State</div>
-        <input
-          name="state"
-          type="text"
-          placeholder="State"
-          value={formData.state}
-          onChange={handleChange}
-          required
-        />
-        <div className = "field-label">Postal Code</div>
-        <input
-          name="postal_code"
-          type="text"
-          placeholder="Postal Code"
-          value={formData.postal_code}
-          onChange={handleChange}
-          required
-        />
-        <div className="button-group">
-          <button
-          className="cancel-button"
-          type="button"
-          onClick={() => navigate("/")}
-          >
-            Cancel
+            name="address1"
+            value={formData.address1}
+            onChange={handleChange}
+            required
+          />
+          <input
+            name="address2"
+            value={formData.address2}
+            onChange={handleChange}
+          />
+
+          <div className="field-label">City</div>
+          <input
+            name="city"
+            value={formData.city}
+            onChange={handleChange}
+            required
+          />
+
+          <div className="field-label">State</div>
+          <input
+            name="state"
+            value={formData.state}
+            onChange={handleChange}
+            required
+          />
+
+          <div className="field-label">Postal Code</div>
+          <input
+            name="postal_code"
+            value={formData.postal_code}
+            onChange={handleChange}
+            required
+          />
+
+          <div className="button-group">
+            <button
+              type="button"
+              className="cancel-button"
+              onClick={() => navigate("/")}
+            >
+              Cancel
             </button>
-          <button className="add-business-button" type="submit">
-          {businessId ? "Update Business" : "Add Business"}
-          </button>
+
+            <button type="submit" className="add-business-button">
+              {businessId ? "Update Business" : "Add Business"}
+            </button>
           </div>
+
           {message && <p>{message}</p>}
         </form>
-        </div>
       </div>
+    </div>
   );
 }
 

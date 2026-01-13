@@ -76,6 +76,15 @@ class BusinessUpdate(BaseModel):
     state: Optional[str] = None
     postal_code: Optional[str] = None
 
+class BusinessPatch(BaseModel):
+    name: Optional[str] = None
+    website_url: Optional[str] = None
+    address1: Optional[str] = None
+    address2: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    postal_code: Optional[str] = None
+
 
 class InvestmentCreate(BaseModel):
     business_id: int

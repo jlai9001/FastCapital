@@ -1,65 +1,69 @@
-from secrets import token_urlsafe
-from starlette.middleware.base import BaseHTTPMiddleware
-from fastapi import (
-    Request,
-    HTTPException,
-    FastAPI,
-    Query,
-    Depends,
-    status,
-    UploadFile,
-    Response,
-    File,
-    Form,
-)
-
-from fastapi.responses import FileResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy.orm import Session, joinedload
-from starlette.middleware.sessions import SessionMiddleware
-from pydantic_schemas import (
-    InvestmentOut,
-    BusinessOut,
-    FinancialsCreate,
-    FinancialsOut,
-    PurchaseCreate,
-    EnrichedPurchaseOut,
-    SuccessResponse,
-    LoginCredentials,
-    SecretResponse,
-    UserPublicDetails,
-    InvestmentCreate,
-    SignupCredentials,
-    BusinessCreate,
-    InvestmentWithPurchasesOut,
-    BusinessUpdate,
-)
+# =========================
+# Standard library
+# =========================
+import os
+import shutil
 from pathlib import Path
 from typing import List, Optional
+from secrets import token_urlsafe
+
+# =========================
+# Third-party
+# =========================
+from fastapi import (
+    FastAPI,
+    Request,
+    Response,
+    HTTPException,
+    Depends,
+    Query,
+    UploadFile,
+    File,
+    Form,
+    status,
+)
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.middleware.sessions import SessionMiddleware
+from sqlalchemy.orm import Session, joinedload
+from rich import print
+
+# =========================
+# Internal
+# =========================
 import db
-import uuid, os, shutil
 from db import (
+    get_db,
     get_purchases_by_status,
     create_user,
     create_business,
     invalidate_session,
     validate_email_password,
-    get_db,
-    update_business_image,
     update_business_details,
 )
 from db_models import DBBusiness, DBInvestment
-from pydantic_schemas import PurchaseStatus
-from auth import get_auth_user,get_optional_auth_user
-from rich import print
+from auth import get_auth_user, get_optional_auth_user
+from pydantic_schemas import (
+    InvestmentOut,
+    BusinessCreate,
+    BusinessPatch,
+    BusinessOut,
+    FinancialsCreate,
+    FinancialsOut,
+    InvestmentCreate,
+    InvestmentWithPurchasesOut,
+    PurchaseCreate,
+    EnrichedPurchaseOut,
+    LoginCredentials,
+    SignupCredentials,
+    SuccessResponse,
+    SecretResponse,
+    UserPublicDetails,
+    PurchaseStatus,
+)
 
-# image serving imports
 
-from fastapi.responses import FileResponse
-import os
-
-DEFAULT_IMAGE_URL = None
 
 
 
@@ -260,16 +264,9 @@ async def create_business_api(
 ) -> BusinessOut:
     try:
         image_url = None
-        if image and image.filename:
-            ext = Path(image.filename).suffix.lower() or ".png"
-            filename = f"{uuid.uuid4()}{ext}"
-            disk_path = os.path.join(IMAGE_ROOT, filename)
+        ext = None
+        temp_path = None
 
-            with open(disk_path, "wb") as f:
-                shutil.copyfileobj(image.file, f)
-
-            # 🔒 LOCKED absolute URL (production)
-            image_url = f"https://fastcapital.onrender.com/images/{filename}"
 
         business_data = {
             "name": name,
@@ -283,7 +280,26 @@ async def create_business_api(
             "postal_code": postal_code,
         }
 
-        return create_business(BusinessCreate(**business_data))
+        business = create_business(BusinessCreate(**business_data))
+
+        if image and image.filename:
+            ext = Path(image.filename).suffix.lower() or ".png"
+            final_filename = f"business_{business.id}{ext}"
+            final_path = os.path.join(IMAGE_ROOT, final_filename)
+
+            with open(final_path, "wb") as f:
+                shutil.copyfileobj(image.file, f)
+
+            business.image_url = f"https://fastcapital.onrender.com/images/{final_filename}"
+
+            db.query(DBBusiness).filter(DBBusiness.id == business.id).update(
+                {"image_url": business.image_url}
+            )
+            db.commit()
+
+
+        return business
+
 
 
     except Exception as e:
@@ -357,10 +373,11 @@ async def get_business(business_id: int) -> BusinessOut:
         raise HTTPException(status_code=404, detail="Business not found")
     return business
 
-@app.put("/api/business/{business_id}", response_model=BusinessOut)
-async def put_business(
+
+@app.patch("/api/business/{business_id}", response_model=BusinessOut)
+async def patch_business(
     business_id: int,
-    updated_business: BusinessUpdate,
+    updated_business: BusinessPatch,
     db: Session = Depends(get_db),
     current_user: UserPublicDetails = Depends(get_auth_user),
 ) -> BusinessOut:
@@ -370,6 +387,50 @@ async def put_business(
         user_id=current_user.id,
         updated_data=updated_business,
     )
+
+
+
+@app.patch("/api/business/{business_id}/image", response_model=BusinessOut)
+async def patch_business_image(
+    business_id: int,
+    image: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: UserPublicDetails = Depends(get_auth_user),
+):
+    # 1. Fetch business
+    business = db.query(DBBusiness).filter(DBBusiness.id == business_id).first()
+    if not business:
+        raise HTTPException(status_code=404, detail="Business not found")
+
+    if business.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+
+    # 2. Remove any existing images for this business (any extension)
+    for file in os.listdir(IMAGE_ROOT):
+        if file.startswith(f"business_{business_id}."):
+            os.remove(os.path.join(IMAGE_ROOT, file))
+
+    # 3. Determine new filename
+    if not image.filename:
+        raise HTTPException(status_code=400, detail="Invalid image upload")
+
+    ext = Path(image.filename).suffix.lower() or ".png"
+    filename = f"business_{business_id}{ext}"
+    disk_path = os.path.join(IMAGE_ROOT, filename)
+
+    # 4. Write new file
+    with open(disk_path, "wb") as f:
+        shutil.copyfileobj(image.file, f)
+
+    # 4. Update image_url (stable per business)
+    business.image_url = f"https://fastcapital.onrender.com/images/{filename}"
+
+    db.commit()
+    db.refresh(business)
+
+    return BusinessOut.model_validate(business)
+
+
 
 @app.get("/api/business", response_model=List[BusinessOut])
 async def get_businesses():
@@ -520,7 +581,6 @@ async def signup(credentials: SignupCredentials, request: Request) -> SuccessRes
     return SuccessResponse(success=True)
 
 
-from typing import Optional
 
 @app.get("/api/me", response_model=Optional[UserPublicDetails])
 async def get_me(

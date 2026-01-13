@@ -23,7 +23,7 @@ from pydantic_schemas import (
     EnrichedPurchaseOut,
     UserPublicDetails,
     BusinessCreate,
-    BusinessUpdate,
+    BusinessPatch,
     PurchaseStatus,
 )
 import os
@@ -139,7 +139,7 @@ def update_business_details(
     db: Session,
     business_id: int,
     user_id: int,
-    updated_data: BusinessUpdate,
+    updated_data: BusinessPatch,
 ) -> BusinessOut:
     business = db.query(DBBusiness).filter(DBBusiness.id == business_id).first()
     if not business:
