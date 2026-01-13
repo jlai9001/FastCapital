@@ -151,11 +151,11 @@ export default function BusinessProfile() {
   {investmentsLoading && <p>Loading investments...</p>}
   {investmentsError && <p>Error loading investments.</p>}
 
-  {!investmentsLoading && !investments && (
+  {/* {!investmentsLoading && !investments && (
     <div className="no-investments-container">
       <div className="no-investment-text">Create an offer so that potential investors know what you're looking for.</div>
     </div>
-  )}
+  )} */}
 
   {!investmentsLoading && investments && (
     <>
