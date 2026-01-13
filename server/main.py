@@ -54,8 +54,14 @@ from pydantic_schemas import PurchaseStatus
 from auth import get_auth_user,get_optional_auth_user
 from rich import print
 
+# image serving imports
+
+from fastapi.responses import FileResponse
+import os
 
 DEFAULT_IMAGE_URL = None
+
+
 
 
 # add ENV detection
@@ -146,6 +152,17 @@ class CSRFMiddleware(BaseHTTPMiddleware):
 
         return await call_next(request)
 
+# serve file from disk
+
+IMAGE_ROOT = "/data/business_images"  # must match your real folder
+
+@app.get("/images/{filename}")
+def serve_image(filename: str):
+    path = os.path.join(IMAGE_ROOT, filename)
+    if not os.path.isfile(path):
+        raise HTTPException(status_code=404, detail="Image not found")
+    return FileResponse(path)
+
 
 # Register CSRF middleware
 app.add_middleware(CSRFMiddleware)
@@ -185,15 +202,6 @@ def image_head(filename: str):
     if not os.path.isfile(path):
         raise HTTPException(status_code=404)
     return Response(status_code=200)
-
-# dynatmic file-serving
-
-@app.get("/images/{filename}")
-def serve_image(filename: str):
-    path = os.path.join("/data/business_images", filename)
-    if not os.path.isfile(path):
-        raise HTTPException(status_code=404)
-    return FileResponse(path)
 
 
 @app.get("/api/investment/{investment_id}")
