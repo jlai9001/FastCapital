@@ -124,18 +124,5 @@ width: 100%;
 justify-content: center;
 }
 
-.tab-slider {
-width: 100%;
-overflow-x: auto;
-scrollbar-width: none; /* Firefox */
-}
 
-.tab-slider::-webkit-scrollbar {
-display: none; /* Chrome/Safari */
-}
-
-.tab-button {
-flex: 0 0 auto;
-min-width: 180px;
-}
 }
