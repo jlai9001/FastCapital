@@ -135,7 +135,6 @@
 /* Terms lists cleanup */
 .terms-list {
   margin: 0.5rem 0 1.5rem 0;   /* removes double spacing */
-  padding-left: 1.25rem;      /* standard bullet indent */
   list-style-type: disc;
 }
 
