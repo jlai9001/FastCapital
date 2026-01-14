@@ -1,13 +1,16 @@
 /* =========================================================
    FEATURED INVESTMENTS SECTION
-   Shared container for header + cards
    ========================================================= */
 
+:root {
+  --card-inner-padding: 1rem; /* single source of truth */
+}
+
 .featured-investments {
-  max-width: 1200px;       /* same visual width as cards */
+  max-width: 1200px;
   margin: 0 auto;
   padding: 1rem;
-  text-align: left;        /* hard stop: no centering */
+  text-align: left;
 }
 
 /* =========================================================
@@ -20,6 +23,9 @@
   align-items: center;
   width: 100%;
   margin-bottom: 1rem;
+
+  /* Align header text with card content */
+  padding-left: var(--card-inner-padding);
 }
 
 .featured-header h2 {
@@ -42,7 +48,7 @@
 .featured-investments li {
   width: 100%;
   height: 100%;
-  padding: 1rem;
+  padding: var(--card-inner-padding);
   transition: transform 0.2s ease;
 }
 
@@ -68,12 +74,14 @@
   padding: 0.5rem 1rem;
   min-width: 88px;
   min-height: 42px;
+
   border-radius: var(--button_border_radius);
   font-family: var(--button_font);
   font-size: 1rem;
   font-weight: 500;
   line-height: 1.2;
   text-decoration: none;
+
   color: var(--main_button_color);
   transition: color 0.3s ease, font-weight 0.2s ease;
 }
