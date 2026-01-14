@@ -29,7 +29,7 @@ export default function Terms() {
 
         <section className="terms-section">
           <h2>2) Definitions (aka: “What do these words mean?”)</h2>
-          <ul>
+          <ul className="terms-list">
             <li><strong>“Platform”</strong>: This website/app and everything inside it that tries to be helpful.</li>
             <li><strong>“You”</strong>: A human (or an extremely polite robot) using the Platform.</li>
             <li><strong>“We/Us”</strong>: The Platform team, fueled by coffee and “why is prod broken” energy.</li>
