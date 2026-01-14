@@ -87,29 +87,27 @@ export default function InvestmentDetails() {
             <p className="investment-detail-business-name">{business.name}</p>
           </div>
           <div className="investment-box">
-            <p className="investment-details-location">
+            <div className="investment-details-location">
               <img
                 src={locationIcon}
                 alt="Location Icon"
                 className="location-icon"
               />
               &nbsp; {business.city}, {business.state}
-            </p>
+            </div>
           </div>
-          <div className="investment-box">
-            <p>
-              <a
-                className="investment-details-website"
-                href={business.website_url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img src={urlIcon} alt="URL Icon" className="website-icon" />
-                &nbsp;&nbsp;
-                {business.website_url.replace(/^https?:\/\/(www\.)?/, "")}
-              </a>
-            </p>
-          </div>
+            <div className="investment-box">
+        <a
+          className="investment-details-website"
+          href={business.website_url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img src={urlIcon} alt="URL Icon" className="website-icon" />
+          {business.website_url.replace(/^https?:\/\/(www\.)?/, "")}
+        </a>
+      </div>
+
         </div>
         <div className="investment-column investment-column-3">
           <div className="investment-nested-column investment-top">
