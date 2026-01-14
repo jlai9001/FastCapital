@@ -271,6 +271,10 @@
     justify-content: space-between;
   }
 
+  .purchase-button-container {
+    margin-top: 2rem;
+  }
+
   /* Progress + Purchase stack */
   .progress-purchase-container {
     flex-direction: column;
