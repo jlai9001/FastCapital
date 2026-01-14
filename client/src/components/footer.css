@@ -41,7 +41,7 @@
   font-weight: 700;
   color: var(--primary_text_color);
   text-decoration: none !important;
-  margin-left: 50px; /* desktop visual alignment with header */
+
 }
 
 .nav-logo-image {
@@ -80,7 +80,6 @@
 .footer__copyright-section {
   color: var(--secondary_text_color);
   font-size: 0.85rem;
-  margin-right: 50px; /* matches logo offset */
 }
 
 /* =========================================================
@@ -97,6 +96,10 @@
    ========================================================= */
 @media (min-width: 768px) {
   .footer {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+    .footer__container {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
   }
