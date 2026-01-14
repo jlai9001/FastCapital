@@ -18,6 +18,7 @@ import Footer from './components/footer.jsx'
 import Terms from './pages/terms.jsx'
 import About from './pages/about.jsx'
 import Contact from './pages/contact.jsx'
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
 
       <Nav />
       <div style={{ height: '60px' }} />
+      <ScrollToTop />
       <Routes>
         <Route path='/' element={<Homepage />}></Route>
         <Route path='/signup' element={<SignupForm />}></Route>
