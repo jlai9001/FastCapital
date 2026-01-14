@@ -1,7 +1,6 @@
 .featured-investments {
-    width: 75%;
+    width: 100%;
     margin: 0 auto;
-    text-align: center;
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -10,10 +9,10 @@
 
 .featured-investments ul {
     display: grid;
-    grid-template-columns: repeat(3, minmax(250px, 1fr));
-    gap: 0.8 rem;
+    grid-template-columns: 1fr;
+    gap: 1rem;
     margin: 0;
-    box-shadow: 50px;
+    padding: 0;
 }
 
 .featured-investments li {
@@ -28,9 +27,20 @@
     transform: translateY(-5px);
 }
 
+/* desktop-layout */
+
+@media (min-width: 768px) {
+  .featured-investments {
+    width: 75%;
+  }
+
+  .featured-investments ul {
+    grid-template-columns: repeat(3, minmax(250px, 1fr));
+  }
+}
+
 
   .home-nav-link {
-
     padding: 0.5rem 1rem;
     min-width: 88px;
     min-height: 42px;
