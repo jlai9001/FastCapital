@@ -17,10 +17,10 @@ export default function About() {
         <section className="about-section">
           <h2>Our Goal</h2>
           <p>
-            Fast Capital was created to make investing in early-stage and local businesses
-            more accessible, transparent, and community-focused. Traditional investment
-            platforms often prioritize large institutions—Fast Capital flips that model by
-            empowering everyday investors to directly support businesses they believe in.
+            Fast Capital was created as a learning project to simulate an investing platform.
+            Traditional investment platforms often prioritize large institutions whil Fast Capital
+            flips that model by empowering everyday investors to directly support businesses they
+            believe in.
           </p>
           <p>
             The platform connects investors and business owners in a shared ecosystem where
