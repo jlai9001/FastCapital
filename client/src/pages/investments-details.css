@@ -6,17 +6,15 @@
   margin: 125px auto 2rem;
   padding: 1.5rem;
   max-width: 1200px;
-
   background-color: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-
   box-sizing: border-box;
 }
 
 /* =========================================================
-   TOP INFO SECTION
+   TOP INFO SECTION (DESKTOP)
    ========================================================= */
 
 .investment-details-info-container {
@@ -66,7 +64,7 @@
 }
 
 /* =========================================================
-   BUSINESS TEXT
+   BUSINESS NAME
    ========================================================= */
 
 .investment-detail-business-name {
@@ -75,12 +73,15 @@
   margin: 0;
 }
 
+/* =========================================================
+   LOCATION & WEBSITE
+   ========================================================= */
+
 .investment-details-location,
 .investment-details-website {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-
   font-size: 18px;
   font-weight: 400;
   color: #6b7280;
@@ -129,14 +130,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  margin-top: 1.5rem;
+  margin-top: 2rem;
   gap: 2rem;
 }
 
 .progress-bar-wrapper {
-  flex: 1;
   max-width: 400px;
+  width: 100%;
 }
 
 .progress-label {
@@ -162,6 +162,7 @@
 .progress-fill {
   height: 100%;
   background-color: #6290c8;
+  transition: width 0.4s ease;
 }
 
 .funded-percentage {
@@ -174,18 +175,10 @@
    PURCHASE BUTTON
    ========================================================= */
 
-.purchase-button-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
 .invest-now-button {
   padding: 10px 20px;
   font-size: 18px;
   font-weight: bold;
-
   background-color: var(--main_button_color);
   color: white;
   border: none;
@@ -200,9 +193,8 @@
 }
 
 .login-message {
-  margin: 0;
+  margin-top: 10px;
   font-size: 16px;
-  color: #374151;
   text-align: center;
 }
 
@@ -221,7 +213,7 @@
 }
 
 /* =========================================================
-   MOBILE LAYOUT (FIXES GAP ISSUE)
+   MOBILE LAYOUT (FIXED)
    ========================================================= */
 
 @media (max-width: 768px) {
@@ -257,34 +249,34 @@
     height: 140px;
   }
 
+  /* Metrics rows */
   .investment-column-3,
   .investment-column-4 {
     flex-direction: row;
     justify-content: space-between;
   }
 
-  /* 🔥 GAP FIX IS HERE 🔥 */
+  /* 🔥 CRITICAL FIX */
   .progress-purchase-container {
     flex-direction: column;
-    justify-content: flex-start;
     align-items: center;
     gap: 0.75rem;
     margin-top: 1rem;
   }
 
   .progress-bar-wrapper {
+    flex: none;
     width: 100%;
     max-width: 100%;
-  }
-
-  .purchase-button-container {
-    width: 100%;
-    margin-top: 0;
   }
 
   .invest-now-button {
     width: 100%;
     font-size: 16px;
+  }
+
+  .login-message {
+    margin-top: 0.5rem;
   }
 
   .financial-dashboard-container {
