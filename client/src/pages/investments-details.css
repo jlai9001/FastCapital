@@ -53,6 +53,8 @@
 }
 
 
+
+
 /* =========================================================
    BUSINESS IMAGE
    ========================================================= */
@@ -253,6 +255,10 @@
     width: 100%;
     align-items: center;
     text-align: center;
+  }
+
+  .investment-column-4{
+    gap: 2rem;
   }
 
   .investment-detail-business-name {
