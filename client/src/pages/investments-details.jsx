@@ -87,7 +87,7 @@ export default function InvestmentDetails() {
             <p className="investment-detail-business-name">{business.name}</p>
           </div>
           <div className="investment-box">
-            <p className="location-text">
+            <p className="investment-details-location">
               <img
                 src={locationIcon}
                 alt="Location Icon"
@@ -99,7 +99,7 @@ export default function InvestmentDetails() {
           <div className="investment-box">
             <p>
               <a
-                className="business-website"
+                className="investment-details-website"
                 href={business.website_url}
                 target="_blank"
                 rel="noopener noreferrer"

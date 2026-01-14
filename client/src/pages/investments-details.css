@@ -66,7 +66,7 @@
 }
 
 /* =========================================================
-   BUSINESS TEXT
+   BUSINESS NAME
    ========================================================= */
 
 .investment-detail-business-name {
@@ -75,22 +75,23 @@
   margin: 0;
 }
 
-.location-text {
+/* =========================================================
+   LOCATION & WEBSITE (ISOLATED — SAFE)
+   ========================================================= */
+
+.investment-details-location,
+.investment-details-website {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 
   font-size: 18px;
+  font-weight: 400;
   color: #6b7280;
 }
 
-.business-website {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-
-  font-size: 18px;
-  color: #059669;
+.investment-details-website {
+  color: var(--main_button_color);
   text-decoration: none;
 }
 
@@ -222,7 +223,7 @@
 }
 
 /* =========================================================
-   MOBILE LAYOUT (STACKED, SAFE)
+   MOBILE LAYOUT (STACKED — SAFE)
    ========================================================= */
 
 @media (max-width: 768px) {
@@ -248,10 +249,9 @@
     font-size: 28px;
   }
 
-  /* location & website font size change */
-
-  .location-text,
-  .business-website {
+  /* Location & website — mobile */
+  .investment-details-location,
+  .investment-details-website {
     font-size: 16px;
   }
 
@@ -268,19 +268,11 @@
     justify-content: space-between;
   }
 
+  /* Progress + purchase */
   .progress-purchase-container {
     flex-direction: column;
     gap: 0.5rem;
     text-align: center;
-  }
-
-  .invest-now-button {
-    width: 100%;
-    font-size: 16px;
-  }
-
-  .financial-dashboard-container {
-    overflow-x: auto;
   }
 
   .progress-bar-wrapper {
@@ -295,6 +287,11 @@
     justify-content: flex-start;
   }
 
+  .invest-now-button {
+    width: 100%;
+    font-size: 16px;
+  }
+
   .purchase-button-container {
     margin-top: 0;
   }
@@ -303,4 +300,7 @@
     margin-top: 0.5rem;
   }
 
+  .financial-dashboard-container {
+    overflow-x: auto;
+  }
 }
