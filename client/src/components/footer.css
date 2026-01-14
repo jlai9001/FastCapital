@@ -1,26 +1,33 @@
+/* =========================================================
+   FOOTER BASE
+   ========================================================= */
 .footer {
   background-color: #f8f9fa;
-  color: #333;
-  padding: 2rem 1rem;
+  color: var(--primary_text_color);
   width: 100%;
   box-sizing: border-box;
   border-top: 1px solid #eee;
   font-family: var(--button_font);
+  padding: 2rem 1rem;
 }
 
-/* Container */
+/* =========================================================
+   FOOTER LAYOUT (DESKTOP DEFAULT)
+   ========================================================= */
 .footer__container {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative; /* required for centered links */
 }
 
-/* Sections */
 .footer__section {
   min-width: 100px;
 }
 
-/* LOGO */
+/* =========================================================
+   LOGO
+   ========================================================= */
 .footer__logo-section {
   display: flex;
   align-items: center;
@@ -30,22 +37,29 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-weight: 700;
   font-size: 1.2rem;
+  font-weight: 700;
   color: var(--primary_text_color);
   text-decoration: none !important;
-  margin-left: 50px;
+  margin-left: 50px; /* desktop visual alignment with header */
 }
 
 .nav-logo-image {
   height: 32px;
 }
 
-/* LINKS (desktop target styling) */
+/* =========================================================
+   NAV LINKS (DESKTOP – TRUE CENTER)
+   ========================================================= */
 .links-section {
   display: flex;
   gap: 1.5rem;
   align-items: center;
+
+  /* true center */
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .links-section a {
@@ -58,17 +72,39 @@
 
 .links-section a:hover {
   color: var(--secondary_text_color);
-  text-decoration: none;
 }
 
-/* COPYRIGHT */
+/* =========================================================
+   COPYRIGHT
+   ========================================================= */
 .footer__copyright-section {
   color: var(--secondary_text_color);
   font-size: 0.85rem;
-  margin-right: 50px;
+  margin-right: 50px; /* matches logo offset */
 }
 
-/* MOBILE */
+/* =========================================================
+   iOS / SAFARI LINK NORMALIZATION
+   ========================================================= */
+.footer a {
+  -webkit-text-decoration: none;
+  text-decoration: none !important;
+  color: inherit;
+}
+
+/* =========================================================
+   DESKTOP HORIZONTAL PADDING (ALIGN WITH HEADER)
+   ========================================================= */
+@media (min-width: 768px) {
+  .footer {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+/* =========================================================
+   MOBILE LAYOUT (STACKED — DO NOT TOUCH)
+   ========================================================= */
 @media (max-width: 768px) {
   .footer__container {
     flex-direction: column;
@@ -79,7 +115,6 @@
 
   .footer__logo-section {
     width: 100%;
-    display: flex;
     justify-content: center;
   }
 
@@ -90,6 +125,8 @@
   }
 
   .links-section {
+    position: static;
+    transform: none;
     flex-direction: column;
     gap: 0.75rem;
   }
@@ -98,11 +135,4 @@
     margin-right: 0;
     font-size: 0.8rem;
   }
-}
-
-/* iOS SAFARI LINK RESET (important) */
-.footer a {
-  -webkit-text-decoration: none;
-  text-decoration: none !important;
-  color: inherit;
 }
