@@ -110,7 +110,7 @@ export default function InvestmentCard({ investment }) {
 
   <div className="button-container">
     <button onClick={handleViewDetailsClick} className="view-details-button">
-      View Details
+      Purchase
     </button>
   </div>
 </div>

@@ -1,32 +1,45 @@
+/* =========================================================
+   PAGE CONTAINER
+   ========================================================= */
+
 .investment-details-page-container {
-  margin-top: 125px;
-  margin-left: 100px;
-  margin-right: 100px;
-  padding: 10px;
-  background-color: #FFFFFF;
-  border: 1px solid #E5E7EB;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  margin: 125px auto 2rem;
+  padding: 1.5rem;
+  max-width: 1200px;
+
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
   border-radius: 10px;
-  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+
   box-sizing: border-box;
 }
+
+/* =========================================================
+   TOP INFO SECTION (DESKTOP)
+   ========================================================= */
 
 .investment-details-info-container {
-  margin-top: 50px;
   display: flex;
-  padding: 10px;
-  overflow: hidden;
+  gap: 2rem;
+  margin-top: 2rem;
   box-sizing: border-box;
-  }
-
-.investment-column {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  padding: 10px;
 }
 
-.investment-column, .investment-column-1 {
+/* =========================================================
+   COLUMNS
+   ========================================================= */
+
+.investment-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.investment-column-1,
+.investment-column-3,
+.investment-column-4 {
   align-items: center;
 }
 
@@ -34,57 +47,11 @@
   align-items: flex-start;
 }
 
-.investment-box, .investment-nested-box {
-  display: flex;
-  justify-content: center;
-}
+/* =========================================================
+   BUSINESS IMAGE
+   ========================================================= */
 
-.investment-nested-column {
-  display: flex;
-  flex-direction: column;
-}
-
-.investment-nested-column, .investment-top {
-  margin-top: 10px;
-  margin-bottom: 3px;
-}
-
-.investment-detail-business-name {
-  font-weight: 700;
-  font-size: 36px;
-  margin: 5px;
-}
-
-.location-icon {
-  width: 21px;
-  height: 33px;
-  position: relative;
-  top: 5px;
-  object-fit: contain;
-}
-
-.website-icon {
-  width: 19px;
-  height: 30px;
-  position: relative;
-  top: 5px;
-  object-fit: contain;
-}
-
-.location-text {
-  color: #6B7280;
-  font-size: 24px;
-  font-weight: 400;
-  margin-bottom: 10px;
-}
-
-.business-website {
-  color: #059669;
-  font-size: 24px;
-  text-decoration: none;
-}
-
-.business-detail-image-wrapper{
+.business-detail-image-wrapper {
   width: 180px;
   height: 180px;
   display: flex;
@@ -96,111 +63,222 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
-  }
+}
+
+/* =========================================================
+   BUSINESS TEXT
+   ========================================================= */
+
+.investment-detail-business-name {
+  font-size: 36px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.location-text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  font-size: 24px;
+  color: #6b7280;
+}
+
+.business-website {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  font-size: 24px;
+  color: #059669;
+  text-decoration: none;
+}
+
+.location-icon {
+  width: 21px;
+  height: 33px;
+}
+
+.website-icon {
+  width: 19px;
+  height: 30px;
+}
+
+/* =========================================================
+   INVESTMENT METRICS
+   ========================================================= */
+
+.investment-nested-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
 .investment-box-quantity {
+  font-size: 20px;
   font-weight: 600;
-  margin: 5px;
 }
 
 .investment-business-detail-text {
-  color: #64748B;
-  font-weight: 400;
   font-size: 16px;
-  margin: 5px;
+  color: #64748b;
 }
 
-.funded-percentage {
-  color: #6290C8;
-  font-weight: 600;
-  font-size: 32px;
-}
+/* =========================================================
+   PROGRESS + PURCHASE
+   ========================================================= */
 
 .progress-purchase-container {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: space-around;
-  text-align: center;
-  margin-top: 15px;
-  margin-left: 30px;
-  margin-right: 30px;
+
+  margin-top: 2rem;
+  gap: 2rem;
 }
+
 .progress-bar-wrapper {
   flex: 1;
-  margin-top: 0.5rem;
   max-width: 400px;
-  width: 100%;
-  text-align: center;
 }
 
 .progress-label {
-  color: #6B7280;
-  text-align: left;
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
 }
 
 .progress-bar-row {
   display: flex;
   align-items: center;
-  gap: 10px;
-  width: 100%;
+  gap: 0.75rem;
 }
 
 .progress-bar {
+  flex: 1;
   height: 20px;
-  background-color: #E0E9F4;
+  background-color: #e0e9f4;
   border-radius: 10px;
   overflow: hidden;
-  width: 100%;
 }
 
 .progress-fill {
   height: 100%;
-  background-color: #6290C8;
-  transition: width 0.5s ease-in-out;
+  background-color: #6290c8;
+  transition: width 0.4s ease;
 }
 
-.financial-dashboard-container {
-  margin-top: 1rem;
-  display: flex;
-  justify-content: center;
-  }
+.funded-percentage {
+  font-size: 20px;
+  font-weight: 600;
+  color: #6290c8;
+}
 
-  .invest-now-button {
-    padding: 10px 20px;
-    background-color: var(--main_button_color); /* Use your defined variable or a default */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
+/* =========================================================
+   PURCHASE BUTTON
+   ========================================================= */
 
-  .invest-now-button:disabled {
-    background-color: #cbd5e1; /* Tailwind gray-300 */
-    color: #6b7280; /* Tailwind gray-500 */
-    cursor: not-allowed;
-  }
+.invest-now-button {
+  padding: 10px 20px;
+  font-size: 18px;
+  font-weight: bold;
 
-  .invest-now-button:disabled:hover {
-    background-color: #d1d5dbd4; /* Tailwind gray-300 */
-    color: #6b7280; /* Tailwind gray-500 */
-    cursor: not-allowed;
-  }
+  background-color: var(--main_button_color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.invest-now-button:disabled {
+  background-color: #cbd5e1;
+  color: #6b7280;
+  cursor: not-allowed;
+}
 
 .login-message {
   margin-top: 10px;
   font-size: 16px;
-  color: #374151; /* Tailwind's gray-700 */
+  color: #374151;
   text-align: center;
-  }
+}
 
-
-.login-link{
+.login-link {
   color: var(--main_button_color);
 }
 
-.login-link:hover{
+.login-link:hover {
   color: var(--main_button_hover);
+}
+
+/* =========================================================
+   FINANCIAL DASHBOARD
+   ========================================================= */
+
+.financial-dashboard-container {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+/* =========================================================
+   MOBILE LAYOUT (STACKED, SAFE)
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+  .investment-details-page-container {
+    margin: 80px 1rem 1.5rem;
+    padding: 1rem;
+  }
+
+  .investment-details-info-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .investment-column {
+    width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+
+  .investment-detail-business-name {
+    font-size: 28px;
+  }
+
+  .location-text,
+  .business-website {
+    font-size: 18px;
+    justify-content: center;
+  }
+
+  .business-detail-image-wrapper {
+    width: 140px;
+    height: 140px;
+  }
+
+  /* Metrics become two-column rows */
+  .investment-column-3,
+  .investment-column-4 {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .progress-purchase-container {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .invest-now-button {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  .financial-dashboard-container {
+    overflow-x: auto;
+  }
 }
