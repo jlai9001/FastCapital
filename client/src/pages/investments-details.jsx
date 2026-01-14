@@ -67,6 +67,7 @@ export default function InvestmentDetails() {
     navigate(`/investment-details/${investment.id}/purchase`);
   };
 
+
   return (
     <div className="investment-details-page-container">
       <div className="investment-details-info-container">

@@ -13,6 +13,7 @@
     display: flex;
     flex-direction: column;
     gap: 0;
+    align-items: center;
 }
 
 /* Tab slider container - NOW WITH UNDERLINE DESIGN */
@@ -26,9 +27,6 @@
     width: 400px;
     box-shadow: none;  /* Remove shadow */
     border-bottom: 2px solid #e0e0e0;  /* Add bottom border for inactive state */
-
-    align-content: left;
-    align-self: left;;
 }
 
 /* Individual tab buttons */
@@ -112,6 +110,32 @@
 
 }
 
-.chart-render{
-  margin-right: 400px;
+
+@media (max-width: 768px) {
+.financial-dashboard-dropdown {
+width: 100%;
+}
+
+.year-dropdown {
+width: 100%;
+}
+
+.financial-dashboard-tabs {
+justify-content: center;
+}
+
+.tab-slider {
+width: 100%;
+overflow-x: auto;
+scrollbar-width: none; /* Firefox */
+}
+
+.tab-slider::-webkit-scrollbar {
+display: none; /* Chrome/Safari */
+}
+
+.tab-button {
+flex: 0 0 auto;
+min-width: 180px;
+}
 }
