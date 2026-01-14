@@ -167,7 +167,7 @@ export default function InvestmentDetails() {
         </div>
       </div>
       <div className="progress-purchase-container">
-        <div className="progress-bar-wrapper">
+        <div className="investment-progress-wrapper">
           <p className="progress-label">Funded</p>
           <div className="progress-bar-row">
             <div className="progress-bar">

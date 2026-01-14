@@ -14,7 +14,7 @@
 }
 
 /* =========================================================
-   TOP INFO SECTION (DESKTOP)
+   TOP INFO SECTION
    ========================================================= */
 
 .investment-details-info-container {
@@ -64,7 +64,7 @@
 }
 
 /* =========================================================
-   BUSINESS NAME
+   BUSINESS TEXT
    ========================================================= */
 
 .investment-detail-business-name {
@@ -72,10 +72,6 @@
   font-weight: 700;
   margin: 0;
 }
-
-/* =========================================================
-   LOCATION & WEBSITE
-   ========================================================= */
 
 .investment-details-location,
 .investment-details-website {
@@ -103,7 +99,7 @@
 }
 
 /* =========================================================
-   INVESTMENT METRICS
+   METRICS
    ========================================================= */
 
 .investment-nested-column {
@@ -128,15 +124,17 @@
 
 .progress-purchase-container {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   margin-top: 2rem;
   gap: 2rem;
 }
 
-.progress-bar-wrapper {
-  max-width: 400px;
+/* 🔒 ISOLATED PROGRESS WRAPPER — FIXES MOBILE BUG */
+.investment-progress-wrapper {
   width: 100%;
+  max-width: 400px;
+  flex: 0 0 auto;
 }
 
 .progress-label {
@@ -249,14 +247,13 @@
     height: 140px;
   }
 
-  /* Metrics rows */
   .investment-column-3,
   .investment-column-4 {
     flex-direction: row;
     justify-content: space-between;
   }
 
-  /* 🔥 CRITICAL FIX */
+  /* 🔥 MOBILE GAP FIX */
   .progress-purchase-container {
     flex-direction: column;
     align-items: center;
@@ -264,8 +261,7 @@
     margin-top: 1rem;
   }
 
-  .progress-bar-wrapper {
-    flex: none;
+  .investment-progress-wrapper {
     width: 100%;
     max-width: 100%;
   }
