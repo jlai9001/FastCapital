@@ -4,34 +4,31 @@
    ========================================================= */
 
 .featured-investments {
-  max-width: 1200px;        /* SAME width as card grid */
+  max-width: 1200px;       /* same visual width as cards */
   margin: 0 auto;
   padding: 1rem;
-  text-align: left;         /* hard stop: no centering */
+  text-align: left;        /* hard stop: no centering */
 }
 
-/* ---------------------------------------------------------
-   Header row: "Featured Investments" + "View All"
-   --------------------------------------------------------- */
+/* =========================================================
+   HEADER ROW (Featured Investments + View All)
+   ========================================================= */
 
-.featured-investments table {
+.featured-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
-  border-collapse: collapse;
   margin-bottom: 1rem;
 }
 
-.featured-investments td {
-  padding: 0;
-  vertical-align: bottom;
-}
-
-.featured-investments h2 {
+.featured-header h2 {
   margin: 0;
 }
 
-/* ---------------------------------------------------------
-   Investment cards grid
-   --------------------------------------------------------- */
+/* =========================================================
+   INVESTMENT CARD GRID
+   ========================================================= */
 
 .featured-investments ul {
   display: grid;
@@ -53,9 +50,9 @@
   transform: translateY(-5px);
 }
 
-/* ---------------------------------------------------------
-   Desktop layout
-   --------------------------------------------------------- */
+/* =========================================================
+   DESKTOP GRID
+   ========================================================= */
 
 @media (min-width: 768px) {
   .featured-investments ul {
@@ -64,7 +61,7 @@
 }
 
 /* =========================================================
-   "View All" link
+   "VIEW ALL" LINK
    ========================================================= */
 
 .home-nav-link {
@@ -78,7 +75,7 @@
   line-height: 1.2;
   text-decoration: none;
   color: var(--main_button_color);
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, font-weight 0.2s ease;
 }
 
 .home-nav-link:hover {
