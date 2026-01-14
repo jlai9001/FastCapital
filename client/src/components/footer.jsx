@@ -10,7 +10,7 @@ const Footer = () => {
 
         {/* Column 1: Logo */}
         <div className="footer__section footer__logo-section">
-          <a href="/" className="footer__logo">
+          <a href="/" className="footer-logo">
             <img src={logo} alt="Fast Capital logo" className="nav-logo-image" />
             Fast Capital
           </a>
@@ -19,19 +19,19 @@ const Footer = () => {
         {/* Column 2: Links */}
         <div className="links-section">
           <NavLink
-              className="nav-link"
+              className="footer-link"
               to='/terms'>
               Terms
           </NavLink>
 
           <NavLink
-              className="nav-link"
+              className="footer-link"
               to='/about'>
               About
           </NavLink>
 
           <NavLink
-              className="nav-link"
+              className="footer-link"
               to='/contact'>
               Contact
           </NavLink>
