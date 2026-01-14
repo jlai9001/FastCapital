@@ -78,6 +78,11 @@
   .footer__logo {
     margin-left: 0;
     justify-content: center;
+    font-family: var(--button_font);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary_text_color);
+    text-decoration: none;
   }
 
   .links-section {
@@ -89,4 +94,19 @@
     margin-right: 0;
     font-size: 0.8rem;
   }
+}
+
+
+/* Restore footer link styling (mobile + desktop safe) */
+.footer .nav-link {
+  font-family: var(--button_font);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--secondary_text_color);
+  text-decoration: none;
+}
+
+.footer .nav-link:hover {
+  color: var(--main_button_color);
+  text-decoration: underline;
 }
