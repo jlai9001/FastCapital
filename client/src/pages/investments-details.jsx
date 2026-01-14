@@ -97,6 +97,7 @@ export default function InvestmentDetails() {
             </div>
           </div>
             <div className="investment-box">
+
         <a
           className="investment-details-website"
           href={business.website_url}
