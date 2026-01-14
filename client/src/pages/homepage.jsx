@@ -34,39 +34,38 @@ export default function Homepage(){
 
 
 
-    return(
-        <>
-            <HomePageHero />
-            <section className='featured-investments'>
-                <table style={{ width: "100%" }}>
-                    <tbody>
-                    <tr>
-                        <td style={{ textAlign: "left" }}>
-                        <h2>Featured Investments</h2>
-                        </td>
-                        <td style={{ textAlign: "right" }}>
-                        <NavLink
-                            className="home-nav-link"
-                            to='/all-investments'
-                        >
-                            View All
-                        </NavLink>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-                {loading && <p>Loading featured investments...</p>}
-                {error && <p>{error}</p>}
-                {featuredInvestments.length > 0 && (
-                <ul>
-                    {featuredInvestments.map((investment) => (
-                    <li key={investment.id}>
-                        <InvestmentCard investment={investment} />
-                    </li>
-                    ))}
-                </ul>
-                )}
-            </section>
-        </>
-    )
+    return (
+    <>
+    {/* FULL-BLEED HERO */}
+    <div className="full-bleed">
+        <HomePageHero />
+    </div>
+
+    {/* CONSTRAINED CONTENT */}
+    <main className="page-content">
+        <section className="featured-investments">
+        <div className="featured-header">
+            <h2>Featured Investments</h2>
+            <NavLink className="home-nav-link" to="/all-investments">
+            View All
+            </NavLink>
+        </div>
+
+        {loading && <p>Loading featured investments...</p>}
+        {error && <p>{error}</p>}
+
+        {featuredInvestments.length > 0 && (
+            <ul>
+            {featuredInvestments.map((investment) => (
+                <li key={investment.id}>
+                <InvestmentCard investment={investment} />
+                </li>
+            ))}
+            </ul>
+        )}
+        </section>
+    </main>
+    </>
+    );
+
 }
