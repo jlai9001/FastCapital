@@ -149,7 +149,7 @@ export default function InvestmentDetails() {
           </div>
           <div className="investment-nested-column investment-bottom">
             <div className="investment-nested-box investment-top">
-              <p className="investment-box-quantity">
+              <div className="investment-box-quantity">
                 {new Date(investment.expiration_date).toLocaleDateString(
                   "en-US",
                   {
@@ -158,7 +158,7 @@ export default function InvestmentDetails() {
                     year: "numeric",
                   }
                 )}
-              </p>
+              </div>
             </div>
             <div className="investment-nested-box investment-bottom">
               <div className="investment-business-detail-text">Offer Expires</div>
