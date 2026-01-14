@@ -52,7 +52,7 @@ export default function About() {
 
         <section className="about-section">
           <h2>Core Features</h2>
-          <ul>
+          <ul className="about-list">
             <li>View and explore active investment opportunities</li>
             <li>Inspect detailed investment data</li>
             <li>Simulate investment purchases</li>
@@ -66,7 +66,7 @@ export default function About() {
             Fast Capital is built with modern, production-grade technologies designed
             for performance, scalability, and maintainability.
           </p>
-          <ul>
+          <ul className="about-list">
             <li>
               <strong>Backend:</strong> FastAPI with async support, powered by PostgreSQL
               and SQLAlchemy 2.x

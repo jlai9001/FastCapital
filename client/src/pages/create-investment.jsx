@@ -92,17 +92,17 @@ export default function NewInvestment() {
             <div className="create-investment-form">
                 <div className="title">Create Investment</div>
                 <div>
-                    <div className="field-label">How many shares would you like to sell?</div>
+                    <div className="field-label">How many shares are you offering in total?</div>
                     <input
                         type="number"
                         value={sharesAvailable}
-                        min="100"
+                        min="1"
                         step="100"
                         onChange={(e) => setSharesAvailable(Number(e.target.value))}
                     />
                 </div><br />
                 <div>
-                    <div className="field-label">What is the minimum investment you need?</div>
+                    <div className="field-label">What is the minimum number of shares you want to sell?</div>
                     <input
                         type="number"
                         value={minInvestment}

@@ -117,3 +117,14 @@
     font-size: 15px;
   }
 }
+
+/* About lists cleanup */
+.about-list {
+  margin: 0.5rem 0 1.5rem 0;   /* removes double spacing */
+  list-style-type: disc;
+}
+
+.about-list li {
+  margin: 0.25rem 0;          /* tight, readable spacing */
+  line-height: 1.5;
+}
