@@ -86,8 +86,8 @@ export default function About() {
         </section>
 
         <section className="about-section">
-          <h2 className="about-list">Authors</h2>
-          <ul>
+          <h2>Authors</h2>
+          <ul className="about-list">
             <li>Tyler McCallum</li>
             <li>Bowe Jessop</li>
             <li>Daniel Greenberg</li>
