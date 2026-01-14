@@ -1,18 +1,37 @@
 .homepage-hero {
     background-color: #E5F5F0;
-    padding: 60px 20px;
+    padding: 3rem 1rem;
     text-align: center;
+    width: 100%;
 }
 
 .hero-text{
-    margin-top: -45px;
-    font-size: 14px;
+    max-width: 640px;
+    margin: 0 auto;
 }
 
-.hero-subtext{
-    margin-top: -23px;
-    font-size: 20px;
+.hero-text h1 {
+    margin-bottom: 0.75rem;
 }
+
+.hero-subtext {
+    margin: 0 0 1.25rem 0;
+    font-size: 1rem;
+}
+
+
+/* desktop-layout */
+
+@media (min-width: 768px) {
+    .homepage-hero {
+    padding: 60px 20px;
+    }
+
+    .hero-subtext {
+    font-size: 1.25rem;
+    }
+}
+
 
 .browse-opp-button{
     margin-top: 15px;
