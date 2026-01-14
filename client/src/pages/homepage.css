@@ -63,3 +63,23 @@
     outline: 2px solid var(--main_button_hover);
     outline-offset: 2px;
   }
+
+
+  /* Full-width sections like hero */
+.full-bleed {
+  width: 100%;
+}
+
+/* Normal page content */
+.page-content {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* Header row (Featured + View All) */
+.featured-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
