@@ -113,38 +113,38 @@ export default function InvestmentDetails() {
         <div className="investment-column investment-column-3">
           <div className="investment-nested-column investment-top">
             <div className="investment-nested-box investment-top">
-              <p className="investment-box-quantity">
+              <div className="investment-box-quantity">
                 {investment.shares_available}
-              </p>
+              </div>
             </div>
             <div className="investment-nested-box investment-bottom">
-              <p className="investment-business-detail-text">
+              <div className="investment-business-detail-text">
                 Shares Available
-              </p>
+              </div>
             </div>
           </div>
           <div className="investment-nested-column investment-bottom">
             <div className="investment-nested-box investment-top">
-              <p className="investment-box-quantity">
+              <div className="investment-box-quantity">
                 {investment.min_investment}
-              </p>
+              </div>
             </div>
             <div className="investment-nested-box investment-bottom">
-              <p className="investment-business-detail-text">
+              <div className="investment-business-detail-text">
                 Minimum Investment
-              </p>
+              </div>
             </div>
           </div>
         </div>
         <div className="investment-column investment-column-4">
           <div className="investment-nested-column investment-top">
             <div className="investment-nested-box investment-top">
-              <p className="investment-box-quantity">
+              <div className="investment-box-quantity">
                 ${investment.price_per_share}
-              </p>
+              </div>
             </div>
             <div className="investment-nested-box investment-bottom">
-              <p className="investment-business-detail-text">Price/Share</p>
+              <div className="investment-business-detail-text">Price/Share</div>
             </div>
           </div>
           <div className="investment-nested-column investment-bottom">
@@ -161,7 +161,7 @@ export default function InvestmentDetails() {
               </p>
             </div>
             <div className="investment-nested-box investment-bottom">
-              <p className="investment-business-detail-text">Offer Expires</p>
+              <div className="investment-business-detail-text">Offer Expires</div>
             </div>
           </div>
         </div>
