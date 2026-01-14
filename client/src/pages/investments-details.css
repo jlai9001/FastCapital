@@ -172,6 +172,11 @@
 /* =========================================================
    PURCHASE BUTTON
    ========================================================= */
+.purchase-button-container{
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+}
 
 .invest-now-button {
   padding: 10px 20px;
@@ -258,7 +263,7 @@
     flex-direction: column;
     align-items: center;
     gap: 0.75rem;
-    margin-top: 1rem;
+    margin-top: 2rem;
   }
 
   .investment-progress-wrapper {
@@ -269,6 +274,7 @@
   .invest-now-button {
     width: 100%;
     font-size: 16px;
+    background-color: ;
   }
 
   .login-message {
