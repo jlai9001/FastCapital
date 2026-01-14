@@ -107,6 +107,7 @@
 /* Button */
 .button-container {
   margin-top: auto;
+  padding-top: 0.75rem; /* ADD THIS */
   text-align: center;
   display: flex;
   align-items: center;
