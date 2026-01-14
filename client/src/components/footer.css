@@ -120,4 +120,9 @@
     margin-right: 0;
     font-size: 0.85rem;
   }
+
+    .footer__logo {
+    justify-content: center;
+    margin-left: 0;
+  }
 }
