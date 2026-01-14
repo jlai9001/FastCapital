@@ -80,7 +80,7 @@
   align-items: center;
   gap: 0.5rem;
 
-  font-size: 24px;
+  font-size: 18px;
   color: #6b7280;
 }
 
@@ -89,7 +89,7 @@
   align-items: center;
   gap: 0.5rem;
 
-  font-size: 24px;
+  font-size: 18px;
   color: #059669;
   text-decoration: none;
 }
@@ -252,7 +252,7 @@
 
   .location-text,
   .business-website {
-    font-size: 10px;
+    font-size: 16px;
   }
 
   .business-detail-image-wrapper {
