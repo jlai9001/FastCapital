@@ -122,7 +122,9 @@
   }
 
     .footer__logo {
+    display: inline-flex;        /* ensure flex applies to icon + text */
     justify-content: center;
-    margin-left: 0;
+    align-items: center;
+    margin-left: 0;              /* override desktop margin */
   }
 }
