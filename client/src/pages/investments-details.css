@@ -258,7 +258,8 @@
   }
 
   .investment-column-4{
-    gap: 2rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 
   .investment-detail-business-name {
