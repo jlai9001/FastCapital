@@ -225,29 +225,10 @@
    FINANCIAL DASHBOARD
    ========================================================= */
 
-
 .financial-dashboard-container {
   margin-top: 3rem;
-  display: block;
-  width: 100%;
-  overflow-x: auto;
-  padding-bottom: 1rem;
-  min-height: 340px;
-}
-
-.financial-dashboard-container::after {
-  content: "← Scroll chart →";
-  display: block;
-  text-align: center;
-  font-size: 13px;
-  color: #64748b;
-  margin-top: 0.5rem;
-}
-
-/* 🔑 Critical fix */
-.financial-dashboard-container > * {
-  min-width: 600px;   /* allows horizontal scroll */
-  height: 320px;      /* forces chart to render correctly */
+  display: flex;
+  justify-content: center;
 }
 
 /* =========================================================
