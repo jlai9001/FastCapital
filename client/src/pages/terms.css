@@ -131,3 +131,15 @@
     font-size: 15px;
   }
 }
+
+/* Terms lists cleanup */
+.terms-list {
+  margin: 0.5rem 0 1.5rem 0;   /* removes double spacing */
+  padding-left: 1.25rem;      /* standard bullet indent */
+  list-style-type: disc;
+}
+
+.terms-list li {
+  margin: 0.25rem 0;          /* tight, readable spacing */
+  line-height: 1.5;
+}

@@ -72,7 +72,7 @@ export default function Terms() {
 
         <section className="terms-section">
           <h2>7) Acceptable Use</h2>
-          <ul>
+          <ul className = "terms-list">
             <li>Don’t break the law.</li>
             <li>Don’t hack, scrape, reverse engineer, or summon demons via the API.</li>
             <li>Don’t upload malware or cursed spreadsheets.</li>
