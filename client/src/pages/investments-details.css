@@ -308,6 +308,13 @@
     margin-top: 0.5rem;
   }
 
+  .financial-dashboard-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+
   .financial-dashboard-container {
     overflow-x: auto;
   }

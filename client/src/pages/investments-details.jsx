@@ -15,6 +15,7 @@ import { useState, useEffect } from "react";
 export default function InvestmentDetails() {
   const [imageVersion, setImageVersion] = useState(0);
   const { investmentId } = useParams();
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const navigate = useNavigate();
   const { user } = useUser();
 
@@ -29,6 +30,15 @@ export default function InvestmentDetails() {
     error: businessError,
     data: business,
   } = useBusiness(investment?.business_id);
+
+  useEffect(() => {
+  const handleResize = () => {
+    setIsMobile(window.innerWidth <= 768);
+  };
+
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
 
   useEffect(() => {
   if (business?.image_url) {
@@ -199,7 +209,15 @@ export default function InvestmentDetails() {
       </div>
       </div>
       <div className="financial-dashboard-container">
-        {business?.id && <FinancialDashboard businessId={business.id} />}
+        {business?.id && (
+          isMobile ? (
+            <div className="financial-dashboard-mobile">
+              <FinancialDashboard businessId={business.id} />
+            </div>
+          ) : (
+            <FinancialDashboard businessId={business.id} />
+          )
+        )}
       </div>
     </div>
   );
