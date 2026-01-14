@@ -34,7 +34,7 @@ export default function About() {
             The core features of Fast Capital are guided by real-world user needs.
             Our MVP focuses on delivering the following experiences:
           </p>
-          <ul>
+          <ul className="about-list">
             <li>
               <strong>Investors</strong> can browse available investment opportunities,
               inspect detailed offerings, purchase shares, and track their personal portfolio.
@@ -86,7 +86,7 @@ export default function About() {
         </section>
 
         <section className="about-section">
-          <h2>Authors</h2>
+          <h2 className="about-list">Authors</h2>
           <ul>
             <li>Tyler McCallum</li>
             <li>Bowe Jessop</li>
