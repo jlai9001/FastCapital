@@ -106,26 +106,41 @@
 
 
 @media (max-width: 768px) {
+    .financial-dashboard {
+    padding-left: 16px;
+    padding-right: 16px;
+    box-sizing: border-box;
+    }
+
     .financial-dashboard-dropdown {
     width: 100%;
     padding: 0 16px;
     box-sizing: border-box;
     }
 
-    .year-dropdown {
-        padding: 12px 20px;
-        border: 2px solid var(--main_button_color);
-        border-radius: 8px;
-        font-size: 14px;
-        min-width: 0;          /* CHANGED from 180px */
-        width: 100%;           /* lets mobile override to 100% */
-        text-align: center;
-        font-family: var(--button_font);
-        background-color: transparent;
-    }
-
     .financial-dashboard-tabs {
     justify-content: center;
+    }
+
+    .tab-slider {
+    width: 100%;
+    }
+
+    .tab-button {
+    padding-left: 24px;
+    padding-right: 24px;
+    }
+
+    .year-dropdown {
+    padding: 12px 20px;
+    border: 2px solid var(--main_button_color);
+    border-radius: 8px;
+    font-size: 14px;
+    min-width: 0;          /* CHANGED from 180px */
+    width: 100%;           /* lets mobile override to 100% */
+    text-align: center;
+    font-family: var(--button_font);
+    background-color: transparent;
     }
 
 
