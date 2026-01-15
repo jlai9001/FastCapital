@@ -9,11 +9,11 @@ const Footer = () => {
       <div className="footer__container">
 
         {/* Column 1: Logo */}
-        <div className="footer__section footer__logo-section">
-          <a href="/" className="footer-logo">
+        <div className = "footer__section footer__logo-section">
+          <NavLink to ="/" className="footer-logo">
             <img src={logo} alt="Fast Capital logo" className="nav-logo-image" />
             Fast Capital
-          </a>
+          </NavLink>
         </div>
 
         {/* Column 2: Links */}
