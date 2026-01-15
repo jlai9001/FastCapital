@@ -125,7 +125,7 @@ function FinancialDashboard({ businessId, refresh }) {
             { label: "Expenses", data: expenses, yAxisKey: "y-axis" },
             { label: "Net Income", data: netIncome, yAxisKey: "y-axis" },
           ]}
-            width={isMobile ? 360 : 500}
+            width={isMobile ? 360 : 700}
             height={isMobile ? 200 : 400}
         />
       );
@@ -151,7 +151,7 @@ function FinancialDashboard({ businessId, refresh }) {
             { label: "Liabilities", data: liabilities, yAxisKey: "y-axis" },
             { label: "Equity", data: equity, yAxisKey: "y-axis" },
           ]}
-          width={isMobile ? 360 : 500}
+          width={isMobile ? 360 : 700}
           height={isMobile ? 200 : 400}
         />
       );
