@@ -185,3 +185,68 @@ input {
   font-size: 12px;
   flex-shrink: 0;
 }
+
+
+/* =========================================================
+   MOBILE SIGNUP LAYOUT (DOES NOT AFFECT DESKTOP)
+   ========================================================= */
+@media (max-width: 768px) {
+
+  .signup-container {
+    padding: 1.25rem;
+    margin-top: 0;
+    margin-bottom: 0;
+    min-height: auto;
+  }
+
+  .signup-form {
+    width: 100%;
+    max-width: 420px;
+    margin: 2rem auto 0;
+    padding: 24px 20px;
+    border-radius: 16px;
+  }
+
+  .coin {
+    width: 48px;
+    height: auto;
+    margin-bottom: 8px;
+  }
+
+  .signup-title {
+    font-size: 24px;
+  }
+
+  .signup-subtitle {
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+
+  input {
+    padding: 14px;
+    font-size: 15px;
+  }
+
+  /* Stack buttons vertically on mobile */
+  .button-group {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .button-group button {
+    margin: 0;
+    width: 100%;
+  }
+
+  .no-account {
+    font-size: 13px;
+    margin-top: 16px;
+  }
+
+  /* Ensure popup doesn't overflow screen edges */
+  .custom-error-popup {
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: calc(100vw - 32px);
+  }
+}
