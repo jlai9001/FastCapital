@@ -219,3 +219,24 @@ h1 {
     overflow-x: auto;
   }
 }
+
+/* =========================================================
+   GLOBAL LAYOUT POLICY
+   ========================================================= */
+
+/* Desktop: never shrink below 1200px */
+@media (min-width: 769px) {
+  body {
+    min-width: 1200px;
+    overflow-x: auto;
+  }
+}
+
+/* Mobile: NEVER allow horizontal layout */
+@media (max-width: 768px) {
+  html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+}

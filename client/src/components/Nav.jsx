@@ -103,19 +103,19 @@ export default function Nav() {
                         </button>
                     ) : (
                     <div>
+                    <NavLink className="mobile-nav-link"
+                    to="/login"
+                    id="login"
+                        onClick={closeMobileMenu}
+                    >
+                        Login
+                    </NavLink>
                     <NavLink
                         className="mobile-nav-link"
                         id="signup"
                         to="/signup"
                         onClick={closeMobileMenu}>
                         Sign Up
-                    </NavLink>
-                    <NavLink className="mobile-nav-link"
-                    to="/login"
-                    id="login"
-                    onClick={closeMobileMenu}
-                    >
-                        Login
                     </NavLink>
                     </div>
             )}
