@@ -115,9 +115,7 @@
 }
 
 .modal-content {
-  background-color: #fff;
   border-radius: var(--border-radius);
-  /* padding: 24px; */
   max-width: 600px;
   width: 90%;
   box-shadow: var(--element-shadow);

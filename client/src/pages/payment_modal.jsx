@@ -100,22 +100,20 @@ function PaymentModal({ onClose, investment, shareAmount, userId }) {
             </div>
 
             <div className="fields_container">
-                            <FieldContainer isVisible={showFields} />
-            </div>
-
-            <div className="buttons_container">
-                <ButtonsContainer
-                    isVisible={showButtons}
-                    onCancel={handle_cancel}
-                    onBuy={handle_buy}
-                />
-            </div>
-
-            <div className="buttons_container">
-                <ExitButtonContainer
-                    isVisible={showExitButton}
-                    onExit={handle_exit}
-                />
+                <FieldContainer isVisible={showFields} />
+                <div className="buttons_container">
+                    <ButtonsContainer
+                        isVisible={showButtons}
+                        onCancel={handle_cancel}
+                        onBuy={handle_buy}
+                    />
+                </div>
+                <div className="buttons_container">
+                    <ExitButtonContainer
+                        isVisible={showExitButton}
+                        onExit={handle_exit}
+                    />
+                </div>
             </div>
 
             {showCompletionMessage && (
