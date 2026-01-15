@@ -120,8 +120,8 @@
 
     .financial-dashboard-tabs {
     justify-content: center;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
     }
 
     .tab-slider {
