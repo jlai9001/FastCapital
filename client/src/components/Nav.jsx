@@ -37,7 +37,7 @@ export default function Nav() {
             </div>
 
             {/* CENTER */}
-            <div className="nav-center desktop-only">
+            <div className="nav-center">
                 {user && (
                 <>
                     <NavLink className="nav-link" to="/all-investments">
