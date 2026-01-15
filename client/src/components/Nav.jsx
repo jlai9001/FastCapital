@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink, useNavigate} from "react-router-dom";
+import { Link , NavLink, useNavigate} from "react-router-dom";
 import './Nav.css';
 import { useUser } from "../context/user-provider";
 import logo from "../assets/logo.svg"
@@ -30,10 +30,10 @@ export default function Nav() {
             <nav className="navbar">
             {/* LEFT */}
             <div className="nav-left">
-                <NavLink className="nav-link logo" to="/" onClick={closeMobileMenu}>
+                <Link className="nav-link logo" to="/" onClick={closeMobileMenu}>
                 <img src={logo} alt="Logo" className="nav-logo-image" />
                 Fast Capital
-                </NavLink>
+                </Link>
             </div>
 
             {/* CENTER */}
