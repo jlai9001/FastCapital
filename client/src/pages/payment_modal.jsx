@@ -101,6 +101,7 @@ function PaymentModal({ onClose, investment, shareAmount, userId }) {
 
             <div className="fields_container">
                 <FieldContainer isVisible={showFields} />
+
                 <div className="buttons_container">
                     <ButtonsContainer
                         isVisible={showButtons}
