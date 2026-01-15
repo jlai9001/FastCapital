@@ -62,11 +62,11 @@ header {
   }
 
   .nav-link:hover {
-    color: var(--main_button_hover);
+    color: var(--main_button_color);
   }
 
   .nav-link:focus {
-    outline: 2px solid var(--main_button_hover);
+    outline: 2px solid var(--main_button_color);
     outline-offset: 2px;
   }
 
