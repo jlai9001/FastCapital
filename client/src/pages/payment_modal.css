@@ -140,10 +140,12 @@
   max-width: 400px;
   margin-top: 30px;
   margin-bottom: 30px;
+      padding-left: 20px;
+    padding-right: 20px;
 }
 
 .cancel_button,
 .buy_button {
-  padding: 12px 12px !important;
+  padding: 12px 20px !important;
   }
 }
