@@ -134,3 +134,12 @@
   color: #000;
   margin-bottom: -20px;
 }
+
+.buttons_container{
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+  width: 100%;
+}
