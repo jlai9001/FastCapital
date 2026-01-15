@@ -26,7 +26,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
-      <scrollToTop/>
+      <ScrollToTop/>
       <Nav />
       <div style={{ height: '60px' }} />
       <Routes>
