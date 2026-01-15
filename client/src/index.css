@@ -3,87 +3,64 @@
 
 :root {
   font-family: 'Poppins', system-ui, Helvetica, Arial, sans-serif;
-
   line-height: 1.5;
   font-weight: 400;
-  --header-height:6rem;
+
+  --header-height: 6rem;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --main_button_color:#059669;
-  --main_button_textcolor:rgb(255, 255, 255);
-  --secondary_button_color:#ffffff;
+  --main_button_color: #059669;
+  --main_button_textcolor: rgb(255, 255, 255);
+  --secondary_button_color: #ffffff;
   --secondary_button_border_color: var(--main_button_color);
   --main_button_hover: #34D399;
   --main_button_hover_textcolor: white;
   --element_background_color: #ffffff;
+
   --large_fontsize: 30px;
   --small_fontsize: 16px;
+
   --button_border_radius: 8px;
-  --primary_text_color:black;
-  --secondary_text_color:#6B7280;
-  --field_border_color:  #e1e1e1;
+  --primary_text_color: black;
+  --secondary_text_color: #6B7280;
+
+  --field_border_color: #e1e1e1;
   --field_background_color: #F9FAFB;
   --page_background_color: #F9FAFB;
+
   --button_font: Poppins;
   --text_font: Roboto;
+
   --element_border_radius: 16px;
   --element_shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* body {
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-} */
-
-
-
-/* a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  padding-top: 6rem;
-  /* For the fixed header */
-  /* margin: 0;
-  display: flex; */
-  /* May not be desired for overall page layout */
-  /* place-items: center; */
-  /* May not be desired for overall page layout */
-  /* min-width: 320px;
-  min-height: 100vh;
-} */
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-.view-details-btn:hover {
-  background-color: var(--all_button_hover);
-  color:var(--all_button_hover_textcolor);
-}
-
-html, body, #root {
+/* base layout reset */
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
   padding: 0;
 }
 
-/* login_screen */
+/* headings */
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
 
+/* buttons */
+.view-details-btn:hover {
+  background-color: var(--all_button_hover);
+  color: var(--all_button_hover_textcolor);
+}
 
+/* login screen */
 
 .login-container {
   width: 100%;
@@ -101,10 +78,9 @@ html, body, #root {
 .login-title {
   font-size: 25px;
   color: #000000;
-  margin: 0 0 5px 0;
+  margin: 0 0 25px 0;
   font-weight: bold;
   text-align: center;
-  margin-bottom: 25px;
   letter-spacing: 0.5px;
 }
 
@@ -151,7 +127,7 @@ html, body, #root {
   width: 100%;
   padding: 15px;
   background-color: var(--main_button_color);
-  color:var(--main_button_textcolor);
+  color: var(--main_button_textcolor);
   border: none;
   border-radius: 5px;
   font-size: 14px;
@@ -163,8 +139,8 @@ html, body, #root {
 }
 
 .sign-in-btn:hover {
-  background-color:var(--all_button_hover);
-   color:var(--all_button_hover_textcolor);
+  background-color: var(--all_button_hover);
+  color: var(--all_button_hover_textcolor);
 }
 
 .bottom-buttons {
@@ -176,7 +152,7 @@ html, body, #root {
 .secondary-btn {
   flex: 1;
   padding: 12px 8px;
-  border: 0px solid #ccc;
+  border: 0;
   background-color: var(--secondary_button_color);
   color: var(--main_button_textcolor);
   border-radius: 5px;
@@ -187,12 +163,11 @@ html, body, #root {
 }
 
 .secondary-btn:hover {
-  background-color:var(--all_button_hover);
+  background-color: var(--all_button_hover);
   color: #ffffff;
 }
 
-/* payment_confirmation_modal */
-
+/* modal */
 
 .modal-overlay {
   margin-top: 50px;
@@ -213,13 +188,11 @@ html, body, #root {
   text-align: center;
   font-size: var(--large_fontsize);
   font-weight: 600;
-  color:
-  #000000;
-  margin-bottom: 40px;
-  margin-top: 10px;
+  color: #000000;
+  margin: 10px 0 40px;
 }
 
-
+/* color scheme */
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -235,11 +208,13 @@ html, body, #root {
   }
 }
 
-
-/* desktop-only */
+/* ========================= */
+/* DESKTOP LAYOUT LOCK */
+/* ========================= */
 
 @media (min-width: 769px) {
-  #root {
+  html,
+  body {
     min-width: 1200px;
     overflow-x: auto;
   }
