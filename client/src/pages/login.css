@@ -188,3 +188,28 @@ body{
     background-color:var(--all_button_hover);
     color: #ffffff;
 }
+
+
+/* =========================================================
+   MOBILE LOGIN LAYOUT (DOES NOT AFFECT DESKTOP)
+   ========================================================= */
+@media (max-width: 768px) {
+
+  .login_container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 1.25rem;
+    margin-top: 0;
+  }
+
+  .login-form {
+    width: 100%;
+    max-width: 420px;
+    margin: 0;
+    margin-top: 2rem;
+    padding: 24px 20px;
+    border-radius: 16px;
+  }
+
+  .login-title
