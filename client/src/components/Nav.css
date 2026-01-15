@@ -186,10 +186,7 @@ nav.navbar {
   }
 
   .nav-center {
-    position: static;
-    transform: none;
-    flex-direction: column;
-    gap: 0.75rem;
+    display:none;
   }
 
   .mobile-nav-link{
