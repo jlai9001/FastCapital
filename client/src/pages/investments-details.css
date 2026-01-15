@@ -276,6 +276,11 @@
     height: 140px;
   }
 
+  .investment-column-3{
+    margin-top:30px;
+    margin-bottom:-20px;
+  }
+
   .investment-column-3,
   .investment-column-4 {
     flex-direction: row;
