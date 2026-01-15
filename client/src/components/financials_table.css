@@ -1,3 +1,7 @@
+.investment-details-page-container{
+    margin: 2rem 1rem 1.5rem !important;
+}
+
 /* Main dashboard controls container */
 .dashboard-controls {
     display: flex;
@@ -106,6 +110,7 @@
 
 .financial-dashboard-container{
     box-shadow:none !important;
+
 }
 
 
