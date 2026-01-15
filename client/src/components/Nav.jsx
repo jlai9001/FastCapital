@@ -104,13 +104,13 @@ export default function Nav() {
                     ) : (
                     <div>
                     <NavLink
-                        className="nav-link"
+                        className="mobile-nav-link"
                         id="signup"
                         to="/signup"
                         onClick={closeMobileMenu}>
                         Sign Up
                     </NavLink>
-                    <NavLink className="nav-link"
+                    <NavLink className="mobile-nav-link"
                     to="/login"
                     id="login"
                     onClick={closeMobileMenu}
