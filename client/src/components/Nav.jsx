@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Link,
   NavLink,
@@ -19,6 +19,20 @@ export default function Nav() {
   const closeMobileMenu = () => {
     setMenuOpen(false);
   };
+
+    useEffect(() => {
+    if (!menuOpen) return;
+
+    const handleScroll = () => {
+      setMenuOpen(false);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [menuOpen]);
 
   // Handles BOTH:
   // - same-page clicks → scroll to top
