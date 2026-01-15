@@ -207,3 +207,15 @@ nav.navbar {
   transition: color 0.2s ease, background-color 0.2s ease;
   }
 }
+
+
+/* =========================================================
+   DISABLE ACTIVE / FOCUS STATE FOR LOGO (MOBILE FIX)
+   ========================================================= */
+.nav-link.logo:focus,
+.nav-link.logo:focus-visible,
+.nav-link.logo:active {
+  color: inherit !important;
+  background-color: transparent !important;
+  outline: none !important;
+}
