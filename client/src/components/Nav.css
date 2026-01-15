@@ -181,6 +181,8 @@ nav.navbar {
   }
 
   .mobile-nav-link {
+    background-color: var(--main_button_color);
+    color: var(--main_button_hover_textcolor);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -192,7 +194,7 @@ nav.navbar {
     font-size: 1rem;
     font-weight: 500;
     text-decoration: none;
-    color: var(--primary_text_color);
+
     transition: color 0.2s ease, background-color 0.2s ease;
   }
 }
