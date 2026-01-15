@@ -231,6 +231,7 @@ input {
   .button-group {
     flex-direction: column;
     gap: 12px;
+    margin-top: 40px;
   }
 
   .button-group button {
