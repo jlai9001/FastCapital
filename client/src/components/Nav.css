@@ -62,7 +62,7 @@ header {
   }
 
   .nav-link:hover {
-    color:#333;
+    color: var(--main_button_hover);
   }
 
   .nav-link:focus {
