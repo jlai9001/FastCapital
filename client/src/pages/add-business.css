@@ -82,12 +82,6 @@ input[type="file"]::file-selector-button:hover {
     transition: background-color 0.3s;
 }
 
-.button-group {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
 .button-group button {
     flex: 1;
     padding: 12px;
