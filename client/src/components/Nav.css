@@ -186,4 +186,22 @@ nav.navbar {
     flex-direction: column;
     gap: 0.75rem;
   }
+
+  .mobile-nav-link{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 20px;
+  min-width: 88px;
+  min-height: 42px;
+  border-radius: var(--button_border_radius);
+  font-family: var(--button_font);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  color: var(--primary_text_color);
+  transition: color 0.2s ease, background-color 0.2s ease;
+  }
 }
