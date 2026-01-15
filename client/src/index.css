@@ -6,7 +6,7 @@
 
   line-height: 1.5;
   font-weight: 400;
-  --header-height:6rem
+  --header-height:6rem;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -219,6 +219,7 @@ html, body, #root {
   margin-top: 10px;
 }
 
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -231,5 +232,15 @@ html, body, #root {
 
   button {
     background-color: #f9f9f9;
+  }
+}
+
+
+/* desktop-only */
+
+@media (min-width: 769px) {
+  #root {
+    min-width: 1200px;
+    overflow-x: auto;
   }
 }
