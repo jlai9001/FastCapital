@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import {Routes, Route } from 'react-router-dom'
 import Homepage from './pages/homepage.jsx'
 import AllInvestments from './pages/all-investments.jsx'
 import InvestmentDetails from './pages/investments-details.jsx'
@@ -25,7 +25,6 @@ function App() {
 
   return (
     <>
-      <BrowserRouter>
       <ScrollToTop/>
       <Nav />
       <div style={{ height: '60px' }} />
@@ -48,8 +47,6 @@ function App() {
         <Route path="/create-financials/:businessId" element={<AddFinancials />} />
       </Routes >
       <Footer />
-      </BrowserRouter>
-
     </>
   )
 }
