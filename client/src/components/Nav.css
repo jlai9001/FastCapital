@@ -180,6 +180,11 @@ nav.navbar {
     display: block !important;
   }
 
+  .nav-left,
+  .nav-right {
+    min-width: auto;
+  }
+
   .nav-center {
     position: static;
     transform: none;
