@@ -17,10 +17,8 @@
 .payment_modal {
   width: 100%;
   max-width: 600px;
-  background: linear-gradient(to bottom, #ebf6ff, #d8d7d7);
   border-radius: var(--border-radius);
   box-shadow: var(--element-shadow);
-  padding: 24px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -29,7 +27,7 @@
 }
 
 .payment_bar {
-  background: linear-gradient(to right, #8e8e8e, #cbcbcb);
+  background: var(--main-button-color);
   height: 60px;
   width: 100%;
   border-top-left-radius: var(--border-radius);
@@ -37,7 +35,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: -24px -24px 24px -24px;
 }
 
 .payment_title {
@@ -53,7 +50,8 @@
   gap: 12px;
   width: 100%;
   max-width: 400px;
-  margin-top: 16px;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .field_title {
@@ -114,4 +112,25 @@
   color: black;
   text-align: center;
   margin-top: 40px;
+}
+
+.modal-content {
+  background-color: #fff;
+  border-radius: var(--border-radius);
+  /* padding: 24px; */
+  max-width: 600px;
+  width: 90%;
+  box-shadow: var(--element-shadow);
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.field_title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: -20px;
 }
