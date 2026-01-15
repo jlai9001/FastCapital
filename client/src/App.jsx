@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Homepage from './pages/homepage.jsx'
 import AllInvestments from './pages/all-investments.jsx'
 import InvestmentDetails from './pages/investments-details.jsx'
@@ -25,10 +25,10 @@ function App() {
 
   return (
     <>
-
+      <BrowserRouter>
+      <scrollToTop/>
       <Nav />
       <div style={{ height: '60px' }} />
-      <ScrollToTop />
       <Routes>
         <Route path='/' element={<Homepage />}></Route>
         <Route path='/signup' element={<SignupForm />}></Route>
@@ -48,6 +48,8 @@ function App() {
         <Route path="/create-financials/:businessId" element={<AddFinancials />} />
       </Routes >
       <Footer />
+      </BrowserRouter>
+
     </>
   )
 }
