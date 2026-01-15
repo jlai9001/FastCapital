@@ -68,35 +68,41 @@ export default function Portfolio(){
     fetchPurchasesAndInvestments();
   }, [user]);
 
-    return(
-      <div className="portfolio-page-container">
-         <h2>Investment Portfolio</h2>
-        <div className="your-investments-container">
-              <UserInvestments user={user} />
-          </div>
-          <div className="pending-investments-container">
-          <p className="pending-investments-title">Pending Investments</p>
-              {loading && <p>Loading pending investments...</p>}
-              {error && <p>{error}</p>}
+return (
+  <div className="portfolio-page">
+    <main className="portfolio-page-container">
+      <h2>Investment Portfolio</h2>
 
-              {!loading && !error && pendingPurchases.length === 0 && (
-                <p className="empty-pending">Please purchase an investment.</p>
-              )}
-
-              {pendingPurchases.map((purchase) => {
-                const matchingInvestment = investments.find(
-                  (inv) => inv.id === purchase.investment_id
-                );
-
-                return (
-                <PendingInvestmentsCard
-                key={purchase.id}
-                purchase={purchase}
-                investment={matchingInvestment}
-              />
-              );
-    })}
-          </div>
+      <div className="your-investments-container">
+        <UserInvestments user={user} />
       </div>
-    )
+
+      <div className="pending-investments-container">
+        <p className="pending-investments-title">Pending Investments</p>
+
+        {loading && <p>Loading pending investments...</p>}
+        {error && <p>{error}</p>}
+
+        {!loading && !error && pendingPurchases.length === 0 && (
+          <p className="empty-pending">Please purchase an investment.</p>
+        )}
+
+        {pendingPurchases.map((purchase) => {
+          const matchingInvestment = investments.find(
+            (inv) => inv.id === purchase.investment_id
+          );
+
+          return (
+            <PendingInvestmentsCard
+              key={purchase.id}
+              purchase={purchase}
+              investment={matchingInvestment}
+            />
+          );
+        })}
+      </div>
+    </main>
+  </div>
+);
+
 }
