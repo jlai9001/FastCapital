@@ -134,6 +134,8 @@
     .year-dropdown {
     padding: 12px 20px;
     border: 2px solid var(--main_button_color);
+    margin-left: 1rem;
+    margin-right: 1rem;
     border-radius: 8px;
     font-size: 14px;
     min-width: 0;          /* CHANGED from 180px */
