@@ -200,6 +200,6 @@ nav.navbar {
 
   /* Restore bottom border ONLY on last button */
   .mobile-nav-link:last-child {
-  border-bottom: 4px solid darkgrey;
+  border-bottom: 4px solid var(--main_button_color);
   }
 }
