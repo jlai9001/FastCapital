@@ -167,15 +167,6 @@ header {
       display: none !important;
     }
     .mobile-only {
-      display: inline-block !important;
-    }
-    .mobile-menu {
-      display: flex;
-    }
-  }
-
-  @media (min-width: 768px) {
-    .mobile-only {
       display: none !important;
     }
     .mobile-menu {
