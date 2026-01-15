@@ -195,21 +195,59 @@ body{
    ========================================================= */
 @media (max-width: 768px) {
 
-  .login_container {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 1.25rem;
-    margin-top: 0;
-  }
+    .login_container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 1.25rem;
+        margin-top: 0;
+    }
 
-  .login-form {
-    width: 100%;
-    max-width: 420px;
-    margin: 0;
-    margin-top: 2rem;
-    padding: 24px 20px;
-    border-radius: 16px;
-  }
+    .login-form {
+        width: 100%;
+        max-width: 420px;
+        margin: 0;
+        margin-top: 2rem;
+        padding: 24px 20px;
+        border-radius: 16px;
+    }
 
-  .login-title
+    .login-title {
+        font-size: 24px;
+    }
+
+    .login-subtitle {
+        font-size: 14px;
+        margin-bottom: 16px;
+    }
+
+    .All_Fields_Container {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .input-field {
+        padding: 14px;
+        font-size: 15px;
+    }
+
+    .login-button {
+        width: 100%;
+        margin-top: 24px;
+    }
+
+    .Error_Message {
+        width: 100%;
+        margin-bottom: 24px;
+        font-size: 13px;
+    }
+
+    .bottom-field {
+        margin-top: 16px;
+    }
+
+    .no-account-msg {
+        font-size: 13px;
+    }
+
+}
