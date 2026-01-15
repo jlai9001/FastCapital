@@ -104,9 +104,7 @@ header {
   /* Centered nav links (e.g. Portfolio) */
   .nav-center.desktop-only {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-grow: 1;
+    justify-self: center;
     gap: 1.5rem;
   }
 
