@@ -104,17 +104,26 @@
     background-color:transparent;
 }
 
+.financial-dasboard-container{
+    box-shadow:none !important;
+}
+
 
 @media (max-width: 768px) {
-    .financial-dasboard-container{
-        box-shadow:none;
-    }
-
-
     .financial-dashboard {
-    padding-left: 16px;
-    padding-right: 16px;
+    margin: auto;
     box-sizing: border-box;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    }
+    .financial-dashboard-mobile {
+    display: flex;
+    flex-direction: column;
+    gap:1rem;
+    margin-left:1rem;
+    margin-right:1rem;
     }
 
     .financial-dashboard-dropdown {
