@@ -26,79 +26,55 @@ export default function Nav() {
 
     return (
         <header> {/* Using <header> tag is semantically good for main navigation */}
+
             <nav className="navbar">
+            {/* LEFT */}
+            <div className="nav-left">
                 <NavLink className="nav-link logo" to="/" onClick={closeMobileMenu}>
-                    <img src={logo} alt="Logo" className="nav-logo-image" />
-                    Fast Capital
+                <img src={logo} alt="Logo" className="nav-logo-image" />
+                Fast Capital
                 </NavLink>
+            </div>
 
-                {/* Desktop Navigation Links */}
-                <div className="nav-center desktop-only">
-                    {user && (
-                        <>
-                            <NavLink
-                                className="nav-link"
-                                id="all-investments"
-                                to="/all-investments"
-                                style={({ isActive }) => isActive ? { textDecoration: 'underline', fontWeight: 'bold' } : {}}
-                            >
-                                All Investments
-                            </NavLink>
-                            <NavLink
-                                className="nav-link"
-                                id="portfolio"
-                                to="/portfolio"
-                                style={({ isActive }) => isActive ? { textDecoration: 'underline', fontWeight: 'bold' } : {}}
-                            >
-                                Portfolio
-                            </NavLink>
-                            <NavLink
-                                className="nav-link"
-                                id="business-profile"
-                                to="/business-profile"
-                                style={({ isActive }) => isActive ? { textDecoration: 'underline', fontWeight: 'bold' } : {}}
-                            >
-                                Business Profile
-                            </NavLink>
-                        </>
-                    )}
-                </div>
-
-                {user ? (
-                    <button
-                        className="nav-link desktop-only"
-                        id="logout"
-                        onClick={handleLogout}
-                        >
-                        Logout
-                        </button>
-                ) : (
-                    <div className="nav-buttons desktop-only">
-                        <NavLink
-                            className="nav-link"
-                            id="signup"
-                            to='/signup'
-                        >
-                            Sign Up
-                        </NavLink>
-                        <NavLink
-                            className="nav-link"
-                            id="login"
-                            to="/login"
-                        >
-                            Login
-                        </NavLink>
-                    </div>
+            {/* CENTER */}
+            <div className="nav-center desktop-only">
+                {user && (
+                <>
+                    <NavLink className="nav-link" to="/all-investments">
+                    All Investments
+                    </NavLink>
+                    <NavLink className="nav-link" to="/portfolio">
+                    Portfolio
+                    </NavLink>
+                    <NavLink className="nav-link" to="/business-profile">
+                    Business Profile
+                    </NavLink>
+                </>
                 )}
+            </div>
 
-                {/* Hamburger Icon for Mobile */}
-                <button
-                    className="hamburger mobile-only"
-                    onClick={() => setMenuOpen(!menuOpen)}
-                    aria-label="Toggle menu"
-                >
-                    ☰
+            {/* RIGHT */}
+            <div className="nav-right desktop-only">
+                {user ? (
+                <button className="nav-link" id="logout" onClick={handleLogout}>
+                    Logout
                 </button>
+                ) : (
+                <div className="nav-buttons">
+                    <NavLink className="nav-link" to="/signup">Sign Up</NavLink>
+                    <NavLink className="nav-link" to="/login">Login</NavLink>
+                </div>
+                )}
+            </div>
+
+            {/* Hamburger */}
+            <button
+                className="hamburger mobile-only"
+                onClick={() => setMenuOpen(!menuOpen)}
+                aria-label="Toggle menu"
+            >
+                ☰
+            </button>
             </nav>
 
             {/* Mobile Menu (conditionally rendered) */}
