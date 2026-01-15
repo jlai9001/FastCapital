@@ -9,7 +9,6 @@ header {
   left: 0;
   width: 100%;
   z-index: 1000;
-  box-sizing: border-box;
 }
 
 /* =========================================================
@@ -17,11 +16,10 @@ header {
    ========================================================= */
 nav.navbar {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   position: relative; /* REQUIRED for absolute centering */
   padding: 0.5rem 1.5rem;
-  max-height: 5rem;
   box-sizing: border-box;
 }
 
@@ -30,6 +28,7 @@ nav.navbar {
    ========================================================= */
 .nav-left,
 .nav-right {
+  min-width: 240px;
   display: flex;
   align-items: center;
 }
@@ -47,6 +46,18 @@ nav.navbar {
   left: 50%;
   transform: translateX(-50%);
 }
+
+/* LEFT */
+.nav-left {
+  justify-content: flex-start;
+}
+
+/* RIGHT */
+.nav-right {
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
 
 /* =========================================================
    NAV LINKS
@@ -108,6 +119,24 @@ nav.navbar {
 #login:hover,
 #signup:hover,
 #logout:hover {
+  background-color: var(--main_button_hover);
+  color: var(--main_button_hover_textcolor);
+}
+
+
+/* ================= AUTH BUTTONS ================= */
+#signup.nav-link {
+  border: 2px solid var(--main_button_color);
+  color: var(--main_button_color);
+}
+
+#login.nav-link {
+  background-color: var(--main_button_color);
+  color: var(--main_button_textcolor);
+}
+
+#signup:hover,
+#login:hover {
   background-color: var(--main_button_hover);
   color: var(--main_button_hover_textcolor);
 }
