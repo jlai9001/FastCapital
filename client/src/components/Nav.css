@@ -1,8 +1,8 @@
-/* =========================
-   Header
-========================= */
+/* =========================================================
+   HEADER
+   ========================================================= */
 header {
-  background-color: #fff;
+  background-color: #ffffff;
   border-bottom: 1px solid #eee;
   position: fixed;
   top: 0;
@@ -12,58 +12,45 @@ header {
   box-sizing: border-box;
 }
 
-/* =========================
-   NAV GRID LAYOUT (KEY FIX)
-========================= */
+/* =========================================================
+   NAV CONTAINER (MATCH FOOTER STRUCTURE)
+   ========================================================= */
 nav.navbar {
-  display: grid;
-  grid-template-columns: auto 1fr auto; /* LEFT | CENTER | RIGHT */
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  width: 100%;
+  position: relative; /* REQUIRED for absolute centering */
   padding: 0.5rem 1.5rem;
   max-height: 5rem;
   box-sizing: border-box;
 }
 
-/* =========================
-   Left / Center / Right
-========================= */
-.nav-left {
-  justify-self: start;
-}
-
-.nav-center {
-  justify-self: center; /* TRUE CENTER */
-  display: flex;
-  gap: 1.5rem;
-}
-
+/* =========================================================
+   LEFT / RIGHT SECTIONS
+   ========================================================= */
+.nav-left,
 .nav-right {
-  justify-self: end;
-}
-
-/* =========================
-   Logo
-========================= */
-.nav-link.logo {
   display: flex;
   align-items: center;
-  font-family: var(--button_font);
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #333;
-  text-decoration: none;
-  white-space: nowrap;
 }
 
-.nav-logo-image {
-  height: 32px;
-  margin-right: 0.5rem;
+/* =========================================================
+   TRUE CENTER (IDENTICAL TO FOOTER)
+   ========================================================= */
+.nav-center {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+
+  /* TRUE CENTER */
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
-/* =========================
-   Nav Links / Buttons
-========================= */
+/* =========================================================
+   NAV LINKS
+   ========================================================= */
 .nav-link {
   display: flex;
   align-items: center;
@@ -75,27 +62,44 @@ nav.navbar {
   font-family: var(--button_font);
   font-size: 1rem;
   font-weight: 500;
+  line-height: 1.2;
   text-align: center;
   text-decoration: none;
   color: var(--primary_text_color);
-  transition: background-color 0.25s ease, color 0.25s ease;
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 
 .nav-link:hover {
   color: var(--main_button_color);
 }
 
-/* =========================
-   Button Variants
-========================= */
-#login.nav-link {
+/* =========================================================
+   LOGO
+   ========================================================= */
+.nav-link.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.nav-logo-image {
+  height: 32px;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+/* =========================================================
+   AUTH BUTTONS
+   ========================================================= */
+#login {
   background-color: var(--main_button_color);
   color: var(--main_button_textcolor);
   border: none;
 }
 
-#signup.nav-link,
-#logout.nav-link {
+#signup,
+#logout {
   background-color: transparent;
   color: var(--main_button_color);
   border: 2px solid var(--main_button_color);
@@ -108,27 +112,20 @@ nav.navbar {
   color: var(--main_button_hover_textcolor);
 }
 
-/* =========================
-   Right-side auth buttons
-========================= */
-.nav-buttons {
-  display: flex;
-  gap: 1rem;
-}
-
-/* =========================
-   Hamburger (Mobile)
-========================= */
+/* =========================================================
+   HAMBURGER
+   ========================================================= */
 .hamburger {
   background: none;
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
+  color: #333;
 }
 
-/* =========================
-   Visibility Helpers
-========================= */
+/* =========================================================
+   VISIBILITY
+   ========================================================= */
 .desktop-only {
   display: flex;
 }
@@ -137,15 +134,10 @@ nav.navbar {
   display: none;
 }
 
-/* =========================
-   Mobile Layout
-========================= */
-@media (max-width: 767px) {
-  nav.navbar {
-    display: flex;
-    justify-content: space-between;
-  }
-
+/* =========================================================
+   MOBILE OVERRIDES
+   ========================================================= */
+@media (max-width: 768px) {
   .desktop-only {
     display: none !important;
   }
@@ -155,6 +147,9 @@ nav.navbar {
   }
 
   .nav-center {
-    display: none;
+    position: static;
+    transform: none;
+    flex-direction: column;
+    gap: 0.75rem;
   }
 }
