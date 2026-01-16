@@ -14,7 +14,9 @@ function useInvestment(investmentId) {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${base_url}/api/investment/${investmentId}`);
+        const response = await fetch(`${base_url}/api/investment/${investmentId}`,{
+          credentials: "include", // 🔴 REQUIRED for iOS
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch investment data");
         }
@@ -75,7 +77,9 @@ function useBusiness(businessId) {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${base_url}/api/business/${businessId}`);
+        const response = await fetch(`${base_url}/api/business/${businessId}`,{
+          credentials: "include", // 🔴 REQUIRED
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch business data");
         }
@@ -152,7 +156,9 @@ function useFinancialsForBusiness(businessId) {
   useEffect(() => {
       async function fetchData() {
         try {
-          const res = await axios.get(`${base_url}/api/financials/${businessId}`);
+          const res = await axios.get(`${base_url}/api/financials/${businessId}`,{
+            withCredentials: true, // 🔴 REQUIRED FOR iOS
+          });
           setFinancials(res.data);
           } catch (err) {
             if (err.response.status === 404) {
@@ -161,6 +167,7 @@ function useFinancialsForBusiness(businessId) {
               setError(err);
             }
           } finally {
+
               setLoading(false);
           }
       };
@@ -209,14 +216,11 @@ export { useInvestment, useBusiness, useBusinessForUser, useFinancialsForBusines
   useInvestmentsForBusiness, useInvestmentPurchases, uploadBusinessImage };
 
 
-export async function getInvestments() {
-  const response = await fetch(`${base_url}/api/investment`);
-  if (!response.ok) throw new Error("Failed to fetch investments");
-  return await response.json();
-}
 
-export async function getBusinesses() {
-  const response = await fetch(`${base_url}/api/business`);
-  if (!response.ok) throw new Error("Failed to fetch businesses");
+export async function getInvestments() {
+  const response = await fetch(`${base_url}/api/investment`, {
+    credentials: "include",
+  });
+  if (!response.ok) throw new Error("Failed to fetch investments");
   return await response.json();
 }
