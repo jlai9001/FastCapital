@@ -24,30 +24,36 @@ function App() {
 
 
   return (
-    <>
-      <ScrollToTop/>
-      <Nav />
-      <div style={{ height: '60px' }} />
+<>
+  <ScrollToTop/>
+
+  <div className="app-shell">
+    <Nav />
+    <div style={{ height: '60px' }} />
+    <main className="app-main">
       <Routes>
-        <Route path='/' element={<Homepage />}></Route>
-        <Route path='/signup' element={<SignupForm />}></Route>
-        <Route path='/all-investments' element={<AllInvestments />}></Route>
-        <Route path='/investment-details/:investmentId' element={<InvestmentDetails />}></Route>
-        <Route path='/investment-details/:investmentId/purchase' element={<Purchase />}></Route>
-        <Route path='/portfolio' element={<Portfolio />}></Route>
-        <Route path='/business-profile' element={<BusinessProfile />}></Route>
-        <Route path='/add-business' element={<AddBusiness />}></Route>
-        <Route path='/login' element={<Login />}></Route>
-        <Route path='/terms' element={<Terms />}></Route>
-        <Route path='/about' element={<About />}></Route>
-        <Route path='/contact' element={<Contact />}></Route>
-        <Route path='/testpage' element={<TestPage />}></Route>
-        <Route path='/not-found' element={<NotFound />}></Route>
-        <Route path='/create-investment' element={<NewInvestment />}></Route>
+        <Route path='/' element={<Homepage />} />
+        <Route path='/signup' element={<SignupForm />} />
+        <Route path='/all-investments' element={<AllInvestments />} />
+        <Route path='/investment-details/:investmentId' element={<InvestmentDetails />} />
+        <Route path='/investment-details/:investmentId/purchase' element={<Purchase />} />
+        <Route path='/portfolio' element={<Portfolio />} />
+        <Route path='/business-profile' element={<BusinessProfile />} />
+        <Route path='/add-business' element={<AddBusiness />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/terms' element={<Terms />} />
+        <Route path='/about' element={<About />} />
+        <Route path='/contact' element={<Contact />} />
+        <Route path='/testpage' element={<TestPage />} />
+        <Route path='/not-found' element={<NotFound />} />
+        <Route path='/create-investment' element={<NewInvestment />} />
         <Route path="/create-financials/:businessId" element={<AddFinancials />} />
-      </Routes >
-      <Footer />
-    </>
+      </Routes>
+    </main>
+    <Footer />
+  </div>
+</>
+
   )
 }
 
