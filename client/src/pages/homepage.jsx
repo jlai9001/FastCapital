@@ -16,7 +16,9 @@ export default function Homepage(){
     useEffect (() => {
         const fetchFeaturedInvestments = async () => {
             try {
-                const result = await fetch(`${base_url}/api/investment`)
+                const result = await fetch(`${base_url}/api/investment`, {
+                credentials: "include",
+                });
                 if(!result.ok) throw new Error("Failed to fetch investments")
 
                 const data = await result.json();
