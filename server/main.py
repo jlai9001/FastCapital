@@ -26,7 +26,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.sessions import SessionMiddleware
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session
 from rich import print
 
 # =========================
@@ -42,7 +42,6 @@ from db import (
     validate_email_password,
     update_business_details,
 )
-from db_models import DBBusiness, DBInvestment
 from auth import get_auth_user, get_optional_auth_user
 from pydantic_schemas import (
     InvestmentOut,
@@ -237,3 +236,15 @@ async def get_business_by_id(business_id: int):
     if not business:
         raise HTTPException(status_code=404, detail="Business not found")
     return business
+
+@app.get("/api/investment/{investment_id}", response_model=InvestmentWithPurchasesOut)
+def investment_detail(
+    investment_id: int,
+    db_session: Session = Depends(get_db)
+):
+    investment = db.get_investment_by_id(db_session, investment_id)
+
+    if not investment:
+        raise HTTPException(status_code=404, detail="Investment not found")
+
+    return investment

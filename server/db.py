@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import sessionmaker, Session , joinedload
 from fastapi import HTTPException
 from db_models import (
     DBBusiness,
@@ -289,3 +289,12 @@ def add_investment(new_investment: InvestmentCreate) -> InvestmentOut:
         db.commit()
         db.refresh(db_investment)
         return InvestmentOut.model_validate(db_investment)
+
+def get_investment_by_id(db: Session, investment_id: int):
+    return (
+        db.query(DBInvestment)
+        .options(joinedload(DBInvestment.business))
+        .options(joinedload(DBInvestment.purchases))
+        .filter(DBInvestment.id == investment_id)
+        .first()
+    )
