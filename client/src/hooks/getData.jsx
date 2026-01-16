@@ -212,6 +212,19 @@ function useInvestmentsForBusiness(businessId) {
     return { investments, loading, error };
 }
 
+export async function getBusinesses() {
+  const response = await fetch(`${base_url}/api/business`, {
+    credentials: "include", // REQUIRED for iOS + sessions
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch businesses");
+  }
+
+  return await response.json();
+}
+
+
 export { useInvestment, useBusiness, useBusinessForUser, useFinancialsForBusiness,
   useInvestmentsForBusiness, useInvestmentPurchases, uploadBusinessImage };
 
