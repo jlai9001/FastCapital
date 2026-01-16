@@ -102,7 +102,7 @@ export default function NewInvestment() {
                     />
                 </div><br />
                 <div>
-                    <div className="field-label">What is the minimum number of shares you want to sell?</div>
+                    <div className="field-label">What is the minimum number of shares per purchase?</div>
                     <input
                         type="number"
                         value={minInvestment}
