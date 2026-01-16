@@ -213,6 +213,18 @@ async def logout(request: Request, response: Response):
 async def get_me(current_user: Optional[UserPublicDetails] = Depends(get_optional_auth_user)):
     return current_user
 
+
+@app.get("/api/purchases", response_model=list[EnrichedPurchaseOut])
+def get_purchases(
+    status: PurchaseStatus = Query(...),
+    current_user: UserPublicDetails = Depends(get_auth_user),
+):
+    return get_purchases_by_status(
+        user_id=current_user.id,
+        status=status
+    )
+
+
 @app.get(
     "/api/secret",
     response_model=SecretResponse,
