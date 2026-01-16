@@ -210,3 +210,8 @@ async def get_me(current_user: Optional[UserPublicDetails] = Depends(get_optiona
 )
 async def secret():
     return SecretResponse(secret="info")
+
+
+@app.get("/api/investment", response_model=List[InvestmentOut])
+async def get_investments():
+    return db.get_investments()
