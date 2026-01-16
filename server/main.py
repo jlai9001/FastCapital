@@ -43,6 +43,8 @@ from db import (
     update_business_details,
 )
 from auth import get_auth_user, get_optional_auth_user
+from jwt_utils import create_access_token
+
 from pydantic_schemas import (
     InvestmentOut,
     BusinessCreate,
@@ -60,7 +62,9 @@ from pydantic_schemas import (
     SecretResponse,
     UserPublicDetails,
     PurchaseStatus,
+    LoginResponse,
 )
+
 
 # =========================
 # ENV / APP SETUP
@@ -179,8 +183,21 @@ def debug_file_check(filename: str):
 # ROUTES (UNCHANGED)
 # =========================
 
-@app.post("/api/login", response_model=SuccessResponse)
+@app.post("/api/login", response_model=LoginResponse)
 async def login(credentials: LoginCredentials, request: Request):
+    token = validate_email_password(credentials.email, credentials.password)
+    if not token:
+        raise HTTPException(status_code=401)
+
+    # Desktop session still works
+    request.session["email"] = credentials.email
+    request.session["session_token"] = token
+
+    # iOS JWT fallback
+    access_token = create_access_token(email=credentials.email, sid=token)
+
+    return LoginResponse(success=True, access_token=access_token, token_type="bearer")
+
     token = validate_email_password(credentials.email, credentials.password)
     if not token:
         raise HTTPException(status_code=401)

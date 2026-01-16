@@ -22,10 +22,17 @@ class SignupCredentials(BaseModel):
     email: EmailStr
     password: str
 
+# JWT - SESSION LOGIC
 
 class SuccessResponse(BaseModel):
     success: bool
     message: str | None = None
+
+
+class LoginResponse(SuccessResponse):
+    # JWT fallback for iOS Safari (or any client that can't store cookies)
+    access_token: str | None = None
+    token_type: str | None = "bearer"
 
 
 class SecretResponse(BaseModel):
