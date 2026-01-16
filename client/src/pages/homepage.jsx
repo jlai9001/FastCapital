@@ -4,35 +4,44 @@ import HomePageHero from '../components/homepage_hero'
 import InvestmentCard from '../components/investment-card'
 import './homepage.css'
 import { base_url } from '../api'
-
+import { getBusinesses } from '../hooks/getData'
 
 export default function Homepage(){
     const [featuredInvestments, setFeaturedInvestments] = useState([])
+    const [businesses, setBusinesses] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState("")
     const navigate = useNavigate();
 
 
-    useEffect (() => {
-        const fetchFeaturedInvestments = async () => {
-            try {
-                const result = await fetch(`${base_url}/api/investment`, {
-                credentials: "include",
-                });
-                if(!result.ok) throw new Error("Failed to fetch investments")
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      // 1️⃣ Fetch investments
+      const investmentsRes = await fetch(`${base_url}/api/investment`, {
+        credentials: "include",
+      });
+      if (!investmentsRes.ok) throw new Error("Failed to fetch investments");
 
-                const data = await result.json();
-                const featured = data.filter((investment) => investment.featured);
-                setFeaturedInvestments(featured);
-            } catch (error) {
-                console.error(error);
-                setError("Could not load featured investments")
-            } finally {
-                setLoading(false)
-            }
-        };
-        fetchFeaturedInvestments();
-    }, []);
+      const investmentsData = await investmentsRes.json();
+      const featured = investmentsData.filter(i => i.featured);
+      setFeaturedInvestments(featured);
+
+      // 2️⃣ Fetch businesses ONCE
+      const businessesData = await getBusinesses();
+      setBusinesses(businessesData);
+
+    } catch (err) {
+      console.error(err);
+      setError("Could not load homepage data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, []);
+
 
 
 
@@ -58,11 +67,20 @@ export default function Homepage(){
 
         {featuredInvestments.length > 0 && (
             <ul>
-            {featuredInvestments.map((investment) => (
+            {featuredInvestments.map((investment) => {
+            const matchedBusiness = businesses.find(
+                (b) => b.id === investment.business_id
+            );
+
+            return (
                 <li key={investment.id}>
-                <InvestmentCard investment={investment} />
+                <InvestmentCard
+                    investment={investment}
+                    business={matchedBusiness}
+                />
                 </li>
-            ))}
+            );
+            })}
             </ul>
         )}
         </section>

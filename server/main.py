@@ -191,13 +191,24 @@ async def login(credentials: LoginCredentials, request: Request):
     return SuccessResponse(success=True)
 
 @app.post("/api/logout", response_model=SuccessResponse)
-async def logout(request: Request):
+async def logout(request: Request, response: Response):
     email = request.session.get("email")
     token = request.session.get("session_token")
     if email and token:
         invalidate_session(email, token)
+
     request.session.clear()
+
+    # Force browser to drop the cookie (Safari can otherwise keep it)
+    response.delete_cookie(
+        key="session",
+        path="/",
+        samesite="none",
+        secure=True,
+    )
+
     return SuccessResponse(success=True)
+
 
 @app.get("/api/me", response_model=Optional[UserPublicDetails])
 async def get_me(current_user: Optional[UserPublicDetails] = Depends(get_optional_auth_user)):
@@ -215,3 +226,14 @@ async def secret():
 @app.get("/api/investment", response_model=List[InvestmentOut])
 async def get_investments():
     return db.get_investments()
+
+@app.get("/api/business", response_model=List[BusinessOut])
+async def get_businesses():
+    return db.get_businesses()
+
+@app.get("/api/business/{business_id}", response_model=BusinessOut)
+async def get_business_by_id(business_id: int):
+    business = db.get_business(business_id)
+    if not business:
+        raise HTTPException(status_code=404, detail="Business not found")
+    return business
