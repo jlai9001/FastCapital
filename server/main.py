@@ -248,3 +248,8 @@ def investment_detail(
         raise HTTPException(status_code=404, detail="Investment not found")
 
     return investment
+
+
+@app.get("/api/financials/{business_id}", response_model=List[FinancialsOut])
+def get_financials(business_id: int):
+    return db.get_financials_by_business_id(business_id)
