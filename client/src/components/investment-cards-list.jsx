@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getInvestments } from "../hooks/getData";
+import { getBusinesses } from "../hooks/getData";
 import InvestmentCard from "./investment-card";
 import "./investment-cards-list.css";
 import { Switch } from '@mui/material';
 
 export default function InvestmentCardsList() {
+    const [businesses, setBusinesses] = useState([]);
     const [error, setError] = useState(null);
     const [investments, setInvestments] = useState([]);
     const navigate = useNavigate();
@@ -37,15 +39,24 @@ export default function InvestmentCardsList() {
     }
 
     useEffect(() => {
-        (async function fetchData() {
+    (async function fetchData() {
         const investmentsResult = await getInvestments();
         if (investmentsResult instanceof Error) {
-            setError("Investments Not Found");
-            return;
+        setError("Investments Not Found");
+        return;
         }
+
+        const businessesResult = await getBusinesses();
+        if (businessesResult instanceof Error) {
+        setError("Businesses Not Found");
+        return;
+        }
+
         setInvestments(investmentsResult);
-        })();
+        setBusinesses(businessesResult);
+    })();
     }, []);
+
 
     if (error) return <h1>{error}</h1>;
     if (!investments.length) return <h1>Loading...</h1>;
@@ -85,11 +96,23 @@ export default function InvestmentCardsList() {
 
         {filteredInvestments.length > 0 ? (
             <ul className="card-grid">
-            {filteredInvestments.map((investment) => (
+
+
+            {filteredInvestments.map((investment) => {
+            const matchedBusiness = businesses.find(
+                (b) => b.id === investment.business_id
+            );
+
+            return (
                 <li key={investment.id} className="investment-card-wrapper">
-                <InvestmentCard investment={investment} />
+                <InvestmentCard
+                    investment={investment}
+                    business={matchedBusiness}
+                />
                 </li>
-            ))}
+            );
+            })}
+
             </ul>
         ) : (
             <p className="no-results">No investments found matching your filters.</p>
