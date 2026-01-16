@@ -77,6 +77,12 @@ function SignupForm() {
               value={formData.name}
               onChange={handleChange}
               required
+
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck="false"
+              inputMode="email"
+
             />
           <div className = "field-label">Email</div>
             <input
@@ -86,6 +92,11 @@ function SignupForm() {
               value={formData.email}
               onChange={handleChange}
               required
+
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck="false"
+              inputMode="email"
             />
           <div className = "field-label">Password</div>
             <input
@@ -95,6 +106,11 @@ function SignupForm() {
               value={formData.password}
               onChange={handleChange}
               required
+
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck="false"
+              inputMode="email"
             />
           {/* password match error by Jonathan */}
 
@@ -114,6 +130,11 @@ function SignupForm() {
             value={formData.confirmPassword}
             onChange={handleChange}
             required
+
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck="false"
+            inputMode="email"
           />
 
           <div className="button-group">

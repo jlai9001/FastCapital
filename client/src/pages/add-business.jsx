@@ -184,6 +184,11 @@ function AddBusiness() {
             value={formData.name}
             onChange={handleChange}
             required
+
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck="false"
+            inputMode="email"
           />
 
           <div className="field-label">Website</div>
@@ -192,6 +197,11 @@ function AddBusiness() {
             value={formData.website_url}
             onChange={handleChange}
             required
+
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck="false"
+            inputMode="email"
           />
 
           <div className="field-label">Picture</div>
@@ -207,11 +217,21 @@ function AddBusiness() {
             value={formData.address1}
             onChange={handleChange}
             required
+
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck="false"
+            inputMode="email"
           />
           <input
             name="address2"
             value={formData.address2}
             onChange={handleChange}
+
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck="false"
+            inputMode="email"
           />
 
           <div className="field-label">City</div>
@@ -220,6 +240,11 @@ function AddBusiness() {
             value={formData.city}
             onChange={handleChange}
             required
+
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck="false"
+            inputMode="email"
           />
 
           <div className="field-label">State</div>
@@ -228,6 +253,11 @@ function AddBusiness() {
             value={formData.state}
             onChange={handleChange}
             required
+
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck="false"
+            inputMode="email"
           />
 
           <div className="field-label">Postal Code</div>
@@ -236,6 +266,11 @@ function AddBusiness() {
             value={formData.postal_code}
             onChange={handleChange}
             required
+
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck="false"
+            inputMode="email"
           />
 
           <div className="button-group">

@@ -99,6 +99,11 @@ function Login() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Enter Your Email"
+
+                        autoCapitalize="none"
+                        autoCorrect="off"
+                        spellCheck="false"
+                        inputMode="email"
                       />
                 <div className = "field-label">Password</div>
                       <input className="input-field"
@@ -106,6 +111,11 @@ function Login() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter Your Password"
+
+                        autoCapitalize="none"
+                        autoCorrect="off"
+                        spellCheck="false"
+                        inputMode="email"
                       />
 
                       <button className="login-button" onClick={LoginClick}>Login</button>
