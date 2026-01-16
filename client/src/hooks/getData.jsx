@@ -35,13 +35,14 @@ function useInvestment(investmentId) {
   return { loading, error, data };
 }
 
-function useInvestmentPurchases(investmentId) {
-  const [purchases, setPurchases] = useState(null);
-  const [loading, setLoading] = useState(true);
+function useInvestmentPurchases(investmentId, enabled = true) {
+  const [purchases, setPurchases] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!investmentId) return;
+    // 🔴 THIS LINE IS THE FIX
+    if (!enabled || !investmentId) return;
 
     async function fetchPurchases() {
       setLoading(true);
@@ -60,10 +61,11 @@ function useInvestmentPurchases(investmentId) {
     }
 
     fetchPurchases();
-  }, [investmentId]);
+  }, [investmentId, enabled]);
 
   return { data: purchases, loading, error };
 }
+
 
 function useBusiness(businessId) {
   const [loading, setLoading] = useState(false);
@@ -161,7 +163,7 @@ function useFinancialsForBusiness(businessId) {
           });
           setFinancials(res.data);
           } catch (err) {
-            if (err.response.status === 404) {
+            if (err.response?.status === 404) {
               setFinancials(null);
             } else {
               setError(err);

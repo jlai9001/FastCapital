@@ -50,7 +50,7 @@ export default function InvestmentDetails() {
     loading: purchasesLoading,
     error: purchasesError,
     data: purchases,
-  } = useInvestmentPurchases(investmentId);
+  } = useInvestmentPurchases(investmentId, !!user);
 
   if (investmentLoading || businessLoading) return <h1> Loading... </h1>;
   if (investmentError || businessError)
