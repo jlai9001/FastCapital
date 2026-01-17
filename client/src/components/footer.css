@@ -117,8 +117,7 @@
   }
 
   .footer__logo-section {
-    width: 100%;
-    justify-content: center;
+    display: none;
   }
 
   .links-section {
