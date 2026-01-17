@@ -43,7 +43,7 @@ from db import (
     update_business_details,
 )
 from auth import get_auth_user, get_optional_auth_user
-from jwt_utils import create_access_token
+from jwt_utils import create_access_token, decode_access_token
 
 from pydantic_schemas import (
     InvestmentOut,
@@ -205,14 +205,26 @@ async def login(credentials: LoginCredentials, request: Request):
 
 @app.post("/api/logout", response_model=SuccessResponse)
 async def logout(request: Request, response: Response):
+    # 1) Prefer cookie session (desktop)
     email = request.session.get("email")
     token = request.session.get("session_token")
+
+    # 2) Fallback to Bearer token (iOS JWT mode)
+    if not email or not token:
+        auth = request.headers.get("Authorization")
+        if auth:
+            parts = auth.split()
+            if len(parts) == 2 and parts[0].lower() == "bearer":
+                payload = decode_access_token(parts[1])
+                if payload:
+                    email = payload.get("sub")
+                    token = payload.get("sid")
+
     if email and token:
         invalidate_session(email, token)
 
     request.session.clear()
 
-    # Force browser to drop the cookie (Safari can otherwise keep it)
     response.delete_cookie(
         key="session",
         path="/",
@@ -221,6 +233,7 @@ async def logout(request: Request, response: Response):
     )
 
     return SuccessResponse(success=True)
+
 
 
 @app.get("/api/me", response_model=Optional[UserPublicDetails])
