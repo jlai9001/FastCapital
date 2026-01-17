@@ -22,6 +22,7 @@ from fastapi import (
     Form,
     status,
 )
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -64,6 +65,8 @@ from pydantic_schemas import (
     PurchaseStatus,
     LoginResponse,
 )
+
+
 
 
 # =========================
@@ -155,7 +158,11 @@ app.add_middleware(CSRFMiddleware)
 # render web storage
 # IMAGE_ROOT = "/data/business_images"
 # dynamic storage (web & local)
-IMAGE_ROOT = os.environ.get("IMAGE_ROOT", "./business_images")
+IMAGE_ROOT = os.environ.get(
+    "IMAGE_ROOT",
+    "/data/business_images" if ENV == "production" else "./business_images"
+)
+
 os.makedirs(IMAGE_ROOT, exist_ok=True)
 
 @app.get("/images/{filename}")
