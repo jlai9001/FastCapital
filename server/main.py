@@ -158,12 +158,16 @@ app.add_middleware(CSRFMiddleware)
 # render web storage
 # IMAGE_ROOT = "/data/business_images"
 # dynamic storage (web & local)
-IMAGE_ROOT = os.environ.get(
+RAW_IMAGE_ROOT = os.environ.get(
     "IMAGE_ROOT",
     "/data/business_images" if ENV == "production" else "./business_images"
 )
 
+# 🔒 sanitize whitespace / newlines
+IMAGE_ROOT = RAW_IMAGE_ROOT.strip()
+
 os.makedirs(IMAGE_ROOT, exist_ok=True)
+
 
 @app.get("/images/{filename}")
 def serve_image(filename: str):
@@ -185,10 +189,13 @@ def image_head(filename: str):
 @app.get("/debug/file-check/{filename}")
 def debug_file_check(filename: str):
     return {
+        "env": ENV,
+        "image_root": IMAGE_ROOT,
+        "image_root_repr": repr(IMAGE_ROOT),
         "exists": os.path.exists(os.path.join(IMAGE_ROOT, filename)),
-        "cwd": os.getcwd(),
         "files": os.listdir(IMAGE_ROOT),
     }
+
 
 # =========================
 # ROUTES (UNCHANGED)
