@@ -56,7 +56,7 @@ export default function PendingInvestmentsCard({ purchase, investment }){
                 <button
                 onClick={handleViewDetails}
                 className='action-button view-all-button'>
-                    View Details
+                    Details
                 </button>
             </div>
         </div>
