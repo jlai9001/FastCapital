@@ -109,10 +109,16 @@
    MOBILE LAYOUT (STACKED — DO NOT TOUCH)
    ========================================================= */
 @media (max-width: 768px) {
+    /* Overall footer padding */
+  .footer {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+
   .footer__container {
     flex-direction: column;
     align-items: center;
-    gap: 1.25rem;
+    gap: 0.5 rem;
     text-align: center;
   }
 
@@ -133,5 +139,8 @@
   .footer__copyright-section {
     margin-right: 0;
     font-size: 0.8rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0;
+    line-height: 1.2;
   }
 }
