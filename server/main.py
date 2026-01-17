@@ -151,7 +151,11 @@ app.add_middleware(CSRFMiddleware)
 # =========================
 # FILE STORAGE
 # =========================
-IMAGE_ROOT = "/data/business_images"
+
+# render web storage
+# IMAGE_ROOT = "/data/business_images"
+# dynamic storage (web & local)
+IMAGE_ROOT = os.environ.get("IMAGE_ROOT", "./business_images")
 os.makedirs(IMAGE_ROOT, exist_ok=True)
 
 @app.get("/images/{filename}")
@@ -198,13 +202,6 @@ async def login(credentials: LoginCredentials, request: Request):
 
     return LoginResponse(success=True, access_token=access_token, token_type="bearer")
 
-    token = validate_email_password(credentials.email, credentials.password)
-    if not token:
-        raise HTTPException(status_code=401)
-
-    request.session["email"] = credentials.email
-    request.session["session_token"] = token
-    return SuccessResponse(success=True)
 
 @app.post("/api/logout", response_model=SuccessResponse)
 async def logout(request: Request, response: Response):
