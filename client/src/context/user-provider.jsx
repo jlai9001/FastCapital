@@ -13,24 +13,38 @@ const UserContext = createContext({ user: null, refreshUser: async () => {} });
 // Toggle detailed logging by setting this to true during debugging only
 const DEBUG = false;
 
+function getAccessToken() {
+  return localStorage.getItem("access_token");
+}
+
+
 export default function UserProvider({children}){
     const [user, setUser] = useState(null)
 
-    const refreshUser = useCallback(async () => {
-       try {
-        if (DEBUG) console.log("refreshUser: fetching /api/me");
+        const refreshUser = useCallback(async () => {
+        try {
+            if (DEBUG) console.log("refreshUser: fetching /api/me");
+
+            const token = getAccessToken();
+
         const res = await fetch(`${base_url}/api/me`, {
             credentials: "include",
+            headers: token
+            ? { Authorization: `Bearer ${token}` }
+            : undefined,
         });
+
 
         if (res.ok) {
             const userData = await res.json();
             if (DEBUG) console.log("refreshUser: success, user data:", userData);
             setUser(userData);
         } else if (res.status === 401) {
-             if (DEBUG) console.warn("refreshUser: 401 Unauthorized, user not logged in");
+            if (DEBUG) console.warn("refreshUser: 401 Unauthorized, user not logged in");
+            localStorage.removeItem("access_token");
             setUser(null);
         }
+
         else {
             console.error("refreshUser failed:", res.status);
             setUser(null);

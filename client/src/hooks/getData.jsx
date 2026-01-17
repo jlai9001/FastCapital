@@ -2,6 +2,16 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { base_url } from "../api";
 
+function getAccessToken() {
+  return localStorage.getItem("access_token");
+}
+
+function authHeader() {
+  const token = getAccessToken();
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+
 function useInvestment(investmentId) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -48,10 +58,11 @@ function useInvestmentPurchases(investmentId, enabled = true) {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get(`${base_url}/api/purchases`, {
-          params: { investment_id: investmentId },
-          withCredentials: true,
-        });
+      const response = await axios.get(`${base_url}/api/purchases`, {
+        params: { investment_id: investmentId },
+        withCredentials: true,
+        headers: authHeader(),
+      });
         setPurchases(response.data);
       } catch (err) {
         setError(err);
@@ -108,7 +119,10 @@ function useBusinessForUser() {
   useEffect(() => {
       async function fetchBusiness() {
           try {
-              const res = await fetch(`${base_url}/api/my_business`, { credentials: "include" });
+              const res = await fetch(`${base_url}/api/my_business`, {
+                credentials: "include",
+                headers: authHeader(),
+              });
 
               if (res.status === 401 || res.status === 404) {
                   setBusiness(null);
@@ -140,7 +154,9 @@ async function uploadBusinessImage(businessId, file) {
     method: "POST",
     body: formData,
     credentials: "include",
+    headers: authHeader(),
   });
+
 
   if (!res.ok) {
     const errorText = await res.text();
@@ -158,9 +174,12 @@ function useFinancialsForBusiness(businessId) {
   useEffect(() => {
       async function fetchData() {
         try {
+
           const res = await axios.get(`${base_url}/api/financials/${businessId}`,{
             withCredentials: true, // 🔴 REQUIRED FOR iOS
+            headers: authHeader(),
           });
+
           setFinancials(res.data);
           } catch (err) {
             if (err.response?.status === 404) {
@@ -190,10 +209,13 @@ function useInvestmentsForBusiness(businessId) {
     useEffect(() => {
         async function fetchData() {
           try {
+
             const res = await axios.get(`${base_url}/api/business_investments`, {
-                params: { business_id: businessId },
-                withCredentials: true,
-                });
+              params: { business_id: businessId },
+              withCredentials: true,
+              headers: authHeader(),
+            });
+
                 setInvestments(res.data);
             } catch (err) {
                 if (err.response?.status === 404) {

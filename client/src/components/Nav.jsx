@@ -10,6 +10,16 @@ import { useUser } from "../context/user-provider";
 import logo from "../assets/logo.svg";
 import { base_url } from "../api";
 
+function getAccessToken() {
+  return localStorage.getItem("access_token");
+}
+
+function authHeader() {
+  const token = getAccessToken();
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+
 export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { user, refreshUser } = useUser();
@@ -49,15 +59,22 @@ export default function Nav() {
     }
   };
 
-  const handleLogout = async () => {
+const handleLogout = async () => {
+  try {
     await fetch(`${base_url}/api/logout`, {
       method: "POST",
       credentials: "include",
+      headers: authHeader(),
     });
-
+  } finally {
+    // Always clear client token (even if request fails)
+    localStorage.removeItem("access_token");
+    closeMobileMenu();
     await refreshUser();
     navigate("/login");
-  };
+  }
+};
+
 
   return (
     <header>

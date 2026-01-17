@@ -23,6 +23,13 @@ function Failed_Message() {
   );
 }
 
+function saveAccessToken(token) {
+  if (!token) return;
+  localStorage.setItem("access_token", token);
+}
+
+
+
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -54,15 +61,19 @@ function Login() {
 
         const data = await response.json();
 
-        if (!response.ok || !data.success) {
-            console.error("Login failed:", data.detail || "Unknown error");
-            setErrorType('invalid');
-            return;
-        }
+    if (!response.ok || !data.success) {
+        console.error("Login failed:", data.detail || "Unknown error");
+        setErrorType('invalid');
+        return;
+    }
 
-        console.log("Login success!");
-        await refreshUser();
-        navigate("/portfolio");
+    // ✅ store JWT if backend provided it (iOS fallback)
+    saveAccessToken(data.access_token);
+
+    console.log("Login success!");
+    await refreshUser();
+    navigate("/portfolio");
+
 
     } catch (error) {
         console.error("Login error:", error);
