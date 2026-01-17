@@ -58,7 +58,7 @@ export default function InvestmentCardsByBusinessId({ businessId }) {
         <div className="cell investment-card-label">Offer Expiry</div>
         <div className="cell investment-card-label">Current Investors</div>
         <div className="column-6">
-        <button className="view-details-button" onClick={() => navigate(`/investment-details/${investment.id}`)}>View Details</button>
+        <button className="view-details-button" onClick={() => navigate(`/investment-details/${investment.id}`)}>Details</button>
         </div>
 
         {/* Row 2: Values */}
