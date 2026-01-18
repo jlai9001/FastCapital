@@ -346,3 +346,52 @@
     justify-content: center;
     align-items: center;
 }
+
+
+/* ===============================
+   MOBILE FIX: prevent sideways overflow + force full-width cards
+   =============================== */
+@media (max-width: 768px) {
+  /* Stop any child from causing horizontal scroll/shift */
+  html, body {
+    overflow-x: hidden;
+  }
+
+  /* Portfolio page container should not behave like desktop */
+  .portfolio-page-container {
+    width: 100%;
+    max-width: 100%;
+    padding: 1rem;          /* smaller padding than desktop */
+    box-sizing: border-box;
+  }
+
+  /* Hide the big desktop-style page title on mobile (matches your Picture 1 look) */
+  .portfolio-page-container > h2 {
+    display: none;
+  }
+
+  /* Any major sections should never exceed viewport width */
+  .your-investments-container,
+  .pending-investments-container {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Recharts tends to set fixed inline widths; force wrapper to stay centered */
+  .recharts-wrapper {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  /* Make the SVG/chart shrink within the card instead of pushing layout sideways */
+  .recharts-surface {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Legend wrapper can also cause overflow */
+  .recharts-legend-wrapper {
+    max-width: 100%;
+  }
+}
