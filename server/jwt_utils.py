@@ -5,7 +5,7 @@ from typing import Any, Optional
 from jose import JWTError, jwt
 
 JWT_ALG = "HS256"
-JWT_EXPIRE_MINUTES = int(os.environ.get("JWT_EXPIRE_MINUTES", "30"))
+JWT_EXPIRE_MINUTES = int(os.environ.get("JWT_EXPIRE_MINUTES", "120"))
 
 
 def _get_jwt_secret() -> str:

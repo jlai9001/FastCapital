@@ -19,6 +19,7 @@ import Terms from './pages/terms.jsx'
 import About from './pages/about.jsx'
 import Contact from './pages/contact.jsx'
 import ScrollToTop from "./components/ScrollToTop";
+import AuthRouteGuard from "./components/AuthRouteGuard";
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
   return (
 <>
   <ScrollToTop/>
+  <AuthRouteGuard />
 
   <div className="app-shell">
     <Nav />

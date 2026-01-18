@@ -35,7 +35,7 @@ DATABASE_URL = os.environ.get(
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
-SESSION_LIFE_MINUTES = 30
+SESSION_LIFE_MINUTES = 120
 
 
 def get_db():
