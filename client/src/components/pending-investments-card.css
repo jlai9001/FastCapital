@@ -231,4 +231,8 @@
   .pending-investment-progress-bar-wrapper {
   width: 100% !important;
   }
+
+  .pending-card-mobile-content{
+    width:100% !important;
+  }
 }
