@@ -171,6 +171,14 @@
   }
 
 
+    .pending-investment-progress-bar-row {
+    width: 100%;
+  }
+
+  .pending-investment-progress-bar {
+    width: 100%;
+  }
+
   /* Hide the extra (mobile-unfriendly) column */
   .pending-info-column1.pending-info-column1 {
     display: none !important;
