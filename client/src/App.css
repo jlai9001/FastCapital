@@ -7,6 +7,18 @@
   flex-direction: column;
 }
 
+/* Mobile: keep footer pinned to bottom when page content is short */
+@media (max-width: 767px) {
+  .app-shell {
+    min-height: 100vh;  /* fallback */
+    min-height: 100dvh; /* modern mobile viewport */
+  }
+
+  .app-main {
+    flex: 1;
+  }
+}
+
 /* Desktop behavior */
 @media (min-width: 768px) {
   .app-shell {
