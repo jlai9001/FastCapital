@@ -1,4 +1,4 @@
-import { React, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './pending-investments-card.css'
 import { useNavigate } from 'react-router-dom';
 import mapIcon from '../assets/map_icon.png';
@@ -7,6 +7,28 @@ import mapIcon from '../assets/map_icon.png';
 export default function PendingInvestmentsCard({ purchase, investment }){
     const navigate = useNavigate();
     const [error, setError] = useState(null)
+    const [isMobile, setIsMobile] = useState(false);
+
+    // mobile responsiveness
+
+            useEffect(() => {
+        const mq = window.matchMedia("(max-width: 600px)");
+
+        const handleChange = () => setIsMobile(mq.matches);
+
+        // set initial value
+        handleChange();
+
+        // listen for changes
+        if (mq.addEventListener) mq.addEventListener("change", handleChange);
+        else mq.addListener(handleChange); // safari fallback
+
+        return () => {
+            if (mq.removeEventListener) mq.removeEventListener("change", handleChange);
+            else mq.removeListener(handleChange);
+        };
+        }, []);
+
 
     if (error) {
         return <div className="pending-investment-card error">Error: Investment data could not be populated.</div>;
@@ -20,46 +42,91 @@ export default function PendingInvestmentsCard({ purchase, investment }){
         ? Math.round((purchase.shares_purchased / investment.shares_available) * 100)
         : 0;
 
+  // MOBILE LAYOUT
+  if (isMobile) {
     return (
-        <div className='pending-investment-card'>
-            <div className='pending-investment-left'>
-                <p className='pending-investment-name'>
-                    {purchase.business_name || "No business name provided"}
-                </p>
-                <p className='pending-investment-location'>
-                <img
-              src={mapIcon}
-              alt="Map Icon"
-              className='map-icon'
-            />
-            &nbsp;
-            {purchase.business_city + ", " + purchase.business_state}
-                </p>
+      <div className="pending-investment-card pending-card-mobile">
+        <div className="pending-card-mobile-content">
+          {/* LEFT */}
+          <div className="pending-card-mobile-left">
+            <p className="pending-card-mobile-name">
+              {purchase.business_name || "No business name provided"}
+            </p>
+
+            <p className="pending-card-mobile-location">
+              <img src={mapIcon} alt="Map Icon" className="map-icon" />
+              <span className="pending-card-mobile-location-text">
+                {purchase.business_city + ", " + purchase.business_state}
+              </span>
+            </p>
+          </div>
+
+          {/* RIGHT */}
+          <div className="pending-card-mobile-right">
+            <div className="pending-card-mobile-progress">
+              <div className="pending-investment-progress-bar">
+                <div className="progress-fill" style={{ width: `${percentSold}%` }} />
+              </div>
+              <p className="funded-percentage">{percentSold}%</p>
             </div>
-                <div className='pending-investment-right'>
-                    <div className='pending-info-column1'>
-                        <div className='pending-info-label'>Shares Purchased</div>
-                        <div className='pending-info-value'>{purchase.shares_purchased}</div>
-                    </div>
-            <div className='pending-info-column2'>
-            <p className='pending-info-label'>Funded</p>
-            <div className="pending-investment-progress-bar-wrapper">
-                <div className="pending-investment-progress-bar-row">
-                    <div className="pending-investment-progress-bar">
-                        <div className="progress-fill" style={{ width: `${percentSold}%` }}></div>
-                    </div>
-                    <p className="funded-percentage">{percentSold}%</p>
-                </div>
-            </div>
-            </div>
-            <div className='pending-info-column3'>
-                <button
-                onClick={handleViewDetails}
-                className='action-button view-all-button'>
-                    Details
-                </button>
-            </div>
+
+            <button
+              onClick={handleViewDetails}
+              className="action-button view-all-button pending-card-mobile-button"
+            >
+              Details
+            </button>
+          </div>
         </div>
-    </div>
+      </div>
     );
+  }
+
+  // DESKTOP / EXISTING LAYOUT (unchanged)
+  return (
+    <div className='pending-investment-card'>
+      <div className='pending-investment-left'>
+        <p className='pending-investment-name'>
+          {purchase.business_name || "No business name provided"}
+        </p>
+        <p className='pending-investment-location'>
+          <img
+            src={mapIcon}
+            alt="Map Icon"
+            className='map-icon'
+          />
+          &nbsp;
+          {purchase.business_city + ", " + purchase.business_state}
+        </p>
+      </div>
+
+      <div className='pending-investment-right'>
+        <div className='pending-info-column1'>
+          <div className='pending-info-label'>Shares Purchased</div>
+          <div className='pending-info-value'>{purchase.shares_purchased}</div>
+        </div>
+
+        <div className='pending-info-column2'>
+          <p className='pending-info-label'>Funded</p>
+          <div className="pending-investment-progress-bar-wrapper">
+            <div className="pending-investment-progress-bar-row">
+              <div className="pending-investment-progress-bar">
+                <div className="progress-fill" style={{ width: `${percentSold}%` }}></div>
+              </div>
+              <p className="funded-percentage">{percentSold}%</p>
+            </div>
+          </div>
+        </div>
+
+        <div className='pending-info-column3'>
+          <button
+            onClick={handleViewDetails}
+            className='action-button view-all-button'>
+            Details
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
 }
