@@ -1,34 +1,33 @@
 /* Contact page wrapper */
 .contact-page {
-.contact-page {
-  /* Let App shell control footer placement */
+  /* ✅ Let App shell handle footer spacing */
   padding: 40px 16px;
   background-color: var(--page_background_color);
 
-  display: flex;
-  justify-content: center;
-
-  /* ✅ prevents the card from stretching tall */
-  align-items: flex-start;
-
+  /* ✅ make it behave like the About page container */
   width: 100%;
+  box-sizing: border-box;
 
   font-family: var(--button_font), system-ui, Helvetica, Arial, sans-serif;
   color: var(--primary_text_color);
 }
 
-}
-
 /* Main card */
+
 .contact-card {
   width: 100%;
   max-width: 900px;
+
+  /* ✅ centers it */
+  margin: 0 auto;
+
   background-color: var(--element_background_color);
   border-radius: var(--element_border_radius);
   padding: 36px 40px;
   box-shadow: var(--element_shadow);
   border: 1px solid var(--field_border_color);
 }
+
 
 /* Header */
 .contact-header {
