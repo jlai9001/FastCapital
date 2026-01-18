@@ -162,7 +162,7 @@ justify-content: center; /* horizontal center */
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 6rem 1rem 3rem;
+    padding: 1rem 1rem 3rem;
     box-sizing: border-box;
 }
 
@@ -227,12 +227,5 @@ justify-content: center; /* horizontal center */
     text-align: center;
   }
 
-  .portfolio-page-container {
-    flex: 1;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 1rem 1rem 3rem;
-    box-sizing: border-box;
-  }
+
 }
