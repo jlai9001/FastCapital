@@ -61,6 +61,7 @@ align-items: flex-start;
 
 .value {
   color: #059669;
+  margin-left: 5px;
 }
 
 .investments-chart {

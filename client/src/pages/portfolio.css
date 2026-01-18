@@ -55,6 +55,14 @@
   margin-bottom: 1.5rem;
 }
 
+.investment-amount {
+    color: #000;
+    font-weight: 600;
+    font-size: 15px;
+    margin: 5px;
+    white-space: nowrap;
+}
+
 /* ===============================
    EMPTY STATE
    =============================== */
