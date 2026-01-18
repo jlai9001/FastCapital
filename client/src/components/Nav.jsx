@@ -318,15 +318,6 @@ export default function Nav() {
                   <button
                     type="button"
                     className="mobile-dropdown-item"
-                    onClick={() => go("/contact")}
-                    role="menuitem"
-                  >
-                    About
-                  </button>
-
-                  <button
-                    type="button"
-                    className="mobile-dropdown-item"
                     onClick={handleLogout}
                     role="menuitem"
                   >
