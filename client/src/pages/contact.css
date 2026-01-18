@@ -1,12 +1,22 @@
 /* Contact page wrapper */
 .contact-page {
-  min-height: 100vh;
+.contact-page {
+  /* Let App shell control footer placement */
   padding: 40px 16px;
   background-color: var(--page_background_color);
+
   display: flex;
   justify-content: center;
+
+  /* ✅ prevents the card from stretching tall */
+  align-items: flex-start;
+
+  width: 100%;
+
   font-family: var(--button_font), system-ui, Helvetica, Arial, sans-serif;
   color: var(--primary_text_color);
+}
+
 }
 
 /* Main card */
