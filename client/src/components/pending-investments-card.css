@@ -1,30 +1,18 @@
-/* ===============================
-   PENDING INVESTMENT CARD
-   =============================== */
-
 .pending-investment-card {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-
+  align-items: center;
   background-color: #F9FAFB;
-  border-radius: 14px;
-
-  padding: 16px 18px;
-  gap: 16px;
-
-  width: 100%;
-  box-sizing: border-box;
+  border-radius: 12px;
+  margin-bottom: 0.75rem;
+  padding: 0.75rem 1rem;
+  gap: 1rem;
 }
 
-/* Reset default paragraph spacing */
+/* Kill default <p> spacing that inflates the card height */
 .pending-investment-card p {
   margin: 0;
 }
-
-/* ===============================
-   LEFT SIDE (Name + Location)
-   =============================== */
 
 .pending-investment-left {
   flex: 1;
@@ -35,39 +23,25 @@
 }
 
 .pending-investment-name {
-  font-size: clamp(14px, 3.8vw, 16px);
+  font-size: 16px;
   font-weight: 600;
   line-height: 1.2;
 }
 
 .pending-investment-location {
-  font-size: clamp(12px, 3.2vw, 14px);
   color: #555;
+  font-size: 0.95rem;
   line-height: 1.2;
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
-
-.map-icon {
-  width: 14px;
-  height: 14px;
-  object-fit: contain;
-}
-
-/* ===============================
-   RIGHT SIDE (Shares / Progress / Button)
-   =============================== */
 
 .pending-investment-right {
-  flex: 1.4;
+  flex: 1.5;
   display: flex;
+  justify-content: space-around;
   align-items: center;
-  justify-content: flex-end;
-  gap: 14px;
+  gap: 1rem;
 }
 
-/* Columns */
 .pending-info-column1,
 .pending-info-column2,
 .pending-info-column3 {
@@ -79,76 +53,160 @@
 }
 
 .pending-info-label {
-  font-size: clamp(11px, 2.8vw, 13px);
+  font-size: 0.9rem;
   color: #888;
+  line-height: 1.2;
 }
 
 .pending-info-value {
-  font-size: clamp(13px, 3.2vw, 15px);
+  font-size: 1rem;
   font-weight: 600;
+  line-height: 1.2;
 }
 
-/* ===============================
-   PROGRESS BAR
-   =============================== */
+/* IMPORTANT: override homepage_hero.css .view-all-button margin-top: 15px; */
+.pending-investment-card .view-all-button {
+  margin-top: 0;
+  padding: 6px 20px;
+  line-height: 1;
+}
+
+.map-icon {
+  width: 18px;
+  height: 18px;
+  position: relative;
+  top: 2px;
+  object-fit: contain;
+}
 
 .pending-investment-progress-bar-wrapper {
-  width: 100%;
-  max-width: 160px;
+  max-width: 400px;
+  text-align: center;
 }
 
 .pending-investment-progress-bar-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  width: 190px;
 }
 
 .pending-investment-progress-bar {
-  flex: 1;
-  height: 0.55em;
+  height: 10px;              /* thinner bar = less vertical space */
   background-color: #E0E9F4;
   border-radius: 999px;
   overflow: hidden;
+  width: 100%;
 }
 
 .progress-fill {
   height: 100%;
   background-color: #6290C8;
+  transition: width 0.5s ease-in-out;
+  min-width: 4px;
   border-radius: 999px 0 0 999px;
-  transition: width 0.4s ease;
 }
 
 .funded-percentage {
-  font-size: clamp(11px, 2.8vw, 13px);
+  font-size: 0.85rem;
   color: #6290C8;
-  min-width: 32px;
+  min-width: 35px;
   text-align: right;
+  line-height: 1.2;
 }
 
 /* ===============================
-   DETAILS BUTTON
+   MOBILE ONLY: Pending Investments Card (compact like mock)
    =============================== */
-
-.pending-investment-card .view-all-button {
-  padding: 0.45em 1em;
-  font-size: clamp(12px, 3vw, 14px);
-  border-radius: 10px;
-  line-height: 1;
-  margin: 0;
-}
-
-/* ===============================
-   MOBILE LAYOUT (CENTERED CARD)
-   =============================== */
-
-@media (max-width: 768px) {
-  .pending-investment-card {
-    margin: 0 auto;                 /* ✅ center entire card */
-    max-width: 420px;               /* ✅ match investment cards */
-    padding: clamp(12px, 4vw, 16px);
+@media (max-width: 600px) {
+  /* Card container */
+  .pending-investment-card.pending-investment-card {
+    padding: 0.6rem 0.75rem;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: flex-start !important;
   }
 
-  .pending-investment-right {
-    gap: clamp(10px, 3vw, 14px);
+  /* LEFT: make sure it can breathe */
+  .pending-investment-left.pending-investment-left {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+
+  .pending-investment-name.pending-investment-name {
+    font-size: 15px;
+    line-height: 1.15;
+    margin-bottom: 0.15rem;
+  }
+
+  .pending-investment-location.pending-investment-location {
+    font-size: 0.85rem;
+    line-height: 1.15;
+  }
+
+  .map-icon.map-icon {
+    width: 14px;
+    height: 14px;
+    top: 1px;
+  }
+
+  /* RIGHT: stop it from stealing width */
+  .pending-investment-right.pending-investment-right {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    justify-content: flex-end !important;
+    align-items: center;
+    gap: 10px !important;
+    margin-left: auto !important;
+  }
+
+  /* Hide the extra (mobile-unfriendly) column */
+  .pending-info-column1.pending-info-column1 {
+    display: none !important;
+  }
+
+  /* Progress column becomes a compact row: [bar] [25%] */
+  .pending-info-column2.pending-info-column2 {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  /* Hide "Funded" label */
+  .pending-info-column2.pending-info-column2 .pending-info-label.pending-info-label {
+    display: none !important;
+  }
+
+  /* Progress bar row sizing */
+  .pending-investment-progress-bar-row.pending-investment-progress-bar-row {
+    width: 120px !important; /* key: prevents squeezing the left side */
+    gap: 8px !important;
+    align-items: center;
+  }
+
+  .pending-investment-progress-bar.pending-investment-progress-bar {
+    height: 8px;
+  }
+
+  .funded-percentage.funded-percentage {
+    min-width: 32px;
+    font-size: 0.8rem;
+    margin: 0;
+  }
+
+  /* Details button sizing */
+  .pending-investment-card.pending-investment-card .view-all-button.view-all-button {
+    padding: 6px 14px;
+    line-height: 1;
+    margin-top: 0;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+
+  .pending-card-mobile.pending-investment-card {
+      /* padding: .75rem .9rem; */
+      gap: 0;
+      align-items: center;
+      scale: 80%;
   }
 }
