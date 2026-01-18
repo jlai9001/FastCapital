@@ -119,6 +119,11 @@
    MOBILE ONLY: Pending Investments Card (compact like mock)
    =============================== */
 @media (max-width: 600px) {
+  .map-icon{
+    display:none;
+  }
+
+
   /* Card container */
   .pending-investment-card.pending-investment-card {
     padding: 0.6rem 0.75rem;
@@ -159,6 +164,12 @@
     gap: 10px !important;
     margin-left: auto !important;
   }
+
+   .pending-investment-right {
+    flex-direction: column;
+    align-items: stretch; /* ✅ allows full-width bar */
+  }
+
 
   /* Hide the extra (mobile-unfriendly) column */
   .pending-info-column1.pending-info-column1 {
@@ -207,6 +218,9 @@
       /* padding: .75rem .9rem; */
       gap: 0;
       align-items: center;
-      scale: 80%;
+  }
+
+  .pending-investment-progress-bar-wrapper {
+  width: 100% !important;
   }
 }
