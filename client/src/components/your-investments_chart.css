@@ -47,11 +47,17 @@ align-items: flex-start;
   align-items: flex-start; /* 🔑 top alignment */
 }
 
-
+.investment-amount {
+    color: #000;
+    font-weight: 600;
+    font-size: 20px;
+    margin: 0;
+    white-space: nowrap;
+}
 
 .value-text {
   font-weight: 600;
-  font-size: 18px;;
+  font-size: 15px;;
 }
 
 .value {
@@ -211,5 +217,14 @@ justify-content: center; /* horizontal center */
   /* Total aligned like Picture 1 */
   .portfolio-total {
     text-align: center;
+  }
+
+  .portfolio-page-container {
+    flex: 1;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 6rem 1rem 3rem;
+    box-sizing: border-box;
   }
 }
