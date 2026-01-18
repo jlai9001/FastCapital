@@ -26,6 +26,9 @@ export default function Nav() {
     if (path.startsWith("/business-profile")) return "Business Profile";
     if (path.startsWith("/all-investments")) return "All Investments";
     if (path.startsWith("/portfolio")) return "Portfolio";
+    if (path.startsWith("/terms")) return "Terms";
+    if (path.startsWith("/about")) return "About";
+    if (path.startsWith("/contact")) return "Contact";
 
     // Default label for any other logged-in pages
     return "Portfolio";
@@ -292,6 +295,33 @@ export default function Nav() {
                     role="menuitem"
                   >
                     All Investments
+                  </button>
+
+                  <button
+                    type="button"
+                    className="mobile-dropdown-item"
+                    onClick={() => go("/terms")}
+                    role="menuitem"
+                  >
+                    Terms
+                  </button>
+
+                  <button
+                    type="button"
+                    className="mobile-dropdown-item"
+                    onClick={() => go("/about")}
+                    role="menuitem"
+                  >
+                    About
+                  </button>
+
+                  <button
+                    type="button"
+                    className="mobile-dropdown-item"
+                    onClick={() => go("/contact")}
+                    role="menuitem"
+                  >
+                    About
                   </button>
 
                   <button
