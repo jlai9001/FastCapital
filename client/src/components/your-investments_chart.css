@@ -151,3 +151,65 @@ justify-content: center; /* horizontal center */
   font-size: 1.2rem;
   font-weight: bold;
 }
+
+
+/* ===============================
+   MOBILE: make "Your Investments" look like Picture 1
+   =============================== */
+@media (max-width: 768px) {
+  /* Remove the desktop forced width that breaks mobile */
+  .investments-dashboard-container {
+    min-width: 0;      /* ✅ critical fix */
+    width: 100%;
+    max-width: 100%;
+    margin-top: 20px;
+    padding: 16px;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  /* Stack chart + list vertically (Picture 1 layout) */
+  .investments-dashboard-shell {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    min-height: 0;
+  }
+
+  .investments-dashboard {
+    flex-direction: column;
+    width: 100%;
+    gap: 16px;
+  }
+
+  .investments-chart {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Hide "Your Portfolio" text on mobile (Picture 1 doesn’t show it) */
+  .portfolio-title {
+    display: none;
+  }
+
+  /* Shrink chart area to fit nicely on mobile */
+  .piechart-wrapper {
+    max-width: 260px;
+    height: 260px;
+    margin: 0 auto;
+  }
+
+  /* Make the investment list full width */
+  .investments-grid-wrapper {
+    width: 100%;
+  }
+
+  .investments-card {
+    width: 100%;
+  }
+
+  /* Total aligned like Picture 1 */
+  .portfolio-total {
+    text-align: center;
+  }
+}
