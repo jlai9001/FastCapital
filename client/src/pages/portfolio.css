@@ -9,12 +9,7 @@
 }
 
 .portfolio-page-container {
-  flex: 1;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 6rem 1rem 3rem; /* mobile-first */
-  box-sizing: border-box;
+  padding: 1rem 1rem 3rem;
 }
 
 /* ===============================

@@ -157,14 +157,6 @@ justify-content: center; /* horizontal center */
   font-weight: bold;
 }
 
-.portfolio-page-container {
-    flex: 1;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 1rem 1rem 3rem;
-    box-sizing: border-box;
-}
 
 
 /* ===============================

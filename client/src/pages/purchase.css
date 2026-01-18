@@ -360,8 +360,7 @@
   /* Portfolio page container should not behave like desktop */
   .portfolio-page-container {
     width: 100%;
-    max-width: 100%;
-    padding: 1rem;          /* smaller padding than desktop */
+    max-width: 100%;          /* smaller padding than desktop */
     box-sizing: border-box;
   }
 
