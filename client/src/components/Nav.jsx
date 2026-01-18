@@ -19,6 +19,19 @@ export default function Nav() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Mobile dropdown trigger label should reflect the current page
+  const mobileMenuLabel = (() => {
+    const path = location.pathname;
+
+    if (path.startsWith("/business-profile")) return "Business Profile";
+    if (path.startsWith("/all-investments")) return "All Investments";
+    if (path.startsWith("/portfolio")) return "Portfolio";
+
+    // Default label for any other logged-in pages
+    return "Portfolio";
+  })();
+
+
   // Mobile dropdown UI state (client-only)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const mobileMenuRef = useRef(null);
@@ -230,7 +243,7 @@ export default function Nav() {
               {/* Trigger (text-only) */}
               <button
                 type="button"
-                className="mobile-toplink mobile-trigger"
+                className="mobile-toplink mobile-trigger mobile-trigger-bordered"
 
                 onClick={async () => {
                   if (mobileMenuOpen) {
@@ -244,7 +257,11 @@ export default function Nav() {
                 aria-haspopup="menu"
                 aria-expanded={mobileMenuOpen}
               >
-                Portfolio
+                {/* button text */}
+                <span className="mobile-trigger-label">
+                  {mobileMenuLabel} <span className="mobile-trigger-arrow">▾</span>
+                </span>
+
               </button>
 
               {/* Dropdown */}

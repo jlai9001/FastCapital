@@ -213,6 +213,25 @@ nav.navbar {
     cursor: pointer;
   }
 
+  /* Logged-in trigger gets a subtle green border (mobile only) */
+  .mobile-trigger-bordered {
+    border: 2px solid var(--main_button_color);
+    border-radius: 10px;
+    padding: 0.5rem 0.6rem; /* slightly more padding than text-only */
+  }
+
+  .mobile-trigger-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px; /* space between text and arrow */
+  }
+
+  .mobile-trigger-arrow {
+    font-size: 0.95em;
+    line-height: 1;
+    transform: translateY(1px); /* tiny optical alignment */
+  }
+
   .mobile-dropdown {
     position: absolute;
     top: calc(100% + 8px);
