@@ -168,7 +168,7 @@ nav.navbar {
   }
 
   .mobile-only {
-    display: block !important;
+    display: flex !important;
   }
 
   .nav-left,
@@ -179,6 +179,82 @@ nav.navbar {
   .nav-center {
     display: none;
   }
+
+  .nav-mobile-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    position: relative;
+  }
+
+  .mobile-toplink {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;            /* keeps tap target consistent */
+    padding: 0.5rem 0.25rem;     /* feels like "text-only" visually */
+    font-family: var(--button_font);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-decoration: none;
+    color: var(--main_button_color);
+  }
+
+  .mobile-toplink:active {
+    opacity: 0.7;
+  }
+
+
+
+  .mobile-trigger {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .mobile-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+
+    /* Match reference container width (NOT full screen) */
+    width: 200px;
+    max-width: 70vw;
+
+    background: var(--field_background_color);
+    border: 2px solid var(--main_button_color);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    z-index: 2000;
+  }
+
+  .mobile-dropdown-item {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+
+    padding: 14px 14px;
+    text-align: left;
+
+    font-family: var(--button_font);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary_text_color);
+
+    cursor: pointer;
+  }
+
+  .mobile-dropdown-item:last-child {
+    border-bottom: none;
+  }
+
+  .mobile-dropdown-item:active {
+    opacity: 0.7;
+  }
+
 
   .mobile-nav-link {
     background-color: var(--field_background_color);
@@ -200,6 +276,6 @@ nav.navbar {
 
   /* Restore bottom border ONLY on last button */
   .mobile-nav-link:last-child {
-  border-bottom: 4px solid var(--main_button_color);
+    border-bottom: 4px solid var(--main_button_color);
   }
 }
