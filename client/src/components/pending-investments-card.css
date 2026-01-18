@@ -1,29 +1,37 @@
 .pending-investment-card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #F9FAFB;
-    border-radius: 12px;
-    margin-bottom: 1rem;
-    padding: 1rem;
-  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #F9FAFB;
+  border-radius: 12px;
+  margin-bottom: 0.75rem;
+  padding: 0.75rem 1rem;
+  gap: 1rem;
+}
+
+/* Kill default <p> spacing that inflates the card height */
+.pending-investment-card p {
+  margin: 0;
+}
 
 .pending-investment-left {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: 4px;
 }
 
 .pending-investment-name {
   font-size: 16px;
   font-weight: 600;
-  margin-bottom: 0.25rem;
+  line-height: 1.2;
 }
 
 .pending-investment-location {
   color: #555;
   font-size: 0.95rem;
+  line-height: 1.2;
 }
 
 .pending-investment-right {
@@ -31,40 +39,43 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
+  gap: 1rem;
 }
 
-.pending-info-column1 {
+.pending-info-column1,
+.pending-info-column2,
+.pending-info-column3 {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.pending-info-column2 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
 
 .pending-info-label {
   font-size: 0.9rem;
   color: #888;
-  margin-bottom: 0.25rem;
+  line-height: 1.2;
 }
 
 .pending-info-value {
   font-size: 1rem;
-  font-weight: 600;;
+  font-weight: 600;
+  line-height: 1.2;
 }
 
-.button-column {
-  justify-content: center;
+/* IMPORTANT: override homepage_hero.css .view-all-button margin-top: 15px; */
+.pending-investment-card .view-all-button {
+  margin-top: 0;
+  padding: 6px 20px;
+  line-height: 1;
 }
 
 .map-icon {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   position: relative;
-  top: 5px;
+  top: 2px;
   object-fit: contain;
 }
 
@@ -77,13 +88,13 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  width: 200px;
+  width: 190px;
 }
 
 .pending-investment-progress-bar {
-  height: 20px;
+  height: 10px;              /* thinner bar = less vertical space */
   background-color: #E0E9F4;
-  border-radius: 10px;
+  border-radius: 999px;
   overflow: hidden;
   width: 100%;
 }
@@ -93,7 +104,7 @@
   background-color: #6290C8;
   transition: width 0.5s ease-in-out;
   min-width: 4px;
-  border-radius: 10px 0 0 10px;
+  border-radius: 999px 0 0 999px;
 }
 
 .funded-percentage {
@@ -101,4 +112,5 @@
   color: #6290C8;
   min-width: 35px;
   text-align: right;
+  line-height: 1.2;
 }
