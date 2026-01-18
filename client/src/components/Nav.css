@@ -89,6 +89,8 @@ nav.navbar {
   color: var(--primary_text_color);
 }
 
+
+
 .nav-logo-image {
   height: 32px;
   margin-right: 0.5rem;
@@ -163,9 +165,29 @@ nav.navbar {
    MOBILE LAYOUT
    ========================================================= */
 @media (max-width: 768px) {
+
   .desktop-only {
     display: none !important;
   }
+
+  /* MOBILE: shrink logo + brand text */
+  .nav-link.logo {
+    font-size: 1.15rem;
+      /* MOBILE: reduce extra padding on the logo link */
+    .nav-link.logo {
+      padding-left: 0;
+      padding-right: 0.5rem;
+      min-width: auto;
+  }
+
+
+  }
+
+  .nav-logo-image {
+    height: 26px;
+    margin-right: 0.4rem;
+  }
+
 
   .mobile-only {
     display: flex !important;
@@ -178,6 +200,10 @@ nav.navbar {
 
   .nav-center {
     display: none;
+  }
+
+  nav.navbar {
+    padding: 0.5rem 0.9rem;
   }
 
   .nav-mobile-right {
@@ -255,11 +281,11 @@ nav.navbar {
     border: none;
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 
-    padding: 14px 14px;
+    padding: 12px 14px;
     text-align: left;
 
     font-family: var(--button_font);
-    font-size: 1rem;
+    font-size: 0.92rem;
     font-weight: 600;
     color: var(--primary_text_color);
 
