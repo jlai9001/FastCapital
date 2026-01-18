@@ -9,7 +9,12 @@
 }
 
 .portfolio-page-container {
-  padding: 7rem 2rem 4rem;
+  flex: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 2rem 4rem; /* mobile-first */
+  box-sizing: border-box;
 }
 
 /* ===============================
@@ -68,6 +73,9 @@
    =============================== */
 
 @media (min-width: 768px) {
+  .portfolio-page-container {
+    padding: 1rem 2rem 4rem;
+  }
 
   .pending-investments-container {
     padding: 2rem;
