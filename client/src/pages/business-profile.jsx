@@ -12,8 +12,8 @@ import locationIcon from "../assets/location_icon.png";
 import urlIcon from "../assets/url_icon.png";
 import coinIcon from "../assets/coin.svg";
 import placeholder from "../assets/business_placeholder.png";
+import { base_url } from "../api";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function BusinessProfile() {
   const navigate = useNavigate();
@@ -84,7 +84,9 @@ export default function BusinessProfile() {
                   ? `${
                       business.image_url.startsWith("http")
                         ? business.image_url
-                        : `${API_BASE}${business.image_url}`
+                        : business.image_url.startsWith("/images/")
+                          ? `${base_url}${business.image_url}`
+                          : `${base_url}/images/${business.image_url}`
                     }?v=${imageVersion}`
                   : placeholder
               }
