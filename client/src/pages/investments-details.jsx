@@ -9,8 +9,10 @@ import "./investments-details.css";
 import locationIcon from "../assets/location_icon.png";
 import urlIcon from "../assets/url_icon.png";
 import placeholder from "../assets/business_placeholder.png";
+import {base_url} from "../api";
 import { useUser } from "../context/user-provider";
 import { useState, useEffect } from "react";
+
 
 export default function InvestmentDetails() {
   const [imageVersion, setImageVersion] = useState(0);
