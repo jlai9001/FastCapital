@@ -19,7 +19,7 @@ export default function BusinessProfile() {
   const navigate = useNavigate();
 
   const { business, loading, error } = useBusinessForUser();
-  const [imageVersion, setImageVersion] = useState(0);
+  const [imageVersion, setImageVersion] = useState(null);
 
   const {
     financials,
@@ -35,10 +35,9 @@ export default function BusinessProfile() {
 
   // 🔑 FORCE IMAGE REFRESH WHEN IMAGE_URL CHANGES
   useEffect(() => {
-    if (business?.image_url) {
-      setImageVersion(Date.now());
-    }
+    if (business?.image_url) setImageVersion(Date.now());
   }, [business?.image_url]);
+
 
   if (loading) return <h1>Loading...</h1>;
   if (error) return <h1>{error.message}</h1>;
@@ -63,6 +62,18 @@ export default function BusinessProfile() {
   const isValidImagePath =
     business.image_url && !business.image_url.startsWith("data:image");
 
+  const resolvedImageUrl = business?.image_url
+  ? (business.image_url.startsWith("http")
+      ? business.image_url
+      : business.image_url.startsWith("/images/")
+        ? `${base_url}${business.image_url}`
+        : `${base_url}/images/${business.image_url}`)
+  : null;
+
+const canShowFreshImage = isValidImagePath && imageVersion && resolvedImageUrl;
+
+
+
   return (
     <div className="business-profile-container">
       <div className="business-profile-header-row">
@@ -79,23 +90,14 @@ export default function BusinessProfile() {
         <div className="business-image-container">
           <div className="image-wrapper">
             <img
-              src={
-                isValidImagePath
-                  ? `${
-                      business.image_url.startsWith("http")
-                        ? business.image_url
-                        : business.image_url.startsWith("/images/")
-                          ? `${base_url}${business.image_url}`
-                          : `${base_url}/images/${business.image_url}`
-                    }?v=${imageVersion}`
-                  : placeholder
-              }
+              src={canShowFreshImage ? `${resolvedImageUrl}?v=${imageVersion}` : placeholder}
               alt={business.name}
               className="business-image"
               onError={(e) => {
                 e.currentTarget.src = placeholder;
               }}
             />
+
           </div>
         </div>
 
