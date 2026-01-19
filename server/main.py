@@ -296,6 +296,140 @@ def get_my_business(
 
     return business
 
+# -------------------------------------------------
+# Compatibility + Business Profile CRUD
+#
+# The frontend expects these routes for the “Edit Profile” page:
+# - GET   /api/business/me            (prefill form)
+# - POST  /api/business               (create business)
+# - PATCH /api/business/{id}          (update details)
+# - PATCH /api/business/{id}/image    (upload/replace image)
+#
+# Some parts of the client also call:
+# - POST  /api/business/{id}/upload_image
+#
+# These were accidentally removed during refactors.
+# -------------------------------------------------
+
+@app.get("/api/business/me", response_model=BusinessOut)
+def get_business_me(
+    current_user: UserPublicDetails = Depends(get_auth_user),
+    db_session: Session = Depends(get_db),
+):
+    """Return the current user's business (same behavior as /api/my_business)."""
+    business = (
+        db_session.query(DBBusiness)
+        .filter(DBBusiness.user_id == current_user.id)
+        .first()
+    )
+
+    if not business:
+        raise HTTPException(status_code=404, detail="No business for user")
+
+    return business
+
+
+def _save_business_image(file: UploadFile) -> str:
+    """Save an uploaded image to IMAGE_ROOT and return the public URL path."""
+    ext = Path(file.filename).suffix.lower() if file.filename else ""
+    if ext not in {".png", ".jpg", ".jpeg", ".webp"}:
+        raise HTTPException(status_code=400, detail="Unsupported image type")
+
+    filename = f"{token_urlsafe(16)}{ext}"
+    out_path = os.path.join(IMAGE_ROOT, filename)
+
+    with open(out_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    return f"/images/{filename}"
+
+
+@app.post("/api/business", response_model=BusinessOut)
+def create_business_route(
+    name: str = Form(...),
+    website_url: str = Form(...),
+    address1: str = Form(...),
+    address2: Optional[str] = Form(None),
+    city: str = Form(...),
+    state: str = Form(...),
+    postal_code: str = Form(...),
+    image: Optional[UploadFile] = File(None),
+    current_user: UserPublicDetails = Depends(get_auth_user),
+    db_session: Session = Depends(get_db),
+):
+    existing = (
+        db_session.query(DBBusiness)
+        .filter(DBBusiness.user_id == current_user.id)
+        .first()
+    )
+    if existing:
+        raise HTTPException(status_code=409, detail="Business already exists for user")
+
+    image_url = None
+    if image:
+        image_url = _save_business_image(image)
+
+    business_in = BusinessCreate(
+        name=name,
+        user_id=current_user.id,
+        website_url=website_url,
+        image_url=image_url,
+        address1=address1,
+        address2=address2,
+        city=city,
+        state=state,
+        postal_code=postal_code,
+    )
+
+    return create_business(business_in)
+
+
+@app.patch("/api/business/{business_id}", response_model=BusinessOut)
+def patch_business_route(
+    business_id: int,
+    payload: BusinessPatch,
+    current_user: UserPublicDetails = Depends(get_auth_user),
+    db_session: Session = Depends(get_db),
+):
+    return update_business_details(
+        db=db_session,
+        business_id=business_id,
+        user_id=current_user.id,
+        updated_data=payload,
+    )
+
+
+@app.patch("/api/business/{business_id}/image")
+def patch_business_image_route(
+    business_id: int,
+    image: UploadFile = File(...),
+    current_user: UserPublicDetails = Depends(get_auth_user),
+):
+    image_url = _save_business_image(image)
+    db.update_business_image(
+        business_id=business_id,
+        user_id=current_user.id,
+        image_url=image_url,
+    )
+    return {"image_url": image_url}
+
+
+@app.post("/api/business/{business_id}/upload_image")
+def post_business_image_route(
+    business_id: int,
+    image: UploadFile = File(...),
+    current_user: UserPublicDetails = Depends(get_auth_user),
+):
+    """Alias for older frontend code that uploads via POST."""
+    image_url = _save_business_image(image)
+    db.update_business_image(
+        business_id=business_id,
+        user_id=current_user.id,
+        image_url=image_url,
+    )
+    return {"image_url": image_url}
+
+
 
 @app.get("/api/business", response_model=List[BusinessOut])
 async def get_businesses():
