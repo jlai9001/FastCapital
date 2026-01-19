@@ -332,6 +332,25 @@ def save_business_image_for_id(business_id: int, file: UploadFile) -> str:
     return f"/images/{filename}"
 
 
+# =========================
+# IMAGE SERVING (Render disk)
+# =========================
+
+@app.get("/images/{filename}")
+def serve_image(filename: str):
+    path = os.path.join(IMAGE_ROOT, filename)
+    if not os.path.isfile(path):
+        raise HTTPException(status_code=404, detail="Image not found")
+    return FileResponse(path)
+
+@app.head("/images/{filename}")
+def image_head(filename: str):
+    path = os.path.join(IMAGE_ROOT, filename)
+    if not os.path.isfile(path):
+        raise HTTPException(status_code=404)
+    return Response(status_code=200)
+
+
 
 @app.post("/api/business", response_model=BusinessOut)
 def create_business_route(
