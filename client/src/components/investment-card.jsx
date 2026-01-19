@@ -4,6 +4,7 @@ import "../components/investment-card.css";
 import locationIcon from "../assets/location_icon.png";
 import urlIcon from "../assets/link_vector.svg";
 import placeholder from "../assets/business_placeholder.png";
+import { base_url } from "../api";
 
 export default function InvestmentCard({ investment, business }) {
   const navigate = useNavigate();
@@ -14,23 +15,36 @@ export default function InvestmentCard({ investment, business }) {
     navigate(`/investment-details/${investment.id}`);
   };
 
+  const rawImageUrl = business?.image_url;
+
   const isValidImageUrl =
-    typeof business.image_url === "string" &&
-    business.image_url.trim() !== "" &&
-    business.image_url !== "null" &&
-    business.image_url !== "undefined";
+    typeof rawImageUrl === "string" &&
+    rawImageUrl.trim() !== "" &&
+    rawImageUrl !== "null" &&
+    rawImageUrl !== "undefined";
+
+  // ✅ Make sure relative image paths resolve to the backend domain
+  const resolvedImageUrl = isValidImageUrl
+    ? rawImageUrl.startsWith("http")
+      ? rawImageUrl
+      : rawImageUrl.startsWith("/images/")
+        ? `${base_url}${rawImageUrl}`
+        : rawImageUrl.startsWith("images/")
+          ? `${base_url}/${rawImageUrl}`
+          : `${base_url}/images/${rawImageUrl}`
+    : null;
 
   return (
     <div className={`investment-card ${investment.featured ? "featured" : ""}`}>
       <div className="top-section">
         <div className="image-container">
           <img
-            src={isValidImageUrl ? business.image_url : placeholder}
+            src={resolvedImageUrl || placeholder}
             alt={`${business.name} logo`}
             className="web-icon"
             onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = placeholder;
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = placeholder;
             }}
           />
         </div>
@@ -57,9 +71,7 @@ export default function InvestmentCard({ investment, business }) {
         <tbody>
           <tr>
             <td className="label">Offer Expiry:</td>
-            <td>
-              {new Date(investment.expiration_date).toLocaleDateString()}
-            </td>
+            <td>{new Date(investment.expiration_date).toLocaleDateString()}</td>
           </tr>
           <tr>
             <td className="label">Shares Available:</td>
