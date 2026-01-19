@@ -42,6 +42,7 @@ from db import (
     invalidate_session,
     validate_email_password,
     update_business_details,
+    DBBusiness
 )
 from auth import get_auth_user, get_optional_auth_user
 from jwt_utils import create_access_token, decode_access_token
@@ -278,6 +279,23 @@ async def secret():
 @app.get("/api/investment", response_model=List[InvestmentOut])
 async def get_investments():
     return db.get_investments()
+
+@app.get("/api/my_business", response_model=BusinessOut)
+def get_my_business(
+    current_user: UserPublicDetails = Depends(get_auth_user),
+    db_session: Session = Depends(get_db),
+):
+    business = (
+        db_session.query(DBBusiness)
+        .filter(DBBusiness.user_id == current_user.id)
+        .first()
+    )
+
+    if not business:
+        raise HTTPException(status_code=404, detail="No business for user")
+
+    return business
+
 
 @app.get("/api/business", response_model=List[BusinessOut])
 async def get_businesses():
