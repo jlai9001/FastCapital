@@ -1,6 +1,8 @@
 .business-investment-card {
-    max-height: 300px;
+    /* ✅ don't clip mobile stacked content */
+    max-height: none;
 }
+
 
 .custom-grid {
     display: grid;
@@ -78,4 +80,136 @@
   height: 100%;
   background-color: #6290C8;
   transition: width 0.5s ease-in-out;
+}
+
+
+
+/* ===============================
+   MOBILE INVESTMENT CARD LAYOUT
+   =============================== */
+@media (max-width: 768px) {
+  /* Hide the desktop grid on mobile */
+  .custom-grid {
+    display: none;
+  }
+
+  .business-investment-card {
+    width: 100%;
+    border-radius: 16px;
+    padding: 16px;
+    box-sizing: border-box;
+  }
+
+  .business-investment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+  }
+
+  .investment-mobile-card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+  }
+
+  .investment-mobile-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .investment-mobile-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #111827;
+  }
+
+  /* Thumb-friendly Details button */
+  .view-details-button {
+    min-height: 42px;
+    height: auto;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .investment-mobile-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    background: #f9fafb;
+    border-radius: 14px;
+    padding: 12px;
+  }
+
+  .stat-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 600;
+  }
+
+  .stat-value {
+    font-size: 14px;
+    color: #111827;
+    font-weight: 800;
+    text-align: right;
+  }
+
+  .investment-mobile-funded {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .funded-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .funded-label {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 700;
+  }
+
+  .funded-percentage {
+    font-size: 14px;
+    font-weight: 900;
+    margin: 0;
+  }
+
+  /* Cleaner progress bar on mobile */
+  .progress-bar {
+    height: 10px;
+    border-radius: 999px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 999px;
+  }
+
+  .progress-bar-row {
+    /* desktop-only layout; keep it from forcing weird spacing */
+    display: block;
+  }
+
+    .stat-value {
+    min-width: 72px;
+  }
 }

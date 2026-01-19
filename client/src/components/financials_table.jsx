@@ -11,16 +11,31 @@ function FinancialDashboard({ businessId, refresh }) {
   const [selectedYear, setSelectedYear] = useState("");
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
+
+  const calcChartWidth = () => {
+  const w = window.innerWidth;
+  return Math.max(280, Math.min(420, w - 48));
+  };
+
+  const [chartWidth, setChartWidth] = useState(calcChartWidth());
+
+
   /* -----------------------------
      Mobile detection
   ----------------------------- */
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
+      setChartWidth(calcChartWidth());
     };
+
+    handleResize(); // run once on mount
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+
 
   /* -----------------------------
      Persistent Y-axis config
@@ -125,7 +140,7 @@ function FinancialDashboard({ businessId, refresh }) {
             { label: "Expenses", data: expenses, yAxisKey: "y-axis" },
             { label: "Net Income", data: netIncome, yAxisKey: "y-axis" },
           ]}
-            width={isMobile ? 360 : 700}
+            width={isMobile ? chartWidth : 700}
             height={isMobile ? 200 : 400}
         />
       );
@@ -151,7 +166,7 @@ function FinancialDashboard({ businessId, refresh }) {
             { label: "Liabilities", data: liabilities, yAxisKey: "y-axis" },
             { label: "Equity", data: equity, yAxisKey: "y-axis" },
           ]}
-          width={isMobile ? 360 : 700}
+          width={isMobile ? chartWidth : 700}
           height={isMobile ? 200 : 400}
         />
       );

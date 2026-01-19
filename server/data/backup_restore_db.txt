@@ -1,0 +1,17 @@
+external data base url:
+postgresql://fastcapital_t9yq_user:eX9SpCqXnaVcMdGNmJWhQt81Mei5Wj2P@dpg-d5fgnuili9vc738o8mb0-a.virginia-postgres.render.com/fastcapital
+
+backup databse (creates dump file in current folder):
+pg_dump "postgresql://fastcapital_t9yq_user:eX9SpCqXnaVcMdGNmJWhQt81Mei5Wj2P@dpg-d5fgnuili9vc738o8mb0-a.virginia-postgres.render.com/fastcapital" -Fc -f render-backup.dump
+
+
+restore database (overwrites *DESTRUCTIVE* current database with file):
+* WARNING - no warnings , no countdowns, no undos
+
+pg_restore \
+  --dbname="postgresql://fastcapital_t9yq_user:eX9SpCqXnaVcMdGNmJWhQt81Mei5Wj2P@dpg-d5fgnuili9vc738o8mb0-a.virginia-postgres.render.com/fastcapital" \
+  --clean \
+  --if-exists \
+  --no-owner \
+  --no-privileges \
+  fastcapital_db_backup.dump
