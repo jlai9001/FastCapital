@@ -49,9 +49,6 @@ export default function BusinessProfile() {
         <div className="no-business-container">
           <img src={coinIcon} alt="Coin Icon" className="profil-coin-icon" />
           <p className="no-business-header">Create a Business Profile</p>
-          <p className="no-business-text">
-            It looks like you don't have a business profile yet.
-          </p>
           <button
             className="no-business-button"
             onClick={() => navigate("/add-business")}
