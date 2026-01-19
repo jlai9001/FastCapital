@@ -356,5 +356,13 @@ margin-bottom: 20px;
     background: #f9fafb;
   }
 
+  /* ✅ MOBILE: remove big headings for a cleaner, minimal column */
+  .business-profile-header,
+  .business-profile-subheader,
+  .no-investment-header {
+    display: none;
+  }
+
+
 
 }
