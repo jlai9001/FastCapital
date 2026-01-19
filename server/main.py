@@ -156,9 +156,6 @@ app.add_middleware(CSRFMiddleware)
 # FILE STORAGE
 # =========================
 
-# render web storage
-# IMAGE_ROOT = "/data/business_images"
-# dynamic storage (web & local)
 RAW_IMAGE_ROOT = os.environ.get(
     "IMAGE_ROOT",
     "/data/business_images" if ENV == "production" else "./business_images"
@@ -166,23 +163,8 @@ RAW_IMAGE_ROOT = os.environ.get(
 
 # 🔒 sanitize whitespace / newlines
 IMAGE_ROOT = RAW_IMAGE_ROOT.strip()
-
 os.makedirs(IMAGE_ROOT, exist_ok=True)
 
-
-@app.get("/images/{filename}")
-def serve_image(filename: str):
-    path = os.path.join(IMAGE_ROOT, filename)
-    if not os.path.isfile(path):
-        raise HTTPException(status_code=404, detail="Image not found")
-    return FileResponse(path)
-
-@app.head("/images/{filename}")
-def image_head(filename: str):
-    path = os.path.join(IMAGE_ROOT, filename)
-    if not os.path.isfile(path):
-        raise HTTPException(status_code=404)
-    return Response(status_code=200)
 
 # =========================
 # DEBUG
@@ -329,19 +311,26 @@ def get_business_me(
     return business
 
 
-def _save_business_image(file: UploadFile) -> str:
-    """Save an uploaded image to IMAGE_ROOT and return the public URL path."""
+def save_business_image_for_id(business_id: int, file: UploadFile) -> str:
     ext = Path(file.filename).suffix.lower() if file.filename else ""
     if ext not in {".png", ".jpg", ".jpeg", ".webp"}:
         raise HTTPException(status_code=400, detail="Unsupported image type")
 
-    filename = f"{token_urlsafe(16)}{ext}"
+    # ✅ Deterministic filename like your Render disk convention
+    filename = f"business_{business_id}{ext}"
     out_path = os.path.join(IMAGE_ROOT, filename)
+
+    # (Optional but nice) remove other ext variants to prevent leftovers
+    for other_ext in [".png", ".jpg", ".jpeg", ".webp"]:
+        other_path = os.path.join(IMAGE_ROOT, f"business_{business_id}{other_ext}")
+        if other_path != out_path and os.path.exists(other_path):
+            os.remove(other_path)
 
     with open(out_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
     return f"/images/{filename}"
+
 
 
 @app.post("/api/business", response_model=BusinessOut)
@@ -365,15 +354,12 @@ def create_business_route(
     if existing:
         raise HTTPException(status_code=409, detail="Business already exists for user")
 
-    image_url = None
-    if image:
-        image_url = _save_business_image(image)
-
+    # 1) Create business FIRST (no image yet)
     business_in = BusinessCreate(
         name=name,
         user_id=current_user.id,
         website_url=website_url,
-        image_url=image_url,
+        image_url=None,
         address1=address1,
         address2=address2,
         city=city,
@@ -381,7 +367,20 @@ def create_business_route(
         postal_code=postal_code,
     )
 
-    return create_business(business_in)
+    created = create_business(business_in)
+
+    # 2) If image uploaded, save deterministically and update DB
+    if image:
+        image_url = save_business_image_for_id(created.id, image)
+        db.update_business_image(
+            business_id=created.id,
+            user_id=current_user.id,
+            image_url=image_url,
+        )
+        # keep response consistent
+        created.image_url = image_url
+
+    return created
 
 
 @app.patch("/api/business/{business_id}", response_model=BusinessOut)
@@ -405,13 +404,14 @@ def patch_business_image_route(
     image: UploadFile = File(...),
     current_user: UserPublicDetails = Depends(get_auth_user),
 ):
-    image_url = _save_business_image(image)
+    image_url = save_business_image_for_id(business_id, image)
     db.update_business_image(
         business_id=business_id,
         user_id=current_user.id,
         image_url=image_url,
     )
     return {"image_url": image_url}
+
 
 
 @app.post("/api/business/{business_id}/upload_image")
@@ -421,7 +421,7 @@ def post_business_image_route(
     current_user: UserPublicDetails = Depends(get_auth_user),
 ):
     """Alias for older frontend code that uploads via POST."""
-    image_url = _save_business_image(image)
+    image_url = save_business_image_for_id(business_id, image)
     db.update_business_image(
         business_id=business_id,
         user_id=current_user.id,
