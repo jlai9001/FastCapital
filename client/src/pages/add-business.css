@@ -9,6 +9,42 @@ body {
     height: 100%;
 }
 
+
+/* ---------- Custom file input (mobile behavior) ---------- */
+
+.file-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.file-input {
+  display: none; /* hide native file input */
+}
+
+.file-btn {
+  background-color: #2f855a; /* match your green */
+  color: white;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.file-name {
+  flex: 1;
+  min-width: 0;            /* required for ellipsis in flex */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #666;
+}
+
 .add-business-container {
     display: block;
     margin: 0 auto;
@@ -102,4 +138,27 @@ input[type="file"]::file-selector-button:hover {
     margin-top: 10px;
     text-align: center;
     color: red;
+}
+
+/* ✅ MOBILE ONLY behavior:
+   - before selection: hide "No file chosen" and make button full width
+   - after selection: hide button and show filename
+*/
+
+@media (max-width: 600px) {
+  .file-row.no-file .file-name {
+    display: none;
+  }
+
+  .file-row.no-file .file-btn {
+    width: 100%;
+  }
+
+  .file-row.has-file .file-btn {
+    display: none;
+  }
+
+  .file-row.has-file .file-name {
+    width: 100%;
+  }
 }

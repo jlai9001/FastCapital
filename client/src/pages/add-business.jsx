@@ -203,11 +203,23 @@ function AddBusiness() {
           />
 
           <div className="field-label">Picture</div>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-          />
+
+          <div className={`file-row ${logoFile ? "has-file" : "no-file"}`}>
+            <label className="file-btn">
+              Choose File
+              <input
+                className="file-input"
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+            </label>
+
+            <span className="file-name">
+              {logoFile ? logoFile.name : "No file chosen"}
+            </span>
+          </div>
+
 
           <div className="field-label">Address</div>
           <input
