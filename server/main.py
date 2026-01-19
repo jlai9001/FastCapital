@@ -65,6 +65,8 @@ from pydantic_schemas import (
     UserPublicDetails,
     PurchaseStatus,
     LoginResponse,
+    InvestmentWithPurchasesOut,
+
 )
 
 
@@ -261,6 +263,14 @@ async def secret():
 @app.get("/api/investment", response_model=List[InvestmentOut])
 async def get_investments():
     return db.get_investments()
+
+@app.get("/api/business_investments", response_model=List[InvestmentWithPurchasesOut])
+def get_business_investments(
+    business_id: int = Query(...),
+    db_session: Session = Depends(get_db),
+):
+    return db.get_investments_by_business_id(db_session, business_id)
+
 
 @app.get("/api/my_business", response_model=BusinessOut)
 def get_my_business(

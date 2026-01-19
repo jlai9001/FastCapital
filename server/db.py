@@ -25,6 +25,7 @@ from pydantic_schemas import (
     BusinessCreate,
     BusinessPatch,
     PurchaseStatus,
+    InvestmentWithPurchasesOut,
 )
 import os
 
@@ -332,3 +333,13 @@ def get_investment_by_id(db: Session, investment_id: int):
         .filter(DBInvestment.id == investment_id)
         .first()
     )
+
+def get_investments_by_business_id(db: Session, business_id: int) -> list[InvestmentWithPurchasesOut]:
+    investments = (
+        db.query(DBInvestment)
+        .options(joinedload(DBInvestment.purchases))
+        .filter(DBInvestment.business_id == business_id)
+        .order_by(DBInvestment.id)
+        .all()
+    )
+    return [InvestmentWithPurchasesOut.model_validate(i) for i in investments]

@@ -6,7 +6,7 @@ class PurchaseStatus(str, enum.Enum):
     expired = "expired"
 
 from enums import FinancialType
-from pydantic import BaseModel, EmailStr, ConfigDict, field_validator
+from pydantic import BaseModel, EmailStr, ConfigDict, field_validator, Field
 from datetime import date, datetime
 from typing import Optional, List
 import re  # this helps the Bowe validate date format
@@ -121,14 +121,16 @@ class PurchaseOut(PurchaseCreate):
 
 class PurchaseSummaryOut(BaseModel):
     id: int
+    user_id: int
     shares_purchased: int
 
     model_config = ConfigDict(from_attributes=True)
 
 class InvestmentWithPurchasesOut(InvestmentOut):
-    purchases: List[PurchaseSummaryOut] = []
+    purchases: List[PurchaseSummaryOut] = Field(default_factory=list)
 
     model_config = ConfigDict(from_attributes=True)
+
 
 class EnrichedPurchaseOut(BaseModel):
     id: int
