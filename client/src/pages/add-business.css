@@ -47,7 +47,6 @@ body {
 }
 
 .add-business-container {
-    display: block;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -68,11 +67,8 @@ body {
     box-shadow: var(--element_shadow);
     padding: 35px;
     justify-content: center;
-    margin-bottom: 250px;
-    /* ✅ replace fixed width */
     width: 100%;
     max-width: 600px;
-
 }
 
 .add-business-title {
@@ -161,5 +157,19 @@ input[type="file"]::file-selector-button:hover {
 
   .file-row.has-file .file-name {
     width: 100%;
+  }
+
+    .add-business-container {
+    padding: 1.25rem;   /* match login page container padding */
+    margin-top: 0;
+  }
+
+  .business-form {
+    width: 100%;
+    max-width: 420px;   /* match login page card width */
+    margin: 0;
+    margin-top: 2rem;
+    padding: 24px 20px; /* match login page card padding */
+    border-radius: 16px;
   }
 }
