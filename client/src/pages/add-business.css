@@ -32,7 +32,9 @@ body {
     padding: 35px;
     justify-content: center;
     margin-bottom: 250px;
-    width: 600px;
+    /* ✅ replace fixed width */
+    width: 100%;
+    max-width: 600px;
 
 }
 
