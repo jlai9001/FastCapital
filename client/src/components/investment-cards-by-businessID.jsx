@@ -71,61 +71,68 @@ export default function InvestmentCardsByBusinessId({ businessId }) {
         return (
           <div key={investment.id} className="business-investment-card">
             {isMobile ? (
-              <div className="investment-mobile-card">
-                <div className="investment-mobile-top">
-                  <div className="investment-mobile-title">Investment Offer</div>
+              <div className="investment-mobile-wrapper">
+                {/* ✅ full-width heading outside the card */}
+                <div className="investment-mobile-heading">Investment Offer</div>
+
+                {/* ✅ the card */}
+                <div className="investment-mobile-card">
+                  <div className="investment-mobile-stats">
+                    <div className="stat-row">
+                      <span className="stat-label">Shares Available</span>
+                      <span className="stat-value">{investment.shares_available}</span>
+                    </div>
+
+                    <div className="stat-row">
+                      <span className="stat-label">Min. Investment</span>
+                      <span className="stat-value">{investment.min_investment} shares</span>
+                    </div>
+
+                    <div className="stat-row">
+                      <span className="stat-label">Price/Share</span>
+                      <span className="stat-value">${investment.price_per_share}</span>
+                    </div>
+
+                    <div className="stat-row">
+                      <span className="stat-label">Offer Expiry</span>
+                      <span className="stat-value">
+                        {new Date(investment.expiration_date).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </span>
+                    </div>
+
+                    <div className="stat-row">
+                      <span className="stat-label">Current Investors</span>
+                      <span className="stat-value">{investorCount}</span>
+                    </div>
+                  </div>
+
+                  <div className="investment-mobile-funded">
+                    <div className="funded-row">
+                      <span className="funded-label">Funded</span>
+                      <span className="funded-percentage">{percentSold.toFixed(0)}%</span>
+                    </div>
+
+                    <div className="progress-bar">
+                      <div className="progress-fill" style={{ width: `${percentSold}%` }} />
+                    </div>
+                  </div>
+
+                  {/* ✅ Details button goes INSIDE card at the bottom */}
                   <button
-                    className="view-details-button"
+                    className="investment-mobile-details-btn"
                     onClick={() => navigate(`/investment-details/${investment.id}`)}
                   >
                     Details
                   </button>
                 </div>
-
-                <div className="investment-mobile-stats">
-                  <div className="stat-row">
-                    <span className="stat-label">Shares Available</span>
-                    <span className="stat-value">{investment.shares_available}</span>
-                  </div>
-
-                <div className="stat-row">
-                  <span className="stat-label">Min. Investment</span>
-                  <span className="stat-value">{investment.min_investment} shares</span>
-                </div>
-
-                <div className="stat-row">
-                  <span className="stat-label">Price/Share</span>
-                  <span className="stat-value">${investment.price_per_share}</span>
-                </div>
-
-                <div className="stat-row">
-                  <span className="stat-label">Offer Expiry</span>
-                  <span className="stat-value">
-                    {new Date(investment.expiration_date).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                  </span>
-                </div>
-
-                <div className="stat-row">
-                  <span className="stat-label">Current Investors</span>
-                  <span className="stat-value">{investorCount}</span>
-                </div>
               </div>
 
-              <div className="investment-mobile-funded">
-                <div className="funded-row">
-                  <span className="funded-label">Funded</span>
-                  <span className="funded-percentage">{percentSold.toFixed(0)}%</span>
-                </div>
 
-                <div className="progress-bar">
-                  <div className="progress-fill" style={{ width: `${percentSold}%` }} />
-                </div>
-              </div>
-            </div>
+
             ) : (
               <div className="custom-grid">
                 {/* Row 1: Labels */}

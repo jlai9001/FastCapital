@@ -1,6 +1,8 @@
 .business-investment-card {
-    /* ✅ don't clip mobile stacked content */
-    max-height: none;
+  width: 100%;
+  padding: 0;        /* ✅ remove extra padding */
+  margin: 0;
+  box-sizing: border-box;
 }
 
 
@@ -88,16 +90,70 @@
    MOBILE INVESTMENT CARD LAYOUT
    =============================== */
 @media (max-width: 768px) {
-  /* Hide the desktop grid on mobile */
-  .custom-grid {
-    display: none;
+  /* ✅ Mobile wrapper: heading outside card */
+  .investment-mobile-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 
-  .business-investment-card {
+  /* ✅ Full-width heading (outside card) */
+  .investment-mobile-heading {
     width: 100%;
+    font-size: 22px;
+    font-weight: 900;
+    color: #111827;
+    margin: 0;
+    padding: 0 2px; /* tiny breathing room */
+  }
+
+  /* ✅ Make the card feel like a card */
+  .investment-mobile-card {
+    width: 100%;
+    background: #ffffff;
     border-radius: 16px;
     padding: 16px;
     box-sizing: border-box;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* ✅ Put funded bar back + keep it blue */
+  .progress-bar {
+    height: 10px;
+    background-color: #E0E9F4;
+    border-radius: 999px;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background-color: #6290C8; /* blue fill */
+    border-radius: 999px;
+    transition: width 0.5s ease-in-out;
+  }
+
+  /* ✅ Details button inside the card at the bottom */
+  .investment-mobile-details-btn {
+    width: 100%;
+    border: none;
+    border-radius: 14px;
+    background-color: #059669;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 800;
+    padding: 14px 16px;
+    min-height: 48px;
+    cursor: pointer;
+  }
+
+  /* Hide the desktop grid on mobile */
+  .custom-grid {
+    display: none;
   }
 
   .business-investment-list {
@@ -105,37 +161,6 @@
     flex-direction: column;
     gap: 14px;
     width: 100%;
-  }
-
-  .investment-mobile-card {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    width: 100%;
-  }
-
-  .investment-mobile-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-  }
-
-  .investment-mobile-title {
-    font-size: 20px;
-    font-weight: 800;
-    color: #111827;
-  }
-
-  /* Thumb-friendly Details button */
-  .view-details-button {
-    min-height: 42px;
-    height: auto;
-    padding: 10px 14px;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 14px;
-    white-space: nowrap;
   }
 
   .investment-mobile-stats {
@@ -191,17 +216,6 @@
     font-size: 14px;
     font-weight: 900;
     margin: 0;
-  }
-
-  /* Cleaner progress bar on mobile */
-  .progress-bar {
-    height: 10px;
-    border-radius: 999px;
-  }
-
-  .progress-fill {
-    height: 100%;
-    border-radius: 999px;
   }
 
   .progress-bar-row {
