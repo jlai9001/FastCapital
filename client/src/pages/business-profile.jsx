@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate , useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import FinancialDashboard from "../components/financials_table";
 import InvestmentCardsByBusinessId from "../components/investment-cards-by-businessID.jsx";
@@ -17,6 +17,7 @@ import { base_url } from "../api";
 
 export default function BusinessProfile() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { business, loading, error } = useBusinessForUser();
   const [imageVersion, setImageVersion] = useState(null);
@@ -33,10 +34,27 @@ export default function BusinessProfile() {
     error: investmentsError,
   } = useInvestmentsForBusiness(business?.id);
 
-  // 🔑 FORCE IMAGE REFRESH WHEN IMAGE_URL CHANGES
+    // ✅ If we arrived here from AddBusiness with a cache-buster, use it (then clear it)
+    useEffect(() => {
+      const buster = location.state?.imageBuster;
+
+      if (buster) {
+        setImageVersion(buster);
+
+        // ✅ clear the state so it only triggers once
+        navigate(location.pathname, { replace: true, state: {} });
+      }
+    }, [location.state, location.pathname, navigate]);
+
+
+
+  // ✅ Fallback: if image_url changes (and we DIDN'T get a buster), refresh anyway
   useEffect(() => {
-    if (business?.image_url) setImageVersion(Date.now());
-  }, [business?.image_url]);
+    const buster = location.state?.imageBuster;
+    if (!buster && business?.image_url) {
+      setImageVersion(Date.now());
+    }
+  }, [business?.image_url, location.state]);
 
 
   if (loading) return <h1>Loading...</h1>;

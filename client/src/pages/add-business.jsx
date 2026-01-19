@@ -88,52 +88,50 @@ function AddBusiness() {
         website_url: normalizeUrl(formData.website_url),
       };
 
+      // 1) Update business details
       const res = await fetch(`${base_url}/api/business/${businessId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json",
+          Accept: "application/json",
         },
         credentials: "include",
         body: JSON.stringify(payload),
       });
 
-      // force fresh image when profile loads
-      navigate("/business-profile", {
-        state: { refreshImage: Date.now() },
-      });
-
       const data = await res.json();
 
+      // 2) Stop if failed
       if (!res.ok) {
         setMessage(data.detail || "Failed to update business.");
         return;
       }
 
-      // 🔹 Upload image AFTER business update
+      // 3) Upload image AFTER business update succeeds
       if (logoFile) {
         const imageForm = new FormData();
         imageForm.append("image", logoFile);
 
-        const imageRes = await fetch(
-          `${base_url}/api/business/${businessId}/image`,
-          {
-            method: "PATCH",
-            credentials: "include",
-            body: imageForm,
-          }
-        );
+        const imageRes = await fetch(`${base_url}/api/business/${businessId}/image`, {
+          method: "PATCH",
+          credentials: "include",
+          body: imageForm,
+        });
 
+        // 4) Stop if image upload failed
         if (!imageRes.ok) {
           setMessage("Business updated, but image upload failed.");
           return;
         }
       }
 
-      setMessage("Business updated!");
-      navigate("/business-profile");
+      // 5) Navigate ONCE, at the end, with a cache-buster
+      const buster = Date.now();
+      navigate("/business-profile", { state: { imageBuster: buster } });
+
       return;
     }
+
 
     // ================================
     // CREATE NEW BUSINESS
