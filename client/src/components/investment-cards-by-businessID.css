@@ -63,12 +63,6 @@
     font-weight: 600;
 }
 
-.progress-bar-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-  }
 
 .progress-bar {
   height: 20px;
@@ -82,6 +76,7 @@
   height: 100%;
   background-color: #6290C8;
   transition: width 0.5s ease-in-out;
+  min-width: 2px;   /* optional: makes a tiny blue line at 0% */
 }
 
 
@@ -128,6 +123,8 @@
     border-radius: 999px;
     overflow: hidden;
     width: 100%;
+    margin-top: 6px;
+    min-height: 10px;
   }
 
   .progress-fill {
@@ -218,10 +215,7 @@
     margin: 0;
   }
 
-  .progress-bar-row {
-    /* desktop-only layout; keep it from forcing weird spacing */
-    display: block;
-  }
+
 
     .stat-value {
     min-width: 72px;
