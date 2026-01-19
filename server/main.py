@@ -341,7 +341,13 @@ def serve_image(filename: str):
     path = os.path.join(IMAGE_ROOT, filename)
     if not os.path.isfile(path):
         raise HTTPException(status_code=404, detail="Image not found")
-    return FileResponse(path)
+
+    response = FileResponse(path)
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
+
 
 @app.head("/images/{filename}")
 def image_head(filename: str):
