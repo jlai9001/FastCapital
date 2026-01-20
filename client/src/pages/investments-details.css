@@ -335,6 +335,7 @@
 
   .financial-dashboard-container {
     overflow-x: auto;
+    padding: 0px;
   }
 
     /* Wrapper that contains tabs + select */
