@@ -2,11 +2,7 @@ import { useNavigate , useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import FinancialDashboard from "../components/financials_table";
 import InvestmentCardsByBusinessId from "../components/investment-cards-by-businessID.jsx";
-import {
-  useBusinessForUser,
-  useFinancialsForBusiness,
-  useInvestmentsForBusiness,
-} from "../hooks/getData.jsx";
+import { useProtectedData } from "../context/protected-data-provider.jsx";
 import "./business-profile.css";
 import locationIcon from "../assets/location_icon.png";
 import urlIcon from "../assets/url_icon.png";
@@ -19,20 +15,22 @@ export default function BusinessProfile() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { business, loading, error } = useBusinessForUser();
+  const { status, myBusiness, businessFinancials, businessInvestments } = useProtectedData();
+
+  const business = myBusiness;
+  const financials = businessFinancials;
+  const investments = businessInvestments;
+
+  const loading = status === "loading" || status === "idle";
+  const error = status === "error";
+
+  const financialsLoading = loading;
+  const investmentsLoading = loading;
+  const financialsError = error;
+  const investmentsError = error;
+
   const [imageVersion, setImageVersion] = useState(null);
 
-  const {
-    financials,
-    loading: financialsLoading,
-    error: financialsError,
-  } = useFinancialsForBusiness(business?.id);
-
-  const {
-    investments,
-    loading: investmentsLoading,
-    error: investmentsError,
-  } = useInvestmentsForBusiness(business?.id);
 
     // ✅ If we arrived here from AddBusiness with a cache-buster, use it (then clear it)
     useEffect(() => {
@@ -58,7 +56,7 @@ export default function BusinessProfile() {
 
 
   if (loading) return <h1>Loading...</h1>;
-  if (error) return <h1>{error.message}</h1>;
+  if (error) return <h1>Could not load business profile.</h1>;
 
   if (!business) {
     return (
@@ -166,7 +164,7 @@ const canShowFreshImage = isValidImagePath && imageVersion && resolvedImageUrl;
         ) : financialsError ? (
           <h2>Error loading financials</h2>
         ) : financials && financials.length > 0 ? (
-          <FinancialDashboard businessId={business.id} />
+          <FinancialDashboard financials={financials} />
         ) : (
           <div className="no-financials-container">
             <div className="no-financials-text">
@@ -188,7 +186,8 @@ const canShowFreshImage = isValidImagePath && imageVersion && resolvedImageUrl;
         {investmentsError && <p>Error loading investments.</p>}
 
         {!investmentsLoading && investments && (
-          <InvestmentCardsByBusinessId businessId={business.id} />
+          <InvestmentCardsByBusinessId investments={investments} />
+
         )}
       </div>
     </div>

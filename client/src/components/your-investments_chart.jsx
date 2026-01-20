@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 import './your-investments_chart.css';
 import { PieChart } from "@mui/x-charts/PieChart";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import placeholder from "../assets/business_placeholder.png";
-import { base_url } from "../api";
+import { useProtectedData } from "../context/protected-data-provider.jsx";
+
 
 const chartTheme = createTheme({
   components: {
@@ -79,21 +79,11 @@ const isValidImageUrl =
 };
 
 const UserInvestments = () => {
-  const [investments, setInvestments] = useState([]);
-  useEffect(() => {
-    axios
-      .get(`${base_url}/api/purchases?status=completed`, {
-      withCredentials: true
-      })
-      .then(res => {
-        if (Array.isArray(res.data)) {
-          setInvestments(res.data);
-        } else {
-          console.error("Unexpected response format:", res.data);
-        }
-      })
-      .catch(err => console.error("Error fetching investments:", err));
-    }, []);
+  const { status, purchasesCompleted } = useProtectedData();
+
+  // This chart expects "investments" to be an array of completed purchases
+  const investments = Array.isArray(purchasesCompleted) ? purchasesCompleted : [];
+  const loading = status === "loading" || status === "idle";
 
   const pieData = Array.isArray(investments)
     ? Object.values(
@@ -117,17 +107,25 @@ const UserInvestments = () => {
   }, 0);
 
   const hasCompletedInvestments = Array.isArray(investments) && investments.length > 0;
+  const showEmpty = !loading && !hasCompletedInvestments;
 
 return (
   <ThemeProvider theme={chartTheme}>
     {/* flex column */}
     <div className="investments-dashboard-container">
       {/* EMPTY STATE — FULL WIDTH */}
-      {!hasCompletedInvestments && (
+      {loading && (
+        <div className="empty-investments">
+          <p>Loading your investments...</p>
+        </div>
+      )}
+
+      {showEmpty && (
         <div className="empty-investments">
           <p>You currently have no active investments that are fully funded.</p>
         </div>
       )}
+
 
       {/* Header */}
       <div className="investments-dashboard-header">

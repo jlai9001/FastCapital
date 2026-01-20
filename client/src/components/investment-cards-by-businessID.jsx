@@ -1,11 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./investment-cards-by-businessID.css";
-import { base_url } from "../api";
 
-export default function InvestmentCardsByBusinessId({ businessId }) {
-  const [investments, setInvestments] = useState(null);
-  const [error, setError] = useState(null);
+export default function InvestmentCardsByBusinessId({ investments = [] }) {
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
@@ -16,33 +13,14 @@ export default function InvestmentCardsByBusinessId({ businessId }) {
   }, []);
 
 
-  useEffect(() => {
-    async function fetchInvestments() {
-      try {
-        const res = await fetch(`${base_url}/api/business_investments?business_id=${businessId}`, {
-          credentials: "include",
-        });
-        if (!res.ok) throw new Error("Investments not found");
-        const data = await res.json();
-        setInvestments(data);
-      } catch (err) {
-        setError(err.message);
-      }
-    }
 
-    if (businessId) {
-      fetchInvestments();
-    }
-  }, [businessId]);
-
-  if (error) return <h1>{error}</h1>;
-  if (!investments) return <h1>Loading investments...</h1>;
-  if (investments.length === 0)
-    return (
-      <div className="no-investment-text">
-        Create an offer so that potential investors know what you're looking for.
-      </div>
-    );
+if (!Array.isArray(investments) || investments.length === 0){
+  return (
+    <div className="no-investment-text">
+      Create an offer so that potential investors know what you're looking for.
+    </div>
+  );
+}
 
     return (
     <div className="business-investment-list">

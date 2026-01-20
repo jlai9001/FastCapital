@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
 import UserProvider from './context/user-provider.jsx'
-
+import ProtectedDataProvider from './context/protected-data-provider.jsx'
 import axios from "axios";
 
 axios.defaults.withCredentials = true;
@@ -24,10 +24,12 @@ const root = document.getElementById('root')
 
 ReactDOM.createRoot(root).render(
   <StrictMode>
-  <BrowserRouter>
-    <UserProvider>
-      <App />
-    </UserProvider>
-  </BrowserRouter>
+    <BrowserRouter>
+      <UserProvider>
+        <ProtectedDataProvider>
+          <App />
+        </ProtectedDataProvider>
+      </UserProvider>
+    </BrowserRouter>
   </StrictMode>
 )

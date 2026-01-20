@@ -20,6 +20,8 @@ import About from './pages/about.jsx'
 import Contact from './pages/contact.jsx'
 import ScrollToTop from "./components/ScrollToTop";
 import AuthRouteGuard from "./components/AuthRouteGuard";
+import ProtectedRouteGate from "./components/ProtectedRouteGate";
+
 
 function App() {
 

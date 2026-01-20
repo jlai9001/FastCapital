@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import PendingInvestmentsCard from "../components/pending-investments-card";
 import UserInvestments from "../components/your-investments_chart";
 import "./portfolio.css";
+import { useState } from "react";
 import { base_url } from "../api";
+import { useProtectedData } from "../context/protected-data-provider.jsx";
 
 function getAccessToken() {
   return localStorage.getItem("access_token");
@@ -15,72 +15,14 @@ function authHeaders() {
 }
 
 export default function Portfolio() {
-  const [user, setUser] = useState(null);
-  const [pendingPurchases, setPendingPurchases] = useState([]);
-  const [investments, setInvestments] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const { status, purchasesPending, pendingInvestments } = useProtectedData();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch(`${base_url}/api/me`, {
-          credentials: "include",
-          headers: authHeaders(),
-        });
+  // Leave this for now so your chart prop doesn't explode.
+  // Next step we’ll make UserInvestments use cached data properly.
+  const [user] = useState(null);
 
-        if (!res.ok) throw new Error("Not authenticated");
-
-        const userData = await res.json();
-        setUser(userData);
-      } catch (err) {
-        navigate("/login");
-      }
-    };
-
-    fetchUser();
-  }, []);
-
-  useEffect(() => {
-    if (!user) return;
-
-    const fetchPurchasesAndInvestments = async () => {
-      try {
-        setError("");
-
-        const res = await fetch(`${base_url}/api/purchases?status=pending`, {
-          credentials: "include",
-          headers: authHeaders(),
-        });
-
-        if (!res.ok) throw new Error("Failed to fetch purchases");
-
-        const purchaseData = await res.json();
-        setPendingPurchases(purchaseData);
-
-        const investmentIds = purchaseData.map((p) => p.investment_id);
-
-        const investmentResults = await Promise.all(
-          investmentIds.map((id) =>
-            fetch(`${base_url}/api/investment/${id}`, {
-              credentials: "include",
-              headers: authHeaders(),
-            }).then((res) => (res.ok ? res.json() : null))
-          )
-        );
-
-        const validInvestments = investmentResults.filter(Boolean);
-        setInvestments(validInvestments);
-      } catch (error) {
-        setError("Could not load purchases or investments.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPurchasesAndInvestments();
-  }, [user]);
+  const loading = status === "loading" || status === "idle";
+  const error = status === "error";
 
   return (
     <div className="portfolio-page">
@@ -95,15 +37,15 @@ export default function Portfolio() {
           <p className="pending-investments-title">Pending Investments</p>
 
           {loading && <p>Loading pending investments...</p>}
-          {error && <p>{error}</p>}
+          {error && <p>Could not load portfolio data.</p>}
 
-          {!loading && !error && pendingPurchases.length === 0 && (
+          {!loading && !error && purchasesPending.length === 0 && (
             <p className="empty-pending">Please purchase an investment.</p>
           )}
 
-          {pendingPurchases.map((purchase) => {
-            const matchingInvestment = investments.find(
-              (inv) => inv.id === purchase.investment_id
+          {purchasesPending.map((purchase) => {
+            const matchingInvestment = pendingInvestments.find(
+              (inv) => inv?.id === purchase.investment_id
             );
 
             return (

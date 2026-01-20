@@ -2,9 +2,12 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./add-business.css";
 import { base_url } from "../api";
+import { useProtectedData } from "../context/protected-data-provider.jsx";
+
 
 function AddBusiness() {
   const navigate = useNavigate();
+  const { refreshProtectedData } = useProtectedData();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -127,6 +130,7 @@ function AddBusiness() {
 
       // 5) Navigate ONCE, at the end, with a cache-buster
       const buster = Date.now();
+      await refreshProtectedData();
       navigate("/business-profile", { state: { imageBuster: buster } });
 
       return;
@@ -162,6 +166,7 @@ function AddBusiness() {
     }
 
     setMessage("Business added!");
+    await refreshProtectedData();
     navigate("/portfolio");
   };
 

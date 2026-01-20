@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { BarChart } from "@mui/x-charts/BarChart";
-import axios from "axios";
 import "./financials_table.css";
-import { base_url } from "../api";
 
-function FinancialDashboard({ businessId, refresh }) {
+function FinancialDashboard({ financials = [] }) {
   const [tab, setTab] = useState("pl");
-  const [financials, setFinancials] = useState([]);
   const [years, setYears] = useState([]);
   const [selectedYear, setSelectedYear] = useState("");
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -52,34 +49,22 @@ function FinancialDashboard({ businessId, refresh }) {
   /* -----------------------------
      Fetch financial data
   ----------------------------- */
+
   useEffect(() => {
-    axios
-      .get(`${base_url}/api/financials/${businessId}`)
-      .then((res) => {
-        const data = res.data;
+  const data = Array.isArray(financials) ? financials : [];
 
-        if (!Array.isArray(data)) {
-          console.error("Expected array but got:", data);
-          setFinancials([]);
-          setYears([]);
-          setSelectedYear(null);
-          return;
-        }
+  const yearSet = new Set(data.map((f) => new Date(f.date).getFullYear()));
+  const sortedYears = Array.from(yearSet).sort((a, b) => b - a);
 
-        setFinancials(data);
+  setYears(sortedYears);
 
-        const yearSet = new Set(
-          data.map((f) => new Date(f.date).getFullYear())
-        );
-        const sortedYears = Array.from(yearSet).sort((a, b) => b - a);
-        setYears(sortedYears);
-
-        if (sortedYears.length) {
-          setSelectedYear(sortedYears[0]);
-        }
-      })
-      .catch((err) => console.error("Failed to fetch financials", err));
-  }, [businessId, refresh]);
+  // If selectedYear is empty OR no longer exists, default to latest year
+  if (sortedYears.length) {
+    setSelectedYear((prev) => (prev && sortedYears.includes(prev) ? prev : sortedYears[0]));
+  } else {
+    setSelectedYear("");
+  }
+  }, [financials]);
 
   /* -----------------------------
      Aggregate monthly data

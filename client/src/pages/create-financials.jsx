@@ -1,7 +1,7 @@
 import "./create-financials.css"
-
+import { useProtectedData } from "../context/protected-data-provider.jsx";
 import { useState } from "react";
-import { TextField, Button, MenuItem, Box } from "@mui/material";
+import { TextField, Button, MenuItem } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"; //you will have to install new dependancies
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -14,10 +14,11 @@ export default function AddFinancials() {
     const [finType, setFinType] = useState("");
     const [finAmount, setFinAmount] = useState("");
     const [finDate, setFinDate] = useState(null);
-    const [refresh, setRefresh] = useState(0) // refresh dashboard after submission, this will require Financial Dashboard to accept this as a prop
     const { businessId: businessIdParam } = useParams();
     const businessId = Number(businessIdParam);
     const nav = useNavigate();
+
+    const { businessFinancials, refreshProtectedData } = useProtectedData();
 
     const handleCancel = async () => {
         nav(-1);
@@ -68,13 +69,14 @@ export default function AddFinancials() {
         console.log("Entry submitted:", data);
         alert("Financial entry added successfully!");
 
+        await refreshProtectedData();
+
+
         // reset form after submit
         setFinType("");
         setFinAmount("");
         setFinDate(null);
 
-        // trigger dashboard refresh
-            setRefresh(prev => prev + 1)
         } catch (error) {
         console.error("Error submitting:", error);
         alert("Failed to add entry, please try again.");
@@ -90,7 +92,7 @@ export default function AddFinancials() {
                 attractive to potential investors.
                 </div >
                 <div className = "financial_dashboard">
-                <FinancialDashboard businessId={businessId} refresh={refresh}/>
+                <FinancialDashboard financials={businessFinancials} />
                 </div>
 
                 <div className = "field-label-container">

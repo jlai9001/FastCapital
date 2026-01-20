@@ -129,7 +129,9 @@ function Login() {
                         inputMode="email"
                       />
 
-                      <button className="login-button" onClick={LoginClick}>Login</button>
+                      <button className="login-button" onClick={LoginClick} disabled={loading}>
+                        {loading ? "Logging in..." : "Login"}
+                      </button>
                           <div className="bottom-field">
                             <div className="no-account-msg">
                                 Don't have an account?
