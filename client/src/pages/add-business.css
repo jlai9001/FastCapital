@@ -35,6 +35,7 @@ body {
   justify-content: center;
   align-items: center;
   flex: 0 0 auto;
+  margin-bottom: 10px;
 }
 
 .file-name {
@@ -90,6 +91,14 @@ input {
     font-size: 1rem;
 }
 
+
+.field-label-address1{
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
 
 input[type="file"]::file-selector-button {
   background-color:var(--main_button_color);
