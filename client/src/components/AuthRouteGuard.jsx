@@ -33,20 +33,23 @@ export default function AuthRouteGuard() {
       }
     };
 
-
-
     const protectedRoutes = [
       "/portfolio",
       "/business-profile",
       "/add-business",
       "/create-investment",
       "/create-financials",
-      "/investment-details",
     ];
 
-    const isProtected = protectedRoutes.some((path) =>
-      location.pathname.startsWith(path)
-    );
+    // ✅ Only protect the PURCHASE flow, not the details page
+    const isPurchaseRoute =
+      location.pathname.startsWith("/investment-details/") &&
+      location.pathname.endsWith("/purchase");
+
+    const isProtected =
+      isPurchaseRoute ||
+      protectedRoutes.some((path) => location.pathname.startsWith(path));
+
 
     // Case 1: JWT exists but expired
     if (token && isExpired(token)) {

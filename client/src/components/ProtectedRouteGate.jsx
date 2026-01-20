@@ -19,9 +19,7 @@ export default function ProtectedRouteGate({ children }) {
     "/add-business",
     "/create-investment",
     "/create-financials",
-    "/investment-details",
   ];
-
 
   const isProtected = protectedRoutes.some((path) =>
     location.pathname.startsWith(path)
