@@ -247,10 +247,10 @@
   .investment-details-info-container {
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
+    gap: 1rem;
 
     /* mobile spacing handled here */
-    margin-bottom: 2rem;
+    margin-bottom: 0px;
   }
 
   .investment-column {
