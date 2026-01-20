@@ -344,4 +344,8 @@
   .financial-dashboard-header select {
     width: 100%;
   }
+
+  .tab-button {
+    font-size:12px;
+  }
 }
