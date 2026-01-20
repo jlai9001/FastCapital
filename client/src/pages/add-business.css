@@ -24,7 +24,7 @@ input[name="address2"] {
   width: 100%;
   /* match input spacing above, but control spacing below */
   margin-top: 12px;
-  margin-bottom: 14px;
+  margin-bottom: 18px;
 }
 
 .file-input {
