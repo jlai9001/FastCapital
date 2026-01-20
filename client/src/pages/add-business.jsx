@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./add-business.css";
-import { base_url } from "../api";
+import { apiFetch } from "../api/client.js";
 import { useProtectedData } from "../context/protected-data-provider.jsx";
-
 
 function AddBusiness() {
   const navigate = useNavigate();
@@ -23,15 +22,26 @@ function AddBusiness() {
   const [logoFile, setLogoFile] = useState(null);
   const [message, setMessage] = useState("");
 
+  const normalizeUrl = (url) => {
+    if (!/^https?:\/\//i.test(url)) return "https://" + url;
+    return url;
+  };
+
+  const safeJson = async (res) => {
+    try {
+      return await res.json();
+    } catch {
+      return null;
+    }
+  };
+
   // ----------------------------------
   // Fetch existing business (edit mode)
   // ----------------------------------
   useEffect(() => {
     const fetchBusiness = async () => {
       try {
-        const res = await fetch(`${base_url}/api/business/me`, {
-          credentials: "include",
-        });
+        const res = await apiFetch(`/api/business/me`);
 
         if (res.ok) {
           const data = await res.json();
@@ -58,21 +68,14 @@ function AddBusiness() {
   // Handlers
   // ----------------------------------
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
 
   const handleFileChange = (e) => {
-    setLogoFile(e.target.files[0]);
-  };
-
-  const normalizeUrl = (url) => {
-    if (!/^https?:\/\//i.test(url)) {
-      return "https://" + url;
-    }
-    return url;
+    setLogoFile(e.target.files?.[0] || null);
   };
 
   // ----------------------------------
@@ -92,21 +95,20 @@ function AddBusiness() {
       };
 
       // 1) Update business details
-      const res = await fetch(`${base_url}/api/business/${businessId}`, {
+      const res = await apiFetch(`/api/business/${businessId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        credentials: "include",
         body: JSON.stringify(payload),
       });
 
-      const data = await res.json();
+      const data = await safeJson(res);
 
       // 2) Stop if failed
       if (!res.ok) {
-        setMessage(data.detail || "Failed to update business.");
+        setMessage(data?.detail || "Failed to update business.");
         return;
       }
 
@@ -115,33 +117,28 @@ function AddBusiness() {
         const imageForm = new FormData();
         imageForm.append("image", logoFile);
 
-        const imageRes = await fetch(`${base_url}/api/business/${businessId}/image`, {
+        const imageRes = await apiFetch(`/api/business/${businessId}/image`, {
           method: "PATCH",
-          credentials: "include",
           body: imageForm,
         });
 
-        // 4) Stop if image upload failed
         if (!imageRes.ok) {
           setMessage("Business updated, but image upload failed.");
           return;
         }
       }
 
-      // 5) Navigate ONCE, at the end, with a cache-buster
+      // 4) Navigate ONCE, at the end, with a cache-buster
       const buster = Date.now();
       await refreshProtectedData();
       navigate("/business-profile", { state: { imageBuster: buster } });
-
       return;
     }
-
 
     // ================================
     // CREATE NEW BUSINESS
     // ================================
     const form = new FormData();
-
     for (const key in formData) {
       let value = formData[key];
       if (key === "website_url") value = normalizeUrl(value);
@@ -152,16 +149,15 @@ function AddBusiness() {
       form.append("image", logoFile);
     }
 
-    const res = await fetch(`${base_url}/api/business`, {
+    const res = await apiFetch(`/api/business`, {
       method: "POST",
       body: form,
-      credentials: "include",
     });
 
-    const data = await res.json();
+    const data = await safeJson(res);
 
     if (!res.ok) {
-      setMessage(data.detail || "Failed to create business.");
+      setMessage(data?.detail || "Failed to create business.");
       return;
     }
 
@@ -187,7 +183,6 @@ function AddBusiness() {
             value={formData.name}
             onChange={handleChange}
             required
-
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck="false"
@@ -200,7 +195,6 @@ function AddBusiness() {
             value={formData.website_url}
             onChange={handleChange}
             required
-
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck="false"
@@ -225,24 +219,22 @@ function AddBusiness() {
             </span>
           </div>
 
-
           <div className="field-label">Address</div>
           <input
             name="address1"
             value={formData.address1}
             onChange={handleChange}
             required
-
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck="false"
             inputMode="email"
           />
+
           <input
             name="address2"
             value={formData.address2}
             onChange={handleChange}
-
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck="false"
@@ -255,7 +247,6 @@ function AddBusiness() {
             value={formData.city}
             onChange={handleChange}
             required
-
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck="false"
@@ -268,7 +259,6 @@ function AddBusiness() {
             value={formData.state}
             onChange={handleChange}
             required
-
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck="false"
@@ -281,28 +271,17 @@ function AddBusiness() {
             value={formData.postal_code}
             onChange={handleChange}
             required
-
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck="false"
             inputMode="email"
           />
 
-          <div className="button-group">
-            <button
-              type="button"
-              className="cancel-button"
-              onClick={() => navigate("/")}
-            >
-              Cancel
-            </button>
+          {message && <div className="Error_Message">{message}</div>}
 
-            <button type="submit" className="add-business-button">
-              {businessId ? "Update Business" : "Add Business"}
-            </button>
-          </div>
-
-          {message && <p>{message}</p>}
+          <button className="no-business-button" type="submit">
+            {businessId ? "Save Changes" : "Add Business"}
+          </button>
         </form>
       </div>
     </div>
