@@ -304,7 +304,7 @@
     align-items: center;
     gap: 1.25rem;
     margin-top: 2rem;
-    margin-bottom: 60px;
+    margin-bottom: 60px !important;
   }
 
   .investment-progress-wrapper {
