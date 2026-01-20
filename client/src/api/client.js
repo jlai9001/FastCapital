@@ -1,5 +1,8 @@
 const API_BASE =
-    import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+  import.meta.env.VITE_API_BASE_URL ||
+  import.meta.env.VITE_API_URL ||
+  "http://localhost:8000";
+
 
 export async function apiFetch(path, options = {}) {
   const timeoutMs = options.timeoutMs ?? 12000; // 12s default
