@@ -307,6 +307,10 @@
     margin-bottom: 60px !important;
   }
 
+  .progress-bar-row {
+    margin-bottom: 15px !important;
+  }
+
   .investment-progress-wrapper {
     max-width: 100%;
     width: 100%;
