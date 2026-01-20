@@ -1,3 +1,7 @@
+
+
+
+
 .no-business-container {
     /* transform: translate(-50%, -25%); */
     text-align: center;
@@ -362,6 +366,27 @@ margin-bottom: 20px;
   .no-investment-header {
     display: none;
   }
+
+
+  /* MOBILE ONLY: outline-green buttons (match the top-right dropdown look) */
+.business-profile-page-button,
+.add-financial-btn,
+.add-investment-btn {
+  background: #ffffff !important;
+  color: #059669 !important;
+
+  border: 2px solid #059669 !important;
+  border-radius: 12px;
+
+  font-weight: 700;
+  font-size: 14px;
+
+  padding: 10px 14px;
+  min-height: 44px;
+
+  text-decoration: none;
+  }
+
 
 
 
