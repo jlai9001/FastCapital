@@ -307,6 +307,7 @@
     margin-bottom: 60px !important;
     margin-left: 15px !important;
     margin-right: 15px !important;
+    width: 100% !important;
   }
 
   .progress-bar-row {
