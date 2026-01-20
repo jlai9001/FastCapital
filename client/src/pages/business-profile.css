@@ -359,6 +359,7 @@ margin-bottom: 20px;
     border: none;
     padding: 0;
     margin-top: 15px;
+    margin-right: 10px;
     color: var(--main_button_color);
     font-size: 14px;
     font-weight: 700;
