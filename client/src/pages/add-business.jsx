@@ -226,7 +226,7 @@ function AddBusiness() {
           </div>
 
 
-          <div className="field-label-address1">Address</div>
+          <div className="field-label">Address</div>
           <input
             name="address1"
             value={formData.address1}
