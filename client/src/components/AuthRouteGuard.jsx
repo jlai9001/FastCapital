@@ -16,12 +16,24 @@ export default function AuthRouteGuard() {
     // Decode + expiry check (frontend-only, UX guard)
     const isExpired = (jwt) => {
       try {
-        const payload = JSON.parse(atob(jwt.split(".")[1]));
+        const base64Url = jwt.split(".")[1];
+        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split("")
+            .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+            .join("")
+        );
+
+        const payload = JSON.parse(jsonPayload);
+        if (!payload?.exp) return true; // no exp = treat as invalid
         return payload.exp * 1000 < Date.now();
       } catch {
-        return true; // malformed token = expired
+        return true;
       }
     };
+
+
 
     const protectedRoutes = [
       "/portfolio",
@@ -29,6 +41,7 @@ export default function AuthRouteGuard() {
       "/add-business",
       "/create-investment",
       "/create-financials",
+      "/investment-details",
     ];
 
     const isProtected = protectedRoutes.some((path) =>

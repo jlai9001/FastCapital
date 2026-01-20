@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
-import { base_url } from "../api";
+import { apiFetch } from "../api/client.js";
 
 function getAccessToken() {
   return localStorage.getItem("access_token");
@@ -15,26 +14,18 @@ function useInvestment(investmentId) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
-
   useEffect(() => {
     if (!investmentId) return;
-
     async function fetchInvestment() {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(
-          `${base_url}/api/investment/${investmentId}`,
-          {
-            credentials: "include",
-            headers: authHeader(),
-          }
-        );
-
+        const response = await apiFetch(`/api/investment/${investmentId}`, {
+          headers: authHeader(),
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch investment data");
         }
-
         const json = await response.json();
         setData(json);
       } catch (e) {
@@ -43,10 +34,8 @@ function useInvestment(investmentId) {
         setLoading(false);
       }
     }
-
     fetchInvestment();
   }, [investmentId]);
-
   return { loading, error, data };
 }
 
@@ -54,28 +43,31 @@ function useInvestmentPurchases(investmentId, enabled = true) {
   const [purchases, setPurchases] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
   useEffect(() => {
     if (!enabled || !investmentId) return;
-
-    async function fetchPurchases() {
+      async function fetchPurchases() {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get(`${base_url}/api/purchases`, {
-          params: { investment_id: investmentId },
-          withCredentials: true,
+
+        const qs = new URLSearchParams({ investment_id: investmentId }).toString();
+        const response = await apiFetch(`/api/purchases?${qs}`, {
           headers: authHeader(),
         });
 
-        setPurchases(response.data);
+        if (!response.ok) {
+          throw new Error("Failed to fetch purchases");
+        }
+
+        const data = await response.json();
+        setPurchases(Array.isArray(data) ? data : []);
+
       } catch (err) {
         setError(err);
       } finally {
         setLoading(false);
       }
     }
-
     fetchPurchases();
   }, [investmentId, enabled]);
 
@@ -86,23 +78,18 @@ function useBusiness(businessId) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
-
   useEffect(() => {
     if (!businessId) return;
-
     async function fetchBusiness() {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${base_url}/api/business/${businessId}`, {
-          credentials: "include",
+        const response = await apiFetch(`/api/business/${businessId}`, {
           headers: authHeader(),
         });
-
         if (!response.ok) {
           throw new Error("Failed to fetch business data");
         }
-
         const json = await response.json();
         setData(json);
       } catch (e) {
@@ -111,10 +98,8 @@ function useBusiness(businessId) {
         setLoading(false);
       }
     }
-
     fetchBusiness();
   }, [businessId]);
-
   return { loading, error, data };
 }
 
@@ -122,15 +107,12 @@ function useBusinessForUser() {
   const [business, setBusiness] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   useEffect(() => {
     async function fetchBusiness() {
       try {
-        const res = await fetch(`${base_url}/api/my_business`, {
-          credentials: "include",
+        const res = await apiFetch(`/api/my_business`, {
           headers: authHeader(),
         });
-
         if (res.status === 401 || res.status === 404) {
           setBusiness(null);
         } else if (!res.ok) {
@@ -146,24 +128,19 @@ function useBusinessForUser() {
         setLoading(false);
       }
     }
-
     fetchBusiness();
   }, []);
-
   return { business, loading, error };
 }
 
 async function uploadBusinessImage(businessId, file) {
   const formData = new FormData();
   formData.append("image", file);
-
-  const res = await fetch(`${base_url}/api/business/${businessId}/upload_image`, {
+  const res = await apiFetch(`/api/business/${businessId}/upload_image`, {
     method: "POST",
     body: formData,
-    credentials: "include",
     headers: authHeader(),
   });
-
   if (!res.ok) {
     const errorText = await res.text();
     throw new Error(`Error uploading image: ${errorText}`);
@@ -178,30 +155,52 @@ function useFinancialsForBusiness(businessId) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (!businessId) {
+      setFinancials([]);
+      setLoading(false);
+      setError(null);
+      return;
+    }
+
+    let isCancelled = false;
+
     async function fetchData() {
+      setLoading(true);
+      setError(null);
+
       try {
-        const res = await axios.get(`${base_url}/api/financials/${businessId}`, {
-          withCredentials: true,
+        const res = await apiFetch(`/api/financials/${businessId}`, {
           headers: authHeader(),
         });
 
-        setFinancials(res.data);
-      } catch (err) {
-        if (err.response?.status === 404) {
-          setFinancials(null);
-        } else {
-          setError(err);
+        if (res.status === 404) {
+          if (!isCancelled) setFinancials(null);
+          return;
         }
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch financials");
+        }
+
+        const json = await res.json();
+        if (!isCancelled) setFinancials(json);
+      } catch (err) {
+        if (!isCancelled) setError(err);
       } finally {
-        setLoading(false);
+        if (!isCancelled) setLoading(false);
       }
     }
 
-    if (businessId) fetchData();
+    fetchData();
+
+    return () => {
+      isCancelled = true;
+    };
   }, [businessId]);
 
   return { financials, loading, error };
 }
+
 
 function useInvestmentsForBusiness(businessId) {
   const [investments, setInvestments] = useState(null);
@@ -209,51 +208,68 @@ function useInvestmentsForBusiness(businessId) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (!businessId) {
+      setInvestments(null);
+      setLoading(false);
+      setError(null);
+      return;
+    }
+
+    let isCancelled = false;
+
     async function fetchData() {
+      setLoading(true);
+      setError(null);
+
       try {
-        const res = await axios.get(`${base_url}/api/business_investments`, {
-          params: { business_id: businessId },
-          withCredentials: true,
+        const qs = new URLSearchParams({ business_id: businessId }).toString();
+        const res = await apiFetch(`/api/business_investments?${qs}`, {
           headers: authHeader(),
         });
 
-        setInvestments(res.data);
-      } catch (err) {
-        if (err.response?.status === 404) {
-          setInvestments(null);
-        } else {
-          setError(err);
+        if (res.status === 404) {
+          if (!isCancelled) setInvestments(null);
+          return;
         }
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch business investments");
+        }
+
+        const json = await res.json();
+        if (!isCancelled) setInvestments(json);
+      } catch (err) {
+        if (!isCancelled) setError(err);
       } finally {
-        setLoading(false);
+        if (!isCancelled) setLoading(false);
       }
     }
 
-    if (businessId) fetchData();
+    fetchData();
+
+    return () => {
+      isCancelled = true;
+    };
   }, [businessId]);
 
   return { investments, loading, error };
 }
 
+
 export async function getBusinesses() {
-  const response = await fetch(`${base_url}/api/business`, {
-    credentials: "include",
+  const response = await apiFetch(`/api/business`, {
     headers: authHeader(),
   });
-
   if (!response.ok) {
     throw new Error("Failed to fetch businesses");
   }
-
   return await response.json();
 }
 
 export async function getInvestments() {
-  const response = await fetch(`${base_url}/api/investment`, {
-    credentials: "include",
+  const response = await apiFetch(`/api/investment`, {
     headers: authHeader(),
   });
-
   if (!response.ok) throw new Error("Failed to fetch investments");
   return await response.json();
 }

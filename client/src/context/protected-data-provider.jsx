@@ -7,7 +7,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { base_url } from "../api";
+import { apiFetch } from "../api/client.js";
 import { useUser } from "./user-provider.jsx";
 
 function getAccessToken() {
@@ -19,9 +19,8 @@ function authHeader() {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
-async function fetchJson(url, { allow404 = false } = {}) {
-  const res = await fetch(url, {
-    credentials: "include",
+async function fetchJson(path, { allow404 = false } = {}) {
+  const res = await apiFetch(path, {
     headers: authHeader(),
   });
 
@@ -30,12 +29,13 @@ async function fetchJson(url, { allow404 = false } = {}) {
   if (!res.ok) {
     const text = await res.text().catch(() => "");
     throw new Error(
-      `Fetch failed ${res.status} for ${url}${text ? `: ${text}` : ""}`
+      `Fetch failed ${res.status} for ${path}${text ? `: ${text}` : ""}`
     );
   }
 
   return await res.json();
 }
+
 
 const ProtectedDataContext = createContext({
   status: "idle", // "idle" | "loading" | "ready" | "error"
@@ -95,11 +95,11 @@ export default function ProtectedDataProvider({ children }) {
     try {
       // 1) Load business + purchases in parallel
       const [business, pending, completed] = await Promise.all([
-        fetchJson(`${base_url}/api/my_business`, { allow404: true }),
-        fetchJson(`${base_url}/api/purchases?status=pending`, { allow404: true }).then(
+        fetchJson(`/api/my_business`, { allow404: true }),
+        fetchJson(`/api/purchases?status=pending`, { allow404: true }).then(
           (d) => (Array.isArray(d) ? d : [])
         ),
-        fetchJson(`${base_url}/api/purchases?status=completed`, { allow404: true }).then(
+        fetchJson(`/api/purchases?status=completed`, { allow404: true }).then(
           (d) => (Array.isArray(d) ? d : [])
         ),
       ]);
@@ -117,7 +117,7 @@ export default function ProtectedDataProvider({ children }) {
         ? (
             await Promise.all(
               uniqueInvestmentIds.map((id) =>
-                fetchJson(`${base_url}/api/investment/${id}`, { allow404: true })
+                fetchJson(`/api/investment/${id}`, { allow404: true })
               )
             )
           ).filter(Boolean)
@@ -128,12 +128,10 @@ export default function ProtectedDataProvider({ children }) {
       // 3) If user has a business, load its financials + investments in parallel
       if (business?.id) {
         const [fin, bizInv] = await Promise.all([
-          fetchJson(`${base_url}/api/financials/${business.id}`, { allow404: true }),
-          fetchJson(
-            `${base_url}/api/business_investments?business_id=${business.id}`,
-            { allow404: true }
-          ),
+          fetchJson(`/api/financials/${business.id}`, { allow404: true }),
+          fetchJson(`/api/business_investments?business_id=${business.id}`, { allow404: true }),
         ]);
+
 
         setBusinessFinancials(fin);
         setBusinessInvestments(bizInv);
@@ -154,6 +152,16 @@ export default function ProtectedDataProvider({ children }) {
     if (user) refreshProtectedData();
     else clearProtectedData();
   }, [user, refreshProtectedData, clearProtectedData]);
+
+  // Clear protected cache immediately when auth is invalidated globally
+  useEffect(() => {
+    const onLogout = () => {
+      clearProtectedData();
+    };
+
+    window.addEventListener("fc:logout", onLogout);
+    return () => window.removeEventListener("fc:logout", onLogout);
+  }, [clearProtectedData]);
 
   const value = useMemo(
     () => ({

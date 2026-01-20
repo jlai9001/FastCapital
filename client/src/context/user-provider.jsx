@@ -5,7 +5,8 @@ import {
     useCallback,
     useEffect,
 } from "react";
-import { base_url } from "../api";
+import { apiFetch } from "../api/client.js";
+
 
 
 const UserContext = createContext({ user: null, refreshUser: async () => {} });
@@ -27,11 +28,8 @@ export default function UserProvider({children}){
 
             const token = getAccessToken();
 
-        const res = await fetch(`${base_url}/api/me`, {
-            credentials: "include",
-            headers: token
-            ? { Authorization: `Bearer ${token}` }
-            : undefined,
+        const res = await apiFetch(`/api/me`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         });
 
 
@@ -39,7 +37,7 @@ export default function UserProvider({children}){
             const userData = await res.json();
             if (DEBUG) console.log("refreshUser: success, user data:", userData);
             setUser(userData);
-        } else if (res.status === 401) {
+        } else if (res.status === 401 || res.status === 403) {
             if (DEBUG) console.warn("refreshUser: 401 Unauthorized, user not logged in");
             localStorage.removeItem("access_token");
             setUser(null);
@@ -60,12 +58,22 @@ export default function UserProvider({children}){
         refreshUser();
     }, [refreshUser]);
 
+    // Clear user immediately when auth is invalidated globally
+    useEffect(() => {
+    const onLogout = () => setUser(null);
+
+    window.addEventListener("fc:logout", onLogout);
+    return () => window.removeEventListener("fc:logout", onLogout);
+    }, []);
+
     return (
         <UserContext.Provider value={{ user, refreshUser }}>
             {children}
         </UserContext.Provider>
     );
 }
+
+
 
 export function useUser() {
     return useContext(UserContext);

@@ -19,7 +19,9 @@ export default function ProtectedRouteGate({ children }) {
     "/add-business",
     "/create-investment",
     "/create-financials",
+    "/investment-details",
   ];
+
 
   const isProtected = protectedRoutes.some((path) =>
     location.pathname.startsWith(path)
@@ -35,7 +37,7 @@ export default function ProtectedRouteGate({ children }) {
   if (!token) return children;
 
   // Gate: token exists + protected route + protected data not ready yet
-  const isLoading = status === "idle" || status === "loading";
+  const isLoading = status === "loading";
   if (isLoading) {
     return (
       <div style={styles.wrapper}>
