@@ -14,7 +14,7 @@ body {
 
 /* Address line 2 spacing should match label → input gap */
 input[name="address2"] {
-  margin-top: 4px;
+  margin-top: -5px;
 }
 
 .file-row {
