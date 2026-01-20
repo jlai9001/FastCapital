@@ -309,6 +309,8 @@
 
   .progress-bar-row {
     margin-bottom: 15px !important;
+    margin-left: 15px !important;
+    margin-right: 15px !important;
   }
 
   .investment-progress-wrapper {
