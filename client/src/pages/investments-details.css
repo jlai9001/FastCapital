@@ -236,9 +236,12 @@
    ========================================================= */
 
 @media (max-width: 768px) {
-    .financial-dashboard-container, .business-investment-container {
+
+
+  .financial-dashboard-container, .business-investment-container {
       margin-top: 40px;
   }
+
   .investment-details-page-container {
     margin: 80px 1rem 1.5rem;
     padding: 1rem;
@@ -262,6 +265,7 @@
   .investment-column-4{
     padding-left: 2rem;
     padding-right: 2rem;
+    margin-top: 20px;
   }
 
   .investment-detail-business-name {
