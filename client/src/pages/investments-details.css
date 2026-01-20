@@ -236,7 +236,9 @@
    ========================================================= */
 
 @media (max-width: 768px) {
-
+    .financial-dashboard-container, .business-investment-container {
+      margin-top: 40px;
+  }
   .investment-details-page-container {
     margin: 80px 1rem 1.5rem;
     padding: 1rem;
@@ -288,7 +290,8 @@
   }
 
   .purchase-button-container {
-    margin-top: 2rem;
+    margin-top: 35px;
+    margin: auto;
   }
 
   /* Progress + Purchase stack */
