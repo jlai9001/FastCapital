@@ -326,11 +326,6 @@
     gap: 1rem;
   }
 
-  .financial-dashboard {
-    margin-top: 60px;
-  }
-
-
   .financial-dashboard-container {
     overflow-x: auto;
   }
