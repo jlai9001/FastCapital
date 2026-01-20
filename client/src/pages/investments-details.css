@@ -296,6 +296,7 @@
   .purchase-button-container {
     margin-top: 35px;
     margin: auto;
+    width: 100%;
   }
 
   /* Progress + Purchase stack */
@@ -303,10 +304,8 @@
     flex-direction: column;
     align-items: center;
     gap: 1.25rem;
-    margin-top: 2rem;
+    margin: 5px ! important;
     margin-bottom: 60px !important;
-    margin-left: 15px !important;
-    margin-right: 15px !important;
     width: 100% !important;
   }
 
