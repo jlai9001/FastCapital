@@ -30,6 +30,7 @@ function App() {
 <>
   <ScrollToTop/>
   <AuthRouteGuard />
+  <ProtectedRouteGate>
 
   <div className="app-shell">
     <Nav />
@@ -56,6 +57,18 @@ function App() {
     </main>
     <Footer />
   </div>
+
+
+
+
+
+
+
+
+
+
+  </ProtectedRouteGate>
+
 </>
 
   )
