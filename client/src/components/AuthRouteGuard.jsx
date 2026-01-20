@@ -13,6 +13,14 @@ export default function AuthRouteGuard() {
   useEffect(() => {
     const token = localStorage.getItem("access_token");
 
+    // Helper: keep UI state in sync when we force-log out client-side
+    const broadcastLogout = () => {
+      // UserProvider listens for this and clears user immediately
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("fc:logout"));
+      }
+    };
+
     // Decode + expiry check (frontend-only, UX guard)
     const isExpired = (jwt) => {
       try {
@@ -50,16 +58,17 @@ export default function AuthRouteGuard() {
       isPurchaseRoute ||
       protectedRoutes.some((path) => location.pathname.startsWith(path));
 
-
-    // Case 1: JWT exists but expired
+    // Case 1: JWT exists but expired/invalid
     if (token && isExpired(token)) {
       localStorage.removeItem("access_token");
+      broadcastLogout(); // ✅ ensures Nav flips to Login immediately
       navigate("/login", { replace: true });
       return;
     }
 
     // Case 2: No JWT + protected route
     if (!token && isProtected) {
+      broadcastLogout(); // ✅ clears any stale user state
       navigate("/login", { replace: true });
     }
   }, [location.pathname, navigate]);
