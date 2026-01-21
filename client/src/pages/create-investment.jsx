@@ -217,7 +217,7 @@ export default function NewInvestment() {
 
         <br />
 
-        <div className="button-container">
+        <div className="button-container-createinvestment">
           <button className="cancel-button" onClick={handleCancel}>
             Cancel
           </button>
