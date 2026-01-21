@@ -1,6 +1,6 @@
 import "./create-financials.css"
 import { useProtectedData } from "../context/protected-data-provider.jsx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TextField, Button, MenuItem } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"; //you will have to install new dependancies
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -14,6 +14,23 @@ export default function AddFinancials() {
     const [finType, setFinType] = useState("");
     const [finAmount, setFinAmount] = useState("");
     const [finDate, setFinDate] = useState(null);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+    }, []);
+
+    const finTypeLabels = {
+    income: "Income",
+    expense: "Expense",
+    asset: "Asset",
+    liability: "Liability",
+    };
+
+
+
     const { businessId: businessIdParam } = useParams();
     const businessId = Number(businessIdParam);
     const nav = useNavigate();
@@ -110,6 +127,19 @@ export default function AddFinancials() {
                 value={finType}
                 onChange={(e) => setFinType(e.target.value)}
                 sx={{ minWidth: 120 }}
+                slotProps={
+                isMobile
+                    ? {
+                        select: {
+                        displayEmpty: true,
+                        renderValue: (selected) => {
+                            if (!selected) return "Financial Data Type";
+                            return finTypeLabels[selected] ?? selected;
+                        },
+                        },
+                    }
+                    : undefined
+                }
                 >
                 <MenuItem value="income">Income</MenuItem>
                 <MenuItem value="expense">Expense</MenuItem>
@@ -124,24 +154,25 @@ export default function AddFinancials() {
                 min="1"
                 value={finAmount}
                 onChange={(e) => setFinAmount(e.target.value)}
+                placeholder={isMobile ? "Amount" : undefined}
                 />
             </div>
 
             <div className="fin-field fin-date">
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
-                    views={["year", "month"]}
-                    minDate={new Date("2000-01-01")}
-                    maxDate={new Date("2100-12-31")}
-                    value={finDate}
-                    onChange={(newValue) => setFinDate(newValue)}
-                    renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        className="date-styling"
-                        helperText={null}
-                    />
-                    )}
+                views={["year", "month"]}
+                minDate={new Date("2000-01-01")}
+                maxDate={new Date("2100-12-31")}
+                value={finDate}
+                onChange={(newValue) => setFinDate(newValue)}
+                slotProps={{
+                    textField: {
+                    className: "date-styling",
+                    helperText: null,
+                    placeholder: isMobile ? "Date" : undefined,
+                    },
+                }}
                 />
                 </LocalizationProvider>
             </div>
