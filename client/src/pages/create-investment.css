@@ -97,6 +97,9 @@ body{
    MOBILE CREATE-INVESTMENT LAYOUT (DOES NOT AFFECT DESKTOP)
    ========================================================= */
 @media (max-width: 768px) {
+  .business-profile-name{
+    font-size: 20px
+  }
 
   .create-investment-container {
     padding: 1.25rem;
@@ -169,7 +172,7 @@ body{
   }
 
   .no-investment-text {
-    font-size: 14px;
+    font-size: 14px !important;
   }
 
 }
