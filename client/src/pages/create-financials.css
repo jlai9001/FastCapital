@@ -255,4 +255,18 @@
     width: 100%;
     text-align: center;
   }
+
+    /* Chart area: center it, DISABLE horizontal movement */
+  .chart-render {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    overflow-x: hidden;              /* ✅ no horizontal scroll */
+    overscroll-behavior-x: none;     /* ✅ prevent sideways bounce */
+    touch-action: pan-y;             /* ✅ allow vertical scroll only */
+
+    padding-top: 6px;
+  }
+
 }
