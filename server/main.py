@@ -493,3 +493,18 @@ def investment_detail(
 @app.get("/api/financials/{business_id}", response_model=List[FinancialsOut])
 def get_financials(business_id: int):
     return db.get_financials_by_business_id(business_id)
+
+@app.post("/api/financials", response_model=FinancialsOut, status_code=201)
+def create_financials(
+    payload: FinancialsCreate,
+    current_user: UserPublicDetails = Depends(get_auth_user),
+):
+    # Ensure the business exists and belongs to the logged-in user
+    business = db.get_business(payload.business_id)
+    if not business:
+        raise HTTPException(status_code=404, detail="Business not found")
+
+    if business.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+
+    return db.add_finance(payload)
