@@ -5,6 +5,16 @@ import coin from "../assets/coin.svg";
 import { useUser } from "../context/user-provider.jsx";
 import { base_url } from "../api";
 
+function saveAccessToken(token) {
+  if (!token) return;
+  localStorage.setItem("access_token", token);
+}
+
+// Backend uses Pydantic EmailStr => requires a dot in the domain (name@domain.com)
+function isValidEmailForBackend(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || "").trim());
+}
+
 function SignupForm() {
   const navigate = useNavigate();
   const { refreshUser } = useUser();
@@ -16,9 +26,7 @@ function SignupForm() {
     confirmPassword: "",
   });
 
-  const [message, setMessage] = useState("");
-
-  // Field-level errors (for reminders)
+  // Field reminders/errors
   const [errors, setErrors] = useState({
     name: "",
     email: "",
@@ -27,44 +35,36 @@ function SignupForm() {
     server: "",
   });
 
-  // Keep your existing "password mismatch" popup behavior
+  // Keep your existing popup style for password mismatch
   const [showPasswordError, setShowPasswordError] = useState(false);
 
-  // Backend requires a real-looking email (EmailStr) => must include a dot in the domain
-  const isValidEmailForBackend = (email) =>
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || "").trim());
+  const validateField = (field, value, all = formData) => {
+    const v = String(value ?? "");
 
-  const validateField = (name, value, allValues = formData) => {
-    const v = String(value || "");
-
-    if (name === "name") {
+    if (field === "name") {
       if (!v.trim()) return "Full name is required.";
       return "";
     }
 
-    if (name === "email") {
+    if (field === "email") {
       if (!v.trim()) return "Email is required.";
       if (!isValidEmailForBackend(v)) return "Use a valid email like name@domain.com";
       return "";
     }
 
-    if (name === "password") {
+    if (field === "password") {
       if (!v) return "Password is required.";
       if (v.length < 6) return "Password should be at least 6 characters.";
       return "";
     }
 
-    if (name === "confirmPassword") {
+    if (field === "confirmPassword") {
       if (!v) return "Please confirm your password.";
-      if (v !== (allValues.password || "")) return "Passwords do not match.";
+      if (v !== (all.password || "")) return "Passwords do not match.";
       return "";
     }
 
     return "";
-  };
-
-  const setOneError = (fieldName, msg) => {
-    setErrors((prev) => ({ ...prev, [fieldName]: msg, server: "" }));
   };
 
   const handleChange = (e) => {
@@ -73,35 +73,32 @@ function SignupForm() {
     setFormData((prev) => {
       const next = { ...prev, [name]: value };
 
-      // Live-validate the field being edited
-      const fieldMsg = validateField(name, value, next);
-      setOneError(name, fieldMsg);
+      // live validate current field
+      const msg = validateField(name, value, next);
+      setErrors((p) => ({ ...p, [name]: msg, server: "" }));
 
-      // If confirmPassword depends on password, re-check it too
+      // if password changes, re-check confirmPassword too
       if (name === "password" && next.confirmPassword) {
         const confirmMsg = validateField("confirmPassword", next.confirmPassword, next);
-        setOneError("confirmPassword", confirmMsg);
+        setErrors((p) => ({ ...p, confirmPassword: confirmMsg, server: "" }));
       }
 
       return next;
     });
 
-    // Hide your old mismatch popup when user starts typing again
     if (showPasswordError) setShowPasswordError(false);
-    if (message) setMessage("");
   };
 
   const handleBlur = (e) => {
     const { name, value } = e.target;
     const msg = validateField(name, value, formData);
-    setOneError(name, msg);
+    setErrors((p) => ({ ...p, [name]: msg }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage("");
 
-    // Validate all fields before hitting the API
+    // Validate all fields before API call
     const nextErrors = {
       name: validateField("name", formData.name, formData),
       email: validateField("email", formData.email, formData),
@@ -112,9 +109,8 @@ function SignupForm() {
 
     setErrors(nextErrors);
 
-    const hasAnyError = Object.values(nextErrors).some((v) => Boolean(v));
+    const hasAnyError = Object.values(nextErrors).some(Boolean);
     if (hasAnyError) {
-      // Keep your existing mismatch popup too (if that’s the error)
       if (nextErrors.confirmPassword === "Passwords do not match.") {
         setShowPasswordError(true);
       }
@@ -139,25 +135,25 @@ function SignupForm() {
       }
 
       if (res.ok && data?.success) {
+        // ✅ AUTO-LOGIN: store JWT fallback exactly like login.jsx does
+        saveAccessToken(data.access_token);
+
+        // ✅ pull /api/me and populate user context
         await refreshUser();
+
+        // ✅ redirect like a normal login
         navigate("/portfolio");
         return;
       }
 
-      // Show helpful backend-based reminders
-      if (res.status === 422) {
-        setErrors((prev) => ({
-          ...prev,
-          server: "Signup failed: check your email format (example: name@domain.com).",
-        }));
+      // Helpful errors
+      if (res.status === 409) {
+        setErrors((p) => ({ ...p, server: "That email is already registered. Try logging in instead." }));
         return;
       }
 
-      if (res.status === 409) {
-        setErrors((prev) => ({
-          ...prev,
-          server: "That email is already registered. Try logging in instead.",
-        }));
+      if (res.status === 422) {
+        setErrors((p) => ({ ...p, server: "Please enter a valid email like name@domain.com." }));
         return;
       }
 
@@ -166,15 +162,9 @@ function SignupForm() {
         (Array.isArray(data?.detail) && data.detail[0]?.msg) ||
         data?.message;
 
-      setErrors((prev) => ({
-        ...prev,
-        server: backendDetail || "Signup failed. Please try again.",
-      }));
+      setErrors((p) => ({ ...p, server: backendDetail || "Signup failed. Please try again." }));
     } catch {
-      setErrors((prev) => ({
-        ...prev,
-        server: "Network error. Please try again.",
-      }));
+      setErrors((p) => ({ ...p, server: "Network error. Please try again." }));
     }
   };
 
@@ -251,7 +241,6 @@ function SignupForm() {
             </div>
           )}
 
-          {/* keep your existing mismatch popup (shows when submitting) */}
           {showPasswordError && (
             <div className="custom-error-popup">
               <div className="error-arrow"></div>
@@ -282,11 +271,7 @@ function SignupForm() {
           )}
 
           <div className="button-group">
-            <button
-              className="cancel-button"
-              type="button"
-              onClick={() => navigate("/")}
-            >
+            <button className="cancel-button" type="button" onClick={() => navigate("/")}>
               Cancel
             </button>
             <button className="signup-button" type="submit">
@@ -294,13 +279,9 @@ function SignupForm() {
             </button>
           </div>
 
-          {/* Server-level message */}
           {errors.server && (
             <p style={{ marginTop: 12, textAlign: "center" }}>{errors.server}</p>
           )}
-
-          {/* (optional) keep this if you still want it */}
-          {message && <p style={{ marginTop: 12, textAlign: "center" }}>{message}</p>}
 
           <p className="no-account">
             Already have an account?{" "}
