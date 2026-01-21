@@ -4,13 +4,17 @@ import { useNavigate } from "react-router-dom";
 import { apiFetch } from "../api/client.js";
 import { useProtectedData } from "../context/protected-data-provider.jsx";
 
+// ✅ Same MUI DatePicker stack as create-financials
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+
 export default function NewInvestment() {
   const [sharesAvailable, setSharesAvailable] = useState("");
   const [pricePerShare, setPricePerShare] = useState("");
   const [minInvestment, setMinInvestment] = useState("");
-  const [expirationDate, setExpirationDate] = useState("");
+  const [expirationDate, setExpirationDate] = useState(null); // ✅ Date | null
   const [submitting, setSubmitting] = useState(false);
-
 
   const { myBusiness, refreshProtectedData, status } = useProtectedData();
   const business = myBusiness;
@@ -18,9 +22,28 @@ export default function NewInvestment() {
   const nav = useNavigate();
   const businessId = business?.id;
 
+  // ✅ Avoid timezone off-by-one: send UTC midnight
+  const toUtcMidnightIso = (dateObj) => {
+    const y = dateObj.getFullYear();
+    const m = dateObj.getMonth();
+    const d = dateObj.getDate();
+    return new Date(Date.UTC(y, m, d, 0, 0, 0, 0)).toISOString();
+  };
+
+  const toUtcMidnightDate = (dateObj) => {
+    const y = dateObj.getFullYear();
+    const m = dateObj.getMonth();
+    const d = dateObj.getDate();
+    return new Date(Date.UTC(y, m, d, 0, 0, 0, 0));
+  };
+
+  const utcTodayMidnight = () => {
+    const now = new Date();
+    return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0, 0));
+  };
+
   const handlePost = async () => {
     try {
-      // business ID guard
       if (!businessId) {
         if (status === "loading" || status === "idle") {
           alert("Business is still loading. Please wait and try again.");
@@ -32,7 +55,6 @@ export default function NewInvestment() {
 
       setSubmitting(true);
 
-      // Convert inputs to numbers once (state stays string so inputs don't get stuck on "0")
       const shares = Number(sharesAvailable);
       const minInv = Number(minInvestment);
       const price = Number(pricePerShare);
@@ -66,11 +88,10 @@ export default function NewInvestment() {
           throw new Error("Missing expiration date.");
         }
 
-        const today = new Date();
-        const expiry = new Date(`${expirationDate}T00:00:00.000Z`);
-        const diffInDays =
-          (expiry.getTime() - today.getTime()) / (1000 * 3600 * 24);
+        const today = utcTodayMidnight();
+        const expiry = toUtcMidnightDate(expirationDate);
 
+        const diffInDays = (expiry.getTime() - today.getTime()) / (1000 * 3600 * 24);
         if (diffInDays < 30) {
           alert("Expiration date must be at least 30 days from today.");
           throw new Error("Invalid expiration date.");
@@ -87,7 +108,7 @@ export default function NewInvestment() {
         price_per_share: price,
         min_investment: minInv,
         start_date: new Date().toISOString(),
-        expiration_date: `${expirationDate}T00:00:00.000Z`,
+        expiration_date: toUtcMidnightIso(expirationDate),
       });
 
       const response = await apiFetch(`/api/investment`, {
@@ -96,12 +117,6 @@ export default function NewInvestment() {
         body,
       });
 
-      // ✅ If offer already exists (backend returns 409)
-      if (response.status === 409) {
-        console.warn("Investment Offer Already Exists for this Business");
-        alert("Investment Offer Already Exists for this Business");
-        return;
-      }
 
       if (!response.ok) {
         const errorDetails = await response.json().catch(() => null);
@@ -113,11 +128,7 @@ export default function NewInvestment() {
       console.log("Offer submitted:", data);
 
       alert("Investment offer submitted successfully!");
-
-      // ✅ Pull fresh investments + business data into the provider cache
       await refreshProtectedData();
-
-      // ✅ Go directly to Business Profile so it's updated immediately
       nav("/business-profile", { replace: true });
     } catch (error) {
       console.error("Error submitting:", error);
@@ -182,16 +193,30 @@ export default function NewInvestment() {
 
         <div>
           <div className="field-label">What is the expiration date?</div>
-          <input
-            className="create-investment-input"
-            type="date"
-            value={expirationDate}
-            onChange={(e) => setExpirationDate(e.target.value)}
-          />
+
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
+              value={expirationDate}
+              onChange={(newValue) => setExpirationDate(newValue)}
+              format="MM/dd/yyyy"
+              localeText={{
+                fieldMonthPlaceholder: () => "mm",
+                fieldDayPlaceholder: () => "dd",
+                fieldYearPlaceholder: () => "yyyy",
+              }}
+              slotProps={{
+                textField: {
+                  className: "create-investment-date",
+                  helperText: null,
+                  InputLabelProps: { shrink: true },
+                },
+              }}
+            />
+          </LocalizationProvider>
         </div>
 
-
         <br />
+
         <div className="button-container">
           <button className="cancel-button" onClick={handleCancel}>
             Cancel
