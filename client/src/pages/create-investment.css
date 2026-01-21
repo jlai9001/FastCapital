@@ -7,6 +7,12 @@ body {
   background-color: var(--page_background_color);
 }
 
+/* Desktop: don't show the custom Date overlay (only needed on mobile) */
+.date-placeholder {
+  display: none;
+}
+
+
 .create-investment-form {
   display: block;
   margin: 0 auto;
@@ -92,6 +98,10 @@ body {
    MOBILE CREATE-INVESTMENT LAYOUT (DOES NOT AFFECT DESKTOP)
    ========================================================= */
 @media (max-width: 768px) {
+    .date-input-wrap .date-placeholder {
+    display: block; /* ensure it appears on mobile */
+  }
+
   .create-investment-container {
     padding: 1.25rem;
     margin-top: 0;
