@@ -2,6 +2,7 @@ import './payment_modal.css'
 import React, { useState } from 'react';
 import { apiFetch } from "../api/client.js";
 import { useProtectedData } from "../context/protected-data-provider.jsx";
+import { useNavigate } from "react-router-dom";
 
 function FieldContainer({ isVisible }) {
     if (!isVisible) return null;
@@ -39,6 +40,7 @@ function PaymentModal({ onClose, investment, shareAmount }) {
     const [showExitButton, setShowExitButton] = useState(false);
     const [showCompletionMessage, setShowCompletionMessage] = useState(false);
     const { refreshProtectedData } = useProtectedData();
+    const navigate = useNavigate();
 
 
     const handle_cancel = () => {
@@ -51,6 +53,7 @@ function PaymentModal({ onClose, investment, shareAmount }) {
         console.log("Exit button clicked");
         setIsVisible(false);
         onClose();
+        navigate("/portfolio", { replace: true });
     };
 
 const handle_buy = async () => {
