@@ -138,10 +138,13 @@ export default function NewInvestment() {
         <div>
           <div className="field-label">How many shares are you offering in total?</div>
           <input
+            className="create-investment-input"
             type="number"
             value={sharesAvailable}
             min="1"
             step="100"
+            inputMode="numeric"
+            placeholder="0"
             onChange={(e) => setSharesAvailable(e.target.value)}
           />
         </div>
@@ -150,9 +153,12 @@ export default function NewInvestment() {
         <div>
           <div className="field-label">What is the minimum number of shares per purchase?</div>
           <input
+            className="create-investment-input"
             type="number"
             value={minInvestment}
             min="1"
+            inputMode="numeric"
+            placeholder="0"
             onChange={(e) => setMinInvestment(e.target.value)}
           />
         </div>
@@ -161,10 +167,13 @@ export default function NewInvestment() {
         <div className="field-label">What is the price per share in USD?</div>
         <div>
           <input
+            className="create-investment-input"
             type="number"
             value={pricePerShare}
             min="1"
             step="1"
+            inputMode="numeric"
+            placeholder="0"
             onChange={(e) => setPricePerShare(e.target.value)}
           />
         </div>
@@ -172,12 +181,19 @@ export default function NewInvestment() {
 
         <div>
           <div className="field-label">What is the expiration date?</div>
-          <input
-            type="date"
-            value={expirationDate}
-            onChange={(e) => setExpirationDate(e.target.value)}
-          />
+
+          {/* Date placeholder overlay that works on iOS */}
+          <div className="date-input-wrap">
+            <input
+              className="create-investment-input date-input"
+              type="date"
+              value={expirationDate}
+              onChange={(e) => setExpirationDate(e.target.value)}
+            />
+            {!expirationDate && <span className="date-placeholder">Date</span>}
+          </div>
         </div>
+
         <br />
 
         <div className="button-container">

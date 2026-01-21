@@ -3,105 +3,95 @@
   box-sizing: border-box;
 }
 
-
-body{
-    background-color: var(--page_background_color);
+body {
+  background-color: var(--page_background_color);
 }
 
-.create-investment-form{
-    display: block;
-    margin: 0 auto;
-    margin-top: 50px;
-    background-color: var(--element_background_color);
-    border-radius: var(--element_border_radius);
-    box-shadow: var(--element_shadow);
-    padding: 35px;
-    justify-content: center;
-    margin-bottom: 250px;
-    width: 600px;
+.create-investment-form {
+  display: block;
+  margin: 0 auto;
+  margin-top: 50px;
+  background-color: var(--element_background_color);
+  border-radius: var(--element_border_radius);
+  box-shadow: var(--element_shadow);
+  padding: 35px;
+  justify-content: center;
+  margin-bottom: 250px;
+  width: 600px;
 }
 
-.title{
-    text-align: center;
-    color: rgb(0, 0, 0);
-    font-weight: Bold;
-    font-size: var(--large_fontsize);
-    font-family:var(--_font);
-    margin-bottom:30px;
+.title {
+  text-align: center;
+  color: rgb(0, 0, 0);
+  font-weight: Bold;
+  font-size: var(--large_fontsize);
+  font-family: var(--_font);
+  margin-bottom: 30px;
 }
 
-
-.field-label{
-    margin-top: 10px;
-    text-align: left;
-    color:var(--secondary_text_color);
-    font-size: var(--small_fontsize);
-    font-weight: bold;
-    margin-bottom: -5px;
+.field-label {
+  margin-top: 10px;
+  text-align: left;
+  color: var(--secondary_text_color);
+  font-size: var(--small_fontsize);
+  font-weight: bold;
+  margin-bottom: -5px;
 }
 
-.button-container{
-    display: flex;
-    gap: 10px;
-    justify-content: space-between;
+.button-container {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
 }
 
-.cancel-button{
-    display: block;
-    width: 50%;
-    padding: 15px;
-    background-color: transparent;
-    color:var(--main_button_color);
-    border: none;
-    border-radius: var(--button_border_radius);
-    font-size: var(--small_fontsize);
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    font-family: var(--button_font);
-    align-items: center;
-    padding: 12px;
-    border: 2px solid var(--main_button_color);
+.cancel-button {
+  display: block;
+  width: 50%;
+  background-color: transparent;
+  color: var(--main_button_color);
+  border: none;
+  border-radius: var(--button_border_radius);
+  font-size: var(--small_fontsize);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-family: var(--button_font);
+  align-items: center;
+  padding: 12px;
+  border: 2px solid var(--main_button_color);
 }
 
-.cancel-button:hover{
-    background-color: var(--main_button_hover);
-
+.cancel-button:hover {
+  background-color: var(--main_button_hover);
 }
 
-.post-button{
-    display: block;
-    width: 50%;
-    padding: 15px;
-    background-color:var(--main_button_color);
-    border-radius: var(--button_border_radius);
-    font-size: var(--small_fontsize);
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    font-family: var(--button_font);
-    align-items: center;
-    padding: 12px;
-    border: 2px solid var(--main_button_color);
-    color:white;
+.post-button {
+  display: block;
+  width: 50%;
+  background-color: var(--main_button_color);
+  border-radius: var(--button_border_radius);
+  font-size: var(--small_fontsize);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-family: var(--button_font);
+  align-items: center;
+  padding: 12px;
+  border: 2px solid var(--main_button_color);
+  color: white;
 }
 
-.post-button:hover{
-    background-color:var(--main_button_hover);
-    border: 2px solid var(--main_button_hover);
+.post-button:hover {
+  background-color: var(--main_button_hover);
+  border: 2px solid var(--main_button_hover);
 }
 
 /* =========================================================
    MOBILE CREATE-INVESTMENT LAYOUT (DOES NOT AFFECT DESKTOP)
    ========================================================= */
 @media (max-width: 768px) {
-
-  .create-investment-form>div {
-        margin-bottom: 5px;
-  }
-
   .create-investment-container {
     padding: 1.25rem;
     margin-top: 0;
@@ -121,26 +111,12 @@ body{
     margin-bottom: 16px;
   }
 
-  /* Make sure inputs fit the card on mobile */
-  .create-investment-form input {
-    width: 100%;
+  /* Remove the “extra tall” feel from <br/> spacing */
+  .create-investment-form br {
+    display: none;
   }
 
-  /* Stack buttons vertically on mobile */
-  .create-investment-form .button-container {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 24px;
-  }
-
-  .create-investment-form .cancel-button,
-  .create-investment-form .post-button {
-    width: 100%;
-  }
-
-    /* ---------- improve spacing + tap targets ---------- */
-
+  /* Improve spacing + tap targets */
   .create-investment-form > div {
     margin-bottom: 14px;
   }
@@ -150,34 +126,58 @@ body{
     margin-bottom: 6px;
   }
 
-  .create-investment-form input {
+  /* Strongly scoped input styling so other pages don't affect this */
+  .create-investment-form .create-investment-input {
+    width: 100%;
+    display: block;
     height: 44px;
     padding: 10px 12px;
     border-radius: 10px;
+    border: 2px solid var(--field_border_color);
+    background-color: var(--field_background_color);
+    font-size: 16px; /* prevents iOS zoom */
+    color: var(--secondary_text_color);
+    outline: none;
+    margin: 0; /* override any global input margins */
   }
 
-  /* Remove the “extra tall” feel from <br/> spacing */
-  .create-investment-form br {
-    display: none;
+  .create-investment-form .create-investment-input:focus {
+    background-color: #ffffff;
   }
 
+  /* Date placeholder overlay */
+  .date-input-wrap {
+    position: relative;
+    width: 100%;
+  }
+
+  .date-input-wrap .date-placeholder {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    font-size: 16px;
+    pointer-events: none; /* allow clicking through to the input */
+  }
+
+  /* Stack buttons vertically on mobile */
   .create-investment-form .button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
     margin-top: 18px;
     padding-top: 6px;
   }
 
   .create-investment-form .cancel-button,
   .create-investment-form .post-button {
+    width: 100%;
     height: 44px;
-    padding: 0;                 /* ✅ key: remove vertical padding */
-    display: flex;              /* ✅ */
-    align-items: center;        /* ✅ vertical center */
-    justify-content: center;    /* ✅ horizontal center */
-    line-height: 1;             /* ✅ avoids font baseline weirdness */
+    padding: 0; /* remove vertical padding */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
   }
-
-  .no-investment-text {
-    font-size: 14px !important;
-  }
-
 }
