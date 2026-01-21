@@ -32,7 +32,7 @@ input[name="address2"] {
 }
 
 .file-btn {
-  background-color: #2f855a; /* match your green */
+  background-color: var (--main_button_color);
   color: white;
   padding: 10px 14px;
   border-radius: 8px;
@@ -142,6 +142,20 @@ input[type="file"]::file-selector-button:hover {
     margin-top: 10px;
     text-align: center;
     color: red;
+}
+
+.no-business-button{
+  background-color: var(--main_button_color);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    height: 48px;
+    border: none;
+    width: 236px;
+    border-radius: 10px;
+    align-items: center;
+    width: 100%;
+    margin-top: 50px;
 }
 
 /* ✅ MOBILE ONLY behavior:
