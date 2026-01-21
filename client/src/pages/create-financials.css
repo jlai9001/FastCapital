@@ -203,6 +203,7 @@
     width: 100%;
     gap: 14px;
     margin-top: 60px;
+    margin-bottom: 60px;
   }
 
     /* Ensure each field wrapper is full width (prevents MUI shrink-wrapping) */
