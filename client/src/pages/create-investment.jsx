@@ -185,13 +185,14 @@ export default function NewInvestment() {
           {/* Date placeholder overlay that works on iOS */}
           <div className="date-input-wrap">
             <input
-              className="create-investment-input date-input"
+              className={`create-investment-input date-input ${expirationDate ? "has-value" : "is-empty"}`}
               type="date"
               value={expirationDate}
               onChange={(e) => setExpirationDate(e.target.value)}
             />
             {!expirationDate && <span className="date-placeholder">Date</span>}
           </div>
+
         </div>
 
         <br />

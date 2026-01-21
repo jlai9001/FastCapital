@@ -151,6 +151,21 @@ body {
     width: 100%;
   }
 
+    /* Hide the browser's native mm/dd/yyyy text when empty so it doesn't overlap "Date" */
+  .date-input.is-empty {
+    color: transparent;
+    -webkit-text-fill-color: transparent; /* iOS/Chrome/Safari */
+    caret-color: transparent;
+  }
+
+  /* When user has picked a date, show it normally */
+  .date-input.has-value {
+    color: var(--secondary_text_color);
+    -webkit-text-fill-color: var(--secondary_text_color);
+    caret-color: auto;
+  }
+
+
   .date-input-wrap .date-placeholder {
     position: absolute;
     left: 12px;
@@ -180,4 +195,27 @@ body {
     justify-content: center;
     line-height: 1;
   }
+
+  /* Chrome/WebKit: hide the internal date text parts when empty */
+.date-input.is-empty::-webkit-datetime-edit,
+.date-input.is-empty::-webkit-datetime-edit-fields-wrapper,
+.date-input.is-empty::-webkit-datetime-edit-text,
+.date-input.is-empty::-webkit-datetime-edit-month-field,
+.date-input.is-empty::-webkit-datetime-edit-day-field,
+.date-input.is-empty::-webkit-datetime-edit-year-field {
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* When it has a value, show the internal parts normally */
+.date-input.has-value::-webkit-datetime-edit,
+.date-input.has-value::-webkit-datetime-edit-fields-wrapper,
+.date-input.has-value::-webkit-datetime-edit-text,
+.date-input.has-value::-webkit-datetime-edit-month-field,
+.date-input.has-value::-webkit-datetime-edit-day-field,
+.date-input.has-value::-webkit-datetime-edit-year-field {
+  color: var(--secondary_text_color);
+  -webkit-text-fill-color: var(--secondary_text_color);
+}
+
 }
