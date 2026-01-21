@@ -182,9 +182,38 @@ def debug_file_check(filename: str):
     }
 
 
+
 # =========================
 # ROUTES (UNCHANGED)
 # =========================
+
+# sign up
+
+@app.post("/api/signup", response_model=LoginResponse, status_code=201)
+async def signup(credentials: SignupCredentials, request: Request):
+    # 1) Create the user (returns False if email already exists)
+    created = create_user(credentials.name, credentials.email, credentials.password)
+    if not created:
+        raise HTTPException(status_code=409, detail="Email already registered")
+
+    # 2) Create a session token (same flow as login)
+    token = validate_email_password(credentials.email, credentials.password)
+    if not token:
+        raise HTTPException(status_code=500, detail="Failed to create session")
+
+    # 3) Store session for cookie-based auth
+    request.session["email"] = credentials.email
+    request.session["session_token"] = token
+
+    # 4) Also return JWT fallback (iOS / token mode)
+    access_token = create_access_token(email=credentials.email, sid=token)
+
+    return LoginResponse(
+        success=True,
+        message="Signup successful",
+        access_token=access_token,
+        token_type="bearer",
+    )
 
 @app.post("/api/login", response_model=LoginResponse)
 async def login(credentials: LoginCredentials, request: Request):
