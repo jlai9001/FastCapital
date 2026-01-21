@@ -228,4 +228,28 @@ body {
   -webkit-text-fill-color: var(--secondary_text_color);
 }
 
+  /* iOS Safari only: normalize native date input sizing */
+  @supports (-webkit-touch-callout: none) {
+    .create-investment-form .date-input {
+      height: 44px;         /* match other inputs */
+      padding: 10px 12px;   /* same as other inputs */
+      line-height: normal;  /* iOS behaves better with normal line-height */
+    }
+
+    /* Keep the overlay placeholder centered */
+    .date-input-wrap .date-placeholder {
+      line-height: 1;
+    }
+
+    /* iOS: sometimes internal date fields ignore parent color rules */
+    .date-input.is-empty::-webkit-date-and-time-value {
+      color: transparent;
+    }
+    .date-input.has-value::-webkit-date-and-time-value {
+      color: var(--secondary_text_color);
+    }
+  }
+
+
+
 }
