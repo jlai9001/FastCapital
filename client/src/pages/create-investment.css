@@ -102,11 +102,6 @@ body{
         margin-bottom: 5px;
   }
 
-  .cancel-button .post-button{
-    padding: 0px !important;
-  }
-
-
   .create-investment-container {
     padding: 1.25rem;
     margin-top: 0;
@@ -174,7 +169,11 @@ body{
   .create-investment-form .cancel-button,
   .create-investment-form .post-button {
     height: 44px;
-    border-radius: 12px;
+    padding: 0;                 /* ✅ key: remove vertical padding */
+    display: flex;              /* ✅ */
+    align-items: center;        /* ✅ vertical center */
+    justify-content: center;    /* ✅ horizontal center */
+    line-height: 1;             /* ✅ avoids font baseline weirdness */
   }
 
   .no-investment-text {
