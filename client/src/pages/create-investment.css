@@ -7,61 +7,9 @@ body {
   background-color: var(--page_background_color);
 }
 
-
-/* =========================================================
-   MUI DatePicker styling (Create Investment)
-   Makes DatePicker match .create-investment-input
-   ========================================================= */
-
-/* Desktop + mobile: make the MUI field full width */
-.create-investment-date {
-  width: 100%;
-}
-
-
-/* Match border thickness + color */
-.create-investment-date .MuiOutlinedInput-notchedOutline {
-  border: 2px solid var(--field_border_color);
-}
-
-/* Let MUI control the inner input sizing; apply padding to the root instead */
-.create-investment-date input {
-  font-size: 16px;
-  color: var(--secondary_text_color);
-  padding: 0 !important;              /* ✅ prevents iOS misalignment */
-  -webkit-text-fill-color: var(--secondary_text_color);
-}
-
-.create-investment-date .MuiOutlinedInput-root {
-  width: 100%;
-  height: 44px;
-  border-radius: 10px;
-  background-color: var(--field_background_color);
-  padding: 0 12px;                    /* ✅ consistent padding */
-  display: flex;
-  align-items: center;                 /* ✅ vertical centering */
-}
-
-/* Placeholder color */
-.create-investment-date input::placeholder {
-  color: #9ca3af;
-  opacity: 1;
-}
-
-/* Focus state similar to your inputs */
-.create-investment-date .MuiOutlinedInput-root.Mui-focused {
-  background-color: #ffffff;
-}
-.create-investment-date .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
-  border-color: var(--field_border_color);
-}
-
-/* Optional: make the calendar icon align nicely */
-.create-investment-date .MuiIconButton-root {
-  margin-right: 4px;
-}
-
-
+/* =========================
+   Base form layout
+   ========================= */
 
 .create-investment-form {
   display: block;
@@ -85,14 +33,41 @@ body {
   margin-bottom: 30px;
 }
 
+/* ✅ Fix desktop spacing (was -5px causing the Date field to look “too close”) */
 .field-label {
   margin-top: 10px;
   text-align: left;
   color: var(--secondary_text_color);
   font-size: var(--small_fontsize);
   font-weight: bold;
-  margin-bottom: -5px;
+  margin-bottom: 6px;
 }
+
+/* =========================
+   ✅ Make ALL inputs match (desktop + mobile)
+   ========================= */
+
+.create-investment-form .create-investment-input {
+  width: 100%;
+  display: block;
+  height: 44px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 2px solid var(--field_border_color);
+  background-color: var(--field_background_color);
+  font-size: 16px; /* prevents iOS zoom */
+  color: var(--secondary_text_color);
+  outline: none;
+  margin: 0; /* override any global input margins */
+}
+
+.create-investment-form .create-investment-input:focus {
+  background-color: #ffffff;
+}
+
+/* =========================
+   Buttons
+   ========================= */
 
 .button-container {
   display: flex;
@@ -144,8 +119,62 @@ body {
   border: 2px solid var(--main_button_hover);
 }
 
-.css-1p8sp1h {
-  border-radius: var(--button_border_radius) !important;
+/* =========================
+   ✅ MUI DatePicker styling (Create Investment)
+   Makes DatePicker match .create-investment-input EXACTLY
+   ========================= */
+
+.create-investment-date {
+  width: 100%;
+}
+
+/* outer shell */
+.create-investment-date .MuiOutlinedInput-root {
+  width: 100%;
+  height: 44px;
+  border-radius: 10px;
+  background-color: var(--field_background_color);
+  padding: 0 12px;          /* match other inputs */
+  display: flex;
+  align-items: center;       /* vertical centering */
+}
+
+/* outline (important: outline has its own shape) */
+.create-investment-date .MuiOutlinedInput-notchedOutline {
+  border: 2px solid var(--field_border_color);
+  border-radius: 10px;
+}
+
+/* hover should NOT change thickness/color */
+.create-investment-date .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border: 2px solid var(--field_border_color);
+}
+
+/* inner text */
+.create-investment-date input {
+  font-size: 16px;
+  color: var(--secondary_text_color);
+  padding: 0 !important;     /* prevent iOS vertical misalignment */
+  -webkit-text-fill-color: var(--secondary_text_color);
+}
+
+/* placeholder color */
+.create-investment-date input::placeholder {
+  color: #9ca3af;
+  opacity: 1;
+}
+
+/* focus state */
+.create-investment-date .MuiOutlinedInput-root.Mui-focused {
+  background-color: #ffffff;
+}
+.create-investment-date .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border: 2px solid var(--field_border_color);
+}
+
+/* calendar icon spacing */
+.create-investment-date .MuiIconButton-root {
+  margin-right: 4px;
 }
 
 /* =========================================================
@@ -184,25 +213,6 @@ body {
   .field-label {
     font-size: 14px;
     margin-bottom: 6px;
-  }
-
-  /* Strongly scoped input styling so other pages don't affect this */
-  .create-investment-form .create-investment-input {
-    width: 100%;
-    display: block;
-    height: 44px;
-    padding: 10px 12px;
-    border-radius: 10px;
-    border: 2px solid var(--field_border_color);
-    background-color: var(--field_background_color);
-    font-size: 16px; /* prevents iOS zoom */
-    color: var(--secondary_text_color);
-    outline: none;
-    margin: 0; /* override any global input margins */
-  }
-
-  .create-investment-form .create-investment-input:focus {
-    background-color: #ffffff;
   }
 
   /* Stack buttons vertically on mobile */
