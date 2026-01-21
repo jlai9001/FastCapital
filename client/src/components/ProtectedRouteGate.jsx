@@ -77,13 +77,16 @@ export default function ProtectedRouteGate({ children }) {
 }
 
 const styles = {
+
   wrapper: {
     minHeight: "70vh",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     padding: "24px",
+    pointerEvents: "none",   // ✅ allows nav/menu clicks even while loading
   },
+
   card: {
     width: "100%",
     maxWidth: "520px",
@@ -93,6 +96,7 @@ const styles = {
     border: "1px solid rgba(0,0,0,0.08)",
     background: "white",
     textAlign: "center",
+    pointerEvents: "auto",
   },
   spinner: {
     width: "34px",

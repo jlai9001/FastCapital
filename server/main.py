@@ -42,7 +42,8 @@ from db import (
     invalidate_session,
     validate_email_password,
     update_business_details,
-    DBBusiness
+    DBBusiness,
+    DBInvestment,
 )
 from auth import get_auth_user, get_optional_auth_user
 from jwt_utils import create_access_token, decode_access_token
@@ -537,3 +538,42 @@ def create_financials(
         raise HTTPException(status_code=403, detail="Not authorized")
 
     return db.add_finance(payload)
+
+@app.post("/api/investment", response_model=InvestmentOut, status_code=201)
+def create_investment_route(
+    payload: InvestmentCreate,
+    current_user: UserPublicDetails = Depends(get_auth_user),
+    db_session: Session = Depends(get_db),
+):
+    # ✅ Ensure business exists
+    business = (
+        db_session.query(DBBusiness)
+        .filter(DBBusiness.id == payload.business_id)
+        .first()
+    )
+    if not business:
+        raise HTTPException(status_code=404, detail="Business not found")
+
+    # ✅ Ensure the logged-in user owns the business
+    if business.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+
+    # ✅ Enforce 1 investment per business (matches your intended constraint)
+    existing = (
+        db_session.query(DBInvestment)
+        .filter(DBInvestment.business_id == payload.business_id)
+        .first()
+    )
+    if existing:
+        raise HTTPException(status_code=409, detail="Investment already exists for this business")
+
+    db_investment = DBInvestment(**payload.model_dump())
+    db_session.add(db_investment)
+    db_session.commit()
+    db_session.refresh(db_investment)
+
+    return InvestmentOut.model_validate(db_investment)
+
+@app.get("/api/investments", response_model=List[InvestmentOut])
+async def get_investments_alias():
+    return db.get_investments()

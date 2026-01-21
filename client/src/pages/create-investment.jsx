@@ -1,8 +1,10 @@
 import './create-investment.css';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { base_url } from '../api'
+import { apiFetch } from "../api/client.js";
 import { useProtectedData } from "../context/protected-data-provider.jsx";
+import { useUser } from "../context/user-provider.jsx";
+
 
 export default function NewInvestment() {
     const [sharesAvailable, setSharesAvailable] = useState(0);
@@ -12,10 +14,40 @@ export default function NewInvestment() {
     const [submitting, setSubmitting] = useState(false);
     const { myBusiness, refreshProtectedData, status } = useProtectedData();
     const business = myBusiness;
+    const { user } = useUser();
 
 
     const nav = useNavigate();
     const businessId = business?.id;
+
+    useEffect(() => {
+    const ensureAuthed = () => {
+        const token = localStorage.getItem("access_token");
+
+        // If token was deleted/expired, or user got cleared via fc:logout
+        if (!token || !user) {
+        nav("/login", { replace: true });
+        }
+    };
+
+    // Run immediately on mount
+    ensureAuthed();
+
+    // If apiFetch triggers global logout, react instantly
+    const onLogout = () => nav("/login", { replace: true });
+
+    window.addEventListener("fc:logout", onLogout);
+
+    // Manual deletion won't fire events — so re-check on user interaction/focus
+    window.addEventListener("focus", ensureAuthed);
+    document.addEventListener("click", ensureAuthed, true);
+
+    return () => {
+        window.removeEventListener("fc:logout", onLogout);
+        window.removeEventListener("focus", ensureAuthed);
+        document.removeEventListener("click", ensureAuthed, true);
+    };
+    }, [user, nav]);
 
 
     const handlePost = async () => {
@@ -39,11 +71,13 @@ export default function NewInvestment() {
                 if (minInvestment > sharesAvailable){
                     alert("Minimum shares invested must be less than shares available.")
                     throw new Error("Minimum shares is invalid.")}
-
-
+                if (!expirationDate) {
+                alert("Please choose an expiration date.");
+                throw new Error("Missing expiration date.");
+                }
 
                 const today = new Date();
-                const expiry = new Date(expirationDate); // Parse from string
+                const expiry = new Date(`${expirationDate}T00:00:00.000Z`);
                 const diffInTime = expiry.getTime() - today.getTime();
                 const diffInDays = diffInTime / (1000 * 3600 * 24);
                 if (diffInDays < 30) {
@@ -55,20 +89,27 @@ export default function NewInvestment() {
 
 
             const headers = { "Content-Type": "application/json" };
+
             const body = JSON.stringify({
-                business_id: businessId,
-                shares_available: sharesAvailable,
-                price_per_share: pricePerShare,
-                min_investment: minInvestment,
-                start_date: new Date().toISOString().split("T")[0],
-                expiration_date: expirationDate
+            business_id: businessId,
+            shares_available: sharesAvailable,
+            price_per_share: pricePerShare,
+            min_investment: minInvestment,
+
+            // ✅ ISO datetime expected by backend
+            start_date: new Date().toISOString(),
+
+            // ✅ Convert date-only input into a stable ISO datetime (UTC midnight)
+            expiration_date: `${expirationDate}T00:00:00.000Z`,
             });
 
-            const response = await fetch(`${base_url}/api/investment`, {
+
+            const response = await apiFetch(`/api/investment`, {
                 method: "POST",
                 headers,
                 body
             });
+
 
             if (!response.ok) {
                 const errorDetails = await response.json();

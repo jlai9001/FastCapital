@@ -41,7 +41,9 @@ body{
 }
 
 .button-container{
-    gap:10px
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
 }
 
 .cancel-button{
@@ -89,4 +91,80 @@ body{
 .post-button:hover{
     background-color:var(--main_button_hover);
     border: 2px solid var(--main_button_hover);
+}
+
+/* =========================================================
+   MOBILE CREATE-INVESTMENT LAYOUT (DOES NOT AFFECT DESKTOP)
+   ========================================================= */
+@media (max-width: 768px) {
+
+  .create-investment-container {
+    padding: 1.25rem;
+    margin-top: 0;
+  }
+
+  .create-investment-form {
+    width: 100%;
+    max-width: 420px;
+    margin: 2rem auto 0;
+    padding: 24px 20px;
+    border-radius: 16px;
+    margin-bottom: 120px;
+  }
+
+  .title {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+
+  /* Make sure inputs fit the card on mobile */
+  .create-investment-form input {
+    width: 100%;
+  }
+
+  /* Stack buttons vertically on mobile */
+  .create-investment-form .button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .create-investment-form .cancel-button,
+  .create-investment-form .post-button {
+    width: 100%;
+  }
+
+    /* ---------- improve spacing + tap targets ---------- */
+
+  .create-investment-form > div {
+    margin-bottom: 14px;
+  }
+
+  .field-label {
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+
+  .create-investment-form input {
+    height: 44px;
+    padding: 10px 12px;
+    border-radius: 10px;
+  }
+
+  /* Remove the “extra tall” feel from <br/> spacing */
+  .create-investment-form br {
+    display: none;
+  }
+
+  .create-investment-form .button-container {
+    margin-top: 18px;
+    padding-top: 6px;
+  }
+
+  .create-investment-form .cancel-button,
+  .create-investment-form .post-button {
+    height: 44px;
+    border-radius: 12px;
+  }
 }
