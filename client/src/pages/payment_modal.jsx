@@ -1,6 +1,7 @@
 import './payment_modal.css'
 import React, { useState } from 'react';
 import { apiFetch } from "../api/client.js";
+import { useProtectedData } from "../context/protected-data-provider.jsx";
 
 function FieldContainer({ isVisible }) {
     if (!isVisible) return null;
@@ -31,12 +32,14 @@ function ButtonsContainer({ isVisible, onCancel, onBuy }) {
     );
 }
 
-function PaymentModal({ onClose, investment, shareAmount, userId }) {
+function PaymentModal({ onClose, investment, shareAmount }) {
     const [isVisible, setIsVisible] = useState(true);
     const [showFields, setShowFields] = useState(true);
     const [showButtons, setShowButtons] = useState(true);
     const [showExitButton, setShowExitButton] = useState(false);
     const [showCompletionMessage, setShowCompletionMessage] = useState(false);
+    const { refreshProtectedData } = useProtectedData();
+
 
     const handle_cancel = () => {
         console.log("Cancel button clicked");
@@ -78,6 +81,14 @@ const handle_buy = async () => {
 
         const data = await response.json();
         console.log("Purchase successful:", data);
+
+        try {
+        await refreshProtectedData();
+        } catch (e) {
+        console.error("refreshProtectedData failed:", e);
+        }
+
+
 
         setShowFields(false);
         setShowButtons(false);
