@@ -558,15 +558,6 @@ def create_investment_route(
     if business.user_id != current_user.id:
         raise HTTPException(status_code=403, detail="Not authorized")
 
-    # ✅ Enforce 1 investment per business (matches your intended constraint)
-    existing = (
-        db_session.query(DBInvestment)
-        .filter(DBInvestment.business_id == payload.business_id)
-        .first()
-    )
-    if existing:
-        raise HTTPException(status_code=409, detail="Investment already exists for this business")
-
     db_investment = DBInvestment(**payload.model_dump())
     db_session.add(db_investment)
     db_session.commit()
