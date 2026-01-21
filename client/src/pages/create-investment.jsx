@@ -31,12 +31,10 @@ export default function NewInvestment() {
 
       setSubmitting(true);
 
-      // input validation
-
+      // Convert inputs to numbers once (state stays string so inputs don't get stuck on "0")
       const shares = Number(sharesAvailable);
       const minInv = Number(minInvestment);
       const price = Number(pricePerShare);
-
 
       const validate = () => {
         if (!Number.isFinite(shares) || shares <= 0) {
@@ -69,16 +67,14 @@ export default function NewInvestment() {
 
         const today = new Date();
         const expiry = new Date(`${expirationDate}T00:00:00.000Z`);
-        const diffInDays = (expiry.getTime() - today.getTime()) / (1000 * 3600 * 24);
+        const diffInDays =
+          (expiry.getTime() - today.getTime()) / (1000 * 3600 * 24);
 
         if (diffInDays < 30) {
           alert("Expiration date must be at least 30 days from today.");
           throw new Error("Invalid expiration date.");
         }
       };
-
-
-
 
       validate();
 
@@ -93,12 +89,18 @@ export default function NewInvestment() {
         expiration_date: `${expirationDate}T00:00:00.000Z`,
       });
 
-
       const response = await apiFetch(`/api/investment`, {
         method: "POST",
         headers,
         body,
       });
+
+      // ✅ If offer already exists (backend returns 409)
+      if (response.status === 409) {
+        console.warn("Investment Offer Already Exists for this Business");
+        alert("Investment Offer Already Exists for this Business");
+        return;
+      }
 
       if (!response.ok) {
         const errorDetails = await response.json().catch(() => null);
@@ -110,8 +112,12 @@ export default function NewInvestment() {
       console.log("Offer submitted:", data);
 
       alert("Investment offer submitted successfully!");
+
+      // ✅ Pull fresh investments + business data into the provider cache
       await refreshProtectedData();
-      nav(-1);
+
+      // ✅ Go directly to Business Profile so it's updated immediately
+      nav("/business-profile", { replace: true });
     } catch (error) {
       console.error("Error submitting:", error);
       alert("Failed to submit, please try again.");
