@@ -10,6 +10,7 @@ export default function NewInvestment() {
   const [minInvestment, setMinInvestment] = useState("");
   const [expirationDate, setExpirationDate] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [dateInputType, setDateInputType] = useState("text");
 
   const { myBusiness, refreshProtectedData, status } = useProtectedData();
   const business = myBusiness;
@@ -179,15 +180,22 @@ export default function NewInvestment() {
         </div>
         <br />
 
-        <div>
-          <div className="field-label">What is the expiration date?</div>
-          <input
-            className="create-investment-input"
-            type="date"
-            value={expirationDate}
-            onChange={(e) => setExpirationDate(e.target.value)}
-          />
-        </div>
+      <div>
+        <div className="field-label">What is the expiration date?</div>
+        <input
+          className="create-investment-input"
+          type={dateInputType}
+          placeholder="Date"
+          value={expirationDate}
+          onTouchStart={() => setDateInputType("date")}   // iOS: makes it open on first tap
+          onFocus={() => setDateInputType("date")}
+          onBlur={() => {
+            if (!expirationDate) setDateInputType("text");
+          }}
+          onChange={(e) => setExpirationDate(e.target.value)}
+        />
+      </div>
+
 
         <br />
 
