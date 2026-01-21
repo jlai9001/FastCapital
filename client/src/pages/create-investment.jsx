@@ -5,9 +5,9 @@ import { apiFetch } from "../api/client.js";
 import { useProtectedData } from "../context/protected-data-provider.jsx";
 
 export default function NewInvestment() {
-  const [sharesAvailable, setSharesAvailable] = useState(0);
-  const [pricePerShare, setPricePerShare] = useState(0);
-  const [minInvestment, setMinInvestment] = useState(0);
+  const [sharesAvailable, setSharesAvailable] = useState("");
+  const [pricePerShare, setPricePerShare] = useState("");
+  const [minInvestment, setMinInvestment] = useState("");
   const [expirationDate, setExpirationDate] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -32,15 +32,34 @@ export default function NewInvestment() {
       setSubmitting(true);
 
       // input validation
+
+      const shares = Number(sharesAvailable);
+      const minInv = Number(minInvestment);
+      const price = Number(pricePerShare);
+
+
       const validate = () => {
-        if (sharesAvailable % 100 !== 0) {
+        if (!Number.isFinite(shares) || shares <= 0) {
+          alert("Please enter shares available.");
+          throw new Error("shares invalid");
+        }
+        if (shares % 100 !== 0) {
           alert("Available shares must be divisible by 100.");
-          throw new Error("Available shares is invalid");
+          throw new Error("shares not divisible by 100");
         }
 
-        if (minInvestment > sharesAvailable) {
+        if (!Number.isFinite(minInv) || minInv <= 0) {
+          alert("Please enter a minimum investment.");
+          throw new Error("min invalid");
+        }
+        if (minInv > shares) {
           alert("Minimum shares invested must be less than shares available.");
-          throw new Error("Minimum shares is invalid.");
+          throw new Error("min > shares");
+        }
+
+        if (!Number.isFinite(price) || price <= 0) {
+          alert("Please enter a price per share.");
+          throw new Error("price invalid");
         }
 
         if (!expirationDate) {
@@ -50,8 +69,7 @@ export default function NewInvestment() {
 
         const today = new Date();
         const expiry = new Date(`${expirationDate}T00:00:00.000Z`);
-        const diffInTime = expiry.getTime() - today.getTime();
-        const diffInDays = diffInTime / (1000 * 3600 * 24);
+        const diffInDays = (expiry.getTime() - today.getTime()) / (1000 * 3600 * 24);
 
         if (diffInDays < 30) {
           alert("Expiration date must be at least 30 days from today.");
@@ -59,22 +77,22 @@ export default function NewInvestment() {
         }
       };
 
+
+
+
       validate();
 
       const headers = { "Content-Type": "application/json" };
 
       const body = JSON.stringify({
         business_id: businessId,
-        shares_available: sharesAvailable,
-        price_per_share: pricePerShare,
-        min_investment: minInvestment,
-
-        // ISO datetime expected by backend
+        shares_available: shares,
+        price_per_share: price,
+        min_investment: minInv,
         start_date: new Date().toISOString(),
-
-        // Convert date-only input into stable ISO datetime (UTC midnight)
         expiration_date: `${expirationDate}T00:00:00.000Z`,
       });
+
 
       const response = await apiFetch(`/api/investment`, {
         method: "POST",
@@ -118,7 +136,7 @@ export default function NewInvestment() {
             value={sharesAvailable}
             min="1"
             step="100"
-            onChange={(e) => setSharesAvailable(Number(e.target.value))}
+            onChange={(e) => setSharesAvailable(e.target.value)}
           />
         </div>
         <br />
@@ -129,7 +147,7 @@ export default function NewInvestment() {
             type="number"
             value={minInvestment}
             min="1"
-            onChange={(e) => setMinInvestment(Number(e.target.value))}
+            onChange={(e) => setMinInvestment(e.target.value)}
           />
         </div>
         <br />
@@ -141,10 +159,7 @@ export default function NewInvestment() {
             value={pricePerShare}
             min="1"
             step="1"
-            onChange={(e) => {
-              const val = parseInt(e.target.value);
-              setPricePerShare(isNaN(val) ? 0 : val);
-            }}
+            onChange={(e) => setPricePerShare(e.target.value)}
           />
         </div>
         <br />
