@@ -186,9 +186,9 @@
 
   /* Dashboard: remove scaling + keep it centered */
   .financial_dashboard {
-    margin-top: 18px;
     scale: 1;
     width: 100%;
+    margin-top: 50px;
   }
 
   /* The desktop row-label layout doesn't work on mobile */
@@ -202,7 +202,7 @@
     align-items: stretch;
     width: 100%;
     gap: 14px;
-    margin-top: 18px;
+    margin-top: 60px;
   }
 
     /* Ensure each field wrapper is full width (prevents MUI shrink-wrapping) */
