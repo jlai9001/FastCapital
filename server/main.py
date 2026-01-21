@@ -58,6 +58,7 @@ from pydantic_schemas import (
     InvestmentCreate,
     InvestmentWithPurchasesOut,
     PurchaseCreate,
+    PurchaseOut,
     EnrichedPurchaseOut,
     LoginCredentials,
     SignupCredentials,
@@ -279,6 +280,15 @@ def get_purchases(
         user_id=current_user.id,
         status=status
     )
+
+@app.post("/api/purchases", response_model=PurchaseOut, status_code=status.HTTP_201_CREATED)
+def create_purchase(
+    purchase: PurchaseCreate,
+    current_user: UserPublicDetails = Depends(get_auth_user),
+):
+    # Don’t trust client-provided user_id; bind purchase to the logged-in user
+    purchase = purchase.model_copy(update={"user_id": current_user.id})
+    return db.add_purchase(purchase)
 
 
 @app.get(
