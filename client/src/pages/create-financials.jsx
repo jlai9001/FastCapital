@@ -7,8 +7,8 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import FinancialDashboard from "../components/financials_table";
 import {useNavigate} from "react-router-dom";
-import { base_url } from '../api'
 import { useParams } from "react-router-dom";
+import { apiFetch } from "../api/client.js";
 
 export default function AddFinancials() {
     const [finType, setFinType] = useState("");
@@ -70,11 +70,12 @@ export default function AddFinancials() {
             type: finType,
         });
 
-        const response = await fetch(`${base_url}/api/financials`, {
-            method: "POST",
-            headers,
-            body,
+        const response = await apiFetch("/api/financials", {
+        method: "POST",
+        headers,
+        body,
         });
+
 
         if (!response.ok) {
             const errorDetails = await response.json();
