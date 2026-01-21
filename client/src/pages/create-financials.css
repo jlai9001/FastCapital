@@ -270,4 +270,47 @@
     padding-top: 6px;
   }
 
+    /* -----------------------------
+     Mobile placeholder color unify
+  ----------------------------- */
+
+  /* Choose ONE placeholder color for everything */
+    .create-financials-form {
+    --mobile_placeholder_color: #9ca3af;
+    }
+
+
+  /* Amount + Date: real input placeholders */
+  .create-financials-form input::placeholder {
+    color: var(--mobile_placeholder_color) !important;
+    opacity: 1;
+  }
+
+  /* DatePicker uses sections; also ensure the field text matches when empty */
+  .date-styling input {
+    color: var(--mobile_placeholder_color);
+  }
+
+    /* DatePicker section placeholders (MMMM/YYYY replacement) */
+  .date-styling .MuiInputBase-input {
+    color: var(--mobile_placeholder_color) !important;
+  }
+
+  /* Some picker versions render placeholder sections as spans */
+  .date-styling .MuiInputBase-root {
+    color: var(--mobile_placeholder_color) !important;
+  }
+
+
+  /* Type dropdown: our fake placeholder via renderValue */
+  .placeholder-text .MuiSelect-select {
+    color: var(--mobile_placeholder_color) !important;
+  }
+
+  /* If MUI renders it via InputBase root instead */
+  .placeholder-text .MuiInputBase-input {
+    color: var(--mobile_placeholder_color) !important;
+  }
+
+
 }

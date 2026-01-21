@@ -122,7 +122,9 @@ export default function AddFinancials() {
         <div className="add-entry-container">
 
             <div className="fin-field fin-type">
-                <TextField className="create-financials-pulldown"
+                <TextField className={`create-financials-pulldown ${
+                    isMobile && !finType ? "placeholder-text" : ""
+                }`}
                 select
                 value={finType}
                 onChange={(e) => setFinType(e.target.value)}
