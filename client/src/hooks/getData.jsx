@@ -43,36 +43,41 @@ function useInvestmentPurchases(investmentId, enabled = true) {
   const [purchases, setPurchases] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
   useEffect(() => {
     if (!enabled || !investmentId) return;
-      async function fetchPurchases() {
+
+    async function fetchPurchases() {
       setLoading(true);
       setError(null);
-      try {
 
-        const qs = new URLSearchParams({ investment_id: investmentId }).toString();
-        const response = await apiFetch(`/api/purchases?${qs}`, {
+      try {
+        // ✅ Your backend already returns purchases here:
+        // GET /api/investment/{investment_id} -> InvestmentWithPurchasesOut { purchases: [...] }
+        const res = await apiFetch(`/api/investment/${investmentId}`, {
           headers: authHeader(),
         });
 
-        if (!response.ok) {
+        if (!res.ok) {
           throw new Error("Failed to fetch purchases");
         }
 
-        const data = await response.json();
-        setPurchases(Array.isArray(data) ? data : []);
-
+        const json = await res.json();
+        const list = Array.isArray(json?.purchases) ? json.purchases : [];
+        setPurchases(list);
       } catch (err) {
-        setError(err);
+        setError(err?.message || String(err));
       } finally {
         setLoading(false);
       }
     }
+
     fetchPurchases();
   }, [investmentId, enabled]);
 
   return { data: purchases, loading, error };
 }
+
 
 function useBusiness(businessId) {
   const [loading, setLoading] = useState(false);
