@@ -184,11 +184,14 @@ export default function AddFinancials() {
                     : undefined
                 }
                 slotProps={{
-                    textField: {
+                textField: {
                     className: "date-styling",
                     helperText: null,
-                    },
+                    placeholder: "mm/yyyy",
+                    InputLabelProps: { shrink: true }, // keeps it from looking weird with placeholders
+                },
                 }}
+
                 />
                 </LocalizationProvider>
             </div>
