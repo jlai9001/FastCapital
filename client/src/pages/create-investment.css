@@ -94,6 +94,10 @@ body {
   border: 2px solid var(--main_button_hover);
 }
 
+.css-1p8sp1h {
+  border-radius: var(--button_border_radius) !important;
+}
+
 /* =========================================================
    MOBILE CREATE-INVESTMENT LAYOUT (DOES NOT AFFECT DESKTOP)
    ========================================================= */
