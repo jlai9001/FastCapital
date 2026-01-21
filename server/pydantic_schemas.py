@@ -107,12 +107,15 @@ class InvestmentOut(InvestmentCreate):
     featured: bool
     model_config = ConfigDict(from_attributes=True)
 
-class PurchaseCreate(BaseModel):
+class PurchaseCreateIn(BaseModel):
     investment_id: int
-    user_id: int
     shares_purchased: int
     cost_per_share: float
     purchase_date: datetime
+
+class PurchaseCreate(PurchaseCreateIn):
+    user_id: int
+
 
 class PurchaseOut(PurchaseCreate):
     id: int

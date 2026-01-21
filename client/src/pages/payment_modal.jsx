@@ -66,7 +66,7 @@ const handle_buy = async () => {
     try {
         const response = await apiFetch(`/api/purchases`, {
         method: "POST",
-        customHeaders: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" },
         body,
         });
 
