@@ -167,4 +167,9 @@ body{
     height: 44px;
     border-radius: 12px;
   }
+
+  .no-investment-text {
+    font-size: 14px;
+  }
+
 }
