@@ -1,15 +1,13 @@
+import React, { useState, useEffect } from "react";
+import { BarChart } from "@mui/x-charts/BarChart";
 import "./financials_table.css";
-import { useState } from "react";
 
-const MONTHS = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-];
-
-// ✅ Supports:
-// - "YYYY-MM-DD" (and "YYYY-MM-DDTHH:MM...")
-// - "MM/YYYY"
-// - fallback to Date parsing if possible
+/**
+ * Supports:
+ * - "YYYY-MM-DD" (and "YYYY-MM-DDTHH:MM...")
+ * - "MM/YYYY"
+ * - fallback to Date parsing if possible
+ */
 function parseFinancialDate(dateVal) {
   if (!dateVal) return null;
 
@@ -44,159 +42,218 @@ function parseFinancialDate(dateVal) {
   return null;
 }
 
-export default function FinancialDashboard({ financials }) {
-  const years = Array.from(
-    new Set(
-      financials
+function FinancialDashboard({ financials = [] }) {
+  const [tab, setTab] = useState("pl");
+  const [years, setYears] = useState([]);
+  const [selectedYear, setSelectedYear] = useState("");
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  const calcChartWidth = () => {
+    const w = window.innerWidth;
+    return Math.max(280, Math.min(420, w - 48));
+  };
+
+  const [chartWidth, setChartWidth] = useState(calcChartWidth());
+
+  /* -----------------------------
+     Mobile detection
+  ----------------------------- */
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+      setChartWidth(calcChartWidth());
+    };
+
+    handleResize(); // run once on mount
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  /* -----------------------------
+     Persistent Y-axis config
+  ----------------------------- */
+  const yAxisConfig = [
+    {
+      id: "y-axis",
+      scaleType: "linear",
+      min: 0,
+      max: undefined,
+    },
+  ];
+
+  /* -----------------------------
+     Build year list from financials (SAFE parsing)
+  ----------------------------- */
+  useEffect(() => {
+    const data = Array.isArray(financials) ? financials : [];
+
+    const yearSet = new Set(
+      data
         .map((f) => parseFinancialDate(f.date)?.year)
         .filter((y) => Number.isFinite(y))
-    )
-  ).sort((a, b) => b - a);
+    );
 
-  const [selectedYear, setSelectedYear] = useState(
-    years[0] ?? new Date().getFullYear()
-  );
-  const [selectedView, setSelectedView] = useState("income_statement"); // "income_statement" or "balance_sheet"
+    const sortedYears = Array.from(yearSet).sort((a, b) => b - a);
 
-  const financialsForYear = financials.filter(
-    (f) => parseFinancialDate(f.date)?.year === selectedYear
-  );
+    setYears(sortedYears);
 
-  const grouped = financialsForYear.reduce((acc, f) => {
-    const parsed = parseFinancialDate(f.date);
-    if (!parsed) return acc;
+    // If selectedYear is empty OR no longer exists, default to latest year
+    if (sortedYears.length) {
+      setSelectedYear((prev) =>
+        prev && sortedYears.includes(prev) ? prev : sortedYears[0]
+      );
+    } else {
+      setSelectedYear("");
+    }
+  }, [financials]);
 
-    const month = parsed.monthIndex;
-    acc[month] = acc[month] || { income: 0, expense: 0, asset: 0, liability: 0 };
-    acc[month][f.type] += Number(f.amount || 0);
-    return acc;
-  }, {});
+  /* -----------------------------
+     Aggregate monthly data (SAFE parsing)
+  ----------------------------- */
+  const getMonthlyData = (typeKeys) => {
+    const monthly = Array(12)
+      .fill(0)
+      .map(() => ({}));
 
-  const data = MONTHS.map((month, index) => ({
-    month,
-    income: grouped[index]?.income || 0,
-    expense: grouped[index]?.expense || 0,
-    netIncome: (grouped[index]?.income || 0) - (grouped[index]?.expense || 0),
-    asset: grouped[index]?.asset || 0,
-    liability: grouped[index]?.liability || 0,
-  }));
+    financials.forEach((f) => {
+      const parsed = parseFinancialDate(f.date);
+      if (!parsed) return;
+      if (parsed.year !== selectedYear) return;
 
-  const displayedData =
-    selectedView === "income_statement"
-      ? data.map((d) => ({
-          month: d.month,
-          income: d.income,
-          expense: d.expense,
-          netIncome: d.netIncome,
-        }))
-      : data.map((d) => ({
-          month: d.month,
-          asset: d.asset,
-          liability: d.liability,
-        }));
+      const month = parsed.monthIndex;
+      const key = String(f.type || "").toLowerCase();
 
-  const maxValue = Math.max(
-    ...displayedData.flatMap((d) =>
-      selectedView === "income_statement"
-        ? [d.income, d.expense, d.netIncome]
-        : [d.asset, d.liability]
-    ),
-    1
-  );
+      if (!typeKeys.includes(key)) return;
 
-  const legendItems =
-    selectedView === "income_statement"
-      ? [
-          { label: "Income", color: "#3f51b5" },
-          { label: "Expenses", color: "#f9a825" },
-          { label: "Net Income", color: "#ef5350" },
-        ]
-      : [
-          { label: "Assets", color: "#66bb6a" },
-          { label: "Liabilities", color: "#ef5350" },
-        ];
+      const amt = Number(f.amount || 0);
+      monthly[month][key] = (monthly[month][key] || 0) + (Number.isFinite(amt) ? amt : 0);
+    });
 
-  const barGroups =
-    selectedView === "income_statement"
-      ? [
-          { key: "income", color: "#3f51b5" },
-          { key: "expense", color: "#f9a825" },
-          { key: "netIncome", color: "#ef5350" },
-        ]
-      : [
-          { key: "asset", color: "#66bb6a" },
-          { key: "liability", color: "#ef5350" },
-        ];
+    return monthly.map((entry) => typeKeys.map((key) => entry[key] || 0));
+  };
 
-  return (
-    <div className="dashboard-container">
-      <div className="dashboard-header">
-        <div className="year-selector">
-          <select
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(Number(e.target.value))}
-          >
-            <option value="">Year</option>
-            {years.map((y) => (
-              <option key={y} value={y}>
-                {y}
-              </option>
-            ))}
-          </select>
-        </div>
+  /* -----------------------------
+     Render chart
+  ----------------------------- */
+  const renderChart = () => {
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
-        <div className="tab-buttons">
-          <button
-            className={`tab-btn ${
-              selectedView === "income_statement" ? "active" : ""
-            }`}
-            onClick={() => setSelectedView("income_statement")}
-          >
-            Income Statement
-          </button>
-          <button
-            className={`tab-btn ${
-              selectedView === "balance_sheet" ? "active" : ""
-            }`}
-            onClick={() => setSelectedView("balance_sheet")}
-          >
-            Balance Sheet
-          </button>
-        </div>
-      </div>
+    if (tab === "pl") {
+      const [incomes, expenses] = getMonthlyData(["income", "expense"]).reduce(
+        ([rev, exp], [r, e]) => [[...rev, r], [...exp, e]],
+        [[], []]
+      );
 
-      <div className="chart-render">
-        <div className="legend">
-          {legendItems.map((item) => (
-            <div className="legend-item" key={item.label}>
-              <span
-                className="legend-color"
-                style={{ backgroundColor: item.color }}
-              ></span>
-              <span className="legend-label">{item.label}</span>
-            </div>
-          ))}
-        </div>
+      const netIncome = incomes.map((r, i) => r - expenses[i]);
 
-        <div className="bar-chart">
-          {displayedData.map((d) => (
-            <div className="bar-group" key={d.month}>
-              {barGroups.map((bar) => (
-                <div
-                  key={bar.key}
-                  className="bar"
-                  style={{
-                    height: `${(Math.abs(d[bar.key]) / maxValue) * 100}%`,
-                    backgroundColor: bar.color,
-                  }}
-                  title={`${bar.key}: ${d[bar.key]}`}
-                ></div>
-              ))}
-              <div className="bar-label">{d.month}</div>
-            </div>
-          ))}
-        </div>
+      return (
+        <BarChart
+          xAxis={[{ scaleType: "band", data: months }]}
+          yAxis={yAxisConfig}
+          series={[
+            { label: "Income", data: incomes, yAxisKey: "y-axis" },
+            { label: "Expenses", data: expenses, yAxisKey: "y-axis" },
+            { label: "Net Income", data: netIncome, yAxisKey: "y-axis" },
+          ]}
+          width={isMobile ? chartWidth : 700}
+          height={isMobile ? 200 : 400}
+        />
+      );
+    }
+
+    if (tab === "bs") {
+      const monthlyData = getMonthlyData(["asset", "liability"]);
+      const assets = monthlyData.map(([a]) => a);
+      const liabilities = monthlyData.map(([, l]) => l);
+      const equity = assets.map((a, i) => a - liabilities[i]);
+
+      return (
+        <BarChart
+          xAxis={[{ scaleType: "band", data: months }]}
+          yAxis={yAxisConfig}
+          series={[
+            { label: "Assets", data: assets, yAxisKey: "y-axis" },
+            { label: "Liabilities", data: liabilities, yAxisKey: "y-axis" },
+            { label: "Equity", data: equity, yAxisKey: "y-axis" },
+          ]}
+          width={isMobile ? chartWidth : 700}
+          height={isMobile ? 200 : 400}
+        />
+      );
+    }
+
+    return null;
+  };
+
+  /* -----------------------------
+     UI blocks
+  ----------------------------- */
+  const TabsBlock = (
+    <div className="financial-dashboard-tabs">
+      <div className="tab-slider">
+        <button
+          className={`tab-button ${tab === "pl" ? "active" : ""}`}
+          onClick={() => setTab("pl")}
+        >
+          Income Statement
+        </button>
+        <button
+          className={`tab-button ${tab === "bs" ? "active" : ""}`}
+          onClick={() => setTab("bs")}
+        >
+          Balance Sheet
+        </button>
+        <div
+          className="tab-indicator"
+          style={{
+            transform: tab === "bs" ? "translateX(calc(100% + 4px))" : "translateX(0px)",
+          }}
+        />
       </div>
     </div>
   );
+
+  const YearSelectorBlock = (
+    <div className="financial-dashboard-dropdown">
+      <select
+        className="year-dropdown"
+        value={selectedYear || ""}
+        onChange={(e) => setSelectedYear(Number(e.target.value))}
+        aria-label="Select year"
+      >
+        <option value="" disabled>
+          Year
+        </option>
+        {years.map((year) => (
+          <option key={year} value={year}>
+            {year}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+
+  const ChartBlock = <div className="chart-render">{selectedYear && renderChart()}</div>;
+
+  return (
+    <div className="financial-dashboard">
+      {isMobile ? (
+        <>
+          {YearSelectorBlock}
+          {TabsBlock}
+          {ChartBlock}
+        </>
+      ) : (
+        <>
+          <div className="dashboard-controls">
+            {TabsBlock}
+            {YearSelectorBlock}
+          </div>
+          {ChartBlock}
+        </>
+      )}
+    </div>
+  );
 }
+
+export default FinancialDashboard;
