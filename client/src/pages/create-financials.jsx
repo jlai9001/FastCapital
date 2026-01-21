@@ -166,11 +166,18 @@ export default function AddFinancials() {
                 maxDate={new Date("2100-12-31")}
                 value={finDate}
                 onChange={(newValue) => setFinDate(newValue)}
+                localeText={
+                isMobile
+                    ? {
+                        fieldMonthPlaceholder: () => "Date",
+                        fieldYearPlaceholder: () => "",
+                    }
+                    : undefined
+                }
                 slotProps={{
                     textField: {
                     className: "date-styling",
                     helperText: null,
-                    placeholder: isMobile ? "Date" : undefined,
                     },
                 }}
                 />
