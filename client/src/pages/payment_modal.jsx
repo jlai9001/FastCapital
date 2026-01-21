@@ -1,6 +1,6 @@
 import './payment_modal.css'
 import React, { useState } from 'react';
-import { base_url } from '../api'
+import { apiFetch } from "../api/client.js";
 
 function FieldContainer({ isVisible }) {
     if (!isVisible) return null;
@@ -50,46 +50,45 @@ function PaymentModal({ onClose, investment, shareAmount, userId }) {
         onClose();
     };
 
-    const handle_buy = async () => {
-        if (!investment?.id || !userId || !shareAmount || shareAmount <= 0) {
-          alert("Missing or invalid purchase details. Please try again.");
-          return;
-        }
+const handle_buy = async () => {
+    if (!investment?.id || !shareAmount || Number(shareAmount) <= 0) {
+        alert("Missing or invalid purchase details. Please try again.");
+        return;
+    }
 
-        const headers = { "Content-Type": "application/json" };
-        const body = JSON.stringify({
-          investment_id: investment.id,
-          user_id: userId,
-          shares_purchased: shareAmount,
-          cost_per_share: parseFloat(investment.price_per_share),
-          purchase_date: new Date().toISOString()
+    const body = JSON.stringify({
+        investment_id: investment.id,
+        shares_purchased: Number(shareAmount),
+        cost_per_share: Number(investment.price_per_share),
+        purchase_date: new Date().toISOString(),
+    });
+
+    try {
+        const response = await apiFetch(`/api/purchases`, {
+        method: "POST",
+        customHeaders: { "Content-Type": "application/json" },
+        body,
         });
 
-        try {
-          const response = await fetch(`${base_url}/api/purchases`, {
-            method: 'POST',
-            headers,
-            body
-          });
-
-          if (!response.ok) {
-            const errorDetails = await response.json();
-            console.error("Detailed error response:", errorDetails)
-            throw new Error("Purchase failed");
-          }
-
-          const data = await response.json();
-          console.log("Purchase successful:", data);
-
-          setShowFields(false);
-          setShowButtons(false);
-          setShowExitButton(true);
-          setShowCompletionMessage(true);
-        } catch (error) {
-          console.error("Error during purchase:", error);
-          alert("Failed to complete transaction. Please try again.");
+        if (!response.ok) {
+        const errorDetails = await response.json().catch(() => null);
+        console.error("Detailed error response:", errorDetails);
+        throw new Error("Purchase failed");
         }
-      };
+
+        const data = await response.json();
+        console.log("Purchase successful:", data);
+
+        setShowFields(false);
+        setShowButtons(false);
+        setShowExitButton(true);
+        setShowCompletionMessage(true);
+    } catch (error) {
+        console.error("Error during purchase:", error);
+        alert("Failed to complete transaction. Please try again.");
+    }
+    };
+
 
     if (!isVisible) return null;
 
