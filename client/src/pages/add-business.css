@@ -145,7 +145,9 @@ input[type="file"]::file-selector-button:hover {
 }
 
 .no-business-button{
+    margin-top: 50px !important;
     height: 48px !important;
+    width: 100% !important;
 }
 
 /* ✅ MOBILE ONLY behavior:
