@@ -87,7 +87,7 @@ export default function AddFinancials() {
         <div className="create-financials-form">
 
                 <div className = "financials_title">Add Financials</div>
-                <div className = "financials_subtitle">
+                <div className = "financials_subtitle add-financials-subtext">
                 Add financial details to your business in order to make it more
                 attractive to potential investors.
                 </div >
@@ -101,48 +101,51 @@ export default function AddFinancials() {
                     <div className ="field-label-3">Date</div>
                 </div>
             {/* Form Inputs */}
-            <div className ="add-entry-container">
 
-                    <TextField className="create-financials-pulldown"
-                        select
-                        // label="Type"
-                        value={finType}
-                        onChange={(e) => setFinType(e.target.value)}
-                        sx={{ minWidth: 120 }}
-                        >
-                        <MenuItem value="income">Income</MenuItem>
-                        <MenuItem value="expense">Expense</MenuItem>
-                        <MenuItem value="asset">Asset</MenuItem>
-                        <MenuItem value="liability">Liability</MenuItem>
-                    </TextField>
+        <div className="add-entry-container">
 
-                    <TextField className="create-financials-pulldown"
-                    type="number"
-                    // label="Amount"
-                    min="1"
-                    value={finAmount}
-                    onChange={(e) => setFinAmount(e.target.value)}
-                    />
+            <div className="fin-field fin-type">
+                <TextField className="create-financials-pulldown"
+                select
+                value={finType}
+                onChange={(e) => setFinType(e.target.value)}
+                sx={{ minWidth: 120 }}
+                >
+                <MenuItem value="income">Income</MenuItem>
+                <MenuItem value="expense">Expense</MenuItem>
+                <MenuItem value="asset">Asset</MenuItem>
+                <MenuItem value="liability">Liability</MenuItem>
+                </TextField>
+            </div>
 
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DatePicker
-                        views={["year", "month"]}
-                        // label="Month and Year"
-                        minDate={new Date("2000-01-01")}
-                        maxDate={new Date("2100-12-31")}
-                        value={finDate}
-                        onChange={(newValue) => setFinDate(newValue)}
-                     renderInput={(params) =>
+            <div className="fin-field fin-amount">
+                <TextField className="create-financials-pulldown"
+                type="number"
+                min="1"
+                value={finAmount}
+                onChange={(e) => setFinAmount(e.target.value)}
+                />
+            </div>
+
+            <div className="fin-field fin-date">
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                    views={["year", "month"]}
+                    minDate={new Date("2000-01-01")}
+                    maxDate={new Date("2100-12-31")}
+                    value={finDate}
+                    onChange={(newValue) => setFinDate(newValue)}
+                    renderInput={(params) => (
                     <TextField
                         {...params}
                         className="date-styling"
                         helperText={null}
-
-                    />}
                     />
-                    </LocalizationProvider>
-
+                    )}
+                />
+                </LocalizationProvider>
             </div>
+        </div>
             <div className = "bottom-container">
                 <Button className="im-done" onClick={handleCancel}>
                     <div className="im-done-text">
