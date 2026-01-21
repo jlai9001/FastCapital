@@ -152,13 +152,19 @@ export default function AddFinancials() {
             </div>
 
             <div className="fin-field fin-amount">
-                <TextField className="create-financials-pulldown"
+            <TextField
+                className="create-financials-pulldown"
                 type="number"
-                min="1"
                 value={finAmount}
-                onChange={(e) => setFinAmount(e.target.value)}
+                onChange={(e) => {
+                const v = e.target.value;
+                if (v === "") return setFinAmount("");
+                if (Number(v) === 0) return setFinAmount(""); // only blocks pure zero
+                setFinAmount(v);
+                }}
                 placeholder={isMobile ? "Amount" : undefined}
-                />
+                inputProps={{ inputMode: "numeric", min: 1 }}
+            />
             </div>
 
             <div className="fin-field fin-date">

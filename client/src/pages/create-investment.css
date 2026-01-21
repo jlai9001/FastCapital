@@ -98,6 +98,10 @@ body{
    ========================================================= */
 @media (max-width: 768px) {
 
+  .create-investment-form>div {
+        margin-bottom: 5px;
+  }
+
   .cancel-button .post-button{
     padding: 0px !important;
   }
