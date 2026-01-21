@@ -7,12 +7,6 @@ body {
   background-color: var(--page_background_color);
 }
 
-/* Desktop: don't show the custom Date overlay (only needed on mobile) */
-.date-placeholder {
-  display: none;
-}
-
-
 .create-investment-form {
   display: block;
   margin: 0 auto;
@@ -102,10 +96,6 @@ body {
    MOBILE CREATE-INVESTMENT LAYOUT (DOES NOT AFFECT DESKTOP)
    ========================================================= */
 @media (max-width: 768px) {
-    .date-input-wrap .date-placeholder {
-    display: block; /* ensure it appears on mobile */
-  }
-
   .create-investment-container {
     padding: 1.25rem;
     margin-top: 0;
@@ -159,37 +149,6 @@ body {
     background-color: #ffffff;
   }
 
-  /* Date placeholder overlay */
-  .date-input-wrap {
-    position: relative;
-    width: 100%;
-  }
-
-    /* Hide the browser's native mm/dd/yyyy text when empty so it doesn't overlap "Date" */
-  .date-input.is-empty {
-    color: transparent;
-    -webkit-text-fill-color: transparent; /* iOS/Chrome/Safari */
-    caret-color: transparent;
-  }
-
-  /* When user has picked a date, show it normally */
-  .date-input.has-value {
-    color: var(--secondary_text_color);
-    -webkit-text-fill-color: var(--secondary_text_color);
-    caret-color: auto;
-  }
-
-
-  .date-input-wrap .date-placeholder {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #999;
-    font-size: 16px;
-    pointer-events: none; /* allow clicking through to the input */
-  }
-
   /* Stack buttons vertically on mobile */
   .create-investment-form .button-container {
     display: flex;
@@ -203,57 +162,10 @@ body {
   .create-investment-form .post-button {
     width: 100%;
     height: 44px;
-    padding: 0; /* remove vertical padding */
+    padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     line-height: 1;
   }
-
-  /* Chrome/WebKit: hide the internal date text parts when empty */
-.date-input.is-empty::-webkit-datetime-edit,
-.date-input.is-empty::-webkit-datetime-edit-fields-wrapper,
-.date-input.is-empty::-webkit-datetime-edit-text,
-.date-input.is-empty::-webkit-datetime-edit-month-field,
-.date-input.is-empty::-webkit-datetime-edit-day-field,
-.date-input.is-empty::-webkit-datetime-edit-year-field {
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-}
-
-/* When it has a value, show the internal parts normally */
-.date-input.has-value::-webkit-datetime-edit,
-.date-input.has-value::-webkit-datetime-edit-fields-wrapper,
-.date-input.has-value::-webkit-datetime-edit-text,
-.date-input.has-value::-webkit-datetime-edit-month-field,
-.date-input.has-value::-webkit-datetime-edit-day-field,
-.date-input.has-value::-webkit-datetime-edit-year-field {
-  color: var(--secondary_text_color);
-  -webkit-text-fill-color: var(--secondary_text_color);
-}
-
-  /* iOS Safari only: normalize native date input sizing */
-  @supports (-webkit-touch-callout: none) {
-    .create-investment-form .date-input {
-      height: 44px;         /* match other inputs */
-      padding: 10px 12px;   /* same as other inputs */
-      line-height: normal;  /* iOS behaves better with normal line-height */
-    }
-
-    /* Keep the overlay placeholder centered */
-    .date-input-wrap .date-placeholder {
-      line-height: 1;
-    }
-
-    /* iOS: sometimes internal date fields ignore parent color rules */
-    .date-input.is-empty::-webkit-date-and-time-value {
-      color: transparent;
-    }
-    .date-input.has-value::-webkit-date-and-time-value {
-      color: var(--secondary_text_color);
-    }
-  }
-
-
-
 }

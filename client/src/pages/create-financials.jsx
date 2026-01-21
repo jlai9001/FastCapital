@@ -169,30 +169,27 @@ export default function AddFinancials() {
 
             <div className="fin-field fin-date">
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
+
                 <DatePicker
                 views={["year", "month"]}
+                format="MM/yyyy"
                 minDate={new Date("2000-01-01")}
                 maxDate={new Date("2100-12-31")}
                 value={finDate}
                 onChange={(newValue) => setFinDate(newValue)}
-                localeText={
-                isMobile
-                    ? {
-                        fieldMonthPlaceholder: () => "Date",
-                        fieldYearPlaceholder: () => "",
-                    }
-                    : undefined
-                }
+                localeText={{
+                    fieldMonthPlaceholder: () => "mm",
+                    fieldYearPlaceholder: () => "yyyy",
+                }}
                 slotProps={{
-                textField: {
+                    textField: {
                     className: "date-styling",
                     helperText: null,
-                    placeholder: "mm/yyyy",
-                    InputLabelProps: { shrink: true }, // keeps it from looking weird with placeholders
-                },
+                    InputLabelProps: { shrink: true },
+                    },
                 }}
-
                 />
+
                 </LocalizationProvider>
             </div>
         </div>
