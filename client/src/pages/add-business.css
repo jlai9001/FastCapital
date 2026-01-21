@@ -145,16 +145,7 @@ input[type="file"]::file-selector-button:hover {
 }
 
 .no-business-button{
-    background-color: var(--main_button_color);
-    color: #fff;
-    font-size: 16px;
-    font-weight: 600;
-    height: 48px;
-    border: none;
-    border-radius: 10px;
-    align-items: center;
-    width: 100%;
-    margin-top: 50px;
+    height: 48px !important;
 }
 
 /* ✅ MOBILE ONLY behavior:
@@ -163,6 +154,11 @@ input[type="file"]::file-selector-button:hover {
 */
 
 @media (max-width: 600px) {
+  .no-business-button{
+    width:100%;
+  }
+
+
   .file-row.no-file .file-name {
     display: none;
   }
