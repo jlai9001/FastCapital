@@ -5,7 +5,6 @@
 
 .payment_modal {
   width: 100%;
-  max-width: 560px;
   background-color: var(--element_background_color);
   border-radius: var(--element_border_radius);
   box-shadow: var(--element_shadow);
@@ -17,6 +16,8 @@
   flex-direction: column;
 
   font-family: var(--button_font);
+
+  padding: 15px;
 }
 
 /* Header (sticky inside scroll container) */
