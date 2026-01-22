@@ -20,7 +20,7 @@ body {
 }
 
 .purchase-card {
-  width: 600px;
+  width: 800px;
   background-color: var(--element_background_color);
   border-radius: var(--element_border_radius);
   box-shadow: var(--element_shadow);
