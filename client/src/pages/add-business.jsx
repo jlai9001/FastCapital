@@ -101,7 +101,7 @@ function AddBusiness() {
     // ✅ HARD BLOCK non jpg/png/svg
     if (!isAllowedImage(file)) {
       setLogoFile(null);
-      setFileError("File must be jpg, png");
+      setFileError("File type must be jpg or png");
 
       // Clear the input so the user can't "keep" the invalid file selected
       e.target.value = "";
