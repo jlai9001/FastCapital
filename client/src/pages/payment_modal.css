@@ -92,7 +92,6 @@
 .fields_container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 
 /* labels */
@@ -137,7 +136,7 @@
 .payment_actions {
   display: flex;
   gap: 10px;
-  margin-top: 14px;
+  margin-top: 40px;
 }
 
 .buy_button,
