@@ -50,12 +50,33 @@ export default function Purchase() {
   const [showModal, setShowModal] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
 
+  // ✅ Hooks MUST be above any conditional returns
+  const handleModalClose = useCallback(() => {
+    setShowModal(false);
+  }, []);
+
+  const onKeyDown = useCallback(
+    (e) => {
+      if (e.key === "Escape") {
+        handleModalClose();
+      }
+    },
+    [handleModalClose]
+  );
+
+  useEffect(() => {
+    if (!showModal) return;
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [showModal, onKeyDown]);
+
   useEffect(() => {
     if (investment) {
       setTotalPrice(shareAmount * Number(investment.price_per_share));
     }
   }, [shareAmount, investment]);
 
+  // ✅ Now safe to early-return
   if (investmentLoading || businessLoading || purchasesLoading) return <p>Loading...</p>;
 
   if (investmentError || businessError || purchasesError) {
@@ -100,33 +121,9 @@ export default function Purchase() {
     }
   }
 
-  const handleModalClose = useCallback(() => {
-    setShowModal(false);
-  }, []);
-
-
   function handleCancel() {
     nav(-1);
   }
-
-  const onKeyDown = useCallback(
-    (e) => {
-      if (e.key === "Escape") {
-        handleModalClose();
-      }
-    },
-    [handleModalClose]
-  );
-
-
-  useEffect(() => {
-    if (!showModal) return;
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [showModal, onKeyDown]);
-
-
-
 
   const minStep = Number(investment.min_investment) || 1;
   const maxShares = Number(investment.shares_available) || 0;
@@ -306,7 +303,6 @@ export default function Purchase() {
           </div>
         </div>
       )}
-
     </>
   );
 }
