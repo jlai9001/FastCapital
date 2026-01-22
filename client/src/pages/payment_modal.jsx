@@ -1,5 +1,5 @@
 import "./payment_modal.css";
-import { useState, useMemo } from "react";
+import { useMemo, useRef, useState } from "react";
 import { apiFetch } from "../api/client.js";
 import { useProtectedData } from "../context/protected-data-provider.jsx";
 import { useNavigate } from "react-router-dom";
@@ -29,24 +29,26 @@ function FieldContainer({ isVisible }) {
   );
 }
 
-function ExitButtonContainer({ isVisible, onExit }) {
+function ExitButtonContainer({ isVisible, onExit, isBusy }) {
   if (!isVisible) return null;
   return (
-    <button className="exit_button" onClick={onExit}>
+    <button className="exit_button" onClick={onExit} disabled={isBusy}>
       Exit
     </button>
   );
 }
 
-function ButtonsContainer({ isVisible, onCancel, onBuy }) {
+function ButtonsContainer({ isVisible, onCancel, onBuy, isBusy }) {
   if (!isVisible) return null;
+
   return (
     <>
-      <button className="cancel_button" onClick={onCancel}>
+      <button className="cancel_button" onClick={onCancel} disabled={isBusy}>
         Cancel
       </button>
-      <button className="buy_button" onClick={onBuy}>
-        Confirm &amp; Purchase
+
+      <button className="buy_button" onClick={onBuy} disabled={isBusy}>
+        {isBusy ? "Processing..." : "Confirm \u0026 Purchase"}
       </button>
     </>
   );
@@ -59,6 +61,10 @@ function PaymentModal({ onClose, investment, shareAmount }) {
   const [showExitButton, setShowExitButton] = useState(false);
   const [showCompletionMessage, setShowCompletionMessage] = useState(false);
 
+  // ✅ locks UI while request is in-flight (prevents double-submit)
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const submitLockRef = useRef(false);
+
   const { refreshProtectedData } = useProtectedData();
   const navigate = useNavigate();
 
@@ -69,21 +75,31 @@ function PaymentModal({ onClose, investment, shareAmount }) {
   }, [shareAmount, investment]);
 
   const handle_cancel = () => {
+    if (isSubmitting) return; // ✅ ignore clicks while processing
     setIsVisible(false);
     onClose?.();
   };
 
   const handle_exit = () => {
+    if (isSubmitting) return; // ✅ ignore clicks while processing
     setIsVisible(false);
     onClose?.();
     navigate("/portfolio", { replace: true });
   };
 
   const handle_buy = async () => {
+    // ✅ immediate lock (prevents even ultra-fast double-clicks before re-render)
+    if (submitLockRef.current) return;
+
     if (!investment?.id || !shareAmount || Number(shareAmount) <= 0) {
       alert("Missing or invalid purchase details. Please try again.");
       return;
     }
+
+    submitLockRef.current = true;
+    setIsSubmitting(true);
+
+    let success = false;
 
     const body = JSON.stringify({
       investment_id: investment.id,
@@ -114,6 +130,8 @@ function PaymentModal({ onClose, investment, shareAmount }) {
         console.error("refreshProtectedData failed:", e);
       }
 
+      success = true;
+
       setShowFields(false);
       setShowButtons(false);
       setShowExitButton(true);
@@ -121,16 +139,39 @@ function PaymentModal({ onClose, investment, shareAmount }) {
     } catch (error) {
       console.error("Error during purchase:", error);
       alert("Failed to complete transaction. Please try again.");
+
+      // ✅ allow retry on failure
+      submitLockRef.current = false;
+    } finally {
+      // ✅ unlock UI after request completes (success OR failure)
+      setIsSubmitting(false);
+
+      // If success, keep lock true (buttons are hidden anyway, but this is extra safety)
+      if (!success) {
+        // already reset above on failure; keeping here for clarity is fine
+      }
     }
   };
 
   if (!isVisible) return null;
 
   return (
-    <div className="payment_modal" role="dialog" aria-modal="true" aria-label="Payment Confirmation">
+    <div
+      className={`payment_modal ${isSubmitting ? "is-submitting" : ""}`}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Payment Confirmation"
+      aria-busy={isSubmitting}
+    >
       <div className="payment_header">
         <div className="payment_title">Payment Confirmation</div>
-        <button className="payment_close" onClick={handle_cancel} aria-label="Close">
+
+        <button
+          className="payment_close"
+          onClick={handle_cancel}
+          aria-label="Close"
+          disabled={isSubmitting}
+        >
           ×
         </button>
       </div>
@@ -160,8 +201,18 @@ function PaymentModal({ onClose, investment, shareAmount }) {
           )}
 
           <div className="payment_actions">
-            <ButtonsContainer isVisible={showButtons} onCancel={handle_cancel} onBuy={handle_buy} />
-            <ExitButtonContainer isVisible={showExitButton} onExit={handle_exit} />
+            <ButtonsContainer
+              isVisible={showButtons}
+              onCancel={handle_cancel}
+              onBuy={handle_buy}
+              isBusy={isSubmitting}
+            />
+
+            <ExitButtonContainer
+              isVisible={showExitButton}
+              onExit={handle_exit}
+              isBusy={isSubmitting}
+            />
           </div>
         </div>
       </div>
