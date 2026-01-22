@@ -361,6 +361,14 @@ body {
    MOBILE
    ========================================================= */
 @media (max-width: 768px) {
+  .cancel_button {
+    padding:12px;
+  }
+
+  .buy_button {
+    padding:12px;
+  };
+
   .purchase-container {
     padding: 0px 10px;
   }
@@ -408,7 +416,7 @@ body {
   .purchase-cancel-btn,
   .purchase-buy-btn {
     width: 100%;
-    padding: 12px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
