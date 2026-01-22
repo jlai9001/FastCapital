@@ -369,6 +369,10 @@ body {
     padding:12px;
   };
 
+  .exit_button{
+    padding:12px;
+  }
+
   .purchase-container {
     padding: 0px 10px;
   }
