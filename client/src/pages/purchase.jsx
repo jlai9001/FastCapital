@@ -93,9 +93,26 @@ export default function Purchase() {
 
   if (!investment || !business) return <p>Data not found.</p>;
 
-  const resolvedImageUrl = business.image_url
-    ? `${base_url}/uploaded_images/${business.image_url}`
-    : businessPlaceholder;
+  const resolvedImageUrl = (() => {
+  const img = business?.image_url;
+  if (!img) return businessPlaceholder;
+
+  // absolute URL already
+  if (img.startsWith("http")) return img;
+
+  // normalize optional "./"
+  const cleaned = img.replace(/^\.\//, "");
+
+  // stored as "/images/filename"
+  if (cleaned.startsWith("/images/")) return `${base_url}${cleaned}`;
+
+  // stored as "images/filename" (or other path containing images/)
+  if (cleaned.includes("images/")) return `${base_url}/${cleaned}`;
+
+  // stored as just "filename"
+  return `${base_url}/images/${cleaned}`;
+  })();
+
 
   function handleShareAmount(e) {
     if (!investment) return;
