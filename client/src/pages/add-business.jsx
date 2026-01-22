@@ -76,15 +76,14 @@ function AddBusiness() {
   };
 
   const isAllowedImage = (file) => {
-    const allowedMimes = new Set(["image/jpeg", "image/png", "image/svg+xml"]);
+    const allowedMimes = new Set(["image/jpeg", "image/png"]);
     const name = (file?.name || "").toLowerCase();
 
     // Some browsers may provide an empty type for certain files → also check extension
     const allowedExt =
       name.endsWith(".jpg") ||
       name.endsWith(".jpeg") ||
-      name.endsWith(".png") ||
-      name.endsWith(".svg");
+      name.endsWith(".png");
 
     return allowedMimes.has(file.type) || allowedExt;
   };
@@ -102,7 +101,7 @@ function AddBusiness() {
     // ✅ HARD BLOCK non jpg/png/svg
     if (!isAllowedImage(file)) {
       setLogoFile(null);
-      setFileError("File must be jpg, png, or svg.");
+      setFileError("File must be jpg, png");
 
       // Clear the input so the user can't "keep" the invalid file selected
       e.target.value = "";
@@ -248,7 +247,7 @@ function AddBusiness() {
                 className="file-input"
                 type="file"
                 // ✅ restrict picker + validate onChange (don’t rely on accept alone)
-                accept="image/jpeg,image/png,image/svg+xml,.jpg,.jpeg,.png,.svg"
+                accept="image/jpeg,image/png,image/svg+xml,.jpg,.jpeg,.png"
                 onChange={handleFileChange}
               />
             </label>

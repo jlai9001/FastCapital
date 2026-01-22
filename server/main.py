@@ -44,6 +44,7 @@ from db import (
     update_business_details,
     DBBusiness,
     DBInvestment,
+    DBUser
 )
 from auth import get_auth_user, get_optional_auth_user
 from jwt_utils import create_access_token, decode_access_token
@@ -575,6 +576,26 @@ def create_investment_route(
     db_session.refresh(db_investment)
 
     return InvestmentOut.model_validate(db_investment)
+
+from sqlalchemy import func
+
+@app.get("/api/users/email-exists")
+def email_exists(
+    email: str = Query(..., min_length=3),
+    db_session: Session = Depends(get_db),
+):
+    normalized = email.strip().lower()
+    if not normalized:
+        return {"exists": False}
+
+    exists = (
+        db_session.query(DBUser)
+        .filter(func.lower(DBUser.email) == normalized)
+        .first()
+        is not None
+    )
+    return {"exists": exists}
+
 
 @app.get("/api/investments", response_model=List[InvestmentOut])
 async def get_investments_alias():

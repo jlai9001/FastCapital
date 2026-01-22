@@ -5,6 +5,22 @@ import coin from "../assets/coin.svg";
 import { useUser } from "../context/user-provider.jsx";
 import { base_url } from "../api";
 
+// check if email exists
+async function checkEmailExists(email) {
+  try {
+    const res = await fetch(
+      `${base_url}/api/users/email-exists?email=${encodeURIComponent(email)}`,
+      { credentials: "include" }
+    );
+    const data = await res.json();
+    return Boolean(data?.exists);
+  } catch {
+    return false; // fail open (don’t block signup on network hiccups)
+  }
+}
+
+
+
 function saveAccessToken(token) {
   if (!token) return;
   localStorage.setItem("access_token", token);
@@ -67,33 +83,74 @@ function SignupForm() {
     return "";
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+const handleChange = (e) => {
+  const { name, value } = e.target;
 
-    setFormData((prev) => {
-      const next = { ...prev, [name]: value };
+  setFormData((prev) => {
+    const next = { ...prev, [name]: value };
 
-      // live validate current field
-      const msg = validateField(name, value, next);
-      setErrors((p) => ({ ...p, [name]: msg, server: "" }));
+    setErrors((p) => {
+      const updated = { ...p, server: "" };
 
-      // if password changes, re-check confirmPassword too
-      if (name === "password" && next.confirmPassword) {
-        const confirmMsg = validateField("confirmPassword", next.confirmPassword, next);
-        setErrors((p) => ({ ...p, confirmPassword: confirmMsg, server: "" }));
+      // clear email uniqueness error while typing
+      if (name === "email") {
+        updated.email = "";
+      } else {
+        updated[name] = validateField(name, value, next);
       }
 
-      return next;
+      // re-check confirm password if password changes
+      if (name === "password" && next.confirmPassword) {
+        updated.confirmPassword = validateField(
+          "confirmPassword",
+          next.confirmPassword,
+          next
+        );
+      }
+
+      return updated;
     });
 
-    if (showPasswordError) setShowPasswordError(false);
+    return next;
+  });
+
+  if (showPasswordError) setShowPasswordError(false);
+};
+
+const handleBlur = async (e) => {
+  const { name, value } = e.target;
+
+  // run normal validation first
+  const msg = validateField(name, value, formData);
+  if (msg) {
+    setErrors((p) => ({ ...p, [name]: msg }));
+    return;
+  }
+
+    // 🔍 email uniqueness check (ONLY on blur)
+    if (name === "email" && isValidEmailForBackend(value)) {
+    const emailAtBlur = value;
+
+    const exists = await checkEmailExists(emailAtBlur);
+
+    // ⛔ prevent stale async overwrite
+    if (formData.email !== emailAtBlur) {
+      return;
+    }
+
+    if (exists) {
+      setErrors((p) => ({
+        ...p,
+        email: "That email is already registered.",
+      }));
+      return;
+    }
+  }
+
+    // clear error if all good
+    setErrors((p) => ({ ...p, [name]: "" }));
   };
 
-  const handleBlur = (e) => {
-    const { name, value } = e.target;
-    const msg = validateField(name, value, formData);
-    setErrors((p) => ({ ...p, [name]: msg }));
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
