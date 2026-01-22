@@ -202,11 +202,13 @@
 
   .payment_actions {
     flex-direction: column;
+    margin-top: 50px
   }
 
   .buy_button,
   .cancel_button,
   .exit_button {
     width: 100%;
+    padding:8px
   }
 }
