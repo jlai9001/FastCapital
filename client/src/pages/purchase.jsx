@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   useInvestment,
   useBusiness,
@@ -11,7 +11,16 @@ import "./purchase.css";
 import locationIcon from "../assets/location_icon.png";
 import urlIcon from "../assets/url_icon.png";
 import businessPlaceholder from "../assets/business_placeholder.png";
-import { base_url } from '../api'
+import { base_url } from "../api";
+
+function formatMoney(n) {
+  const num = Number(n);
+  if (!Number.isFinite(num)) return "0";
+  return num.toLocaleString("en-US", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  });
+}
 
 export default function Purchase() {
   const nav = useNavigate();
@@ -23,11 +32,13 @@ export default function Purchase() {
     loading: investmentLoading,
     error: investmentError,
   } = useInvestment(investmentId);
+
   const {
     data: business,
     loading: businessLoading,
     error: businessError,
   } = useBusiness(investment?.business_id);
+
   const {
     data: purchases,
     loading: purchasesLoading,
@@ -39,16 +50,15 @@ export default function Purchase() {
   const [showModal, setShowModal] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
 
-
   useEffect(() => {
     if (investment) {
-      setTotalPrice(shareAmount * investment.price_per_share);
+      setTotalPrice(shareAmount * Number(investment.price_per_share));
     }
   }, [shareAmount, investment]);
 
-  if (investmentLoading || businessLoading || purchasesLoading)
-    return <p>Loading...</p>;
-  if (investmentError || businessError || purchasesError)
+  if (investmentLoading || businessLoading || purchasesLoading) return <p>Loading...</p>;
+
+  if (investmentError || businessError || purchasesError) {
     return (
       <p>
         Error:{" "}
@@ -57,31 +67,25 @@ export default function Purchase() {
           purchasesError?.message}
       </p>
     );
+  }
+
   if (!investment || !business) return <p>Data not found.</p>;
 
   const resolvedImageUrl = business.image_url
-        ? `${base_url}/uploaded_images/${business.image_url}`
-        : businessPlaceholder;
-
-  const totalSharesPurchased =
-    purchases?.reduce((sum, purchase) => sum + purchase.shares_purchased, 0) || 0;
-
-  const totalSharesIssued = totalSharesPurchased + investment.shares_available;
-
-  const percentSold = totalSharesIssued > 0
-    ? ((totalSharesPurchased / totalSharesIssued) * 100).toFixed(0)
-    : 0;
+    ? `${base_url}/uploaded_images/${business.image_url}`
+    : businessPlaceholder;
 
   function handleShareAmount(e) {
     if (!investment) return;
 
     let value = parseInt(e.target.value, 10);
-    const max = investment.shares_available;
-    const min = investment.min_investment;
+    const max = Number(investment.shares_available);
+    const min = Number(investment.min_investment);
 
     if (isNaN(value) || value < 0) value = 0;
     if (value > max) value = max;
-    if (value % min !== 0) {
+
+    if (min > 0 && value % min !== 0) {
       value = Math.floor(value / min) * min;
     }
 
@@ -96,190 +100,213 @@ export default function Purchase() {
     }
   }
 
-  function handleModalClose() {
+  const handleModalClose = useCallback(() => {
     setShowModal(false);
-  }
+  }, []);
+
 
   function handleCancel() {
     nav(-1);
   }
 
-  return (<>
-    <div className="page-container">
-      <div className="top-half">
-        <div className="column column-1">
-          <div className="box image-wrapper">
-                    <img
-                      src={resolvedImageUrl}
-                      alt={business.name}
-                      className="business-image"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = businessPlaceholder;
-                      }}
-                    />
-          </div>
-        </div>
-        <div className="column column-2">
-          <div className="box">
-            <h2 className="business-detail-name">{business.name}</h2>
-          </div>
-          <div className="box">
-            <h4 className="location-text">
+  const onKeyDown = useCallback(
+    (e) => {
+      if (e.key === "Escape") {
+        handleModalClose();
+      }
+    },
+    [handleModalClose]
+  );
+
+
+  useEffect(() => {
+    if (!showModal) return;
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [showModal, onKeyDown]);
+
+
+
+
+  const minStep = Number(investment.min_investment) || 1;
+  const maxShares = Number(investment.shares_available) || 0;
+
+  const decShares = () => {
+    setShareAmount((prev) => Math.max(prev - minStep, 0));
+  };
+
+  const incShares = () => {
+    const next = shareAmount + minStep;
+    if (next <= maxShares) setShareAmount(next);
+  };
+
+  return (
+    <>
+      <div className="purchase-container">
+        <div className="purchase-card">
+          <h1 className="purchase-title">Purchase Investment</h1>
+
+          <div className="purchase-business">
+            <div className="purchase-avatar">
               <img
-                src={locationIcon}
-                alt="Location Icon"
-                className="location-icon"
+                src={resolvedImageUrl}
+                alt={business.name}
+                className="purchase-avatar-img"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = businessPlaceholder;
+                }}
               />
-              &nbsp; {business.city}, {business.state}
-            </h4>
-          </div>
-          <div className="box">
-            <p>
+            </div>
+
+            <div className="purchase-business-info">
+              <div className="purchase-business-name">{business.name}</div>
+
+              <div className="purchase-meta-row">
+                <img
+                  src={locationIcon}
+                  alt="Location Icon"
+                  className="purchase-meta-icon"
+                />
+                <span className="purchase-meta-text">
+                  {business.city}, {business.state}
+                </span>
+              </div>
+
               <a
-                className="business-website"
+                className="purchase-website"
                 href={business.website_url}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <img
                   src={urlIcon}
-                  alt="URL Icon"
-                  className="website-icon"
+                  alt="Website Icon"
+                  className="purchase-meta-icon"
                 />
-                &nbsp;&nbsp;
-                {business.website_url.replace(/^https?:\/\/(www\.)?/, "")}
+                <span className="purchase-meta-text">
+                  {business.website_url.replace(/^https?:\/\/(www\.)?/, "")}
+                </span>
               </a>
-            </p>
-          </div>
-        </div>
-        <div className="column column-3">
-          <div className="nested-column top">
-            <div className="nested-box top">
-              <h3 className="box-quantity">{investment.shares_available}</h3>
-            </div>
-            <div className="nested-box bottom">
-              <p className="business-detail-text">Shares Available</p>
             </div>
           </div>
-          <div className="nested-column bottom">
-            <div className="nested-box top">
-              <h3 className="box-quantity">{investment.min_investment}</h3>
-            </div>
-            <div className="nested-box bottom">
-              <p className="business-detail-text">Minimum Investment</p>
-            </div>
-          </div>
-        </div>
-        <div className="column column-4">
-          <div className="nested-column top">
-            <div className="nested-box top">
-              <h3 className="box-quantity">${investment.price_per_share}</h3>
-            </div>
-            <div className="nested-box bottom">
-              <p className="business-detail-text">Price/Share</p>
-            </div>
-          </div>
-          <div className="nested-column bottom">
-            <div className="nested-box top">
-              <h3 className="box-quantity">
-                {new Date(investment.expiration_date).toLocaleDateString(
-                  "en-US",
-                  {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  }
-                )}
-              </h3>
-            </div>
-            <div className="nested-box bottom">
-              <p className="business-detail-text">Offer Expires</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="progress-purchase-container">
-        <div className="progress-bar-wrapper">
-          <p className="progress-label">Funded</p>
-          <div className="progress-bar-row">
-            <div className="progress-bar">
-              <div
-                className="progress-fill"
-                style={{ width: `${percentSold}%` }}
-              ></div>
-            </div>
-            <p className="funded-percentage">{percentSold}%</p>
-          </div>
-        </div>
-      </div>
 
-    <div className="bottom-half">
-        <div className="price-row">
-          <span className="price-label">Price Per Share</span>
-          <span className="price-value">${investment.price_per_share}</span>
-        </div>
+          <div className="purchase-stats">
+            <div className="purchase-stat">
+              <div className="purchase-stat-label">Price Per Share</div>
+              <div className="purchase-stat-value">
+                ${formatMoney(investment.price_per_share)}
+              </div>
+            </div>
 
-        <div className="shares-input-container">
-          <div className="shares-label">Number of Shares</div>
-          <div className="shares-input-row">
-            <button className="share-btn" onClick={() => setShareAmount(prev => Math.max(prev - investment.min_investment, 0))}>−</button>
+            <div className="purchase-stat">
+              <div className="purchase-stat-label">Shares Available</div>
+              <div className="purchase-stat-value">{investment.shares_available}</div>
+            </div>
+
+            <div className="purchase-stat">
+              <div className="purchase-stat-label">Min Shares / Purchase</div>
+              <div className="purchase-stat-value">{investment.min_investment}</div>
+            </div>
+          </div>
+
+          <div className="purchase-divider" />
+
+          <div className="purchase-field">
+            <div className="purchase-label">Number of Shares</div>
+
+            <div className="purchase-stepper">
+              <button
+                type="button"
+                className="purchase-step-btn"
+                onClick={decShares}
+                aria-label="Decrease shares"
+              >
+                −
+              </button>
+
+              <input
+                type="number"
+                className="purchase-step-input"
+                value={shareAmount}
+                onChange={handleShareAmount}
+                min={0}
+                max={maxShares}
+                step={minStep}
+                inputMode="numeric"
+              />
+
+              <button
+                type="button"
+                className="purchase-step-btn"
+                onClick={incShares}
+                aria-label="Increase shares"
+              >
+                +
+              </button>
+            </div>
+
+            <div className="purchase-helper">
+              Must be in increments of <strong>{investment.min_investment}</strong>
+            </div>
+          </div>
+
+          <div className="purchase-total-row">
+            <span className="purchase-total-label">Total Price</span>
+            <span className="purchase-total-value">${formatMoney(totalPrice)}</span>
+          </div>
+
+          <label className="purchase-terms">
             <input
-              type="number"
-              className="share-input"
-              value={shareAmount}
-              onChange={handleShareAmount}
-              min={0}
-              max={investment.shares_available}
-              step={investment.min_investment}
+              type="checkbox"
+              checked={termsAccepted}
+              onChange={() => setTermsAccepted((prev) => !prev)}
             />
-            <button className="share-btn" onClick={() => {
-              const next = shareAmount + investment.min_investment;
-              if (next <= investment.shares_available) setShareAmount(next);
-            }}>+</button>
-        </div>
+            <span>
+              I have read and accept the{" "}
+              <Link to="/terms" className="purchase-terms-link">
+                Investor Terms &amp; Conditions
+              </Link>
+            </span>
+          </label>
 
-        <div className="total-price-row">
-          <span className="total-label">Total Price</span>
-          <span className="total-value">${totalPrice}</span>
+          <div className="purchase-actions">
+            <button className="purchase-cancel-btn" onClick={handleCancel}>
+              Cancel
+            </button>
+
+            <button
+              className="purchase-buy-btn"
+              onClick={modalPop}
+              disabled={shareAmount <= 0 || !termsAccepted}
+            >
+              Purchase
+            </button>
+          </div>
         </div>
-        <label className="terms-and-conditions">
-          <input
-            type="checkbox"
-            checked={termsAccepted}
-            onChange={() => setTermsAccepted(prev => !prev)}
-          />
-          <span>I have read and accept the <a href="#" className="terms-link">Investor Terms & Conditions</a></span>
-        </label>
-        <div className="purchase-actions">
-          <button className="cancel-btn" onClick={handleCancel}>
-            Cancel
-          </button>
-          <button
-            className="buy-btn"
-            onClick={modalPop}
-            disabled={shareAmount <= 0 || !termsAccepted}
-          >
-            Purchase
-          </button>
-        </div>
-    </div>
-  </div>
-  </div>
+      </div>
+
       {showModal && investment && (
-        <div className="modal-overlay">
-          <div className="modal-content">
+        <div
+          className="purchase-modal-overlay"
+          onClick={handleModalClose}
+          role="presentation"
+        >
+          <div
+            className="purchase-modal-content"
+            onClick={(e) => e.stopPropagation()}
+            role="presentation"
+          >
             <PaymentModal
               onClose={handleModalClose}
               investment={investment}
-              userId={user.id}
+              userId={user?.id}
               shareAmount={shareAmount}
             />
           </div>
         </div>
       )}
 
-</>
-
+    </>
   );
 }

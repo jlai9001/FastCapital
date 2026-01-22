@@ -1,458 +1,408 @@
-.terms-and-conditions {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    color: var(--secondary-text-color);
-    margin: 16px 0;
-    cursor: pointer;
-    user-select: none;
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
 }
 
-.terms-and-conditions input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
+body {
+  background-color: var(--page_background_color);
 }
 
-.terms-link {
-    color: var(--main-button-color);
-    text-decoration: underline;
+/* =========================================================
+   PAGE + CARD SHELL
+   ========================================================= */
+.purchase-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1.25rem;
+
+  /* avoids needing huge card margin-bottom */
+  padding-bottom: 140px;
 }
 
+.purchase-card {
+  width: 600px;
+  background-color: var(--element_background_color);
+  border-radius: var(--element_border_radius);
+  box-shadow: var(--element_shadow);
+  padding: 35px;
 
-/* Container for entire purchase page */
-.page-container {
-    margin: 125px 100px 50px 100px;
-    padding: 10px;
-    background-color: #FFFFFF;
-    border: 1px solid #E5E7EB;
-    box-shadow: var(--element-shadow);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-sizing: border-box;
+  /* responsive vertical spacing */
+  margin-top: clamp(20px, 6vh, 60px);
+  margin-bottom: 0;
 }
 
-/* Main details flex container */
-.top-half {
-    margin-top: 50px;
-    display: flex;
-    padding: 10px;
-    box-sizing: border-box;
-    overflow: hidden;
-    }
-
-/* Columns */
-.column {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    padding: 10px;
-    box-sizing: border-box;
+/* =========================================================
+   TITLE
+   ========================================================= */
+.purchase-title {
+  text-align: center;
+  color: var(--primary_text_color);
+  font-weight: 700;
+  font-size: var(--large_fontsize);
+  margin: 0 0 22px 0;
+  font-family: var(--button_font);
 }
 
-.column-1, .column {
-    align-items: center;
+/* =========================================================
+   BUSINESS HEADER
+   ========================================================= */
+.purchase-business {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 18px;
 }
 
-.column-2 {
-    align-items: flex-start;
+.purchase-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 14px;
+  overflow: hidden;
+  background-color: var(--field_background_color);
+  border: 1px solid #e5e7eb;
+  flex: 0 0 auto;
 }
 
-/* Boxes inside columns */
-.box, .nested-box {
-    display: flex;
-    justify-content: center;
+.purchase-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.nested-column {
-    display: flex;
-    flex-direction: column;
+.purchase-business-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
 }
 
-.business-detail-name {
-    font-weight: 700;
-    font-size: 36px;
-    color: black;
+.purchase-business-name {
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--primary_text_color);
+  line-height: 1.2;
 }
 
-.location-icon, .website-icon {
-    object-fit: contain;
-    position: relative;
-    top: 5px;
+.purchase-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--secondary_text_color);
+  font-size: 14px;
+  min-width: 0;
 }
 
-.location-icon {
-    width: 21px;
-    height: 33px;
+.purchase-meta-icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  flex: 0 0 auto;
 }
 
-.website-icon {
-    width: 19px;
-    height: 30px;
+.purchase-meta-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.location-text {
-    color: var(--secondary-text-color);
-    font-size: 24px;
-    font-weight: 400;
-    margin-bottom: 10px;
+.purchase-website {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--main_button_color);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  min-width: 0;
 }
 
-.business-website {
-    color: var(--main-button-color);
-    font-size: 24px;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
+.purchase-website:hover {
+  text-decoration: underline;
 }
 
-.image-wrapper {
-    width: 180px;
-    height: 180px;
-    background-color: #f9f9f9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* =========================================================
+   STATS (Price / Shares / Min)
+   ========================================================= */
+.purchase-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 16px 0 18px 0;
 }
 
-.business-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.purchase-stat {
+  background-color: var(--field_background_color);
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
 }
 
-.box-quantity {
-    font-weight: 600;
-    font-size: 28px;
-    color: black;
+.purchase-stat-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--secondary_text_color);
+  letter-spacing: 0.2px;
+  margin-bottom: 6px;
 }
 
-.business-detail-text {
-    color: var(--secondary-text-color);
-    font-weight: 400;
-    font-size: 16px;
+.purchase-stat-value {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--primary_text_color);
 }
 
-/* Funded percentage and progress bar */
-.funded-percentage {
-    color: #6290C8;
-    font-weight: 600;
-    font-size: 32px;
+/* =========================================================
+   DIVIDER
+   ========================================================= */
+.purchase-divider {
+  height: 1px;
+  width: 100%;
+  background-color: #e5e7eb;
+  margin: 18px 0;
 }
 
-.progress-purchase-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    margin: 10px 30px 0 30px;
-    gap: 1rem;
-    flex-wrap: wrap;
+/* =========================================================
+   SHARE STEPPER
+   ========================================================= */
+.purchase-field {
+  margin-bottom: 14px;
 }
 
-.progress-bar-wrapper {
-    flex: 1 1 400px;
-    max-width: 400px;
-    text-align: center;
+.purchase-label {
+  margin-top: 2px;
+  text-align: left;
+  color: var(--primary_text_color);
+  font-size: var(--small_fontsize);
+  font-weight: 700;
+  margin-bottom: 10px;
 }
 
-.progress-label {
-    color: var(--secondary-text-color);
-    text-align: left;
-    font-weight: 600;
-    margin-bottom: 0.25rem;
+.purchase-stepper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.progress-bar-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
+.purchase-step-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  border: 2px solid var(--main_button_color);
+  background-color: var(--main_button_color);
+  color: var(--main_button_textcolor);
+  font-weight: 900;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-.progress-bar {
-    height: 20px;
-    background-color: #E0E9F4;
-    border-radius: 10px;
-    overflow: hidden;
-    flex-grow: 1;
+.purchase-step-btn:hover {
+  background-color: var(--main_button_hover);
+  border-color: var(--main_button_hover);
 }
 
-.progress-fill {
-    height: 100%;
-    background-color: #6290C8;
-    transition: width 0.5s ease-in-out;
+.purchase-step-input {
+  width: 110px;
+  height: 44px;
+  border-radius: 10px;
+  border: 2px solid var(--field_border_color);
+  background-color: var(--field_background_color);
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--secondary_text_color);
+  outline: none;
 }
 
-/* Buttons */
-.invest-now-button,
-.buy-btn {
-    background-color: var(--main-button-color);
-    color: var(--main-button-textcolor);
-    border: none;
-    padding: 12px 24px;
-    border-radius: var(--button-border-radius);
-    font-weight: 600;
-    font-size: 18px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    min-width: 180px;
+/* remove browser spin buttons */
+.purchase-step-input::-webkit-outer-spin-button,
+.purchase-step-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
-.invest-now-button:hover,
-.buy-btn:hover:not(:disabled) {
-    background-color: var(--main-button-hover);
-    color: var(--main-button-hover-textcolor);
+.purchase-helper {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--secondary_text_color);
 }
 
-.buy-btn:disabled {
-    background-color: #cbd5e1;
-    color: #6b7280; /* Tailwind gray-500 */
-    cursor: not-allowed;
+/* =========================================================
+   TOTAL ROW
+   ========================================================= */
+.purchase-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 16px 0 6px 0;
 }
 
-.buy-btn:disabled:hover {
-    background-color: #d1d5dbd4; /* Tailwind gray-300 */
-    color: #6b7280; /* Tailwind gray-500 */
-    cursor: not-allowed;
-  }
-
-.cancel-btn {
-    background-color: #ddd;
-    color: black;
-    border: none;
-    padding: 12px 24px;
-    border-radius: var(--button-border-radius);
-    font-weight: 600;
-    font-size: 18px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    min-width: 120px;
+.purchase-total-label {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--primary_text_color);
 }
 
-.cancel-btn:hover {
-    background-color: #bbb;
+.purchase-total-value {
+  font-weight: 900;
+  font-size: 18px;
+  color: var(--main_button_color);
 }
 
-/* Bottom half with price per share, shares input, total price */
-.bottom-half {
-    margin-top: 30px;
-    padding: 10px 30px;
-    border-top: 1px solid #E5E7EB;
-    max-width: 480px;
-    width: 100%;
+/* =========================================================
+   TERMS
+   ========================================================= */
+.purchase-terms {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--secondary_text_color);
+  margin: 14px 0 0 0;
+  cursor: pointer;
+  user-select: none;
 }
 
-.price-row,
-.total-price-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
+.purchase-terms input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--main_button_color);
 }
 
-.price-label,
-.total-label,
-.shares-label {
-    font-weight: 600;
-    font-size: 18px;
-    color: black;
+.purchase-terms-link {
+  color: var(--main_button_color);
+  text-decoration: underline;
+  font-weight: 700;
 }
 
-.price-value,
-.total-value {
-    font-weight: 700;
-    font-size: 20px;
-    color: var(--main-button-color);
-}
-
-/* Shares input container */
-.shares-input-container {
-    margin-bottom: 20px;
-}
-
-.shares-input-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.share-btn {
-    background-color: var(--main-button-color);
-    color: var(--main-button-textcolor);
-    border: none;
-    font-weight: 700;
-    font-size: 24px;
-    width: 38px;
-    height: 38px;
-    border-radius: 6px;
-    cursor: pointer;
-    user-select: none;
-    transition: background-color 0.3s ease;
-}
-
-.share-btn:hover {
-    background-color: var(--main-button-hover);
-}
-
-.share-input {
-    width: 100px;
-    height: 38px;
-    font-size: 18px;
-    font-weight: 600;
-    padding: 6px 12px;
-    border: 1px solid var(--field-border-color);
-    border-radius: var(--button-border-radius);
-    text-align: center;
-    box-sizing: border-box;
-
-}
-
-.share-input::-webkit-inner-spin-button,
-.share-input::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-/* Purchase actions buttons container */
+/* =========================================================
+   ACTION BUTTONS
+   ========================================================= */
 .purchase-actions {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    margin-top: 20px;
-    padding: 0 30px 20px 30px;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  margin-top: 22px;
 }
 
-/* Modal overlay & content */
-.modal-overlay {
-    position: fixed;
-    width: 100%;
-    height: 100vh;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: rgba(0,0,0,0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    max-width: 100%;
+.purchase-cancel-btn {
+  width: 50%;
+  background-color: transparent;
+  color: var(--main_button_color);
+  border: 2px solid var(--main_button_color);
+  border-radius: var(--button_border_radius);
+  font-size: var(--small_fontsize);
+  font-weight: 700;
+  cursor: pointer;
+  padding: 12px;
+  transition: background-color 0.2s ease;
 }
 
-.modal-content {
-    background-color: white;
-    border-radius: var(--border-radius);
-    max-width: 600px;
-    width: 90%;
-    box-shadow: var(--element-shadow);
-    box-sizing: border-box;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.purchase-cancel-btn:hover {
+  background-color: var(--main_button_hover);
+  color: var(--main_button_hover_textcolor);
 }
 
+.purchase-buy-btn {
+  width: 50%;
+  background-color: var(--main_button_color);
+  color: var(--main_button_textcolor);
+  border: 2px solid var(--main_button_color);
+  border-radius: var(--button_border_radius);
+  font-size: var(--small_fontsize);
+  font-weight: 700;
+  cursor: pointer;
+  padding: 12px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
 
-/* ===============================
-   MOBILE FIX: prevent sideways overflow + force full-width cards
-   =============================== */
+.purchase-buy-btn:hover:not(:disabled) {
+  background-color: var(--main_button_hover);
+  border-color: var(--main_button_hover);
+}
+
+.purchase-buy-btn:disabled {
+  background-color: #cbd5e1;
+  border-color: #cbd5e1;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   MODAL (must appear above fixed Nav)
+   ========================================================= */
+.purchase-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  z-index: 2000;
+}
+
+.purchase-modal-content {
+  background-color: white;
+  border-radius: var(--element_border_radius);
+  max-width: 640px;
+  width: 100%;
+  box-shadow: var(--element_shadow);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
 @media (max-width: 768px) {
-  /* Stop any child from causing horizontal scroll/shift */
-  html, body {
-    overflow-x: hidden;
+  .purchase-container {
+    padding: 1.25rem;
+    padding-bottom: 110px;
   }
 
-  /* Portfolio page container should not behave like desktop */
-  .portfolio-page-container {
+  .purchase-card {
     width: 100%;
-    max-width: 100%;          /* smaller padding than desktop */
-    box-sizing: border-box;
+    max-width: 420px;
+    margin: 1.25rem auto 0;
+    padding: 24px 20px;
+    border-radius: 16px;
+    margin-bottom: 0;
   }
 
-  /* Hide the big desktop-style page title on mobile (matches your Picture 1 look) */
-  .portfolio-page-container > h2 {
-    display: none;
+  .purchase-title {
+    font-size: 24px;
+    margin-bottom: 16px;
   }
 
-  /* Any major sections should never exceed viewport width */
-  .your-investments-container,
-  .pending-investments-container {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
+  .purchase-business {
+    align-items: center;
   }
 
-  /* Recharts tends to set fixed inline widths; force wrapper to stay centered */
-  .recharts-wrapper {
-    max-width: 100%;
-    margin: 0 auto;
+  .purchase-stats {
+    grid-template-columns: 1fr;
   }
 
-  /* Make the SVG/chart shrink within the card instead of pushing layout sideways */
-  .recharts-surface {
-    max-width: 100%;
-    height: auto;
-  }
-
-  /* Legend wrapper can also cause overflow */
-  .recharts-legend-wrapper {
-    max-width: 100%;
-  }
-}
-
-
-/* ===============================
-   MOBILE: make "Your Investments" look like Picture 1
-   =============================== */
-@media (max-width: 768px) {
-  /* Remove the desktop forced width that breaks mobile */
-  .investments-dashboard-container {
-    min-width: 0;      /* ✅ critical fix */
-    width: 100%;
-    max-width: 100%;
-    margin-top: 20px;
-    padding: 16px;
-    overflow: hidden;
-    box-sizing: border-box;
-  }
-
-  /* Stack chart + list vertically (Picture 1 layout) */
-  .investments-dashboard-shell {
+  .purchase-actions {
     flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
-    min-height: 0;
+    gap: 12px;
   }
 
-  .investments-dashboard {
-    flex-direction: column;
+  .purchase-cancel-btn,
+  .purchase-buy-btn {
     width: 100%;
-    gap: 16px;
-  }
-
-  .investments-chart {
-    width: 100%;
-    min-width: 0;
-  }
-
-  /* Hide "Your Portfolio" text on mobile (Picture 1 doesn’t show it) */
-  .portfolio-title {
-    display: none;
-  }
-
-  /* Shrink chart area to fit nicely on mobile */
-  .piechart-wrapper {
-    max-width: 260px;
-    height: 260px;
-    margin: 0 auto;
-  }
-
-  /* Make the investment list full width */
-  .investments-grid-wrapper {
-    width: 100%;
-  }
-
-  .investments-card {
-    width: 100%;
-  }
-
-  /* Total aligned like Picture 1 */
-  .portfolio-total {
-    text-align: center;
+    height: 44px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
   }
 }
