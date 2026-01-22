@@ -166,6 +166,7 @@ body {
    SHARE STEPPER
    ========================================================= */
 .purchase-field {
+  margin-top: 35px;
   margin-bottom: 14px;
 }
 
@@ -175,7 +176,7 @@ body {
   color: var(--primary_text_color);
   font-size: var(--small_fontsize);
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
 }
 
 .purchase-stepper {
@@ -227,7 +228,6 @@ body {
 }
 
 .purchase-helper {
-  margin-top: 10px;
   font-size: 13px;
   color: var(--secondary_text_color);
 }
@@ -239,7 +239,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 16px 0 6px 0;
+  margin: 40px 0 6px 0;
 }
 
 .purchase-total-label {
@@ -263,7 +263,6 @@ body {
   gap: 10px;
   font-size: 14px;
   color: var(--secondary_text_color);
-  margin: 14px 0 0 0;
   cursor: pointer;
   user-select: none;
 }
@@ -287,7 +286,7 @@ body {
   display: flex;
   gap: 10px;
   justify-content: space-between;
-  margin-top: 22px;
+  margin-top: 40px;
 }
 
 .purchase-cancel-btn {
