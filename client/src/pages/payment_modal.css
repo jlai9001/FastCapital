@@ -183,14 +183,13 @@
 
 /* Mobile */
 @media (max-width: 768px) {
-  .payment_summary_row {
-    display: none;
-  }
-
-
   .payment_modal {
     max-width: 100%;
     max-height: calc(100vh - 80px);
+  }
+
+  .payment_summary_row{
+    padding: 0;
   }
 
   .payment_body {
