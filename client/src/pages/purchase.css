@@ -134,16 +134,15 @@ body {
   background-color: var(--field_background_color);
   border: 1px solid #e5e7eb;
   border-radius: 12px;
-  padding: 12px;
+  padding: 6px;
   text-align: center;
 }
 
 .purchase-stat-label {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--secondary_text_color);
   letter-spacing: 0.2px;
-  margin-bottom: 6px;
 }
 
 .purchase-stat-value {
@@ -363,8 +362,15 @@ body {
    ========================================================= */
 @media (max-width: 768px) {
   .purchase-container {
-    padding: 1.25rem;
-    padding-bottom: 110px;
+    padding: 0px 10px;
+  }
+
+  .purchase-total-row{
+    margin: 20px 0 6px;
+  }
+
+  .purchase-terms{
+    margin-top: 10px;
   }
 
   .purchase-card {
@@ -376,8 +382,12 @@ body {
     margin-bottom: 0;
   }
 
+  .purchase-field{
+    margin: 0;
+  }
+
   .purchase-title {
-    font-size: 24px;
+    font-size: 20px;
     margin-bottom: 16px;
   }
 
@@ -392,6 +402,7 @@ body {
   .purchase-actions {
     flex-direction: column;
     gap: 12px;
+    margin-top :20px;
   }
 
   .purchase-cancel-btn,

@@ -280,10 +280,7 @@ export default function Purchase() {
               onChange={() => setTermsAccepted((prev) => !prev)}
             />
             <span>
-              I have read and accept the{" "}
-              <Link to="/terms" className="purchase-terms-link">
-                Investor Terms &amp; Conditions
-              </Link>
+              I agree to the terms and conditions
             </span>
           </label>
 
