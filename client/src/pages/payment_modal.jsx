@@ -54,7 +54,7 @@ function ButtonsContainer({ isVisible, onCancel, onBuy, isBusy }) {
   );
 }
 
-function PaymentModal({ onClose, investment, shareAmount }) {
+function PaymentModal({ onClose, investment, shareAmount, onDismissLockChange }) {
   const [isVisible, setIsVisible] = useState(true);
   const [showFields, setShowFields] = useState(true);
   const [showButtons, setShowButtons] = useState(true);
@@ -64,6 +64,14 @@ function PaymentModal({ onClose, investment, shareAmount }) {
   // ✅ locks UI while request is in-flight (prevents double-submit)
   const [isSubmitting, setIsSubmitting] = useState(false);
   const submitLockRef = useRef(false);
+
+  // Lock dismissing the modal (overlay click / Escape / close button) while processing
+  // and after a successful payment until the user clicks EXIT.
+  const dismissLocked = isSubmitting || showCompletionMessage;
+
+  const setDismissLocked = (locked) => {
+    onDismissLockChange?.(Boolean(locked));
+  };
 
   const { refreshProtectedData } = useProtectedData();
   const navigate = useNavigate();
@@ -75,13 +83,15 @@ function PaymentModal({ onClose, investment, shareAmount }) {
   }, [shareAmount, investment]);
 
   const handle_cancel = () => {
-    if (isSubmitting) return; // ✅ ignore clicks while processing
+    if (dismissLocked || submitLockRef.current) return; // ✅ ignore dismiss while locked
+    setDismissLocked(false);
     setIsVisible(false);
     onClose?.();
   };
 
   const handle_exit = () => {
     if (isSubmitting) return; // ✅ ignore clicks while processing
+    setDismissLocked(false);
     setIsVisible(false);
     onClose?.();
     navigate("/portfolio", { replace: true });
@@ -98,6 +108,7 @@ function PaymentModal({ onClose, investment, shareAmount }) {
 
     submitLockRef.current = true;
     setIsSubmitting(true);
+    setDismissLocked(true);
 
     let success = false;
 
@@ -132,6 +143,9 @@ function PaymentModal({ onClose, investment, shareAmount }) {
 
       success = true;
 
+      // Keep dismiss locked after success until user clicks EXIT.
+      setDismissLocked(true);
+
       setShowFields(false);
       setShowButtons(false);
       setShowExitButton(true);
@@ -142,14 +156,13 @@ function PaymentModal({ onClose, investment, shareAmount }) {
 
       // ✅ allow retry on failure
       submitLockRef.current = false;
+      setDismissLocked(false);
     } finally {
       // ✅ unlock UI after request completes (success OR failure)
       setIsSubmitting(false);
 
-      // If success, keep lock true (buttons are hidden anyway, but this is extra safety)
-      if (!success) {
-        // already reset above on failure; keeping here for clarity is fine
-      }
+      // If success, keep dismiss locked. If failure, it was unlocked above.
+      if (success) setDismissLocked(true);
     }
   };
 
@@ -170,14 +183,13 @@ function PaymentModal({ onClose, investment, shareAmount }) {
           className="payment_close"
           onClick={handle_cancel}
           aria-label="Close"
-          disabled={isSubmitting}
+          disabled={dismissLocked}
         >
           ×
         </button>
       </div>
 
       <div className="payment_body">
-        {/* Summary always visible */}
         <div className="payment_summary">
           <div className="payment_summary_row">
             <span>Shares</span>
