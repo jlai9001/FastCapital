@@ -49,19 +49,21 @@ export default function Purchase() {
   const [totalPrice, setTotalPrice] = useState(0.0);
   const [showModal, setShowModal] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [modalDismissLocked, setModalDismissLocked] = useState(false);
 
   // ✅ Hooks MUST be above any conditional returns
   const handleModalClose = useCallback(() => {
     setShowModal(false);
+    setModalDismissLocked(false);
   }, []);
 
   const onKeyDown = useCallback(
     (e) => {
-      if (e.key === "Escape") {
+      if (e.key === "Escape" && !modalDismissLocked) {
         handleModalClose();
       }
     },
-    [handleModalClose]
+    [handleModalClose, modalDismissLocked]
   );
 
   useEffect(() => {
@@ -76,7 +78,6 @@ export default function Purchase() {
     }
   }, [shareAmount, investment]);
 
-  // ✅ Now safe to early-return
   if (investmentLoading || businessLoading || purchasesLoading) return <p>Loading...</p>;
 
   if (investmentError || businessError || purchasesError) {
@@ -115,6 +116,8 @@ export default function Purchase() {
 
   function modalPop() {
     if (shareAmount > 0) {
+      // Reset dismiss lock each time we open the modal.
+      setModalDismissLocked(false);
       setShowModal(true);
     } else {
       alert("Please enter a valid number of shares");
@@ -286,7 +289,10 @@ export default function Purchase() {
       {showModal && investment && (
         <div
           className="purchase-modal-overlay"
-          onClick={handleModalClose}
+          onClick={() => {
+            // Only allow clicking outside to dismiss while NOT locked.
+            if (!modalDismissLocked) handleModalClose();
+          }}
           role="presentation"
         >
           <div
@@ -299,6 +305,7 @@ export default function Purchase() {
               investment={investment}
               userId={user?.id}
               shareAmount={shareAmount}
+              onDismissLockChange={setModalDismissLocked}
             />
           </div>
         </div>
