@@ -20,6 +20,7 @@ function AddBusiness() {
 
   const [businessId, setBusinessId] = useState(null);
   const [logoFile, setLogoFile] = useState(null);
+  const [fileError, setFileError] = useState(""); // ✅ file-type warning
   const [message, setMessage] = useState("");
 
   const normalizeUrl = (url) => {
@@ -74,8 +75,42 @@ function AddBusiness() {
     }));
   };
 
+  const isAllowedImage = (file) => {
+    const allowedMimes = new Set(["image/jpeg", "image/png", "image/svg+xml"]);
+    const name = (file?.name || "").toLowerCase();
+
+    // Some browsers may provide an empty type for certain files → also check extension
+    const allowedExt =
+      name.endsWith(".jpg") ||
+      name.endsWith(".jpeg") ||
+      name.endsWith(".png") ||
+      name.endsWith(".svg");
+
+    return allowedMimes.has(file.type) || allowedExt;
+  };
+
   const handleFileChange = (e) => {
-    setLogoFile(e.target.files?.[0] || null);
+    const file = e.target.files?.[0];
+
+    // user canceled selection
+    if (!file) {
+      setLogoFile(null);
+      setFileError("");
+      return;
+    }
+
+    // ✅ HARD BLOCK non jpg/png/svg
+    if (!isAllowedImage(file)) {
+      setLogoFile(null);
+      setFileError("File must be jpg, png, or svg.");
+
+      // Clear the input so the user can't "keep" the invalid file selected
+      e.target.value = "";
+      return;
+    }
+
+    setFileError("");
+    setLogoFile(file);
   };
 
   // ----------------------------------
@@ -84,6 +119,9 @@ function AddBusiness() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
+
+    // ✅ Don’t allow submit if file is invalid
+    if (fileError) return;
 
     // ================================
     // UPDATE EXISTING BUSINESS
@@ -209,7 +247,8 @@ function AddBusiness() {
               <input
                 className="file-input"
                 type="file"
-                accept="image/*"
+                // ✅ restrict picker + validate onChange (don’t rely on accept alone)
+                accept="image/jpeg,image/png,image/svg+xml,.jpg,.jpeg,.png,.svg"
                 onChange={handleFileChange}
               />
             </label>
@@ -218,6 +257,9 @@ function AddBusiness() {
               {logoFile ? logoFile.name : "No file chosen"}
             </span>
           </div>
+
+          {/* ✅ field-level warning */}
+          {fileError && <div className="message">{fileError}</div>}
 
           <div className="field-label">Address</div>
           <input
