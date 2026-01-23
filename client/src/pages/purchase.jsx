@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useParams, useNavigate} from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   useInvestment,
   useBusiness,
@@ -51,6 +51,28 @@ export default function Purchase() {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [modalDismissLocked, setModalDismissLocked] = useState(false);
 
+  // ✅ Mobile-only page class hook (enables route-specific CSS fixes)
+  useEffect(() => {
+    const mql = window.matchMedia("(max-width: 768px)");
+
+    const apply = () => {
+      if (mql.matches) document.body.classList.add("purchase-route");
+      else document.body.classList.remove("purchase-route");
+    };
+
+    apply();
+
+    if (mql.addEventListener) mql.addEventListener("change", apply);
+    else mql.addListener(apply);
+
+    return () => {
+      if (mql.removeEventListener) mql.removeEventListener("change", apply);
+      else mql.removeListener(apply);
+
+      document.body.classList.remove("purchase-route");
+    };
+  }, []);
+
   // ✅ Hooks MUST be above any conditional returns
   const handleModalClose = useCallback(() => {
     setShowModal(false);
@@ -78,7 +100,6 @@ export default function Purchase() {
     }
   }, [shareAmount, investment]);
 
-
   useEffect(() => {
     // If an offer becomes sold out while user is on page, clamp UI state
     if (!investment) return;
@@ -90,7 +111,6 @@ export default function Purchase() {
       setModalDismissLocked(false);
     }
   }, [investment?.shares_available]);
-
 
   if (investmentLoading || businessLoading || purchasesLoading) return <p>Loading...</p>;
 
@@ -111,27 +131,25 @@ export default function Purchase() {
   const maxShares = Number(investment.shares_available) || 0;
   const isSoldOut = maxShares <= 0;
 
-
   const resolvedImageUrl = (() => {
-  const img = business?.image_url;
-  if (!img) return businessPlaceholder;
+    const img = business?.image_url;
+    if (!img) return businessPlaceholder;
 
-  // absolute URL already
-  if (img.startsWith("http")) return img;
+    // absolute URL already
+    if (img.startsWith("http")) return img;
 
-  // normalize optional "./"
-  const cleaned = img.replace(/^\.\//, "");
+    // normalize optional "./"
+    const cleaned = img.replace(/^\.\//, "");
 
-  // stored as "/images/filename"
-  if (cleaned.startsWith("/images/")) return `${base_url}${cleaned}`;
+    // stored as "/images/filename"
+    if (cleaned.startsWith("/images/")) return `${base_url}${cleaned}`;
 
-  // stored as "images/filename" (or other path containing images/)
-  if (cleaned.includes("images/")) return `${base_url}/${cleaned}`;
+    // stored as "images/filename" (or other path containing images/)
+    if (cleaned.includes("images/")) return `${base_url}/${cleaned}`;
 
-  // stored as just "filename"
-  return `${base_url}/images/${cleaned}`;
+    // stored as just "filename"
+    return `${base_url}/images/${cleaned}`;
   })();
-
 
   function handleShareAmount(e) {
     if (!investment) return;
@@ -169,7 +187,6 @@ export default function Purchase() {
     nav(-1);
   }
 
-
   const decShares = () => {
     setShareAmount((prev) => Math.max(prev - minStep, 0));
   };
@@ -183,138 +200,141 @@ export default function Purchase() {
     <>
       <div className="purchase-container">
         <div className="purchase-card">
-          <h1 className="purchase-title">Purchase Investment</h1>
+          {/* ✅ Everything except buttons goes in purchase-content */}
+          <div className="purchase-content">
+            <h1 className="purchase-title">Purchase Investment</h1>
+
             {isSoldOut && (
               <div className="purchase-soldout-notice">
                 This offer is fully funded and is no longer available for purchase.
               </div>
             )}
 
-          <div className="purchase-business">
-            <div className="purchase-avatar">
-              <img
-                src={resolvedImageUrl}
-                alt={business.name}
-                className="purchase-avatar-img"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = businessPlaceholder;
-                }}
-              />
-            </div>
-
-            <div className="purchase-business-info">
-              <div className="purchase-business-name">{business.name}</div>
-
-              <div className="purchase-meta-row">
+            <div className="purchase-business">
+              <div className="purchase-avatar">
                 <img
-                  src={locationIcon}
-                  alt="Location Icon"
-                  className="purchase-meta-icon"
+                  src={resolvedImageUrl}
+                  alt={business.name}
+                  className="purchase-avatar-img"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = businessPlaceholder;
+                  }}
                 />
-                <span className="purchase-meta-text">
-                  {business.city}, {business.state}
-                </span>
               </div>
 
-              <a
-                className="purchase-website"
-                href={business.website_url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src={urlIcon}
-                  alt="Website Icon"
-                  className="purchase-meta-icon"
-                />
-                <span className="purchase-meta-text">
-                  {business.website_url.replace(/^https?:\/\/(www\.)?/, "")}
-                </span>
-              </a>
-            </div>
-          </div>
+              <div className="purchase-business-info">
+                <div className="purchase-business-name">{business.name}</div>
 
-          <div className="purchase-stats">
-            <div className="purchase-stat">
-              <div className="purchase-stat-label">Price Per Share</div>
-              <div className="purchase-stat-value">
-                ${formatMoney(investment.price_per_share)}
+                <div className="purchase-meta-row">
+                  <img
+                    src={locationIcon}
+                    alt="Location Icon"
+                    className="purchase-meta-icon"
+                  />
+                  <span className="purchase-meta-text">
+                    {business.city}, {business.state}
+                  </span>
+                </div>
+
+                <a
+                  className="purchase-website"
+                  href={business.website_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src={urlIcon}
+                    alt="Website Icon"
+                    className="purchase-meta-icon"
+                  />
+                  <span className="purchase-meta-text">
+                    {business.website_url.replace(/^https?:\/\/(www\.)?/, "")}
+                  </span>
+                </a>
               </div>
             </div>
 
-            <div className="purchase-stat">
-              <div className="purchase-stat-label">Shares Available</div>
-              <div className="purchase-stat-value">{investment.shares_available}</div>
+            <div className="purchase-stats">
+              <div className="purchase-stat">
+                <div className="purchase-stat-label">Price Per Share</div>
+                <div className="purchase-stat-value">
+                  ${formatMoney(investment.price_per_share)}
+                </div>
+              </div>
+
+              <div className="purchase-stat">
+                <div className="purchase-stat-label">Shares Available</div>
+                <div className="purchase-stat-value">{investment.shares_available}</div>
+              </div>
+
+              <div className="purchase-stat">
+                <div className="purchase-stat-label">Min Shares / Purchase</div>
+                <div className="purchase-stat-value">{investment.min_investment}</div>
+              </div>
             </div>
 
-            <div className="purchase-stat">
-              <div className="purchase-stat-label">Min Shares / Purchase</div>
-              <div className="purchase-stat-value">{investment.min_investment}</div>
+            <div className="purchase-divider" />
+
+            <div className="purchase-field">
+              <div className="purchase-label">Number of Shares</div>
+
+              <div className="purchase-stepper">
+                <button
+                  type="button"
+                  className="purchase-step-btn"
+                  onClick={decShares}
+                  aria-label="Decrease shares"
+                  disabled={isSoldOut}
+                >
+                  −
+                </button>
+
+                <input
+                  type="number"
+                  className="purchase-step-input"
+                  value={shareAmount}
+                  onChange={handleShareAmount}
+                  min={0}
+                  max={maxShares}
+                  step={minStep}
+                  inputMode="numeric"
+                  disabled={isSoldOut}
+                />
+
+                <button
+                  type="button"
+                  className="purchase-step-btn"
+                  onClick={incShares}
+                  aria-label="Increase shares"
+                  disabled={isSoldOut}
+                >
+                  +
+                </button>
+              </div>
+
+              <div className="purchase-helper">
+                Must be in increments of <strong>{investment.min_investment}</strong>
+              </div>
             </div>
-          </div>
 
-          <div className="purchase-divider" />
+            <div className="purchase-total-row">
+              <span className="purchase-total-label">Total Price</span>
+              <span className="purchase-total-value">${formatMoney(totalPrice)}</span>
+            </div>
 
-          <div className="purchase-field">
-            <div className="purchase-label">Number of Shares</div>
-
-            <div className="purchase-stepper">
-              <button
-                type="button"
-                className="purchase-step-btn"
-                onClick={decShares}
-                aria-label="Decrease shares"
-                disabled={isSoldOut}
-              >
-                −
-              </button>
-
+            <label className="purchase-terms">
               <input
-                type="number"
-                className="purchase-step-input"
-                value={shareAmount}
-                onChange={handleShareAmount}
-                min={0}
-                max={maxShares}
-                step={minStep}
-                inputMode="numeric"
+                type="checkbox"
+                checked={termsAccepted}
+                onChange={() => setTermsAccepted((prev) => !prev)}
                 disabled={isSoldOut}
               />
-
-              <button
-                type="button"
-                className="purchase-step-btn"
-                onClick={incShares}
-                aria-label="Increase shares"
-                disabled={isSoldOut}
-              >
-                +
-              </button>
-            </div>
-
-            <div className="purchase-helper">
-              Must be in increments of <strong>{investment.min_investment}</strong>
-            </div>
+              <span>I agree to the terms and conditions</span>
+            </label>
           </div>
 
-          <div className="purchase-total-row">
-            <span className="purchase-total-label">Total Price</span>
-            <span className="purchase-total-value">${formatMoney(totalPrice)}</span>
-          </div>
-
-          <label className="purchase-terms">
-            <input
-              type="checkbox"
-              checked={termsAccepted}
-              onChange={() => setTermsAccepted((prev) => !prev)}
-              disabled={isSoldOut}
-            />
-            <span>
-              I agree to the terms and conditions
-            </span>
-          </label>
-
+          {/* ✅ Buttons stay OUTSIDE the scrollable content area */}
           <div className="purchase-actions">
             <button className="purchase-cancel-btn" onClick={handleCancel}>
               Cancel
