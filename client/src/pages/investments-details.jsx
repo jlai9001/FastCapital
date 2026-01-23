@@ -2,7 +2,6 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   useInvestment,
   useBusiness,
-  useInvestmentPurchases,
 } from "../hooks/getData";
 import FinancialDashboard from "../components/financials_table";
 import "./investments-details.css";
@@ -52,11 +51,6 @@ export default function InvestmentDetails() {
     if (business?.image_url) setImageVersion(Date.now());
   }, [business?.image_url]);
 
-  const {
-    loading: purchasesLoading,
-    error: purchasesError,
-    data: purchases,
-  } = useInvestmentPurchases(investmentId, !!user);
 
   // ✅ NEW: fetch financials once we know the business id
   useEffect(() => {
