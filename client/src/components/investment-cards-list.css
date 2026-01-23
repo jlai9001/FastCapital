@@ -82,7 +82,13 @@ ul {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
+  transition: transform 0.2s ease;
 }
+
+.card-grid:hover {
+  transform: translateY(-5px);
+}
+
 
 .investment-controls {
   display: flex;
