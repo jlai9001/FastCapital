@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './pending-investments-card.css'
 import { useNavigate } from 'react-router-dom';
 import mapIcon from '../assets/map_icon.png';
+import { getFundingPercent } from "../utils/investmentFunding";
 
 // This function will need to recieve the data for a purchase by passing the prop into the component
 export default function PendingInvestmentsCard({ purchase, investment }){
@@ -38,9 +39,8 @@ export default function PendingInvestmentsCard({ purchase, investment }){
         navigate(`/investment-details/${investment.id}`)
     };
 
-    const percentSold = investment && investment.shares_available
-        ? Math.round((purchase.shares_purchased / investment.shares_available) * 100)
-        : 0;
+    const percentSold = getFundingPercent(investment);
+
 
   // MOBILE LAYOUT
   if (isMobile) {

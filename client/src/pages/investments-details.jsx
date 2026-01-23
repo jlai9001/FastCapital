@@ -12,6 +12,8 @@ import placeholder from "../assets/business_placeholder.png";
 import { base_url } from "../api";
 import { useUser } from "../context/user-provider";
 import { useState, useEffect } from "react";
+import { getFundingPercent } from "../utils/investmentFunding";
+
 
 function getAccessToken() {
   return localStorage.getItem("access_token");
@@ -93,10 +95,8 @@ export default function InvestmentDetails() {
     return <h1> {investmentError || businessError} </h1>;
   if (!investment || !business) return <h1>Unable to retreive investment data.</h1>;
 
-  const totalSharesPurchased =
-    purchases?.reduce((sum, p) => sum + p.shares_purchased, 0) || 0;
-  const totalShares = totalSharesPurchased + investment.shares_available;
-  const percentSold = totalShares > 0 ? (totalSharesPurchased / totalShares) * 100 : 0;
+  // use single truth of funding percentage
+  const percentSold = getFundingPercent(investment);
 
   const handlePurchaseClick = () => {
     navigate(`/investment-details/${investment.id}/purchase`);
