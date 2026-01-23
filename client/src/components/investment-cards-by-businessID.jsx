@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getFundingPercent } from "../utils/investmentFunding";
 import "./investment-cards-by-businessID.css";
 
 export default function InvestmentCardsByBusinessId({ investments = [] }) {
@@ -11,7 +12,6 @@ export default function InvestmentCardsByBusinessId({ investments = [] }) {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
 
 
 if (!Array.isArray(investments) || investments.length === 0){
@@ -28,23 +28,12 @@ if (!Array.isArray(investments) || investments.length === 0){
 
         const purchases = Array.isArray(investment.purchases) ? investment.purchases : [];
 
-        // ✅ investorCount = number of UNIQUE users who purchased
-        const investorCount = new Set(purchases.map((p) => p.user_id).filter(Boolean)).size;
+        const investorCount = new Set(
+          purchases.map((p) => p?.user_id).filter(Boolean)
+        ).size;
 
 
-        const sharesSold = purchases.reduce(
-          (sum, p) => sum + (Number(p.shares_purchased) || 0),
-          0
-        );
-
-        const totalSharesIssued = sharesSold + (Number(investment.shares_available) || 0);
-
-        const percentSoldRaw =
-          totalSharesIssued > 0 ? (sharesSold / totalSharesIssued) * 100 : 0;
-
-        const percentSold = Math.max(0, Math.min(100, percentSoldRaw));
-
-
+        const percentSold = getFundingPercent(investment);
 
         return (
           <div key={investment.id} className="business-investment-card">
