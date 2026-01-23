@@ -92,7 +92,13 @@ export default function InvestmentDetails() {
   // use single truth of funding percentage
   const percentSold = getFundingPercent(investment);
 
+  // ✅ Sold-out protection (shares_available <= 0)
+  const sharesLeftNum = Number(investment?.shares_available);
+  const isSoldOut = Number.isFinite(sharesLeftNum) && sharesLeftNum <= 0;
+
+
   const handlePurchaseClick = () => {
+    if (isSoldOut) return; // ✅ don't navigate to purchase if fully funded
     navigate(`/investment-details/${investment.id}/purchase`);
   };
 
@@ -204,19 +210,31 @@ export default function InvestmentDetails() {
         </div>
 
         <div className="purchase-button-container">
-          <button disabled={!user} onClick={handlePurchaseClick} className="invest-now-button">
-            Purchase Investment
-          </button>
 
-          {!user && (
-            <p className="login-message">
-              You must{" "}
-              <Link to="/login" className="login-link">
-                login
-              </Link>{" "}
-              in order to become an investor.
-            </p>
-          )}
+      <button
+        disabled={!user || isSoldOut}
+        onClick={handlePurchaseClick}
+        className="invest-now-button"
+      >
+        {isSoldOut ? "Offer Fully Funded" : "Purchase Investment"}
+      </button>
+
+      {isSoldOut && (
+        <p className="login-message">
+          This offer is fully funded and is no longer available for purchase.
+        </p>
+      )}
+
+      {!user && !isSoldOut && (
+        <p className="login-message">
+          You must{" "}
+          <Link to="/login" className="login-link">
+            login
+          </Link>{" "}
+          in order to become an investor.
+        </p>
+      )}
+
         </div>
       </div>
 

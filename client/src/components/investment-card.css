@@ -1,67 +1,47 @@
-/* Responsive grid container */
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.investment-card {
+  width: 100%;
+  background-color: var(--element_background_color);
+  border: 1px solid #e5e7eb; /* if you have a token for this, swap it */
+  border-radius: var(--element_border_radius);
+  box-shadow: var(--element_shadow);
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+/* If your parent already handles grid (.card-grid), you can delete this */
 .cards-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1rem;
   padding: 1rem;
-
 }
 
-/* Square, responsive card */
-.investment-card {
-  width: 100%;
-  background-color: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-  box-sizing: border-box;
-  text-align: left;
-}
+/* =========================================================
+   HEADER ROW
+   ========================================================= */
 
-.pin-icon{
-  margin-right:17px;
-}
-
-.business-name-text{
-  font-size: 20px;
-  font-weight:bold;
-  margin-bottom: 12px;
-}
-
-.link-icon{
-  scale:1;
-  margin-right:10px;
-}
-
-.city-state-text{
-  font-size: 14px;
-
-}
-
-.website-text{
-  font-size: 14px;
-  color: var(--main_button_color);
-  text-decoration: none;
-}
-
-/* Top section: small square image + optional label */
 .top-section {
   display: flex;
   align-items: flex-start;
-  gap: 1rem;
-  margin-bottom: 0.75rem;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
-/* Small square image */
 .image-container {
   width: 60px;
   height: 60px;
-  flex-shrink: 0;
-  border-radius: 8px;
+  flex: 0 0 auto;
+  border-radius: 10px;
   overflow: hidden;
+  background-color: var(--field_background_color);
+  border: 1px solid #e5e7eb;
 }
 
 .web-icon {
@@ -69,70 +49,109 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  border-radius: 8px;
 }
 
-/* Business info */
-.business-info h3 {
-  margin: 0;
-  font-size: 10px;
-  line-height: 1.2;
+/* Text */
+.business-name-text {
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0 0 8px 0;
+  color: var(--primary_text_color);
 }
 
+.city-state-text {
+  font-size: 14px;
+  color: var(--secondary_text_color);
+}
 
+.website-text {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--main_button_color);
+  text-decoration: none;
+}
 
-/* Table */
+.website-text:hover {
+  text-decoration: underline;
+}
+
+/* icons */
+.pin-icon {
+  margin-right: 10px;
+}
+
+.link-icon {
+  margin-right: 10px;
+}
+
+/* REMOVE this unless you truly need it (it conflicts with business-name-text) */
+/* .business-info h3 { font-size: 10px; } */
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
 .investment-table {
-
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1rem;
-  font-size: 0.85rem;
-
+  margin-top: 12px;
+  font-size: 14px;
 }
 
 .investment-table .label {
-  font-weight: 600;
+  font-weight: 700;
   text-align: left;
+  color: var(--secondary_text_color);
 }
 
 .investment-table td {
-  padding: 2px 4px;
+  padding: 4px 0;
+  color: var(--primary_text_color);
 }
 
 .investment-table td:last-child {
   text-align: right;
+  font-weight: 800;
 }
 
-/* Button */
+/* =========================================================
+   BUTTON
+   ========================================================= */
+
 .button-container {
   margin-top: auto;
-  padding-top: 0.75rem; /* ADD THIS */
-  text-align: center;
+  padding-top: 14px;
   display: flex;
-  align-items: center;
 }
 
 .view-details-button {
   width: 100%;
-  max-width: 100%;
-
+  height: 44px;
+  border-radius: var(--button_border_radius);
+  border: 2px solid var(--main_button_color);
+  background-color: var(--main_button_color);
+  color: var(--main_button_textcolor);
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .view-details-button:hover {
-  background-color: #1e40af;
+  background-color: var(--main_button_hover);
+  border-color: var(--main_button_hover);
 }
 
 .view-details-button:focus {
-  outline: 2px solid #1e40af;
+  outline: 2px solid var(--main_button_color);
   outline-offset: 2px;
 }
 
-/* desktop-layout */
-
-@media (min-width: 768px) {
-
-  .view-details-button {
-    max-width: 100%;
+/* =========================================================
+   MOBILE
+   ========================================================= */
+@media (max-width: 768px) {
+  .investment-card {
+    padding: 14px;
   }
 }

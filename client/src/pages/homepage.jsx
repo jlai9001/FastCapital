@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { NavLink,useNavigate } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import HomePageHero from '../components/homepage_hero'
 import InvestmentCard from '../components/investment-card'
 import './homepage.css'
@@ -11,21 +11,34 @@ export default function Homepage(){
     const [businesses, setBusinesses] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState("")
-    const navigate = useNavigate();
-
 
 useEffect(() => {
   const fetchData = async () => {
     try {
       // 1️⃣ Fetch investments
-      const investmentsRes = await fetch(`${base_url}/api/investment`, {
+      const investmentsRes = await fetch(`${base_url}/api/investment?active=true`, {
         credentials: "include",
       });
       if (!investmentsRes.ok) throw new Error("Failed to fetch investments");
 
       const investmentsData = await investmentsRes.json();
-      const featured = investmentsData.filter(i => i.featured);
+
+
+      // ✅ Only show featured investments that still have shares remaining
+      const featured = investmentsData.filter((i) => {
+        if (!i.featured) return false;
+
+        const sharesLeft = Number(i?.shares_available);
+        // If shares_available missing/non-numeric, keep it (don’t accidentally hide)
+        if (!Number.isFinite(sharesLeft)) return true;
+
+        return sharesLeft > 0;
+      });
+
       setFeaturedInvestments(featured);
+
+
+
 
       // 2️⃣ Fetch businesses ONCE
       const businessesData = await getBusinesses();
@@ -64,6 +77,11 @@ useEffect(() => {
 
         {loading && <p>Loading featured investments...</p>}
         {error && <p>{error}</p>}
+
+        {/* ✅ No featured investments message */}
+        {!loading && !error && featuredInvestments.length === 0 && (
+          <p>No featured investments available right now.</p>
+        )}
 
         {featuredInvestments.length > 0 && (
             <ul>

@@ -1,3 +1,6 @@
+/* =========================================================
+   PAGE WRAPPER
+   ========================================================= */
 .investment-list-container {
   max-width: 1200px;
   padding: 0 1rem;
@@ -5,154 +8,154 @@
   min-height: 80vh;
 }
 
-.investment-card {
-    background: #fff;
-    color:#1a202c;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    border-radius: 1rem;
-    box-shadow: 0 15px 15px rgba(0,0,0,0.3);
-    border: 1px solid #eee;
-
-  }
-
-
-.investment-card h2 {
-  margin: 0.25rem 0;
+/* Avoid global ul styles affecting the whole app */
+.investment-list-container ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.investment-card p {
-    margin: 0.25rem 0;
-}
-
-ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.card-top {
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: wrap;
-}
-
-.business-name {
-  flex: 1;
-  min-width: 200px;
-  text-align: left;
-}
-
-.investment-details {
-  text-align: right;
-  min-width: 200px;
-}
-
-.card-bottom {
-  display: flex;
-  align-items: flex-end;
-  flex-wrap: wrap;
-}
-
-.business-details {
-  flex: 1;
-  min-width: 200px;
-  text-align: left;
-}
-
-.button-container {
-  min-width: 150px;
-  text-align: right;
-}
-
-.view-details-button {
-  background-color: var(--main_button_color);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 0.75rem;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-.view-details-button:hover {
-  background-color: var(--main_button_hover);
-}
-
-.card-grid{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-}
-
-
+/* =========================================================
+   HEADER / CONTROLS
+   ========================================================= */
 .investment-controls {
-  display: flex;
-  justify-content: flex-end;
+  display: block;
   margin-bottom: 1rem;
 }
 
 .sort-filter {
+  background-color: var(--element_background_color);
+  border-radius: var(--element_border_radius);
+  box-shadow: var(--element_shadow);
+  padding: 16px 18px;
+
   display: flex;
-  gap: 1rem;
-  align-items: center;
-  font-size: 0.9rem;
-  flex-direction: row;
-}
-.sort-filter select,
-.sort-filter input[type="checkbox"] {
-  margin-left: 0.5rem;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.no-results {
-  text-align: center;
-  color: #4a5568;
-  margin-top: 2rem;
+.invest-opp-title {
+  color: var(--primary_text_color);
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0;
+  font-family: var(--button_font);
 }
 
-.investment-table {
-  width: 100%;
-  margin-top: 1rem;
-  border-collapse: collapse;
-}
-
-.investment-table td {
-  padding: 0.25rem 0;
-}
-
-
-.sort-filter label {
+.controls-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.switch-element {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--secondary_text_color);
   font-size: 14px;
-  color: #666;
+  font-weight: 700;
   margin: 0;
 }
 
-.sort-filter select {
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+.switch-label {
+  user-select: none;
+}
+
+/* Sort dropdown group */
+.sort-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+
+.sort-label {
+  color: var(--secondary_text_color);
   font-size: 14px;
-  background-color: white;
+  font-weight: 700;
+}
+
+/* Dropdown styling consistent with your fields */
+.sort-select {
+  height: 44px;
+  padding: 0 12px;
+  border: 2px solid var(--field_border_color);
+  border-radius: 10px;
+  background-color: var(--field_background_color);
+  color: var(--secondary_text_color);
+  font-size: 14px;
+  font-weight: 700;
+  outline: none;
   cursor: pointer;
 }
 
-.sort-filter select:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+.sort-select:focus {
+  border-color: var(--main_button_color);
 }
 
-.invest-opp-title{
-  text-align: left;
-  font-size:20px;
-  margin-right:340px;
-
-  flex-direction: row;
-
+/* MUI Switch theme override (best-effort via class targeting) */
+.expires-switch .MuiSwitch-switchBase.Mui-checked {
+  color: var(--main_button_color);
+}
+.expires-switch .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track {
+  background-color: var(--main_button_color);
 }
 
-.switch-element{
-  margin-right:50px;
+/* =========================================================
+   GRID
+   ========================================================= */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
+
+/* optional wrapper if you want consistent spacing hooks */
+.investment-card-wrapper {
+  display: block;
+}
+
+/* =========================================================
+   EMPTY STATES
+   ========================================================= */
+.no-results {
+  text-align: center;
+  color: var(--secondary_text_color);
+  margin-top: 2rem;
+  font-weight: 700;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+@media (max-width: 768px) {
+  .investment-list-container {
+    margin-top: 1.25rem;
+    padding: 0 10px;
+  }
+
+  .sort-filter {
+    padding: 14px 14px;
+  }
+
+  .controls-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .switch-element {
+    justify-content: space-between;
+  }
+
+  .sort-group {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .sort-select {
+    width: 100%;
+  }
 }

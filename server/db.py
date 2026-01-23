@@ -216,6 +216,27 @@ def get_purchases_by_status(user_id: int, status: PurchaseStatus) -> list[Enrich
     with SessionLocal() as db:
         status_enum = PurchaseStatusEnum(status.value)
 
+        # ✅ Auto-reconcile: if an offer is fully funded, pending purchases become completed
+        # This fixes legacy/seed/imported data where shares_available is already 0
+        # but purchases are still marked "pending".
+        if status_enum == PurchaseStatusEnum.pending:
+
+            sold_out_ids = (
+                db.query(DBInvestment.id)
+                .filter(DBInvestment.shares_available <= 0)
+            )
+
+            db.query(DBPurchase).filter(
+                DBPurchase.status == PurchaseStatusEnum.pending,
+                DBPurchase.investment_id.in_(sold_out_ids),
+            ).update(
+                {DBPurchase.status: PurchaseStatusEnum.completed},
+                synchronize_session=False,
+            )
+
+            db.commit()
+
+
         results = (
             db.query(DBPurchase, DBBusiness)
             .join(DBInvestment, DBPurchase.investment_id == DBInvestment.id)
@@ -245,11 +266,14 @@ def get_purchases_by_status(user_id: int, status: PurchaseStatus) -> list[Enrich
 
 def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut:
     with SessionLocal() as db:
+
         investment = (
             db.query(DBInvestment)
             .filter(DBInvestment.id == purchase_request.investment_id)
+            .with_for_update()
             .first()
         )
+
         if not investment:
             raise HTTPException(status_code=404, detail="Investment not found")
 
@@ -266,7 +290,12 @@ def add_purchase(purchase_request: PurchaseCreate) -> PurchaseOut:
         db.add(purchase)
 
         # COMPLETE ALL PURCHASES IF FULLY FUNDED
-        if investment.shares_available == 0:
+        # ✅ Use <= 0 to be defensive, and flush so the just-added purchase is included.
+        db.flush()
+
+        if investment.shares_available <= 0:
+            investment.shares_available = 0  # clamp
+
             (
                 db.query(DBPurchase)
                 .filter(

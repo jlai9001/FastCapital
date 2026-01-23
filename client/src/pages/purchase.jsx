@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate} from "react-router-dom";
 import {
   useInvestment,
   useBusiness,
@@ -78,6 +78,20 @@ export default function Purchase() {
     }
   }, [shareAmount, investment]);
 
+
+  useEffect(() => {
+    // If an offer becomes sold out while user is on page, clamp UI state
+    if (!investment) return;
+    const sharesLeft = Number(investment.shares_available);
+    if (Number.isFinite(sharesLeft) && sharesLeft <= 0) {
+      setShareAmount(0);
+      setTermsAccepted(false);
+      setShowModal(false);
+      setModalDismissLocked(false);
+    }
+  }, [investment?.shares_available]);
+
+
   if (investmentLoading || businessLoading || purchasesLoading) return <p>Loading...</p>;
 
   if (investmentError || businessError || purchasesError) {
@@ -92,6 +106,11 @@ export default function Purchase() {
   }
 
   if (!investment || !business) return <p>Data not found.</p>;
+
+  const minStep = Number(investment.min_investment) || 1;
+  const maxShares = Number(investment.shares_available) || 0;
+  const isSoldOut = maxShares <= 0;
+
 
   const resolvedImageUrl = (() => {
   const img = business?.image_url;
@@ -132,6 +151,11 @@ export default function Purchase() {
   }
 
   function modalPop() {
+    if (isSoldOut) {
+      alert("This offer is fully funded and is no longer available for purchase.");
+      return;
+    }
+
     if (shareAmount > 0) {
       // Reset dismiss lock each time we open the modal.
       setModalDismissLocked(false);
@@ -145,8 +169,6 @@ export default function Purchase() {
     nav(-1);
   }
 
-  const minStep = Number(investment.min_investment) || 1;
-  const maxShares = Number(investment.shares_available) || 0;
 
   const decShares = () => {
     setShareAmount((prev) => Math.max(prev - minStep, 0));
@@ -162,6 +184,11 @@ export default function Purchase() {
       <div className="purchase-container">
         <div className="purchase-card">
           <h1 className="purchase-title">Purchase Investment</h1>
+            {isSoldOut && (
+              <div className="purchase-soldout-notice">
+                This offer is fully funded and is no longer available for purchase.
+              </div>
+            )}
 
           <div className="purchase-business">
             <div className="purchase-avatar">
@@ -238,6 +265,7 @@ export default function Purchase() {
                 className="purchase-step-btn"
                 onClick={decShares}
                 aria-label="Decrease shares"
+                disabled={isSoldOut}
               >
                 −
               </button>
@@ -251,6 +279,7 @@ export default function Purchase() {
                 max={maxShares}
                 step={minStep}
                 inputMode="numeric"
+                disabled={isSoldOut}
               />
 
               <button
@@ -258,6 +287,7 @@ export default function Purchase() {
                 className="purchase-step-btn"
                 onClick={incShares}
                 aria-label="Increase shares"
+                disabled={isSoldOut}
               >
                 +
               </button>
@@ -278,6 +308,7 @@ export default function Purchase() {
               type="checkbox"
               checked={termsAccepted}
               onChange={() => setTermsAccepted((prev) => !prev)}
+              disabled={isSoldOut}
             />
             <span>
               I agree to the terms and conditions
@@ -292,7 +323,7 @@ export default function Purchase() {
             <button
               className="purchase-buy-btn"
               onClick={modalPop}
-              disabled={shareAmount <= 0 || !termsAccepted}
+              disabled={shareAmount <= 0 || !termsAccepted || isSoldOut}
             >
               Purchase
             </button>

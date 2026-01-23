@@ -28,6 +28,7 @@ from fastapi.responses import FileResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from rich import print
 
 # =========================
@@ -302,9 +303,7 @@ async def secret():
     return SecretResponse(secret="info")
 
 
-@app.get("/api/investment", response_model=List[InvestmentOut])
-async def get_investments():
-    return db.get_investments()
+
 
 @app.get("/api/business_investments", response_model=List[InvestmentWithPurchasesOut])
 def get_business_investments(
@@ -551,6 +550,29 @@ def create_financials(
 
     return db.add_finance(payload)
 
+
+
+
+@app.get("/api/users/email-exists")
+def email_exists(
+    email: str = Query(..., min_length=3),
+    db_session: Session = Depends(get_db),
+):
+    normalized = email.strip().lower()
+    if not normalized:
+        return {"exists": False}
+
+    exists = (
+        db_session.query(DBUser)
+        .filter(func.lower(DBUser.email) == normalized)
+        .first()
+        is not None
+    )
+    return {"exists": exists}
+
+
+
+
 @app.post("/api/investment", response_model=InvestmentOut, status_code=201)
 def create_investment_route(
     payload: InvestmentCreate,
@@ -577,26 +599,29 @@ def create_investment_route(
 
     return InvestmentOut.model_validate(db_investment)
 
-from sqlalchemy import func
 
-@app.get("/api/users/email-exists")
-def email_exists(
-    email: str = Query(..., min_length=3),
-    db_session: Session = Depends(get_db),
-):
-    normalized = email.strip().lower()
-    if not normalized:
-        return {"exists": False}
 
-    exists = (
-        db_session.query(DBUser)
-        .filter(func.lower(DBUser.email) == normalized)
-        .first()
-        is not None
-    )
-    return {"exists": exists}
+@app.get("/api/investment", response_model=List[InvestmentOut])
+async def get_investments(active: bool = Query(False)):
+    investments = db.get_investments()
+
+    if active:
+        investments = [
+            i for i in investments
+            if (i.shares_available is None) or (int(i.shares_available) > 0)
+        ]
+
+    return investments
 
 
 @app.get("/api/investments", response_model=List[InvestmentOut])
-async def get_investments_alias():
-    return db.get_investments()
+async def get_investments_alias(active: bool = Query(False)):
+    investments = db.get_investments()
+
+    if active:
+        investments = [
+            i for i in investments
+            if (i.shares_available is None) or (int(i.shares_available) > 0)
+        ]
+
+    return investments
