@@ -9,3 +9,11 @@
   color: #1a202c;
   margin-bottom: 2rem;
 }
+
+.investment-card-wrapper{
+  transition: transform 0.2s ease;
+}
+
+.investment-card-wrapper:hover {
+  transform: translateY(-5px);
+}
