@@ -303,7 +303,13 @@
    ========================================================= */
 
 @media (max-width: 768px) {
+  .investment-business-detail-text{
+    font-size:14px;
+  }
 
+  .investment-box-quantity{
+    font-size:14px;
+  }
 
   .financial-dashboard-container, .business-investment-container {
       margin-top: 40px;
@@ -320,7 +326,7 @@
     gap: 1rem;
 
     /* mobile spacing handled here */
-    margin-bottom: 0px;
+    margin-bottom: 20px;
   }
 
   .investment-column {
@@ -336,7 +342,7 @@
   }
 
   .investment-detail-business-name {
-    font-size: 28px;
+    font-size: 18px;
   }
 
   .investment-details-location,
