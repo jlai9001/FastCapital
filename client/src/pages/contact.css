@@ -60,10 +60,6 @@
   margin: 26px 0;
 }
 
-/* Sections */
-.contact-section {
-  margin-bottom: 28px;
-}
 
 .contact1{
   margin-bottom: 40px
@@ -78,7 +74,7 @@
 .contact-section p {
   font-size: var(--small_fontsize);
   line-height: 1.7;
-  margin-bottom: 10px;
+  margin-top: 40px;
 }
 
 /* Contact list */
@@ -90,7 +86,7 @@
 
 .contact-list li {
   font-size: var(--small_fontsize);
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   line-height: 1.6;
 }
 
