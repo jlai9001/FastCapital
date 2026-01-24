@@ -22,13 +22,12 @@ export default function Contact() {
               </a>
             </li>
             <li>
-              <strong>LinkedIn:</strong>{" "}
               <a
                 href="https://www.linkedin.com/in/bowe-jessop/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                https://www.linkedin.com/in/bowe-jessop/
+                LinkedIn
               </a>
             </li>
           </ul>
@@ -50,7 +49,7 @@ export default function Contact() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                https://www.linkedin.com/in/jonathan-lai
+                LinkedIn
               </a>
             </li>
           </ul>

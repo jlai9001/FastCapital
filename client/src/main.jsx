@@ -7,6 +7,7 @@ import App from './App.jsx'
 import UserProvider from './context/user-provider.jsx'
 import ProtectedDataProvider from './context/protected-data-provider.jsx'
 import axios from "axios";
+import { UIBlockerProvider } from "./context/ui-blocker-provider.jsx";
 
 axios.defaults.withCredentials = true;
 
@@ -27,7 +28,9 @@ ReactDOM.createRoot(root).render(
     <BrowserRouter>
       <UserProvider>
         <ProtectedDataProvider>
-          <App />
+          <UIBlockerProvider>
+            <App />
+          </UIBlockerProvider>
         </ProtectedDataProvider>
       </UserProvider>
     </BrowserRouter>
