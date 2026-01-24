@@ -11,7 +11,7 @@ export default function Contact() {
         <hr className="contact-divider" />
         <section className="contact-section">
 
-          <ul className="contact-list">
+          <ul className="contact-list contact1">
             <li>
               <strong>Name:</strong> Bowe Jessop
             </li>
@@ -33,7 +33,7 @@ export default function Contact() {
             </li>
           </ul>
 
-          <ul className="contact-list">
+          <ul className="contact-list contact2">
             <li>
               <strong>Name:</strong> Jonathan Lai
             </li>

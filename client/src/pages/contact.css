@@ -65,6 +65,10 @@
   margin-bottom: 28px;
 }
 
+.contact1{
+  margin-bottom: 40px
+}
+
 .contact-section h2 {
   font-size: 18px;
   font-weight: 600;
@@ -86,7 +90,7 @@
 
 .contact-list li {
   font-size: var(--small_fontsize);
-  margin-bottom: 35px;
+  margin-bottom: 30px;
   line-height: 1.6;
 }
 
