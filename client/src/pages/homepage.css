@@ -35,6 +35,10 @@
 /* =========================================================
    INVESTMENT CARD GRID
    ========================================================= */
+.featured-investments-text{
+  font-size:16px;
+  font-family:800px;
+}
 
 .featured-investments ul {
   display: grid;

@@ -302,27 +302,37 @@
     gap: 0.9rem;
   }
 
-  /* Funded + button should match the compact width */
+
+    /* Funded + button: keep compact and centered like the sketch */
   .progress-purchase-container {
-    max-width: 900px;
+    max-width: 760px;
     margin: 0.75rem auto 0;
-    gap: 1.25rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;   /* ✅ this is the key (not space-between) */
+    gap: 2rem;                 /* controls distance between bar and button */
   }
 
   .investment-progress-wrapper {
     flex: 1 1 auto;
-    max-width: 520px;
+    max-width: 520px;          /* wider bar so it doesn't feel tiny */
+    width: 100%;
   }
 
   .purchase-button-container {
-    margin-left: 0; /* override base */
-    flex: 0 0 240px;
+    flex: 0 0 auto;            /* don't reserve a big empty column */
+    margin-left: 0;            /* override base margin-left:auto */
     align-items: flex-end;
   }
 
   .invest-now-button {
-    width: 220px;
+    width: 200px;
   }
+
+
+
+
 
   .financial-dashboard-container {
     margin-top: 2rem;
