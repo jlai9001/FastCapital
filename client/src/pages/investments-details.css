@@ -233,68 +233,102 @@
 
 
 /* =========================================================
-   DESKTOP DENSITY PASS (reduces dead space)
+   DESKTOP — sketch-like header (centered + metrics on 2nd row)
    Desktop-only: does NOT affect mobile
    ========================================================= */
 @media (min-width: 769px) {
-  /* Keep the top section from stretching across the whole card */
-  .investment-details-info-container {
+  /* Make the card feel tighter like the sketch */
+  .investment-details-page-container {
     max-width: 980px;
-    margin-left: auto;
-    margin-right: auto;
-
-    gap: 1.5rem;
-    margin-top: 1.5rem;
-    margin-bottom: 2rem;
-
-    align-items: flex-start;
+    padding: 2rem 2.25rem;
   }
 
-  /* Stop all 4 columns from being equally wide (this causes the “dead space”) */
+  /* Wrap so metrics drop under the title block */
+  .investment-details-info-container {
+    max-width: 900px;
+    margin: 1.5rem auto 1rem;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+
+    column-gap: 2.5rem;
+    row-gap: 1.25rem;
+  }
+
+  /* Stop equal stretching */
   .investment-column {
     flex: 0 0 auto;
+    gap: 1rem; /* reduce vertical dead space inside columns */
   }
 
-  /* Image column */
+  /* Logo */
   .investment-column-1 {
-    flex: 0 0 190px;
+    flex: 0 0 160px;
+    align-items: center;
   }
 
-  /* Business name + location + website */
+  .business-detail-image-wrapper {
+    width: 150px;
+    height: 150px;
+  }
+
+  /* Title block: centered like the sketch */
   .investment-column-2 {
-    flex: 1 1 420px;
-    min-width: 320px;
+    flex: 1 1 560px;
+    min-width: 520px;
 
-    /* preserve your tight spacing */
-    gap: 0.35rem;
-    padding-top: 12px;
+    align-items: center;
+    text-align: center;
+    padding-top: 6px;
   }
 
-  /* Stats columns (make them fixed width so they don’t drift far right) */
+  /* Location + website on ONE row (desktop only) */
+  .investment-details-subrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    margin-top: 0.25rem;
+  }
+
+  /* Metrics columns should land on row 2, centered */
   .investment-column-3,
   .investment-column-4 {
-    flex: 0 0 190px;
+    flex: 0 0 240px;
+    align-items: center;
+    gap: 0.9rem;
   }
 
-  /* Make the funded row match the same compact width */
+  /* Funded + button should match the compact width */
   .progress-purchase-container {
-    max-width: 980px;
-    margin-left: auto;
-    margin-right: auto;
+    max-width: 900px;
+    margin: 0.75rem auto 0;
+    gap: 1.25rem;
   }
 
-  /* Let the bar expand instead of leaving empty space */
   .investment-progress-wrapper {
-    max-width: none;
     flex: 1 1 auto;
+    max-width: 520px;
   }
 
-  /* Avoid extra “push to far right” behavior */
   .purchase-button-container {
-    margin-left: 0;
+    margin-left: 0; /* override base */
+    flex: 0 0 240px;
     align-items: flex-end;
   }
+
+  .invest-now-button {
+    width: 220px;
+  }
+
+  .financial-dashboard-container {
+    margin-top: 2rem;
+  }
 }
+
 
 
 

@@ -127,18 +127,17 @@ export default function InvestmentDetails() {
         </div>
 
         <div className="investment-column investment-column-2">
-          <div className="investment-box">
-            <p className="investment-detail-business-name">{business.name}</p>
-          </div>
+          <p className="investment-detail-business-name">{business.name}</p>
 
-          <div className="investment-box">
+          {/* desktop will display these side-by-side; mobile remains stacked by default */}
+          <div className="investment-details-subrow">
             <div className="investment-details-location">
               <img src={locationIcon} alt="Location Icon" className="location-icon" />
-              &nbsp; {business.city}, {business.state}
+              <span>
+                {business.city}, {business.state}
+              </span>
             </div>
-          </div>
 
-          <div className="investment-box">
             <a
               className="investment-details-website"
               href={business.website_url}
@@ -146,10 +145,11 @@ export default function InvestmentDetails() {
               rel="noopener noreferrer"
             >
               <img src={urlIcon} alt="URL Icon" className="website-icon" />
-              {business.website_url.replace(/^https?:\/\/(www\.)?/, "")}
+              <span>{(business.website_url || "").replace(/^https?:\/\/(www\.)?/, "")}</span>
             </a>
           </div>
         </div>
+
 
         <div className="investment-column investment-column-3">
           <div className="investment-nested-column investment-top">
