@@ -50,7 +50,7 @@ export default function Contact() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                linkedin.com/in/jonathan-lai
+                https://www.linkedin.com/in/jonathan-lai
               </a>
             </li>
           </ul>
