@@ -3,6 +3,8 @@ import { useMemo, useRef, useState } from "react";
 import { apiFetch } from "../api/client.js";
 import { useProtectedData } from "../context/protected-data-provider.jsx";
 import { useNavigate } from "react-router-dom";
+import { useUIBlocker } from "../context/ui-blocker-provider.jsx";
+
 
 function formatMoney(n) {
   const num = Number(n);
@@ -75,6 +77,8 @@ function PaymentModal({ onClose, investment, shareAmount, onDismissLockChange })
 
   const { refreshProtectedData } = useProtectedData();
   const navigate = useNavigate();
+  const { withUIBlock } = useUIBlocker();
+
 
   const totalCost = useMemo(() => {
     const shares = Number(shareAmount) || 0;
@@ -89,13 +93,27 @@ function PaymentModal({ onClose, investment, shareAmount, onDismissLockChange })
     onClose?.();
   };
 
-  const handle_exit = () => {
-    if (isSubmitting) return; // ✅ ignore clicks while processing
+  const handle_exit = async () => {
+    if (isSubmitting) return;
+
+    // Keep modal locked while we update portfolio
+    setDismissLocked(true);
+
+    try {
+      await withUIBlock(async () => {
+        await refreshProtectedData();
+      }, "Updating portfolio…");
+    } catch (e) {
+      console.error("refreshProtectedData failed:", e);
+      // We still navigate; portfolio might load via normal page logic
+    }
     setDismissLocked(false);
     setIsVisible(false);
     onClose?.();
+    submitLockRef.current = false;
     navigate("/portfolio", { replace: true });
   };
+
 
   const handle_buy = async () => {
     // ✅ immediate lock (prevents even ultra-fast double-clicks before re-render)
@@ -119,31 +137,27 @@ function PaymentModal({ onClose, investment, shareAmount, onDismissLockChange })
       purchase_date: new Date().toISOString(),
     });
 
+
     try {
-      const response = await apiFetch(`/api/purchases`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body,
-      });
+      await withUIBlock(async () => {
+        const response = await apiFetch(`/api/purchases`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body,
+        });
 
-      if (!response.ok) {
-        const errorDetails = await response.json().catch(() => null);
-        console.error("Detailed error response:", errorDetails);
-        throw new Error("Purchase failed");
-      }
+        if (!response.ok) {
+          const errorDetails = await response.json().catch(() => null);
+          console.error("Detailed error response:", errorDetails);
+          throw new Error("Purchase failed");
+        }
 
-      const data = await response.json();
-      console.log("Purchase successful:", data);
+        const data = await response.json().catch(() => null);
+        console.log("Purchase successful:", data);
+      }, "Processing purchase…");
 
-      try {
-        await refreshProtectedData();
-      } catch (e) {
-        console.error("refreshProtectedData failed:", e);
-      }
-
+      // ✅ success: keep modal locked on completion screen
       success = true;
-
-      // Keep dismiss locked after success until user clicks EXIT.
       setDismissLocked(true);
 
       setShowFields(false);
@@ -158,13 +172,12 @@ function PaymentModal({ onClose, investment, shareAmount, onDismissLockChange })
       submitLockRef.current = false;
       setDismissLocked(false);
     } finally {
-      // ✅ unlock UI after request completes (success OR failure)
       setIsSubmitting(false);
-
-      // If success, keep dismiss locked. If failure, it was unlocked above.
       if (success) setDismissLocked(true);
     }
+
   };
+
 
   if (!isVisible) return null;
 

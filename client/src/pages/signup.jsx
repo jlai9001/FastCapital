@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./signup.css";
 import coin from "../assets/coin.svg";
 import { useUser } from "../context/user-provider.jsx";
 import { base_url } from "../api";
+import { useUIBlocker } from "../context/ui-blocker-provider.jsx";
+
 
 // check if email exists
 async function checkEmailExists(email) {
@@ -15,10 +17,17 @@ async function checkEmailExists(email) {
     const data = await res.json();
     return Boolean(data?.exists);
   } catch {
-    return false; // fail open (don’t block signup on network hiccups)
+    return false; // fail open
   }
 }
 
+async function safeJson(res) {
+  try {
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
 
 
 function saveAccessToken(token) {
@@ -34,6 +43,7 @@ function isValidEmailForBackend(email) {
 function SignupForm() {
   const navigate = useNavigate();
   const { refreshUser } = useUser();
+  const { withUIBlock } = useUIBlocker();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -41,6 +51,14 @@ function SignupForm() {
     password: "",
     confirmPassword: "",
   });
+
+
+
+  // Keep a ref of latest email to prevent stale async overwrite on blur
+  const latestEmailRef = useRef("");
+  useEffect(() => {
+    latestEmailRef.current = formData.email;
+  }, [formData.email]);
 
   // Field reminders/errors
   const [errors, setErrors] = useState({
@@ -50,6 +68,9 @@ function SignupForm() {
     confirmPassword: "",
     server: "",
   });
+
+  // Prevent double submit
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Keep your existing popup style for password mismatch
   const [showPasswordError, setShowPasswordError] = useState(false);
@@ -82,78 +103,83 @@ function SignupForm() {
 
     return "";
   };
+  const canSubmit =
+    !isSubmitting &&
+    !validateField("name", formData.name, formData) &&
+    !validateField("email", formData.email, formData) &&
+    !validateField("password", formData.password, formData) &&
+    !validateField("confirmPassword", formData.confirmPassword, formData) &&
+    !errors.email; // disables if blur-check set "already registered"
 
-const handleChange = (e) => {
-  const { name, value } = e.target;
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
-  setFormData((prev) => {
-    const next = { ...prev, [name]: value };
+    setFormData((prev) => {
+      const next = { ...prev, [name]: value };
 
-    setErrors((p) => {
-      const updated = { ...p, server: "" };
+      setErrors((p) => {
+        const updated = { ...p, server: "" };
 
-      // clear email uniqueness error while typing
-      if (name === "email") {
-        updated.email = "";
-      } else {
-        updated[name] = validateField(name, value, next);
-      }
+        // clear email uniqueness error while typing
+        if (name === "email") {
+          updated.email = "";
+        } else {
+          updated[name] = validateField(name, value, next);
+        }
 
-      // re-check confirm password if password changes
-      if (name === "password" && next.confirmPassword) {
-        updated.confirmPassword = validateField(
-          "confirmPassword",
-          next.confirmPassword,
-          next
-        );
-      }
+        // re-check confirm password if password changes
+        if (name === "password" && next.confirmPassword) {
+          updated.confirmPassword = validateField(
+            "confirmPassword",
+            next.confirmPassword,
+            next
+          );
+        }
 
-      return updated;
+        return updated;
+      });
+
+      return next;
     });
 
-    return next;
-  });
+    if (showPasswordError) setShowPasswordError(false);
+  };
 
-  if (showPasswordError) setShowPasswordError(false);
-};
+  const handleBlur = async (e) => {
+    const { name, value } = e.target;
 
-const handleBlur = async (e) => {
-  const { name, value } = e.target;
+    // run normal validation first
+    const msg = validateField(name, value, formData);
+    if (msg) {
+      setErrors((p) => ({ ...p, [name]: msg }));
+      return;
+    }
 
-  // run normal validation first
-  const msg = validateField(name, value, formData);
-  if (msg) {
-    setErrors((p) => ({ ...p, [name]: msg }));
-    return;
-  }
-
-    // 🔍 email uniqueness check (ONLY on blur)
+    // email uniqueness check (ONLY on blur)
     if (name === "email" && isValidEmailForBackend(value)) {
-    const emailAtBlur = value;
+      const emailAtBlur = value;
 
-    const exists = await checkEmailExists(emailAtBlur);
+      const exists = await checkEmailExists(emailAtBlur);
 
-    // ⛔ prevent stale async overwrite
-    if (formData.email !== emailAtBlur) {
-      return;
+      // prevent stale async overwrite (use ref, not formData)
+      if (latestEmailRef.current !== emailAtBlur) return;
+
+      if (exists) {
+        setErrors((p) => ({
+          ...p,
+          email: "That email is already registered.",
+        }));
+        return;
+      }
     }
-
-    if (exists) {
-      setErrors((p) => ({
-        ...p,
-        email: "That email is already registered.",
-      }));
-      return;
-    }
-  }
 
     // clear error if all good
     setErrors((p) => ({ ...p, [name]: "" }));
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
 
     // Validate all fields before API call
     const nextErrors = {
@@ -176,52 +202,61 @@ const handleBlur = async (e) => {
 
     const { confirmPassword, ...submitData } = formData;
 
+    setIsSubmitting(true);
     try {
-      const res = await fetch(`${base_url}/api/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(submitData),
-        credentials: "include",
-      });
+      await withUIBlock(async () => {
+        const res = await fetch(`${base_url}/api/signup`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(submitData),
+          credentials: "include",
+        });
 
-      let data = null;
-      try {
-        data = await res.json();
-      } catch {
-        data = null;
-      }
+        const data = await safeJson(res);
 
-      if (res.ok && data?.success) {
-        // ✅ AUTO-LOGIN: store JWT fallback exactly like login.jsx does
-        saveAccessToken(data.access_token);
 
-        // ✅ pull /api/me and populate user context
-        await refreshUser();
+        if (res.ok && data?.success) {
+          // AUTO-LOGIN: store JWT fallback exactly like login.jsx does
+          saveAccessToken(data.access_token);
 
-        // ✅ redirect like a normal login
-        navigate("/portfolio");
-        return;
-      }
+          // pull /api/me and populate user context
+          await refreshUser();
 
-      // Helpful errors
-      if (res.status === 409) {
-        setErrors((p) => ({ ...p, server: "That email is already registered. Try logging in instead." }));
-        return;
-      }
+          // redirect like a normal login
+          navigate("/portfolio", { replace: true });
+          return;
+        }
 
-      if (res.status === 422) {
-        setErrors((p) => ({ ...p, server: "Please enter a valid email like name@domain.com." }));
-        return;
-      }
+        if (res.status === 409) {
+          setErrors((p) => ({
+            ...p,
+            server: "That email is already registered. Try logging in instead.",
+          }));
+          return;
+        }
 
-      const backendDetail =
-        (typeof data?.detail === "string" && data.detail) ||
-        (Array.isArray(data?.detail) && data.detail[0]?.msg) ||
-        data?.message;
+        if (res.status === 422) {
+          setErrors((p) => ({
+            ...p,
+            server: "Please enter a valid email like name@domain.com.",
+          }));
+          return;
+        }
 
-      setErrors((p) => ({ ...p, server: backendDetail || "Signup failed. Please try again." }));
+        const backendDetail =
+          (typeof data?.detail === "string" && data.detail) ||
+          (Array.isArray(data?.detail) && data.detail[0]?.msg) ||
+          data?.message;
+
+        setErrors((p) => ({
+          ...p,
+          server: backendDetail || "Signup failed. Please try again.",
+        }));
+      }, "Creating account…");
     } catch {
       setErrors((p) => ({ ...p, server: "Network error. Please try again." }));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -246,6 +281,7 @@ const handleBlur = async (e) => {
             autoCapitalize="words"
             autoCorrect="off"
             spellCheck="false"
+            disabled={isSubmitting}
           />
           {errors.name && (
             <div className="custom-error-popup">
@@ -268,6 +304,7 @@ const handleBlur = async (e) => {
             autoCorrect="off"
             spellCheck="false"
             inputMode="email"
+            disabled={isSubmitting}
           />
           {errors.email && (
             <div className="custom-error-popup">
@@ -289,6 +326,7 @@ const handleBlur = async (e) => {
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck="false"
+            disabled={isSubmitting}
           />
           {errors.password && (
             <div className="custom-error-popup">
@@ -318,6 +356,7 @@ const handleBlur = async (e) => {
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck="false"
+            disabled={isSubmitting}
           />
           {errors.confirmPassword && !showPasswordError && (
             <div className="custom-error-popup">
@@ -328,12 +367,20 @@ const handleBlur = async (e) => {
           )}
 
           <div className="button-group">
-            <button className="cancel-button" type="button" onClick={() => navigate("/")}>
+            <button
+              className="cancel-button"
+              type="button"
+              onClick={() => navigate("/")}
+              disabled={isSubmitting}
+            >
               Cancel
             </button>
-            <button className="signup-button" type="submit">
-              Sign Up
+
+            <button className="signup-button" type="submit" disabled={!canSubmit}>
+              {isSubmitting ? "Creating..." : "Sign Up"}
             </button>
+
+
           </div>
 
           {errors.server && (
@@ -342,9 +389,9 @@ const handleBlur = async (e) => {
 
           <p className="no-account">
             Already have an account?{" "}
-            <a className="log-in" href="/login">
+            <span className="log-in" onClick={() => navigate("/login")}>
               Log in
-            </a>
+            </span>
           </p>
         </form>
       </div>

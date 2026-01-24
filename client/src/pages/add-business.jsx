@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import "./add-business.css";
 import { apiFetch } from "../api/client.js";
 import { useProtectedData } from "../context/protected-data-provider.jsx";
+import { useUIBlocker } from "../context/ui-blocker-provider.jsx";
+
 
 function AddBusiness() {
   const navigate = useNavigate();
   const { refreshProtectedData } = useProtectedData();
-
+  const { withUIBlock } = useUIBlocker();
   const [formData, setFormData] = useState({
     name: "",
     website_url: "",
@@ -115,93 +117,112 @@ function AddBusiness() {
   // ----------------------------------
   // Submit
   // ----------------------------------
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setMessage("");
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setMessage("");
 
-    // ✅ Don’t allow submit if file is invalid
-    if (fileError) return;
+  // ✅ Don’t allow submit if file is invalid
+  if (fileError) return;
 
-    // ================================
-    // UPDATE EXISTING BUSINESS
-    // ================================
-    if (businessId) {
-      const payload = {
-        ...formData,
-        website_url: normalizeUrl(formData.website_url),
-      };
+  let buster = Date.now();
+  let shouldRedirect = false;
 
-      // 1) Update business details
-      const res = await apiFetch(`/api/business/${businessId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(payload),
+  try {
+    await withUIBlock(async () => {
+      // ================================
+      // UPDATE EXISTING BUSINESS
+      // ================================
+      if (businessId) {
+        const payload = {
+          ...formData,
+          website_url: normalizeUrl(formData.website_url),
+        };
+
+        const res = await apiFetch(`/api/business/${businessId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await safeJson(res);
+
+        if (!res.ok) {
+          setMessage(data?.detail || "Failed to update business.");
+          return;
+        }
+
+        // Upload image AFTER business update succeeds
+        if (logoFile) {
+          const imageForm = new FormData();
+          imageForm.append("image", logoFile);
+
+          const imageRes = await apiFetch(`/api/business/${businessId}/image`, {
+            method: "PATCH",
+            body: imageForm,
+          });
+
+          if (!imageRes.ok) {
+            setMessage("Business updated, but image upload failed.");
+            return;
+          }
+        }
+
+        await refreshProtectedData();
+
+
+        buster = Date.now();
+        shouldRedirect = true;
+        return;
+      }
+
+      // ================================
+      // CREATE NEW BUSINESS
+      // ================================
+      const form = new FormData();
+      for (const key in formData) {
+        let value = formData[key];
+        if (key === "website_url") value = normalizeUrl(value);
+        form.append(key, value);
+      }
+
+      if (logoFile) {
+        form.append("image", logoFile);
+      }
+
+      const res = await apiFetch(`/api/business`, {
+        method: "POST",
+        body: form,
       });
 
       const data = await safeJson(res);
 
-      // 2) Stop if failed
       if (!res.ok) {
-        setMessage(data?.detail || "Failed to update business.");
+        setMessage(data?.detail || "Failed to create business.");
         return;
       }
 
-      // 3) Upload image AFTER business update succeeds
-      if (logoFile) {
-        const imageForm = new FormData();
-        imageForm.append("image", logoFile);
-
-        const imageRes = await apiFetch(`/api/business/${businessId}/image`, {
-          method: "PATCH",
-          body: imageForm,
-        });
-
-        if (!imageRes.ok) {
-          setMessage("Business updated, but image upload failed.");
-          return;
-        }
-      }
-
-      // 4) Navigate ONCE, at the end, with a cache-buster
-      const buster = Date.now();
       await refreshProtectedData();
-      navigate("/business-profile", { state: { imageBuster: buster } });
-      return;
-    }
 
-    // ================================
-    // CREATE NEW BUSINESS
-    // ================================
-    const form = new FormData();
-    for (const key in formData) {
-      let value = formData[key];
-      if (key === "website_url") value = normalizeUrl(value);
-      form.append(key, value);
-    }
+      buster = Date.now();
+      shouldRedirect = true;
+    }, businessId ? "Saving business…" : "Creating business…");
+  } catch (err) {
+    console.error("Business submit failed:", err);
+    setMessage("Failed to submit business. Please try again.");
+    return;
+  }
 
-    if (logoFile) {
-      form.append("image", logoFile);
-    }
 
-    const res = await apiFetch(`/api/business`, {
-      method: "POST",
-      body: form,
-    });
+  if (shouldRedirect) {
+    navigate("/business-profile", { state: { imageBuster: buster }, replace: true });
+  }
 
-    const data = await safeJson(res);
+};
 
-    if (!res.ok) {
-      setMessage(data?.detail || "Failed to create business.");
-      return;
-    }
 
-    setMessage("Business added!");
-    await refreshProtectedData();
-    navigate("/portfolio");
-  };
 
   // ----------------------------------
   // Render

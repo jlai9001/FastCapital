@@ -9,6 +9,7 @@ import FinancialDashboard from "../components/financials_table";
 import {useNavigate} from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { apiFetch } from "../api/client.js";
+import { useUIBlocker } from "../context/ui-blocker-provider.jsx";
 
 export default function AddFinancials() {
     const [finType, setFinType] = useState("");
@@ -36,13 +37,28 @@ export default function AddFinancials() {
     const nav = useNavigate();
 
     const { businessFinancials, refreshProtectedData } = useProtectedData();
+    const { withUIBlock } = useUIBlocker();
 
     const handleCancel = async () => {
-        nav(-1);
+    try {
+        await withUIBlock(async () => {
+        await refreshProtectedData();
+        }, "Updating business profile…");
+    } catch (e) {
+        console.error("refreshProtectedData failed:", e);
     }
+    nav("/business-profile", { replace: true });
+    };
+
+
 
     // handle post entry
     const handleAddEntry = async () => {
+        if (!Number.isFinite(businessId)) {
+        alert("Invalid business id in URL.");
+        return;
+        }
+
         if (!finDate) {
         alert("Please select a date");
         return;
@@ -56,18 +72,20 @@ export default function AddFinancials() {
         return;
         }
 
-        try {
+    try {
+    await withUIBlock(async () => {
         const headers = { "Content-Type": "application/json" };
+
         // Format date as MM/YYYY
         const month = (finDate.getMonth() + 1).toString().padStart(2, "0");
         const year = finDate.getFullYear();
         const formattedDate = `${month}/${year}`;
 
         const body = JSON.stringify({
-            business_id: businessId,
-            date: formattedDate,
-            amount: finAmount,
-            type: finType,
+        business_id: businessId,
+        date: formattedDate,
+        amount: finAmount,
+        type: finType,
         });
 
         const response = await apiFetch("/api/financials", {
@@ -76,29 +94,31 @@ export default function AddFinancials() {
         body,
         });
 
-
         if (!response.ok) {
-            const errorDetails = await response.json();
-            console.error("Detailed error response:", errorDetails);
-            throw new Error("Add entry failed.");
+        const errorDetails = await response.json().catch(() => null);
+        console.error("Detailed error response:", errorDetails);
+        throw new Error("Add entry failed.");
         }
 
-        const data = await response.json();
+        const data = await response.json().catch(() => null);
         console.log("Entry submitted:", data);
-        alert("Financial entry added successfully!");
 
         await refreshProtectedData();
+    }, "Adding financial entry…");
+
+    alert("Financial entry added successfully!");
+
+    // reset form after submit
+    setFinType("");
+    setFinAmount("");
+    setFinDate(null);
+    } catch (error) {
+    console.error("Error submitting:", error);
+    alert("Failed to add entry, please try again.");
+    }
 
 
-        // reset form after submit
-        setFinType("");
-        setFinAmount("");
-        setFinDate(null);
 
-        } catch (error) {
-        console.error("Error submitting:", error);
-        alert("Failed to add entry, please try again.");
-        }
     };
 
     return (
