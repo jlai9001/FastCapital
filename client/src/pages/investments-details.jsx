@@ -216,7 +216,7 @@ export default function InvestmentDetails() {
         onClick={handlePurchaseClick}
         className="invest-now-button"
       >
-        {isSoldOut ? "Offer Fully Funded" : "Purchase Investment"}
+        {isSoldOut ? "Offer Fully Funded" : "Purchase"}
       </button>
 
       {isSoldOut && (

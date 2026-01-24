@@ -22,7 +22,6 @@
 .investment-details-info-container {
   display: flex;
   gap: 2rem;
-  margin-top: 2rem;
 
   /* 🔥 DESKTOP GAP BELOW THIS SECTION */
   margin-bottom: 3rem;
@@ -153,7 +152,6 @@
 .progress-label {
   font-size: 14px;
   color: #6b7280;
-  margin-bottom: 0.25rem;
 }
 
 .progress-bar-row {
@@ -246,7 +244,7 @@
   /* Wrap so metrics drop under the title block */
   .investment-details-info-container {
     max-width: 900px;
-    margin: 1.5rem auto 1rem;
+    margin: 0 auto 0;
 
     display: flex;
     flex-wrap: wrap;
@@ -306,7 +304,7 @@
     /* Funded + button: keep compact and centered like the sketch */
   .progress-purchase-container {
     max-width: 760px;
-    margin: 0.75rem auto 0;
+    margin: 0 auto 0;
 
     display: flex;
     align-items: center;
@@ -323,7 +321,6 @@
   .purchase-button-container {
     flex: 0 0 auto;            /* don't reserve a big empty column */
     margin-left: 0;            /* override base margin-left:auto */
-    align-items: flex-end;
   }
 
   .invest-now-button {
