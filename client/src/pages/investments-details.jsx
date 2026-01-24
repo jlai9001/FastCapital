@@ -227,11 +227,10 @@ export default function InvestmentDetails() {
 
       {!user && !isSoldOut && (
         <p className="login-message">
-          You must{" "}
           <Link to="/login" className="login-link">
-            login
+            Login
           </Link>{" "}
-          in order to become an investor.
+          to purchase.
         </p>
       )}
 
