@@ -48,7 +48,6 @@
 
 .investment-column-2 {
   align-items: flex-start;
-  gap: 0.35rem;
 }
 
 
@@ -258,7 +257,6 @@
   /* Stop equal stretching */
   .investment-column {
     flex: 0 0 auto;
-    gap: 1rem; /* reduce vertical dead space inside columns */
   }
 
   /* Logo */
@@ -274,12 +272,8 @@
 
   /* Title block: centered like the sketch */
   .investment-column-2 {
-    flex: 1 1 560px;
-    min-width: 520px;
-
     align-items: center;
     text-align: center;
-    padding-top: 6px;
   }
 
   /* Location + website on ONE row (desktop only) */
