@@ -10,6 +10,7 @@ export default function InvestmentCardsList() {
   const [investments, setInvestments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth <= 768);
 
   const [sortOption, setSortOption] = useState("");
   const [filterExpiring, setFilterExpiring] = useState(false);
@@ -59,6 +60,12 @@ export default function InvestmentCardsList() {
     return () => {
       cancelled = true;
     };
+  }, []);
+
+  useEffect(() => {
+  const onResize = () => setIsMobile(window.innerWidth <= 768);
+  window.addEventListener("resize", onResize);
+  return () => window.removeEventListener("resize", onResize);
   }, []);
 
   // ---------- derived list ----------
@@ -112,33 +119,64 @@ export default function InvestmentCardsList() {
           <div className="invest-opp-title">Investment Opportunities</div>
 
           {/* ✅ NEW: layout wrapper so CSS can align controls nicely */}
+
           <div className="controls-row">
-            <label className="switch-element">
-              <Switch
-                className="expires-switch"
-                checked={filterExpiring}
-                onChange={handleFilterToggle}
-              />
-              <span className="switch-label">Expires Soon</span>
-            </label>
+          {isMobile ? (
+            <>
+              <label className="sort-group">
+                <span className="sort-label">Sort By:</span>
+                <select
+                  className="sort-select"
+                  onChange={handleSortChange}
+                  value={sortOption}
+                >
+                  <option value="">Property</option>
+                  <option value="price_asc">Price per Share (Low → High)</option>
+                  <option value="price_desc">Price per Share (High → Low)</option>
+                  <option value="min_asc">Minimum Investment (Low → High)</option>
+                  <option value="min_desc">Minimum Investment (High → Low)</option>
+                </select>
+              </label>
 
-            <label className="sort-group">
-              <span className="sort-label">Sort By:</span>
-              <select
-                className="sort-select"
-                onChange={handleSortChange}
-                value={sortOption}
-              >
-                <option value="">Property</option>
+              <label className="switch-element">
+                <Switch
+                  className="expires-switch"
+                  checked={filterExpiring}
+                  onChange={handleFilterToggle}
+                />
+                <span className="switch-label">Expires Soon</span>
+              </label>
+            </>
+          ) : (
+            <>
+              <label className="switch-element">
+                <Switch
+                  className="expires-switch"
+                  checked={filterExpiring}
+                  onChange={handleFilterToggle}
+                />
+                <span className="switch-label">Expires Soon</span>
+              </label>
 
-                <option value="price_asc">Price per Share (Low → High)</option>
-                <option value="price_desc">Price per Share (High → Low)</option>
+              <label className="sort-group">
+                <span className="sort-label">Sort By:</span>
+                <select
+                  className="sort-select"
+                  onChange={handleSortChange}
+                  value={sortOption}
+                >
+                  <option value="">Property</option>
+                  <option value="price_asc">Price per Share (Low → High)</option>
+                  <option value="price_desc">Price per Share (High → Low)</option>
+                  <option value="min_asc">Minimum Investment (Low → High)</option>
+                  <option value="min_desc">Minimum Investment (High → Low)</option>
+                </select>
+              </label>
+            </>
+          )}
+        </div>
 
-                <option value="min_asc">Minimum Investment (Low → High)</option>
-                <option value="min_desc">Minimum Investment (High → Low)</option>
-              </select>
-            </label>
-          </div>
+
         </div>
       </div>
 
