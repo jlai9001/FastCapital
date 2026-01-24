@@ -43,7 +43,6 @@ export default function Contact() {
               </a>
             </li>
             <li>
-              <strong>LinkedIn:</strong>{" "}
               <a
                 href="https://www.linkedin.com/in/jonathan-lai-a8444974/"
                 target="_blank"
