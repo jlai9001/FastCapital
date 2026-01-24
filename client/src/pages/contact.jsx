@@ -13,6 +13,28 @@ export default function Contact() {
 
           <ul className="contact-list contact1">
             <li>
+              <strong>Name:</strong> Tyler McCallum
+            </li>
+            <li>
+              <strong>Email:</strong>{" "}
+              <a href="mailto:tyler.mccallum9@gmail.com">
+                tyler.mccallum9@gmail.com
+              </a>
+            </li>
+            <li>
+              <strong>LinkedIn:</strong>{" "}
+              <a
+                href="https://www.linkedin.com/in/tylermccallum/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                linkedin.com/in/tylermccallum/
+              </a>
+            </li>
+          </ul>
+
+          <ul className="contact-list contact2">
+            <li>
               <strong>Name:</strong> Bowe Jessop
             </li>
             <li>
@@ -33,7 +55,31 @@ export default function Contact() {
             </li>
           </ul>
 
-          <ul className="contact-list contact2">
+          <ul className="contact-list contact3">
+            <li>
+              <strong>Name:</strong> Daniel Greenberg
+            </li>
+            <li>
+              <strong>Email:</strong>{" "}
+              <a href="mailto:danielrgreenberg1@gmail.com">
+                danielrgreenberg1@gmail.com
+              </a>
+            </li>
+            <li>
+              <strong>LinkedIn:</strong>{" "}
+              <a
+                href="https://www.linkedin.com/in/danielraphaelgreenberg/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                linkedin.com/in/danielraphaelgreenberg/
+              </a>
+            </li>
+          </ul>
+
+
+
+          <ul className="contact-list contact4">
             <li>
               <strong>Name:</strong> Jonathan Lai
             </li>
