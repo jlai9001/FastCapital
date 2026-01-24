@@ -231,6 +231,73 @@
   justify-content: center;
 }
 
+
+/* =========================================================
+   DESKTOP DENSITY PASS (reduces dead space)
+   Desktop-only: does NOT affect mobile
+   ========================================================= */
+@media (min-width: 769px) {
+  /* Keep the top section from stretching across the whole card */
+  .investment-details-info-container {
+    max-width: 980px;
+    margin-left: auto;
+    margin-right: auto;
+
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+
+    align-items: flex-start;
+  }
+
+  /* Stop all 4 columns from being equally wide (this causes the “dead space”) */
+  .investment-column {
+    flex: 0 0 auto;
+  }
+
+  /* Image column */
+  .investment-column-1 {
+    flex: 0 0 190px;
+  }
+
+  /* Business name + location + website */
+  .investment-column-2 {
+    flex: 1 1 420px;
+    min-width: 320px;
+
+    /* preserve your tight spacing */
+    gap: 0.35rem;
+    padding-top: 12px;
+  }
+
+  /* Stats columns (make them fixed width so they don’t drift far right) */
+  .investment-column-3,
+  .investment-column-4 {
+    flex: 0 0 190px;
+  }
+
+  /* Make the funded row match the same compact width */
+  .progress-purchase-container {
+    max-width: 980px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Let the bar expand instead of leaving empty space */
+  .investment-progress-wrapper {
+    max-width: none;
+    flex: 1 1 auto;
+  }
+
+  /* Avoid extra “push to far right” behavior */
+  .purchase-button-container {
+    margin-left: 0;
+    align-items: flex-end;
+  }
+}
+
+
+
 /* =========================================================
    MOBILE LAYOUT (STACKED)
    ========================================================= */
