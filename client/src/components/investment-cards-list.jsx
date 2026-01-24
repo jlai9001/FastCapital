@@ -123,7 +123,7 @@ export default function InvestmentCardsList() {
             </label>
 
             <label className="sort-group">
-              <span className="sort-label">Sort by</span>
+              <span className="sort-label">Sort By:</span>
               <select
                 className="sort-select"
                 onChange={handleSortChange}
