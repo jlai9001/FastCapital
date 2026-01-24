@@ -37,7 +37,6 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
 }
 
 .investment-column-1,
@@ -137,7 +136,6 @@
   justify-content: space-between;
 
   /* consistent vertical spacing */
-  margin-top: 2rem;
   gap: 2rem;
 }
 
@@ -298,7 +296,7 @@
     /* Funded + button: keep compact and centered like the sketch */
   .progress-purchase-container {
     max-width: 760px;
-    margin: 0 auto 0;
+    margin: 30px auto 0;
 
     display: flex;
     align-items: center;
