@@ -21,6 +21,7 @@ import Contact from './pages/contact.jsx'
 import ScrollToTop from "./components/ScrollToTop";
 import AuthRouteGuard from "./components/AuthRouteGuard";
 import ProtectedRouteGate from "./components/ProtectedRouteGate";
+import UIBlockerOverlay from "./components/UIBlockerOverlay.jsx";
 
 
 function App() {
@@ -28,10 +29,10 @@ function App() {
 
   return (
 <>
-  <ScrollToTop/>
+  <UIBlockerOverlay />
+  <ScrollToTop />
   <AuthRouteGuard />
   <ProtectedRouteGate>
-
   <div className="app-shell">
     <Nav />
     <div style={{ height: '60px' }} />
@@ -57,50 +58,9 @@ function App() {
     </main>
     <Footer />
   </div>
-
-
-
-
-
-
-
-
-
-
   </ProtectedRouteGate>
-
 </>
-
-  )
+)
 }
 
 export default App
-
-
-
-// reference
-// Router Setup
-
-// import {BrowserRouter,Routes,Route} from "react-router-dom";
-// import Home from "./pages/home";
-// import FullCollection from "./pages/collection";
-// import GameDetails from "./pages/game_detail";
-// import AddGame from "./pages/add_game";
-
-// function App() {
-//   return (
-
-//     <BrowserRouter>
-//       <Routes>
-//         <Route path="/" element={<Home />} />
-//         <Route path="/home" element={<Home/>} />
-//         <Route path="/collection" element={<FullCollection />} />
-//         <Route path="/add_game" element ={<AddGame />} />
-//         {/* Route with the ID parameter */}
-//         <Route path="/game_details/:id" element={<GameDetails />} />
-//       </Routes>
-//     </BrowserRouter>
-//   );
-// }
-
-// export default App;
