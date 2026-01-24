@@ -226,6 +226,10 @@
   justify-content: center;
 }
 
+/* Desktop-only flex line break (default hidden) */
+.investment-details-flex-break {
+  display: none;
+}
 
 /* =========================================================
    DESKTOP — sketch-like header (centered + metrics on 2nd row)
@@ -236,6 +240,15 @@
   .investment-details-page-container {
     max-width: 980px;
     padding: 2rem 2.25rem;
+  }
+
+
+    .investment-details-flex-break {
+      display: block;
+      flex: 0 0 100%;
+      height: 0;
+      padding: 0;
+    margin: 0;
   }
 
   /* Wrap so metrics drop under the title block */

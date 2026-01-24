@@ -150,6 +150,9 @@ export default function InvestmentDetails() {
           </div>
         </div>
 
+        {/* Desktop-only flex line break: forces metrics (cols 3 & 4) onto row 2 */}
+        <div className="investment-details-flex-break" aria-hidden="true" />
+
 
         <div className="investment-column investment-column-3">
           <div className="investment-nested-column investment-top">
