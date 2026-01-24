@@ -119,7 +119,7 @@ export default function InvestmentCardsList() {
                 checked={filterExpiring}
                 onChange={handleFilterToggle}
               />
-              <span className="switch-label">Expires soon</span>
+              <span className="switch-label">Expires Soon</span>
             </label>
 
             <label className="sort-group">
