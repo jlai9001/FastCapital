@@ -294,19 +294,19 @@ margin-bottom: 20px;
   }
 
   .business-profile-name {
-    font-size: 20px;
+    font-size: 30px;
     line-height: 1.1;
     text-align: center;
     margin: 0;
   }
 
   .business-location {
-    font-size: 18px;
+    font-size: 20px;
     margin-top: 6px;
   }
 
   .business-website {
-    font-size: 18px;
+    font-size: 20px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
