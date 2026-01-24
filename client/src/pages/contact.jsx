@@ -28,7 +28,7 @@ export default function Contact() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                linkedin.com/in/bowe-jessop/
+                linkedin.com/in/bowe-jessop
               </a>
             </li>
           </ul>
