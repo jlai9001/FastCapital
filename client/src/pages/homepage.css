@@ -55,6 +55,11 @@
   transform: translateY(-5px);
 }
 
+  .featured-investments-text{
+    font-size:30px;
+    font-weight:bolder;
+  }
+
 /* =========================================================
    DESKTOP GRID
    ========================================================= */
@@ -98,7 +103,6 @@
 @media (max-width: 768px) {
   .featured-investments-text{
     font-size:16px;
-    font-weight:800px;
+    font-weight:bolder;
   }
-
 }

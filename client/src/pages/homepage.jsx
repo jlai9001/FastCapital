@@ -69,7 +69,7 @@ useEffect(() => {
     <main className="page-content">
         <section className="featured-investments">
         <div className="featured-header">
-            <div ClassName="featured-investments-text" >feeatured Investments</div>
+            <div ClassName="featured-investments-text" >Featured Investments</div>
             <NavLink className="home-nav-link" to="/all-investments">
             View All
             </NavLink>
