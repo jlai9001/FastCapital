@@ -10,6 +10,29 @@ export default function Contact() {
         </p>
         <hr className="contact-divider" />
         <section className="contact-section">
+
+          <ul className="contact-list">
+            <li>
+              <strong>Name:</strong> Bowe Jessop
+            </li>
+            <li>
+              <strong>Email:</strong>{" "}
+              <a href="mailto:bowejessop@gmail.com">
+                bowejessop@gmail.com
+              </a>
+            </li>
+            <li>
+              <strong>LinkedIn:</strong>{" "}
+              <a
+                href="https://www.linkedin.com/in/bowe-jessop/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                linkedin.com/in/jonathan-lai
+              </a>
+            </li>
+          </ul>
+
           <ul className="contact-list">
             <li>
               <strong>Name:</strong> Jonathan Lai
@@ -31,6 +54,9 @@ export default function Contact() {
               </a>
             </li>
           </ul>
+
+
+
         </section>
       </section>
     </main>
