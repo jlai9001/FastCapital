@@ -35,11 +35,6 @@
 /* =========================================================
    INVESTMENT CARD GRID
    ========================================================= */
-.featured-investments-text{
-  font-size:16px;
-  font-family:800px;
-}
-
 .featured-investments ul {
   display: grid;
   grid-template-columns: 1fr;
@@ -97,4 +92,13 @@
 .home-nav-link:focus {
   outline: 2px solid var(--main_button_hover);
   outline-offset: 2px;
+}
+
+/* mobile response */
+@media (max-width: 768px) {
+  .featured-investments-text{
+    font-size:16px;
+    font-weight:800px;
+  }
+
 }
