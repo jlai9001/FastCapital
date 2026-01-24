@@ -147,7 +147,7 @@
   }
 
   .switch-element {
-    justify-content: space-between;
+    justify-content: left;
   }
 
   .sort-group {
@@ -156,6 +156,10 @@
   }
 
   .sort-select {
-    width: 100%;
+    width: 250px;
+  }
+
+  .invest-opp-title{
+    text-align:center;
   }
 }
