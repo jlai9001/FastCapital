@@ -55,8 +55,8 @@
 }
 
   .featured-investments-text{
-    font-size:20px !important;
-    font-weight:bolder;
+    font-size:20px;
+    font-weight:700;
   }
 
 /* =========================================================
@@ -74,7 +74,7 @@
    ========================================================= */
 
 .home-nav-link {
-  padding: 0.5rem 1rem;
+  padding: 1rem;
   min-width: 88px;
   min-height: 42px;
 
@@ -101,7 +101,7 @@
 /* mobile response */
 @media (max-width: 768px) {
   .featured-investments-text{
-    font-size:16px !important;
-    font-weight:bolder !important;
+    font-size:16px;
+    font-weight:700;
   }
 }
