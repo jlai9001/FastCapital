@@ -74,10 +74,14 @@
 .contact-section p {
   font-size: var(--small_fontsize);
   line-height: 1.7;
-  margin-top: 40px;
 }
 
 /* Contact list */
+
+.contact-section{
+  margin-top: 40px;
+}
+
 .contact-list {
   margin-left: 0;
   padding-left: 0;
