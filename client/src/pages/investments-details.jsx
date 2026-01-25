@@ -12,6 +12,7 @@ import { base_url } from "../api";
 import { useUser } from "../context/user-provider";
 import { useState, useEffect } from "react";
 import { getFundingPercent } from "../utils/investmentFunding";
+import Spinner from "../components/spinner";
 
 
 function getAccessToken() {
@@ -84,10 +85,13 @@ export default function InvestmentDetails() {
     fetchFinancials();
   }, [business?.id]);
 
-  if (investmentLoading || businessLoading) return;
+  if (investmentLoading || businessLoading){
+    return <Spinner centered size={34} label="Loading investment details…" />;
+  }
+
   if (investmentError || businessError)
-    return <h1> {investmentError || businessError} </h1>;
-  if (!investment || !business) return <h1>Unable to retreive investment data.</h1>;
+    return;
+  if (!investment || !business) return;
 
   // use single truth of funding percentage
   const percentSold = getFundingPercent(investment);
