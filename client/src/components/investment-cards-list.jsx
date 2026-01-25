@@ -4,6 +4,7 @@ import InvestmentCard from "./investment-card";
 import "./investment-cards-list.css";
 import { Switch } from "@mui/material";
 import { base_url } from "../api";
+import Spinner from "./spinner";
 
 export default function InvestmentCardsList() {
   const [businesses, setBusinesses] = useState([]);
@@ -107,8 +108,20 @@ export default function InvestmentCardsList() {
   }
 
   // ---------- UI states ----------
-  if (loading) return <h1>Loading...</h1>;
-  if (error) return <h1>{error}</h1>;
+  if (loading)
+  return (
+    <div className="investment-list-container">
+      <Spinner centered size={38} label="Loading investments…" />
+    </div>
+  );
+
+  if (error)
+  return (
+    <div className="investment-list-container">
+      <p className="no-results">{error}</p>
+    </div>
+  );
+
 
   const noActiveInvestments = investments.length === 0;
 

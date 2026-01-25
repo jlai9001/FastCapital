@@ -5,6 +5,8 @@ import InvestmentCard from '../components/investment-card'
 import './homepage.css'
 import { base_url } from '../api'
 import { getBusinesses } from '../hooks/getData'
+import Spinner from "../components/spinner";
+
 
 export default function Homepage(){
     const [featuredInvestments, setFeaturedInvestments] = useState([])
@@ -75,7 +77,7 @@ useEffect(() => {
             </NavLink>
         </div>
 
-        {loading && <p>Loading featured investments...</p>}
+        {loading && <Spinner centered size={34} label="Loading featured investments…" />}
         {error && <p>{error}</p>}
 
         {/* ✅ No featured investments message */}
