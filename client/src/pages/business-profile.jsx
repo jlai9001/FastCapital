@@ -9,7 +9,7 @@ import urlIcon from "../assets/url_icon.png";
 import coinIcon from "../assets/coin.svg";
 import placeholder from "../assets/business_placeholder.png";
 import { base_url } from "../api";
-
+import Spinner from "../components/spinner.jsx";
 
 export default function BusinessProfile() {
   const navigate = useNavigate();
@@ -30,6 +30,7 @@ export default function BusinessProfile() {
   const investmentsError = error;
 
   const [imageVersion, setImageVersion] = useState(null);
+  const [imageLoading, setImageLoading] = useState(false);
 
 
     // ✅ If we arrived here from AddBusiness with a cache-buster, use it (then clear it)
@@ -88,7 +89,18 @@ export default function BusinessProfile() {
 
 const canShowFreshImage = isValidImagePath && imageVersion && resolvedImageUrl;
 
+const imageSrc = canShowFreshImage
+  ? `${resolvedImageUrl}?v=${imageVersion}`
+  : placeholder;
 
+// Show spinner only while a real (non-placeholder) image is loading
+useEffect(() => {
+  if (imageSrc && imageSrc !== placeholder) {
+    setImageLoading(true);
+  } else {
+    setImageLoading(false);
+  }
+}, [imageSrc]);
 
   return (
     <div className="business-profile-container">
@@ -105,11 +117,19 @@ const canShowFreshImage = isValidImagePath && imageVersion && resolvedImageUrl;
       <div className="business-info">
         <div className="business-image-container">
           <div className="image-wrapper">
-            <img
-              src={canShowFreshImage ? `${resolvedImageUrl}?v=${imageVersion}` : placeholder}
+          {imageLoading && (
+            <div className="business-image-spinner-overlay">
+              <Spinner size={34} label="" />
+            </div>
+          )}
+
+          <img
+              src={imageSrc}
               alt={business.name}
               className="business-image"
+              onLoad={() => setImageLoading(false)}
               onError={(e) => {
+                setImageLoading(false);
                 e.currentTarget.src = placeholder;
               }}
             />
