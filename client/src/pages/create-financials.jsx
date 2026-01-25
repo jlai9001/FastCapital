@@ -17,6 +17,8 @@ export default function AddFinancials() {
     const [finDate, setFinDate] = useState(null);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
+    const VALID_FIN_TYPES = ["income", "expense", "asset", "liability"];
+
     useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener("resize", onResize);
@@ -30,11 +32,23 @@ export default function AddFinancials() {
     liability: "Liability",
     };
 
-
-
     const { businessId: businessIdParam } = useParams();
     const businessId = Number(businessIdParam);
     const nav = useNavigate();
+
+    // ------------------------------------------------------
+    // Form validity (drives Add Entry enabled/disabled + color)
+    // ------------------------------------------------------
+    const isBusinessIdValid = Number.isFinite(businessId) && businessId > 0;
+    const isTypeValid = VALID_FIN_TYPES.includes(finType);
+
+    const amountNumber = Number(finAmount);
+    const isAmountValid = Number.isFinite(amountNumber) && amountNumber > 0;
+
+    const isDateValid =
+        finDate instanceof Date && !Number.isNaN(finDate.getTime());
+
+    const isEntryValid = isBusinessIdValid && isTypeValid && isAmountValid && isDateValid;
 
     const { businessFinancials, refreshProtectedData } = useProtectedData();
     const { withUIBlock } = useUIBlocker();
@@ -50,10 +64,14 @@ export default function AddFinancials() {
     nav("/business-profile", { replace: true });
     };
 
-
-
     // handle post entry
     const handleAddEntry = async () => {
+        // Extra safety: button is disabled when invalid, but keep guard.
+        if (!isEntryValid) {
+        alert("Please complete all entry fields with valid values.");
+        return;
+        }
+
         if (!Number.isFinite(businessId)) {
         alert("Invalid business id in URL.");
         return;
@@ -116,9 +134,6 @@ export default function AddFinancials() {
     console.error("Error submitting:", error);
     alert("Failed to add entry, please try again.");
     }
-
-
-
     };
 
     return (
@@ -176,12 +191,7 @@ export default function AddFinancials() {
                 className="create-financials-pulldown"
                 type="number"
                 value={finAmount}
-                onChange={(e) => {
-                const v = e.target.value;
-                if (v === "") return setFinAmount("");
-                if (Number(v) === 0) return setFinAmount(""); // only blocks pure zero
-                setFinAmount(v);
-                }}
+                onChange={(e) => setFinAmount(e.target.value)}
                 placeholder={isMobile ? "Amount" : undefined}
                 inputProps={{ inputMode: "numeric", min: 1 }}
             />
@@ -219,7 +229,14 @@ export default function AddFinancials() {
                          I'm Done Adding Financials
                     </div>
                    </Button>
-                <Button className="AddEntry_Button"  onClick={handleAddEntry}>Add Entry</Button>
+
+                <Button
+                    className="AddEntry_Button"
+                    disabled={!isEntryValid}
+                    onClick={handleAddEntry}
+                >
+                    Add Entry
+                </Button>
             </div>
     </div>
 
