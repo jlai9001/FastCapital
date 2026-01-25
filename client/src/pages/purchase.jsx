@@ -170,7 +170,7 @@ export default function Purchase() {
 
   function modalPop() {
     if (isSoldOut) {
-      alert("This offer is fully funded and is no longer available for purchase.");
+      console.log("Offer is fully funded and  not available for purchase");
       return;
     }
 
@@ -179,7 +179,7 @@ export default function Purchase() {
       setModalDismissLocked(false);
       setShowModal(true);
     } else {
-      alert("Please enter a valid number of shares");
+      console.log("Invalid number of shares");
     }
   }
 

@@ -120,7 +120,7 @@ function PaymentModal({ onClose, investment, shareAmount, onDismissLockChange })
     if (submitLockRef.current) return;
 
     if (!investment?.id || !shareAmount || Number(shareAmount) <= 0) {
-      alert("Missing or invalid purchase details. Please try again.");
+      console.log("Missing or invalid purchase details.");
       return;
     }
 
@@ -166,7 +166,7 @@ function PaymentModal({ onClose, investment, shareAmount, onDismissLockChange })
       setShowCompletionMessage(true);
     } catch (error) {
       console.error("Error during purchase:", error);
-      alert("Failed to complete transaction. Please try again.");
+      console.log("Failed to complete transaction");
 
       // ✅ allow retry on failure
       submitLockRef.current = false;
