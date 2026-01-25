@@ -68,25 +68,25 @@ export default function AddFinancials() {
     const handleAddEntry = async () => {
         // Extra safety: button is disabled when invalid, but keep guard.
         if (!isEntryValid) {
-        alert("Please complete all entry fields with valid values.");
+        console.log("Invalid fields");
         return;
         }
 
         if (!Number.isFinite(businessId)) {
-        alert("Invalid business id in URL.");
+        console.log("Invalid business id in URL.");
         return;
         }
 
         if (!finDate) {
-        alert("Please select a date");
+        console.log("Please select a date");
         return;
         }
         if (!finType) {
-        alert("Please select a financial type");
+        console.log("Please select a financial type");
         return;
         }
         if (!finAmount) {
-        alert("Please enter an amount");
+        console.log("Please enter an amount");
         return;
         }
 
@@ -124,7 +124,7 @@ export default function AddFinancials() {
         await refreshProtectedData();
     }, "Adding financial entry…");
 
-    alert("Financial entry added successfully!");
+    console.log("Financial entry added successfully!");
 
     // reset form after submit
     setFinType("");
@@ -132,7 +132,6 @@ export default function AddFinancials() {
     setFinDate(null);
     } catch (error) {
     console.error("Error submitting:", error);
-    alert("Failed to add entry, please try again.");
     }
     };
 
