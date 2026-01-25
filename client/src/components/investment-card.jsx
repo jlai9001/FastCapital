@@ -9,7 +9,7 @@ import { base_url } from "../api";
 export default function InvestmentCard({ investment, business }) {
   const navigate = useNavigate();
 
-  // if (!business) return <h1>Loading...</h1>;
+
   if (!business) return;
 
   const handleViewDetailsClick = () => {

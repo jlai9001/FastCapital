@@ -55,7 +55,7 @@ export default function BusinessProfile() {
   }, [business?.image_url, location.state]);
 
 
-  if (loading) return <h1>Loading...</h1>;
+  if (loading) return;
   if (error) return <h1>Could not load business profile.</h1>;
 
   if (!business) {

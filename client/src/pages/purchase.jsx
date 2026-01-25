@@ -112,7 +112,7 @@ export default function Purchase() {
     }
   }, [investment?.shares_available]);
 
-  if (investmentLoading || businessLoading || purchasesLoading) return <p>Loading...</p>;
+  if (investmentLoading || businessLoading || purchasesLoading) return;
 
   if (investmentError || businessError || purchasesError) {
     return (

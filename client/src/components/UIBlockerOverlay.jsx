@@ -11,7 +11,7 @@ export default function UIBlockerOverlay() {
     <div className="ui-blocker-overlay" aria-busy="true" aria-live="polite">
       <div className="ui-blocker-card">
         <div className="ui-blocker-spinner" />
-        <div className="ui-blocker-text">{message || "Loading..."}</div>
+        {/* <div className="ui-blocker-text">{message || ""}</div> */}
       </div>
     </div>
   );

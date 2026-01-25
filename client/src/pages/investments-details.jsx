@@ -84,7 +84,7 @@ export default function InvestmentDetails() {
     fetchFinancials();
   }, [business?.id]);
 
-  if (investmentLoading || businessLoading) return <h1> Loading... </h1>;
+  if (investmentLoading || businessLoading) return;
   if (investmentError || businessError)
     return <h1> {investmentError || businessError} </h1>;
   if (!investment || !business) return <h1>Unable to retreive investment data.</h1>;

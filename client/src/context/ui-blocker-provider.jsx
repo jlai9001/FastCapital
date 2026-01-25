@@ -6,7 +6,7 @@ export function UIBlockerProvider({ children }) {
   const [isBlocked, setIsBlocked] = useState(false);
   const [message, setMessage] = useState("");
 
-  const block = useCallback((msg = "Loading...") => {
+  const block = useCallback((msg = "") => {
     setMessage(msg);
     setIsBlocked(true);
     // Lock scrolling while blocked
@@ -26,7 +26,7 @@ export function UIBlockerProvider({ children }) {
    * - Guarantees unblock in finally
    */
   const withUIBlock = useCallback(
-    async (fn, msg = "Loading...") => {
+    async (fn, msg = "") => {
       block(msg);
       try {
         return await fn();
