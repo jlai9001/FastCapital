@@ -75,7 +75,7 @@
    ========================================================= */
 
 .investment-detail-business-name {
-  font-size: 36px;
+  font-size: 30px;
   font-weight: 700;
   margin: 0;
 }
@@ -283,7 +283,6 @@
 
   /* Title block: centered like the sketch */
   .investment-column-2 {
-    align-items: center;
     text-align: center;
   }
 
