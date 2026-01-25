@@ -46,9 +46,9 @@ export default function NewInvestment() {
     try {
       if (!businessId) {
         if (status === "loading" || status === "idle") {
-          alert("Business is still loading. Please wait and try again.");
+          console.log("Business is still loading");
         } else {
-          alert("No business found. Please create a business profile first.");
+          console.log("No business found, create a business");
         }
         return;
       }
@@ -61,30 +61,30 @@ export default function NewInvestment() {
 
       const validate = () => {
         if (!Number.isFinite(shares) || shares <= 0) {
-          alert("Please enter shares available.");
+          console.log("Enter shares");
           throw new Error("shares invalid");
         }
-        if (shares % 100 !== 0) {
-          alert("Available shares must be divisible by 100.");
-          throw new Error("shares not divisible by 100");
+        if (shares % 10 !== 0) {
+          console.log("Total shares must be divisible by 10");co
+          throw new Error("shares not divisible by 10");
         }
 
         if (!Number.isFinite(minInv) || minInv <= 0) {
-          alert("Please enter a minimum investment.");
+          console.log("Enter minimum shares per purchase");
           throw new Error("min invalid");
         }
         if (minInv > shares) {
-          alert("Minimum shares invested must be less than shares available.");
+          console.log("Minimum shares invested must be less than shares available");
           throw new Error("min > shares");
         }
 
         if (!Number.isFinite(price) || price <= 0) {
-          alert("Please enter a price per share.");
+          console.log("Enter price per share");
           throw new Error("price invalid");
         }
 
         if (!expirationDate) {
-          alert("Please choose an expiration date.");
+          console.log("Enter expiration date.");
           throw new Error("Missing expiration date.");
         }
 
@@ -93,7 +93,7 @@ export default function NewInvestment() {
 
         const diffInDays = (expiry.getTime() - today.getTime()) / (1000 * 3600 * 24);
         if (diffInDays < 30) {
-          alert("Expiration date must be at least 30 days from today.");
+          console.log("Expiration date must be 30 days ahead from today.");
           throw new Error("Invalid expiration date.");
         }
       };
@@ -127,12 +127,12 @@ export default function NewInvestment() {
       const data = await response.json();
       console.log("Offer submitted:", data);
 
-      alert("Investment offer submitted successfully!");
+      console.log("Investment offer submitted successfully!");
       await refreshProtectedData();
       nav("/business-profile", { replace: true });
     } catch (error) {
       console.error("Error submitting:", error);
-      alert("Failed to submit, please try again.");
+      console.log("Failed to submit");
     } finally {
       setSubmitting(false);
     }
