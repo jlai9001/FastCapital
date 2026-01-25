@@ -119,7 +119,8 @@ useEffect(() => {
           <div className="image-wrapper">
           {imageLoading && (
             <div className="business-image-spinner-overlay">
-              <Spinner size={34} label="" />
+              <Spinner size={34} label="Loading business image" className="business-image-spinner" />
+
             </div>
           )}
 

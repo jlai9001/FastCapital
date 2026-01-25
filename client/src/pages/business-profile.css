@@ -210,6 +210,35 @@ margin-bottom: 20px;
   padding: 20px;
 }
 
+.image-wrapper {
+  position: relative;
+}
+
+.business-image-spinner-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+/* ✅ make spinner fill the image box */
+.business-image-spinner-overlay .business-image-spinner {
+  width: 100%;
+  height: 100%;
+}
+
+/* the actual spinning ring */
+.business-image-spinner-overlay .business-image-spinner .fc-spinner {
+  width: 100% !important;
+  height: 100% !important;
+
+  /* thicker ring so it looks right when huge */
+  border-width: clamp(6px, 1.2vw, 14px) !important;
+
+  box-sizing: border-box;
+}
 
 
 /* ===============================
