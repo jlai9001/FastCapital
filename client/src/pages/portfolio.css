@@ -85,5 +85,14 @@
   .portfolio-page-container {
     padding: 1rem 2rem 4rem;
   }
+}
 
+/* ===============================
+   MOBILE LAYOUT
+   =============================== */
+
+@media (max-width: 768px) {
+.portfolio-page-container h2 {
+    display:  none;
+  }
 }
