@@ -4,7 +4,7 @@ import "./add-business.css";
 import { apiFetch } from "../api/client.js";
 import { useProtectedData } from "../context/protected-data-provider.jsx";
 import { useUIBlocker } from "../context/ui-blocker-provider.jsx";
-import Spinner from "../components/Spinner";
+import Spinner from "../components/spinner";
 
 
 
