@@ -137,7 +137,7 @@ function AddBusiness() {
   // ----------------------------------
 const handleSubmit = async (e) => {
   e.preventDefault();
-  setMessage("");
+  setMessage("Creating Business...");
 
   // ✅ Don’t allow submit if file is invalid
   if (fileError) return;

@@ -1,46 +1,42 @@
 .ui-blocker-overlay {
   position: fixed;
   inset: 0;
-  z-index: 99999; /* must sit above modals/menus */
+  z-index: 99999;
   display: flex;
   align-items: center;
   justify-content: center;
 
-  /* Slight dim + blur */
   background: rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(2px);
 
-  /* This is the lock: blocks all clicks underneath */
   pointer-events: all;
 }
 
-.ui-blocker-card {
-  min-width: 260px;
-  max-width: 90vw;
-  padding: 18px 16px;
-  border-radius: 14px;
-  background: var(--page_background_color, #111);
-  border: 2px solid var(--field_border_color, rgba(255,255,255,0.15));
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+/* Centered content without a "bubble" card */
+.ui-blocker-center {
   display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 12px;
 }
 
 .ui-blocker-spinner {
-  width: 22px;
-  height: 22px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  border: 3px solid rgba(255, 255, 255, 0.35);
-  border-top-color: rgba(255, 255, 255, 0.95);
+  border: 4px solid rgba(0, 0, 0, 0.18);
+  border-top-color: var(--main_button_color, #0e7c66);
   animation: uiBlockSpin 0.9s linear infinite;
   flex: 0 0 auto;
 }
 
 .ui-blocker-text {
-  color: var(--secondary_text_color, #fff);
+  color: var(--primary_text_color, #111);
   font-size: 15px;
   line-height: 1.25;
+  text-align: center;
+  max-width: min(420px, 90vw);
 }
 
 @keyframes uiBlockSpin {

@@ -56,7 +56,8 @@ export default function BusinessProfile() {
   }, [business?.image_url, location.state]);
 
 
-  if (loading) return;
+  if (loading) return <div />; // or your page spinner
+
   if (error) return <h1>Could not load business profile.</h1>;
 
   if (!business) {
@@ -67,7 +68,7 @@ export default function BusinessProfile() {
           <p className="no-business-header">Create a Business Profile</p>
           <button
             className="no-business-button"
-            onClick={() => navigate("/add-business")}
+            onClick={() => navigate("/add-business", { state: { mode: "create" } })}
           >
             Add Your Business
           </button>
@@ -108,7 +109,7 @@ useEffect(() => {
         <p className="business-profile-header">Business profile</p>
         <button
           className="business-profile-page-button"
-          onClick={() => navigate("/add-business")}
+          onClick={() => navigate("/add-business", { state: { mode: "edit" } })}
         >
           Edit Profile Details
         </button>
