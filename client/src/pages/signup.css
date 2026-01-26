@@ -84,8 +84,9 @@ input {
     font-weight: 600;
 }
 
-.button-group button:hover{
-   background-color:var(--main_button_hover);
+/* Hover only when clickable (prevents disabled Sign Up from hovering) */
+.button-group button:not(:disabled):hover{
+   background-color: var(--main_button_hover);
 }
 
 .cancel-button{
@@ -103,6 +104,13 @@ input {
     color:var(--main_button_textcolor);
     border: none;
 }
+
+/* Disabled Sign Up matches Purchase button grey */
+.signup-button:disabled {
+  background-color: #cbd5e1;
+  color: #6b7280;
+}
+
 
 .message {
     margin-top: 10px;

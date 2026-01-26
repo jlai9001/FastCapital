@@ -37,6 +37,9 @@
 
   --element_border_radius: 16px;
   --element_shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  --disabled_button_bg: #cbd5e1;
+  --disabled_button_text: #6b7280;
 }
 
 /* base layout reset */
