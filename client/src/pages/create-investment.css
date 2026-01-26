@@ -43,6 +43,69 @@ body {
   margin-bottom: 6px;
 }
 
+/* ✅ Needed for blur warnings positioning (desktop + mobile) */
+.field-wrap {
+  position: relative;
+}
+
+/* ✅ Warning popup styling (match signup/add-business) */
+.custom-error-popup {
+  position: absolute;
+  background-color: white;
+  color: black;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 13px;
+  margin-top: 5px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.error-arrow {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid white;
+}
+
+.error-arrow::before {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: -8px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #ccc;
+  z-index: -1;
+}
+
+.error-icon {
+  width: 16px;
+  height: 16px;
+  background-color: #ff8c00;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+
 /* =========================
    ✅ Make ALL inputs match (desktop + mobile)
    ========================= */
@@ -66,58 +129,58 @@ body {
 }
 
 /* =========================
-   Buttons
+   Buttons (match signup behavior)
    ========================= */
 
-.button-container {
+.create-investment-form .button-container-createinvestment {
   display: flex;
   gap: 10px;
   justify-content: space-between;
+  margin-top: 40px;
 }
 
-.cancel-button {
-  display: block;
-  width: 50%;
+.create-investment-form .button-container-createinvestment button {
+  flex: 1;
+  padding: 12px;
+  font-size: var(--small_fontsize);
+  cursor: pointer;
+  border-radius: var(--button_border_radius);
+  font-family: var(--button_font);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* ✅ Hover only when clickable (exactly like signup.css) */
+.create-investment-form .button-container-createinvestment button:not(:disabled):hover {
+  background-color: var(--main_button_hover);
+  border-color: var(--main_button_hover);
+}
+
+.create-investment-form .cancel-button {
   background-color: transparent;
   color: var(--main_button_color);
-  border: none;
-  border-radius: var(--button_border_radius);
-  font-size: var(--small_fontsize);
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  font-family: var(--button_font);
-  align-items: center;
-  padding: 12px;
   border: 2px solid var(--main_button_color);
 }
 
-.cancel-button:hover {
-  background-color: var(--main_button_hover);
-}
-
-.post-button {
-  display: block;
-  width: 50%;
-  background-color: var(--main_button_color);
-  border-radius: var(--button_border_radius);
-  font-size: var(--small_fontsize);
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  font-family: var(--button_font);
-  align-items: center;
-  padding: 12px;
-  border: 2px solid var(--main_button_color);
+.create-investment-form .cancel-button:not(:disabled):hover {
   color: white;
 }
 
-.post-button:hover {
-  background-color: var(--main_button_hover);
-  border: 2px solid var(--main_button_hover);
+.create-investment-form .post-button {
+  background-color: var(--main_button_color);
+  color: var(--main_button_textcolor);
+  border: 2px solid var(--main_button_color);
 }
+
+/* ✅ Disabled Post Offer matches signup grey */
+.create-investment-form .post-button:disabled {
+  background-color: #cbd5e1;
+  color: #6b7280;
+  border-color: #cbd5e1;
+  cursor: not-allowed;
+}
+
 
 /* =========================
    ✅ MUI DatePicker styling (Create Investment)
@@ -177,12 +240,8 @@ body {
   margin-right: 4px;
 }
 
-.button-container-createinvestment{
-  display: flex;
-  gap: 10px;
-  justify-content: space-between;
-  margin-top: 40px;
-}
+
+
 
 
 /* =========================================================
@@ -218,19 +277,15 @@ body {
     margin-bottom: 14px;
   }
 
-  .field-label {
-    font-size: 14px;
-    margin-bottom: 6px;
+  /* Stack buttons vertically on mobile */
+  .create-investment-form .button-container-createinvestment {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 18px;
+  padding-top: 6px;
   }
 
-  /* Stack buttons vertically on mobile */
-  .create-investment-form .button-container {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 18px;
-    padding-top: 6px;
-  }
 
   .create-investment-form .cancel-button,
   .create-investment-form .post-button {
