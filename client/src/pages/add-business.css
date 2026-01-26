@@ -68,6 +68,7 @@ input[name="address2"] {
 }
 
 .business-form {
+    position: relative;
     margin-top: 5px;
     background-color: var(--element_background_color);
     border-radius: var(--element_border_radius);
@@ -77,6 +78,24 @@ input[name="address2"] {
     width: 100%;
     max-width: 600px;
 }
+
+.add-business-loading-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* subtle veil without changing layout */
+  background: rgba(255, 255, 255, 0.6);
+
+  /* keep overlay inside card rounded corners */
+  border-radius: inherit;
+
+  /* ensure it's above the form */
+  z-index: 10;
+}
+
 
 .add-business-title {
     color: rgb(0, 0, 0);

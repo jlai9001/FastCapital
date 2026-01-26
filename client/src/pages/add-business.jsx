@@ -4,6 +4,8 @@ import "./add-business.css";
 import { apiFetch } from "../api/client.js";
 import { useProtectedData } from "../context/protected-data-provider.jsx";
 import { useUIBlocker } from "../context/ui-blocker-provider.jsx";
+import Spinner from "../components/Spinner";
+
 
 
 function AddBusiness() {
@@ -11,6 +13,7 @@ function AddBusiness() {
   const { refreshProtectedData } = useProtectedData();
   const { withUIBlock } = useUIBlocker();
   const [formData, setFormData] = useState({
+
     name: "",
     website_url: "",
     address1: "",
@@ -24,6 +27,7 @@ function AddBusiness() {
   const [logoFile, setLogoFile] = useState(null);
   const [fileError, setFileError] = useState(""); // ✅ file-type warning
   const [message, setMessage] = useState("");
+  const [loadingBusiness, setLoadingBusiness] = useState(false);
 
   const normalizeUrl = (url) => {
     if (!/^https?:\/\//i.test(url)) return "https://" + url;
@@ -42,30 +46,44 @@ function AddBusiness() {
   // Fetch existing business (edit mode)
   // ----------------------------------
   useEffect(() => {
+    let cancelled = false;
+
     const fetchBusiness = async () => {
       try {
+        setLoadingBusiness(true);
+
         const res = await apiFetch(`/api/business/me`);
 
-        if (res.ok) {
-          const data = await res.json();
-          setFormData({
-            name: data.name || "",
-            website_url: data.website_url || "",
-            address1: data.address1 || "",
-            address2: data.address2 || "",
-            city: data.city || "",
-            state: data.state || "",
-            postal_code: data.postal_code || "",
-          });
-          setBusinessId(data.id);
-        }
+        if (!res.ok) return;
+
+        const data = await res.json();
+
+        if (cancelled) return;
+
+        setFormData({
+          name: data.name || "",
+          website_url: data.website_url || "",
+          address1: data.address1 || "",
+          address2: data.address2 || "",
+          city: data.city || "",
+          state: data.state || "",
+          postal_code: data.postal_code || "",
+        });
+        setBusinessId(data.id);
       } catch (err) {
         console.error("Failed to fetch business:", err);
+      } finally {
+        if (!cancelled) setLoadingBusiness(false);
       }
     };
 
     fetchBusiness();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
+
 
   // ----------------------------------
   // Handlers
@@ -229,7 +247,13 @@ const handleSubmit = async (e) => {
   // ----------------------------------
   return (
     <div className="add-business-container">
-      <div className="business-form">
+          <div className="business-form">
+            {loadingBusiness && (
+          <div className="add-business-loading-overlay" aria-label="Loading business">
+            <Spinner />
+          </div>
+        )}
+
         <div className="add-business-title">
           {businessId ? "Edit Business" : "Add Business"}
         </div>
