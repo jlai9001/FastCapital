@@ -200,6 +200,11 @@
   cursor: pointer;
 }
 
+.invest-now-button:hover {
+  background-color: var(--main_button_hover);
+  color: white;
+}
+
 .invest-now-button:disabled {
   background-color: #cbd5e1;
   color: #6b7280;
@@ -329,11 +334,9 @@
 
   .invest-now-button {
     width: 200px;
+    color: white;
   }
 
-  .invest-now-button:hover{
-    background-color: var(--main_buton_hover);
-  }
 
 
 
