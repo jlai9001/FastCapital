@@ -64,8 +64,8 @@ export default function BusinessProfile() {
     return (
       <div className="full-screen-wrapper">
         <div className="no-business-container">
-          <img src={coinIcon} alt="Coin Icon" className="profil-coin-icon" />
           <p className="no-business-header">Create a Business Profile</p>
+          <img src={coinIcon} alt="Coin Icon" className="profil-coin-icon" />
           <button
             className="no-business-button"
             onClick={() => navigate("/add-business", { state: { mode: "create" } })}
