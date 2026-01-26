@@ -157,6 +157,11 @@
     font-size: var(--small_fontsize);
 }
 
+.AddEntry_Button:hover{
+  color: white !important;
+  background-color: var(--main_button_hover) !important;
+}
+
 /* Disabled state (MUI adds .Mui-disabled). Our !important styles above would
    otherwise keep the button green even when disabled. */
 .AddEntry_Button.Mui-disabled {
