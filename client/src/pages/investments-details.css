@@ -331,6 +331,9 @@
     width: 200px;
   }
 
+  .invest-now-button:hover{
+    background-color: var(--main_buton_hover);
+  }
 
 
 
