@@ -6,14 +6,12 @@ import { useProtectedData } from "../context/protected-data-provider.jsx";
 import { useUIBlocker } from "../context/ui-blocker-provider.jsx";
 import Spinner from "../components/spinner";
 
-
-
 function AddBusiness() {
   const navigate = useNavigate();
   const { refreshProtectedData } = useProtectedData();
   const { withUIBlock } = useUIBlocker();
-  const [formData, setFormData] = useState({
 
+  const [formData, setFormData] = useState({
     name: "",
     website_url: "",
     address1: "",
@@ -28,6 +26,7 @@ function AddBusiness() {
   const [fileError, setFileError] = useState(""); // ✅ file-type warning
   const [message, setMessage] = useState("");
   const [loadingBusiness, setLoadingBusiness] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const normalizeUrl = (url) => {
     if (!/^https?:\/\//i.test(url)) return "https://" + url;
@@ -53,11 +52,9 @@ function AddBusiness() {
         setLoadingBusiness(true);
 
         const res = await apiFetch(`/api/business/me`);
-
         if (!res.ok) return;
 
         const data = await res.json();
-
         if (cancelled) return;
 
         setFormData({
@@ -69,6 +66,7 @@ function AddBusiness() {
           state: data.state || "",
           postal_code: data.postal_code || "",
         });
+
         setBusinessId(data.id);
       } catch (err) {
         console.error("Failed to fetch business:", err);
@@ -84,7 +82,6 @@ function AddBusiness() {
     };
   }, []);
 
-
   // ----------------------------------
   // Handlers
   // ----------------------------------
@@ -99,11 +96,8 @@ function AddBusiness() {
     const allowedMimes = new Set(["image/jpeg", "image/png"]);
     const name = (file?.name || "").toLowerCase();
 
-    // Some browsers may provide an empty type for certain files → also check extension
     const allowedExt =
-      name.endsWith(".jpg") ||
-      name.endsWith(".jpeg") ||
-      name.endsWith(".png");
+      name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".png");
 
     return allowedMimes.has(file.type) || allowedExt;
   };
@@ -118,7 +112,7 @@ function AddBusiness() {
       return;
     }
 
-    // ✅ HARD BLOCK non jpg/png/svg
+    // ✅ HARD BLOCK non jpg/png
     if (!isAllowedImage(file)) {
       setLogoFile(null);
       setFileError("File type must be jpg or png");
@@ -132,124 +126,153 @@ function AddBusiness() {
     setLogoFile(file);
   };
 
+  const isValidWebsite = (value) => {
+    const v = (value || "").trim();
+    if (!v) return false;
+    if (/\s/.test(v)) return false; // no spaces
+    return v.includes("."); // simple check
+  };
+
+  // ✅ address2 + picture are OPTIONAL (not included here)
+  const canSubmit =
+    !isSubmitting &&
+    !fileError &&
+    Boolean(formData.name.trim()) &&
+    isValidWebsite(formData.website_url) &&
+    Boolean(formData.address1.trim()) &&
+    Boolean(formData.city.trim()) &&
+    Boolean(formData.state.trim()) &&
+    Boolean(formData.postal_code.trim());
+
   // ----------------------------------
   // Submit
   // ----------------------------------
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setMessage("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMessage("");
 
-  // ✅ Don’t allow submit if file is invalid
-  if (fileError) return;
+    if (fileError) return;
+    if (!canSubmit) return;
 
-  let buster = Date.now();
-  let shouldRedirect = false;
+    setIsSubmitting(true);
 
-  try {
-    await withUIBlock(async () => {
-      // ================================
-      // UPDATE EXISTING BUSINESS
-      // ================================
-      if (businessId) {
-        const payload = {
-          ...formData,
-          website_url: normalizeUrl(formData.website_url),
-        };
+    let buster = Date.now();
+    let shouldRedirect = false;
 
-        const res = await apiFetch(`/api/business/${businessId}`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify(payload),
-        });
+    try {
+      await withUIBlock(
+        async () => {
+          // ================================
+          // UPDATE EXISTING BUSINESS
+          // ================================
+          if (businessId) {
+            const payload = {
+              ...formData,
+              website_url: normalizeUrl(formData.website_url),
+            };
 
-        const data = await safeJson(res);
+            const res = await apiFetch(`/api/business/${businessId}`, {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              },
+              body: JSON.stringify(payload),
+            });
 
-        if (!res.ok) {
-          setMessage(data?.detail || "Failed to update business.");
-          return;
-        }
+            const data = await safeJson(res);
 
-        // Upload image AFTER business update succeeds
-        if (logoFile) {
-          const imageForm = new FormData();
-          imageForm.append("image", logoFile);
+            if (!res.ok) {
+              setMessage(data?.detail || "Failed to update business.");
+              return;
+            }
 
-          const imageRes = await apiFetch(`/api/business/${businessId}/image`, {
-            method: "PATCH",
-            body: imageForm,
-          });
+            // Upload image AFTER business update succeeds
+            if (logoFile) {
+              const imageForm = new FormData();
+              imageForm.append("image", logoFile);
 
-          if (!imageRes.ok) {
-            setMessage("Business updated, but image upload failed.");
+              const imageRes = await apiFetch(
+                `/api/business/${businessId}/image`,
+                {
+                  method: "PATCH",
+                  body: imageForm,
+                }
+              );
+
+              if (!imageRes.ok) {
+                setMessage("Business updated, but image upload failed.");
+                return;
+              }
+            }
+
+            await refreshProtectedData();
+
+            buster = Date.now();
+            shouldRedirect = true;
             return;
           }
-        }
 
-        await refreshProtectedData();
+          // ================================
+          // CREATE NEW BUSINESS
+          // ================================
+          const form = new FormData();
+          for (const key in formData) {
+            let value = formData[key];
+            if (key === "website_url") value = normalizeUrl(value);
+            form.append(key, value);
+          }
 
+          if (logoFile) {
+            form.append("image", logoFile);
+          }
 
-        buster = Date.now();
-        shouldRedirect = true;
-        return;
-      }
+          const res = await apiFetch(`/api/business`, {
+            method: "POST",
+            body: form,
+          });
 
-      // ================================
-      // CREATE NEW BUSINESS
-      // ================================
-      const form = new FormData();
-      for (const key in formData) {
-        let value = formData[key];
-        if (key === "website_url") value = normalizeUrl(value);
-        form.append(key, value);
-      }
+          const data = await safeJson(res);
 
-      if (logoFile) {
-        form.append("image", logoFile);
-      }
+          if (!res.ok) {
+            setMessage(data?.detail || "Failed to create business.");
+            return;
+          }
 
-      const res = await apiFetch(`/api/business`, {
-        method: "POST",
-        body: form,
+          await refreshProtectedData();
+
+          buster = Date.now();
+          shouldRedirect = true;
+        },
+        businessId ? "Saving business…" : "Creating business…"
+      );
+    } catch (err) {
+      console.error("Business submit failed:", err);
+      setMessage("Failed to submit business. Please try again.");
+      return;
+    } finally {
+      setIsSubmitting(false);
+    }
+
+    if (shouldRedirect) {
+      navigate("/business-profile", {
+        state: { imageBuster: buster },
+        replace: true,
       });
-
-      const data = await safeJson(res);
-
-      if (!res.ok) {
-        setMessage(data?.detail || "Failed to create business.");
-        return;
-      }
-
-      await refreshProtectedData();
-
-      buster = Date.now();
-      shouldRedirect = true;
-    }, businessId ? "Saving business…" : "Creating business…");
-  } catch (err) {
-    console.error("Business submit failed:", err);
-    setMessage("Failed to submit business. Please try again.");
-    return;
-  }
-
-
-  if (shouldRedirect) {
-    navigate("/business-profile", { state: { imageBuster: buster }, replace: true });
-  }
-
-};
-
-
+    }
+  };
 
   // ----------------------------------
   // Render
   // ----------------------------------
   return (
     <div className="add-business-container">
-          <div className="business-form">
-            {loadingBusiness && (
-          <div className="add-business-loading-overlay" aria-label="Loading business">
+      <div className="business-form">
+        {loadingBusiness && (
+          <div
+            className="add-business-loading-overlay"
+            aria-label="Loading business"
+          >
             <Spinner />
           </div>
         )}
@@ -268,7 +291,7 @@ const handleSubmit = async (e) => {
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck="false"
-            inputMode="email"
+            inputMode="text"
           />
 
           <div className="field-label">Website</div>
@@ -280,7 +303,7 @@ const handleSubmit = async (e) => {
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck="false"
-            inputMode="email"
+            inputMode="text"
           />
 
           <div className="field-label">Picture</div>
@@ -291,8 +314,7 @@ const handleSubmit = async (e) => {
               <input
                 className="file-input"
                 type="file"
-                // ✅ restrict picker + validate onChange (don’t rely on accept alone)
-                accept="image/jpeg,image/png,image/svg+xml,.jpg,.jpeg,.png"
+                accept="image/jpeg,image/png,.jpg,.jpeg,.png"
                 onChange={handleFileChange}
               />
             </label>
@@ -302,7 +324,6 @@ const handleSubmit = async (e) => {
             </span>
           </div>
 
-          {/* ✅ field-level warning */}
           {fileError && <div className="message">{fileError}</div>}
 
           <div className="field-label">Address</div>
@@ -314,7 +335,7 @@ const handleSubmit = async (e) => {
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck="false"
-            inputMode="email"
+            inputMode="text"
           />
 
           <input
@@ -324,7 +345,7 @@ const handleSubmit = async (e) => {
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck="false"
-            inputMode="email"
+            inputMode="text"
           />
 
           <div className="field-label">City</div>
@@ -336,7 +357,7 @@ const handleSubmit = async (e) => {
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck="false"
-            inputMode="email"
+            inputMode="text"
           />
 
           <div className="field-label">State</div>
@@ -348,7 +369,7 @@ const handleSubmit = async (e) => {
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck="false"
-            inputMode="email"
+            inputMode="text"
           />
 
           <div className="field-label">Postal Code</div>
@@ -360,12 +381,16 @@ const handleSubmit = async (e) => {
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck="false"
-            inputMode="email"
+            inputMode="numeric"
           />
 
           {message && <div className="Error_Message">{message}</div>}
 
-          <button className="no-business-button" type="submit">
+          <button
+            className="no-business-button"
+            type="submit"
+            disabled={!canSubmit}
+          >
             {businessId ? "Save Changes" : "Add Business"}
           </button>
         </form>

@@ -44,6 +44,12 @@ input[name="address2"] {
   flex: 0 0 auto;
 }
 
+.file-btn:hover {
+  background-color: var(--main_button_hover);
+}
+
+
+
 .file-name {
   flex: 1;
   min-width: 0;            /* required for ellipsis in flex */
@@ -168,6 +174,25 @@ input[type="file"]::file-selector-button:hover {
     height: 48px !important;
     width: 100% !important;
 }
+
+/* Base Add Business button colors */
+.no-business-button {
+  background-color: var(--main_button_color);
+  color: var(--main_button_textcolor);
+  border: none;
+}
+
+/* Hover ONLY when clickable */
+.no-business-button:not(:disabled):hover {
+  background-color: var(--main_button_hover);
+}
+
+/* Disabled state matches Purchase button grey */
+.no-business-button:disabled {
+  background-color: #cbd5e1;
+  color: #6b7280;
+}
+
 
 /* ✅ MOBILE ONLY behavior:
    - before selection: hide "No file chosen" and make button full width
