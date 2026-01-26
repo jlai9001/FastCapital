@@ -27,6 +27,7 @@ function AddBusiness() {
   const [message, setMessage] = useState("");
   const [loadingBusiness, setLoadingBusiness] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [touched, setTouched] = useState({ website_url: false });
 
   const normalizeUrl = (url) => {
     if (!/^https?:\/\//i.test(url)) return "https://" + url;
@@ -144,11 +145,15 @@ function AddBusiness() {
     Boolean(formData.state.trim()) &&
     Boolean(formData.postal_code.trim());
 
+  const websiteInvalid = touched.website_url && !isValidWebsite(formData.website_url);
+
+
   // ----------------------------------
   // Submit
   // ----------------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setTouched((p) => ({ ...p, website_url: true }));
     setMessage("");
 
     if (fileError) return;
@@ -294,37 +299,58 @@ function AddBusiness() {
             inputMode="text"
           />
 
-          <div className="field-label">Website</div>
-          <input
-            name="website_url"
-            value={formData.website_url}
-            onChange={handleChange}
-            required
-            autoCapitalize="none"
-            autoCorrect="off"
-            spellCheck="false"
-            inputMode="text"
-          />
+          <div className="field-wrap">
+            <div className="field-label">Website</div>
+            <input
+              name="website_url"
+              value={formData.website_url}
+              onChange={handleChange}
+              onBlur={() => setTouched((p) => ({ ...p, website_url: true }))}
+              required
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck="false"
+              inputMode="text"
+            />
 
-          <div className="field-label">Picture</div>
-
-          <div className={`file-row ${logoFile ? "has-file" : "no-file"}`}>
-            <label className="file-btn">
-              Choose File
-              <input
-                className="file-input"
-                type="file"
-                accept="image/jpeg,image/png,.jpg,.jpeg,.png"
-                onChange={handleFileChange}
-              />
-            </label>
-
-            <span className="file-name">
-              {logoFile ? logoFile.name : "No file chosen"}
-            </span>
+            {websiteInvalid && (
+              <div className="custom-error-popup">
+                <div className="error-arrow"></div>
+                <div className="error-icon">!</div>
+                Please enter a valid website (example: mysite.com)
+              </div>
+            )}
           </div>
 
-          {fileError && <div className="message">{fileError}</div>}
+          <div className="field-wrap">
+            <div className="field-label">Picture</div>
+
+            <div className={`file-row ${logoFile ? "has-file" : "no-file"}`}>
+              <label className="file-btn">
+                Choose File
+                <input
+                  className="file-input"
+                  type="file"
+                  accept="image/jpeg,image/png,.jpg,.jpeg,.png"
+                  onChange={handleFileChange}
+                />
+              </label>
+
+              <span className="file-name">
+                {logoFile ? logoFile.name : "No file chosen"}
+              </span>
+            </div>
+
+            {fileError && (
+              <div className="custom-error-popup">
+                <div className="error-arrow"></div>
+                <div className="error-icon">!</div>
+                {fileError}
+              </div>
+            )}
+          </div>
+
+
 
           <div className="field-label">Address</div>
           <input
